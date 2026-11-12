@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T054451-0800-r11-20261112T134649Z",
+  "scheduled_for": "2026-11-12T05:44:51-08:00",
+  "started_at": "2026-11-12T05:44:13-08:00",
+  "completed_at": "2026-11-12T05:46:49.222-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T04:47:00.368-08:00",
+    "end": "2026-11-12T05:46:49.222-08:00",
+    "previous_run_completed_at": "2026-11-12T04:47:00.368-08:00",
+    "basis": "Previous hourly watch heartbeat authenticated from ops/watch-ledger (04:44 watch run); bounded contemporaneous check conducted around 05:44-05:46 PST.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall; does not replace primary production collection or publication.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T044451-0800-r11-20261112T124700Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest home entry remained 11 Nov humanitarian chief statement on winter shelter and crossings, already outside interval/previously observed; 9 Nov heavy-rain report older."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO health crisis overview and news headings accessible; no newly published Gaza health/medical-evacuation factual bulletin identified during window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502 Bad Gateway, persisted from previous watch; no material worsening."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 05:00 PST November 12 latest AP Reuters Palestinian killed airstrike casualties",
+      "site:english.wafa.ps/Pages/Details/ 12/November/2026 Gaza strike wounded detentions 2026",
+      "Gaza November 12 2026 morning hospital Nasser service resumption repairs Al-Shifa WHO",
+      "site:ochaopt.org/content/ Gaza 12 November 2026 crossings rain floods displaced",
+      "site:unrwa.org Gaza November 12 2026 shelters food aid latest",
+      "site:unicef.org Gaza 12 November 2026 children water access",
+      "Gaza November 12 2026 Rafah Kerem Shalom crossings aid trucks fuel deliveries",
+      "Gaza November 12 2026 ceasefire hostage negotiation detainees prisoners update Reuters",
+      "site:english.wafa.ps/Pages/Details/ November 12 2026 13:00 Gaza Palestinians killed hospital wounded aid",
+      "Gaza November 12 2026 14:00 GMT medical hospital water strike Reuters AP update",
+      "site:reliefweb.int/report/occupied-palestinian-territory 12 November 2026 Gaza situation report OCHA WHO hospital",
+      "Gaza 12 November 2026 latest Nov 12 13:30 UTC aid crossings hospital casualties displacement"
+    ],
+    "targeted_search_engine": "Web fast search; recency 1 day; direct page opens/clicks were additional verification, not targeted search queries.",
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 Nov 2026 advocacy statement already observed; no new factual event within observation window."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible; latest health crisis page does not feature new 12 Nov bulletin."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176879",
+        "result": "Previously logged al-Shifa-gate fatal strike; internal date contradiction (Nov 14 body vs Nov 12 header) persists; no independently confirmed new event."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Nasser strike six deaths, at least 28 injuries, surgical/radiology/laboratory suspension and unmet specialized surgery already present in earlier watch findings; duplicate."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176863",
+        "result": "Nov 11 20:42 WAFA cumulative 74,653 deaths, 176,007 wounded and since-ceasefire 1,622 deaths predates this search window; no new casualty delta logged."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176876",
+        "result": "Nov 12 14:08 handover of a detainee from Silwad/Ramallah who died March 2025; West Bank origin and historic death outside Gaza-specific scope."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/",
+        "result": "Latest Gaza child deaths in storms press release dated Nov 9; already outside interval."
+      },
+      {
+        "publisher": "WAFA Latest News",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Index showed already logged fishermen, casualties, Nasser report and older updates; no verified distinct new Gaza event."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176879",
+        "reason": "Already logged al-Shifa fatality and several wounded in previous 04:44 watch; 9 total since dawn includes previously reported Nasser casualties; avoid double counting."
+      },
+      {
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "reason": "Nasser hospital events, six killed, at least 28 wounded, specialist services suspension documented in earlier heartbeats; no separately verified new service recovery or worsening."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "reason": "Gaza fishermen detentions off Deir al-Balah already logged previous watch."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176876",
+        "reason": "Detainee from Silwad, Ramallah; historic death in prison predates observation and is outside Gaza-specific watch."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176863",
+        "reason": "Cumulative death count published Nov 11 before interval; not new event, beware duplication and cumulative-count inflation."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO Eastern Mediterranean HTTP 502; useful coverage from OCHA OPT, WHO Global, WAFA, AP, Reuters, UNICEF available. No newly deteriorated restriction.",
+    "limitations": "Search indexing delays, publication timestamp ambiguity and repeated reports mean a fresh event might not yet be visible. No independent confirmation found for fresh impacts; zero findings. Previous reports not treated as new.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no approval, publication, schedule, permissions, credentials or production changes."
+  }
+}

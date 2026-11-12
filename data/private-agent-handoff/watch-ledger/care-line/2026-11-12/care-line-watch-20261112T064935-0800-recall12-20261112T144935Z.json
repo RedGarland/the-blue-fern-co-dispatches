@@ -1,0 +1,90 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T064935-0800-recall12-20261112T144935Z",
+  "scheduled_for": "2026-11-12T06:45:22-08:00",
+  "started_at": "2026-11-12T06:49:35-08:00",
+  "completed_at": "2026-11-12T06:51:12.534-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T05:48:03.489-08:00",
+    "end": "2026-11-12T06:51:12.534-08:00",
+    "prior_check_basis": "Previous committed Care Line watch heartbeat completed 2026-11-12T05:48:03.489-08:00; verified by reading the GitHub file on ops/watch-ledger.",
+    "event_time_basis": "Consider newly verifiable, nonduplicate healthcare-access developments since the prior check; distinguish publication time from the effective date of the service change."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "CMS official Public Notices table was checked before any targeted search; most recent dated notice remains 2026-11-10 Advanced Urgent Care (Illinois), limitation of CLIA certificate #14D2049789. No notice dated November 11 or 12 appeared at the time of checking."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 12, 2026\" hospital emergency department closed suspended services United States",
+      "\"November 12, 2026\" hospital maternity labor delivery unit closes suspend",
+      "\"November 12, 2026\" rural hospital emergency services closure reopening",
+      "\"November 12, 2026\" behavioral health psychiatric hospital services closing suspended",
+      "hospital \"Nov 12, 2026\" closed emergency department medical services",
+      "hospital \"Nov 11, 2026\" dialysis center oncology clinic primary care closure",
+      "ambulance service base shuts down closes November 11 2026 United States",
+      "air ambulance helicopter medical base closure service November 12 2026 USA",
+      "\"November 12 2026\" hospital \"reopens\" emergency obstetrics maternity dialysis",
+      "\"November 11 2026\" \"ambulance service\" \"suspended\" OR \"closed\"",
+      "\"November 12 2026\" healthcare services shut down Puerto Rico Guam Virgin Islands Samoa",
+      "site:cms.gov \"2026-11-12\" \"termination\" \"CLIA\" hospital"
+    ],
+    "targeted_search_recency_days": 2,
+    "assessment": "No newly qualifying, nonduplicate hospital, ED, maternity, behavioral-health, dialysis, oncology or primary-care closure/suspension; rural/emergency-service loss; ground/air EMS or base suspension; CMS action; or effective restoration was substantiated within the observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Ambulances Bypass Waukegan's Vista Medical Center East as Mayor and Congressman Urge Owner to Sell Troubled Hospital",
+        "publisher": "Medical Daily",
+        "source_published_date": "2026-11-12",
+        "url": "https://www.medicaldaily.com/vista-medical-center-east-ems-bypass-waukegan-481156",
+        "reason": "Publication at 7:31 a.m. EST (4:31 a.m. PST), before prior check; IDPH EMS bypass began Nov. 7 and had been previously reported. November 11 calls for sale are ownership/political commentary, not a new service loss."
+      },
+      {
+        "title": "University Hospitals opens new urgent care in Rocky River",
+        "publisher": "Cleveland 19 (WOIO)",
+        "source_published_date": "2026-11-12",
+        "url": "https://www.cleveland19.com/2026/11/12/university-hospitals-opens-new-urgent-care-rocky-river/",
+        "reason": "A new additional urgent-care site; no evidence of reopening or restoration of a previously lost essential service."
+      },
+      {
+        "title": "King-Hinds’ Veterans Bills Included in House-Passed Legislation on Veterans Day",
+        "publisher": "Marianas Press",
+        "source_published_date": "2026-11-12",
+        "url": "https://marianaspress.com/news/article/king-hinds-veterans-bills-included-in-house-passed-legislation-on-veterans-day",
+        "reason": "House-passed provisions proposing future veterans healthcare-access expansion; no demonstrated immediate access effect."
+      },
+      {
+        "title": "Local initiative restores power, water supply to East Darfur hospital",
+        "publisher": "Radio Tamazuj",
+        "source_published_date": "2026-11-12",
+        "url": "https://www.radiotamazuj.org/en/news/article/local-initiative-restores-power-water-supply-to-east-darfur-hospital",
+        "reason": "Sudan, outside U.S. and territories."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices accessed successfully.",
+      "All 12 targeted search calls returned usable results; no tool failure was observed.",
+      "Prior committed heartbeat was independently fetched for exact prior completion boundary."
+    ],
+    "limitations": [
+      "Search engines may not yet index local publications within the current hour.",
+      "Bounded 12-search supplementary sampling cannot guarantee exhaustive U.S. state and territory coverage.",
+      "A dated article may report an older access event; effective dates and duplicate status were screened."
+    ],
+    "review_status": "No qualifying findings; nothing pending_review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

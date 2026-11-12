@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T114451-0800-r11-20261112T194804Z",
+  "scheduled_for": "2026-11-12T11:44:51-08:00",
+  "started_at": "2026-11-12T11:46:56-08:00",
+  "completed_at": "2026-11-12T11:48:04-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T10:45:41-08:00",
+    "end": "2026-11-12T11:48:04-08:00",
+    "previous_run_completed_at": "2026-11-12T10:45:41-08:00",
+    "basis": "Authenticated read of preceding hourly heartbeat plus source publication/event date verification. Reports with no hour-precise release time were screened for potential retrospective follow-ups and duplicates.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value recall only; daily Gaza publication and collection remain authoritative.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T104451-0800-r11-20261112T184541000Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Direct homepage and targeted search checked; latest displayed news item is 11 November winter-supply appeal, not a new confirmed material change within this interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Canonical WHO emergency page checked directly; no newly posted relevant November 12 operational update on its news list. Initial noncanonical URL returned 404; corrected by accessing canonical page."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502 from direct request, matching a prior known regional endpoint restriction. WHO Global and Health Cluster pages accessible."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Direct regional health-cluster page checked; displayed metrics and article list did not supply a new dated update within the window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 after 19:00 local new casualties airstrike Rafah Khan Younis Gaza City",
+      "site:ochaopt.org \"12 Nov 2026\" Gaza humanitarian update crossing aid",
+      "site:un.org Gaza 12 November 2026 humanitarian medical evacuation aid crossings briefing",
+      "site:who.int \"12 November 2026\" Gaza hospital surgical services fuel ambulance evacuation",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"12/November/2026\" \"09:\" PM killed injured",
+      "Gaza November 12 2026 Reuters AP new attack killed medical aid afternoon Thursday",
+      "site:unrwa.org 12 November 2026 Gaza aid crossings shelter hospital update",
+      "site:unicef.org Gaza \"12 November 2026\" drinking water shelter children",
+      "site:wfp.org Gaza \"12 November 2026\" food kitchens distributions",
+      "site:palestinercs.org 12 November 2026 Gaza ambulance emergency evacuation",
+      "site:reliefweb.int 12 November 2026 Gaza situation report humanitarian health access",
+      "Gaza November 12 2026 ceasefire crossings hostages detainees displacement civilian impact after 18:00 local Reuters AFP"
+    ],
+    "targeted_search_method": "After OCHA OPT and WHO official-first checks, exactly 12 targeted web searches; direct URL reads and previously retrieved source checks were not counted as additional searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Homepage checked through 20:58 Gaza local time Nov 12; latest Gaza-specific stories were 18:04 aid appeal and 16:20 three deaths, both already captured in prior hourly runs. Later 19:26 OIC condemnation was also previously excluded as no operational change. Latest new headline concerned West Bank vehicle seizure, out of Gaza scope."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Nasser Hospital: existing six deaths, at least 28 injuries and suspended health services, recorded in earlier ledger runs. No distinct new verified casualty/capacity change."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Previously documented Nasser Hospital strike and surrounding events; no verified new increment."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest Gaza winter humanitarian appeal dated November 10, no confirmed new operational event during interval."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Hospital strike and service suspensions",
+        "reason": "Prior hourly watch recorded six deaths, at least 28 wounded and radiology/lab/surgical service disruption. Subsequent coverage did not demonstrate new incremental verified change."
+      },
+      {
+        "subject": "Three Gaza strike deaths Nov 12, Al-Shifa vicinity, Deir al-Balah vehicle strike, Jabalia and Bureij shooting",
+        "reason": "Already recorded in earlier hourly watches. Avoid double counting or reclassifying republished reports."
+      },
+      {
+        "subject": "Gaza fishermen detentions off Deir al-Balah",
+        "reason": "Previously recorded; no confirmed subsequent detention or release status."
+      },
+      {
+        "subject": "53 countries and organizations joint humanitarian access statement",
+        "reason": "Recorded in preceding watch; no confirmed new crossing operation, aid entry or evacuation change."
+      },
+      {
+        "subject": "OIC condemnation of Nasser Hospital strike",
+        "reason": "Previously seen condemnation, no documented new military or humanitarian operational action."
+      },
+      {
+        "subject": "West Bank settler violence and domestic political statements",
+        "reason": "Outside specific Gaza civilian-impact scope."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false,
+        "notes": "Regional health endpoint repeatedly inaccessible in prior hourly runs; corroborating global WHO and health-cluster pages accessible."
+      },
+      {
+        "publisher": "WHO Global",
+        "status": "INITIAL_NONCANONICAL_404_RESOLVED",
+        "previously_observed": true,
+        "materially_worsened": false,
+        "notes": "Recovered by direct correct canonical path."
+      }
+    ],
+    "status_rationale": "DEGRADED owing to inaccessible WHO Eastern Mediterranean endpoint. Useful OCHA, WHO Global/Health Cluster, WAFA, AP, Reuters and PRCS coverage remained. No new qualifying development verified, and no material deterioration compared with previous runs.",
+    "limitations": "Negative result is bounded-source recall, not evidence that no incident occurred. Search indexing and publisher updates may lag; event and publication times can be ambiguous.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no publication, approval, schedule or workflow change."
+  }
+}

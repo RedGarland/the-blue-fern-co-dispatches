@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T224451-0800-r11-20261112T064426526Z",
+  "scheduled_for": "2026-11-11T22:44:51-08:00",
+  "started_at": "2026-11-11T22:41:17-08:00",
+  "completed_at": "2026-11-11T22:44:26.526-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T21:47:01.265-08:00",
+    "end": "2026-11-11T22:44:26.526-08:00",
+    "previous_run_completed_at": "2026-11-11T21:47:01.265-08:00",
+    "basis": "Authenticated preceding heartbeat on ops/watch-ledger. Look for new qualifying events or substantive follow-ups since completion, suppressing duplicate Nasser Hospital and older flood reporting.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; primary production collector and publisher remain authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T214451-0800-r11-20261112T054701265Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza item is 11 November winter aid appeal, already known; 9 November heavy-rains situation report covers 6-8 November."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean, Palestine",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT_OR_HTTP_502",
+        "result": "Regional endpoint timed out and regional Palestine page returned 502. Restriction documented in previous hourly watches; no evidence of newly worsened access."
+      },
+      {
+        "publisher": "WHO global situation hub (fallback)",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new relevant Nov 11-12 Gaza health-service report listed; WHO global newsroom accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza 12 November 2026 new humanitarian update",
+      "site:who.int Gaza 12 November 2026 hospital evacuation medical aid",
+      "site:reliefweb.int \"Gaza\" \"12 Nov 2026\" humanitarian",
+      "site:unrwa.org Gaza 12 November 2026 displacement shelter food",
+      "site:unicef.org Gaza 12 November 2026 water children",
+      "site:wfp.org Gaza November 12 2026 food aid",
+      "Reuters Gaza November 12 2026 Nasser hospital strikes injuries updates Thursday",
+      "AP News Gaza November 12 2026 deaths ceasefire negotiations hostages",
+      "Al Jazeera Gaza November 12 2026 civilian attacks Nasser hospital latest",
+      "WAFA Gaza November 12 2026 attack civilians houses killed hospital",
+      "Gaza November 12 2026 crossings Rafah Kerem Shalom aid truck access UN",
+      "Gaza November 12 2026 evacuation fuel dialysis ambulance hospitals flood"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "12 November 08:04 Gaza-local report (22:04 PST Nov 11) reiterates Nasser Hospital six fatalities, 20+ wounded, second-floor surgery-department damage; already recorded in prior watch; newer publication is not a new event."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Six fatalities including surgeon Rezik Abushira and 20 injuries unchanged. Israeli military issued a justification alleging Hamas operation in hospital, but no verified new publication time after previous watch; not counted as a new follow-up."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/12/israel-strikes-intensive-care-at-gazas-nasser-hospital",
+        "result": "At least six deaths, 20+ injuries including staff; same known hospital incident, no verified additional outcome."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 November winter shelter and aid access appeal was previously reviewed; no new quantified consequence during this watch."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176867",
+        "reason": "New publication within search window but no substantively new casualty, healthcare-capacity or strike detail beyond previously recorded Nasser Hospital findings."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "reason": "Israeli military statement presented in updated story without a verifiable timestamp for attribution to this hour. Do not count a repost or unverified-timestamp follow-up."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "reason": "Older Nov 6-8 flooding and service disruptions, already covered."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502_OR_TIMEOUT",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "search_quality_notes": "12 targeted web search queries run after checking OCHA OPT and WHO. Recency-filtered search returned mainly older or previously-covered events; direct-source dates and earlier heartbeat used for duplicate suppression.",
+    "status_rationale": "DEGRADED for the pre-existing WHO regional access restriction, with alternate WHO global and OCHA OPT accessible; no material worsening during this run.",
+    "limitations": "Some subsequent reports or revisions may appear after the observed end; publication and event times are not always independently timestamped. Gaza-local Thursday morning maps to Wednesday November 11 in Pacific time.",
+    "notification_warranted": false,
+    "changes_to_production": "None: no publishing, approval, schedule, task-state, or production changes.",
+    "schedule_note": "Automation invocation began before nominal :44:51 wall-clock schedule; nominal scheduled_for preserved; actual start/end recorded separately."
+  }
+}

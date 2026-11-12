@@ -1,0 +1,97 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T034150-0800-recall12-20261112T114150Z",
+  "scheduled_for": "2026-11-12T03:45:22-08:00",
+  "started_at": "2026-11-12T03:41:50-08:00",
+  "completed_at": "2026-11-12T03:44:05-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T02:43:49.484-08:00",
+    "end": "2026-11-12T03:44:05-08:00",
+    "prior_check_basis": "Exact completed_at of immediately preceding persisted Care Line Watch heartbeat, care-line-watch-20261112T024137-0800-recall12-20261112T104137Z.json (independently fetched from ops/watch-ledger).",
+    "event_time_basis": "Newly verified reports and access-changing developments since previous check, distinguishing announcement, publication and effective dates; historical re-indexing excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded recall only. Primary national production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_result": "Official CMS table still begins with 2026-11-10 Advanced Urgent Care (Illinois), limitation of CLIA certificate, 14D2049789; followed by 2026-11-09 Compassionate Home Health Services (Michigan), termination notice. No more recent notice on page at review."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed temporarily suspended service November 12 2026 United States",
+      "rural hospital emergency room lost emergency services November 11 12 2026",
+      "maternity labor delivery obstetrics unit closure suspension November 11 12 2026",
+      "behavioral health psychiatric inpatient unit closed suspended November 11 12 2026",
+      "dialysis center abruptly closed suspended treatments November 11 12 2026",
+      "oncology cancer infusion center closes suspends services November 11 12 2026",
+      "primary care clinic closes abruptly patients November 11 12 2026",
+      "ambulance EMS service shut down closed November 11 12 2026",
+      "air medical helicopter ambulance base closed suspended November 11 12 2026",
+      "emergency room maternity dialysis service reopened restored November 11 12 2026",
+      "site:cms.gov \"2026-11-12\" \"Termination\" \"CLIA\" public notices",
+      "Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital clinic ambulance service closure suspended November 2026"
+    ],
+    "search_recency_days": 2,
+    "search_assessment": "Twelve bounded targeted searches covered hospital/ED and rural emergency care, maternity, behavioral health, dialysis, oncology, primary care, EMS, air medical bases, restorations, federal notices and U.S. territories. No result was verified as a new in-window, qualifying and nonduplicate access change.",
+    "reviewed_exclusions": [
+      {
+        "title": "Monadnock Community Hospital in New Hampshire diverts ambulances amid suspected cyber incident",
+        "publisher": "DysruptionHub",
+        "url": "https://dysruptionhub.com/monadnock-community-hospital-suspected-cyber-incident/",
+        "source_published_date": "2026-11-11",
+        "reason": "Existing ambulance diversions and elective surgery cancellations from Tuesday/Wednesday, reported before this observation window; prior-window reconciliation rather than new alert."
+      },
+      {
+        "title": "Network failure forces Monadnock Community Hospital to halt elective surgeries",
+        "publisher": "All News Radio",
+        "url": "https://www.newsradiokeene.com/news/new-hampshire/network-failure-forces-monadnock-community-hospital-to-halt-elective-surgeries/",
+        "source_published_date": "2026-11-11",
+        "reason": "First reported at 11:16 a.m. November 11, outside observation window; same already ongoing service disruption."
+      },
+      {
+        "title": "Pennsylvania hospital to suspend all services",
+        "publisher": "Becker's Hospital Review",
+        "url": "https://www.beckershospitalreview.com/finance/pennsylvania-hospital-to-suspend-all-services/",
+        "source_published_date": "2026-11-04",
+        "reason": "Sharon Regional hospital service loss effective November 6, already known; historical outside window."
+      },
+      {
+        "title": "Mass General Brigham to close primary care clinic in Downtown Crossing",
+        "publisher": "The Boston Globe",
+        "url": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+        "source_published_date": "2026-11-04",
+        "reason": "Previously announced clinic closure, not a newly verifiable access change within the hourly window."
+      },
+      {
+        "title": "GRMC Announces Suspension of Visitations and Clinic Operations, Rehabilitation, and OR Services Monday to Wednesday Due to Tropical Storm Sinlaku",
+        "publisher": "Guam Regional Medical City",
+        "url": "https://www.grmc.gu/2026/04/10/grmc-announces-suspension-of-visitations-and-clinic-operations-rehabilitation-and-or-services-monday-to-wednesday-due-to-tropical-storm-sinlaku/",
+        "source_published_date": "2026-04-10",
+        "reason": "April 2026 temporary suspension, not new."
+      }
+    ],
+    "source_access_notes": [
+      "CMS official Public Notices list directly opened and read before initiating the 12 additional searches.",
+      "All 12 targeted searches returned results; no material retrieval failure observed.",
+      "Previous persisted heartbeat fetched from the requested branch and used to establish observation-window start."
+    ],
+    "limitations": [
+      "Very recent notices can appear after search indexing latency; absence of verified results is not proof of no events.",
+      "This is bounded recall, not exhaustive coverage of states or territories.",
+      "The nominal scheduled time is later than this automation's invocation; both timestamps are preserved without altering the schedule."
+    ],
+    "review_status": "No new qualifying findings; no pending review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

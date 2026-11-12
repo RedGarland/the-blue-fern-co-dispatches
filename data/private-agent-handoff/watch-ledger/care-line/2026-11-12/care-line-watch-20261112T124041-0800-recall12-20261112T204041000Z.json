@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T124041-0800-recall12-20261112T204041000Z",
+  "scheduled_for": "2026-11-12T12:40:41-08:00",
+  "started_at": "2026-11-12T12:40:41-08:00",
+  "completed_at": "2026-11-12T12:42:25.494-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T11:46:13-08:00",
+    "end": "2026-11-12T12:42:25.494-08:00",
+    "prior_check_basis": "Read the latest committed Care Line Watch heartbeat on ops/watch-ledger; 2026-11-12 11:45 run completed at 2026-11-12T11:46:13-08:00.",
+    "event_time_basis": "New official notice or newly verifiable announced or effective essential-service access change during observation window; exclude re-reporting of prior known incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall, not primary national production collector; production collection remains authoritative.",
+    "run_timestamp_note": "scheduled_for reflects current automation invocation at 12:40:41 PST; nominal next recurrence at 12:45:22 PST had not yet occurred.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, IL; limitation of CLIA certification; 14D2049789",
+      "next_notice_date": "2026-11-09",
+      "next_notice": "Compassionate Home Health Services, MI; termination notice",
+      "result": "Direct official table accessed before targeted searches; no CMS notice dated November 11 or November 12. Latest notices previously documented."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 12 2026 hospital emergency department closure suspended ambulance divert today United States",
+      "November 12 2026 labor delivery maternity unit close stop services hospital new announcement",
+      "November 12 2026 behavioral health psychiatric mental health hospital shutdown suspension service",
+      "November 12 2026 dialysis clinic closes patients oncology cancer care treatments service suspended",
+      "November 12 2026 rural emergency department shut down lost emergency care service",
+      "November 12 2026 ambulance service EMS district closing service suspension air medical helicopter base",
+      "November 12 2026 clinic primary care physician urgent care permanent closure patients",
+      "November 12 2026 reopened hospital emergency department reinstated EMS ambulance services",
+      "November 12 2026 CMS Medicare termination rescission CLIA limitation suspension lab health public notice",
+      "November 12 2026 state health department hospital license suspension medical service cease operations",
+      "November 12 2026 Puerto Rico Guam Virgin Islands CNMI American Samoa hospital clinic emergency service closure reopening",
+      "November 12 2026 hospital cancer center neonatal unit inpatient service abruptly closing today local news"
+    ],
+    "search_result": "Twelve bounded one-day targeted web searches performed, with no verified new and nonduplicate US/territory service loss or actual reopening in the observation window.",
+    "reviewed_exclusions": [
+      {
+        "source": "Pennsylvania Capital-Star",
+        "title": "In Bradford, a community reels after hospital closes",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/",
+        "reason": "Published Nov 12 but covers prior Bradford Regional Medical Center closure; already excluded in previous durable heartbeat; not an event within this window."
+      },
+      {
+        "source": "Pittsburgh Post-Gazette",
+        "title": "Struggling Sharon Regional hospital to suspend operations",
+        "url": "https://www.post-gazette.com/business/healthcare-business/2026/11/04/sharon-regional-medical-center-suspends-operations-nov-6/stories/202611040058",
+        "reason": "Published Nov 4; Nov 6 service closure already documented, outside window."
+      },
+      {
+        "source": "Prevea Health",
+        "title": "Prevea Washington Street Health Center",
+        "url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "reason": "Previously confirmed known Green Bay primary-care/urgent-care cessation with last patient-care date Nov 13; no new announcement or effective loss in this window."
+      },
+      {
+        "source": "Fierce Healthcare",
+        "title": "UPDATE: Ardent Health restores access to Epic EHR two weeks after ransomware attack",
+        "url": "https://www.fiercehealthcare.com/health-tech/ardent-health-struggles-get-systems-back-online-hospitals-reopen-emergency-rooms",
+        "reason": "Historical restoration in December 2023, not a 2026 new reopening."
+      },
+      {
+        "source": "North Carolina Health News",
+        "title": "State budget advances plan to reopen Martin County hospital",
+        "url": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/",
+        "reason": "July 2026 funding plan, not a newly concrete opening or service restoration."
+      },
+      {
+        "source": "McKinsey",
+        "title": "Rural healthcare and America's $340 billion workforce earnings opportunity",
+        "url": "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/rural-healthcare-and-americas-340-billion-workforce-earnings-opportunity",
+        "reason": "November 12 report on national conditions; no specific newly effective facility service change."
+      }
+    ],
+    "source_access_notes": [
+      "Direct CMS Public Notices official page accessible and reviewed first.",
+      "Twelve additional searches completed; searches returned broad or historical results, not a verifiable within-window event.",
+      "Latest preceding durable GitHub heartbeat read for exact observation start and known deduplication.",
+      "No GitHub source or article publication treated as proof of service-change date without checking its underlying event."
+    ],
+    "limitations": [
+      "Search-index lag and localized reporting may delay discovery into subsequent watches.",
+      "Bounded recall does not provide exhaustive national or territorial surveillance."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

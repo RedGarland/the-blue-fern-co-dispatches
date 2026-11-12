@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T2040590800-recall12-20261112T044232039Z",
+  "scheduled_for": "2026-11-11T20:45:22-08:00",
+  "started_at": "2026-11-11T20:40:59-08:00",
+  "completed_at": "2026-11-11T20:42:32.039-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T19:46:41.261-08:00",
+    "end": "2026-11-11T20:42:32.039-08:00",
+    "prior_check_basis": "Read back the previous 2026-11-11 19:44:54 PST Care Line Watch heartbeat on ops/watch-ledger; its completed_at was 19:46:41.261 PST, status SUCCESS and outcome no_findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for U.S. and territories; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices table fetched first. Latest entry dated 2026-11-10: Advanced Urgent Care, Illinois, Limitation of CLIA cert 14D2049789, previously noted. Next dated 2026-11-09: Compassionate Home Health Services, Michigan, termination. No new current-window notice."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended reopened November 11 2026 November 12 2026 United States",
+      "hospital maternity labor delivery obstetrics services closing suspended November 11 2026",
+      "rural hospital emergency service closure ambulance diversion November 11 2026",
+      "behavioral health psychiatric inpatient unit closing admissions suspended November 11 2026",
+      "dialysis center closure treatment interrupted November 11 2026",
+      "oncology infusion cancer center services suspended closing November 11 2026",
+      "primary care clinic urgent care closure patients November 11 2026",
+      "ambulance EMS base closing service suspended November 11 2026",
+      "air medical helicopter base closes suspends service November 2026",
+      "hospital clinic service restored reopened after closure November 11 2026",
+      "hospital clinic closure emergency services Puerto Rico Guam Virgin Islands American Samoa Northern Mariana November 2026",
+      "Medicare provider termination CLIA suspension rescission notice November 11 2026 site:cms.gov"
+    ],
+    "search_recency_days": "Eleven searches used 1-2-day recency, spanning contemporary Nov 11/12 2026 coverage; specifically 9 used 1-day and 3 used 2-day filters.",
+    "search_assessment": "No verified newly reported/current-window qualifying, nonduplicate hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, EMS/air-medical, CMS or essential-service restoration access changes found in bounded recall.",
+    "reviewed_exclusions": [
+      {
+        "title": "Granite City Fire Chief Warns of Longer Ambulance Transports",
+        "publisher": "RiverBender",
+        "url": "https://www.riverbender.com/news/details/granite-city-fire-chief-warns-of-longer-ambulance-transports-98244.cfm",
+        "article_date": "2026-11-11",
+        "reason": "Gateway Regional Medical Center ED ambulance diversion began Saturday Nov 7, 2026 and article published Nov 11 at 07:56 local, both before 19:46 PST observation start. Genuine earlier access loss, not a new current-window finding; refer to primary collector for backfill/deduplication if needed."
+      }
+    ],
+    "source_access_notes": [
+      "CMS official current table fetched successfully before additional search.",
+      "Twelve targeted web searches executed; no material retrieval error observed.",
+      "Previous watch heartbeat fetched and inspected from specified GitHub branch for the exact comparison window."
+    ],
+    "limitations": [
+      "Search indexing lag may miss same-hour publication.",
+      "Bounded supplemental queries cannot guarantee exhaustive state/territory coverage.",
+      "Article publication date does not substitute for effective date or proof of a new access effect."
+    ],
+    "review_status": "No qualifying findings pending review.",
+    "publication_action": false,
+    "approval_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

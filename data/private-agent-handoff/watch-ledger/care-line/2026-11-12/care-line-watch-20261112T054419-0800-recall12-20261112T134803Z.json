@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T054419-0800-recall12-20261112T134803Z",
+  "scheduled_for": "2026-11-12T05:45:22-08:00",
+  "started_at": "2026-11-12T05:44:19-08:00",
+  "completed_at": "2026-11-12T05:48:03.489-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T04:45:22-08:00",
+    "end": "2026-11-12T05:48:03.489-08:00",
+    "prior_check_basis": "Conservative inclusive previous hourly-slot boundary, with overlap to cover the prior reported 04:52 PST run; exact previous heartbeat completion was not independently resolved. The earlier verified 02:43 PST heartbeat was used for the output format.",
+    "event_time_basis": "Newly verifiable healthcare access developments after the prior hourly check; distinguish publication date, announcement date and actual service-effect date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_result": "Official CMS table read first. Most recent row remained 2026-11-10 Advanced Urgent Care, Illinois, Limitation of CLIA cert (14D2049789); next row 2026-11-09 Compassionate Home Health Services, Michigan, Termination Notice. No later row as of this check."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 12, 2026\" hospital emergency department closed suspended reopened United States",
+      "\"November 12, 2026\" maternity labor delivery unit shut down hospital",
+      "\"November 12, 2026\" rural hospital emergency services closure suspension",
+      "\"November 12, 2026\" dialysis center oncology clinic primary care closure patients",
+      "\"November 12, 2026\" behavioral health psychiatric hospital services suspended closed",
+      "\"November 12, 2026\" ambulance service station base closed air medical grounded service",
+      "hospital emergency department temporarily closed \"November 11\" \"2026\" patients diverted",
+      "hospital \"services suspended\" \"November 12\" 2026 patients",
+      "air ambulance base closure ambulance shutdown \"November 11\" \"2026\" US",
+      "hospital labor delivery unit closure \"November 11\" \"2026\" rural",
+      "health center hospital clinic closure reopening Puerto Rico Guam US Virgin Islands November 2026",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices \"2026-11-12\" OR \"2026-11-11\""
+    ],
+    "search_recency_days": [
+      1,
+      2
+    ],
+    "search_assessment": "No source substantiated a newly reported, qualifying, nonduplicate U.S./territory closure, suspension, CMS access-risk action, emergency service loss, air/ground EMS-base suspension, or effective restoration during the target hourly window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Cleveland council not sold on city's proposal to move fire, EMS into closed school",
+        "publisher": "Ideastream Public Media",
+        "source_published_date": "2026-11-11",
+        "url": "https://www.ideastream.org/government-politics/2026-11-11/cleveland-council-not-sold-on-citys-proposal-to-move-fire-ems-into-closed-school",
+        "reason": "Municipal proposal; references already-shuttered St. Vincent ER, not a new closure or service change."
+      },
+      {
+        "title": "Health Officials Battle Rural Missouri's Maternity Care Crisis",
+        "publisher": "KRCU Public Radio",
+        "source_published_date": "2026-11-11",
+        "url": "https://www.krcu.org/news/2026-11-11/health-officials-battle-rural-missouris-maternity-care-crisis",
+        "reason": "Describes existing rural maternity-access problems, without a newly effective service loss in this window."
+      },
+      {
+        "title": "WVU Cancer Institute opens new facility at Summersville Regional Medical Center",
+        "publisher": "My Buckhannon (news release)",
+        "source_published_date": "2026-11-11",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "reason": "New facility opened November 10; not an abrupt restoration of a previously lost essential service, and reported in prior checks."
+      },
+      {
+        "title": "Trump Promised to Care for America’s Veterans. The VA Is Now 'Collapsing From the Inside.'",
+        "publisher": "ProPublica",
+        "source_published_date": "2026-11-11",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "Discusses earlier accumulated care disruption and East Orange OR closure; no newly dated service loss in target hourly window."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS Public Notices page available and read before targeted searches.",
+      "All twelve targeted search requests returned; potentially relevant local reports were accessible for screening.",
+      "Latest precise prior heartbeat completion could not be independently identified from repository directory listing; the prior hourly-slot boundary was used conservatively instead."
+    ],
+    "limitations": [
+      "Current-hour search indexing may lag and local sources may post after cutoff.",
+      "Only a bounded sampling of high-value miss classes; not comprehensive U.S. and territory monitoring.",
+      "The inclusive start overlaps the preceding hourly run due to unresolved exact previous heartbeat completion; avoid treating previously observed articles as new."
+    ],
+    "review_status": "No new qualifying findings; nothing pending_review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

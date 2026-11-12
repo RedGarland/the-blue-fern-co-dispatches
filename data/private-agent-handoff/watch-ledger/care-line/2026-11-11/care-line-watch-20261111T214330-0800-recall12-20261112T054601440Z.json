@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T214330-0800-recall12-20261112T054601440Z",
+  "scheduled_for": "2026-11-11T21:45:22-08:00",
+  "started_at": "2026-11-11T21:43:30-08:00",
+  "completed_at": "2026-11-11T21:46:01.440-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T20:42:32.039-08:00",
+    "end": "2026-11-11T21:46:01.440-08:00",
+    "prior_check_basis": "Read the latest prior 2026-11-11 20:40:59 PST Care Line Watch heartbeat directly from ops/watch-ledger. Its completed_at was 20:42:32.039 PST, status SUCCESS, outcome no_findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territories recall; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Checked official CMS Public Notices directly before searching. Latest dated 2026-11-10: Advanced Urgent Care, IL, limitation of CLIA cert 14D2049789; previously recorded. Next dated 2026-11-09: Compassionate Home Health Services, MI, termination. No new CMS public notice dated during current observation window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 11 2026 United States",
+      "maternity labor delivery service closed suspended November 11 2026 hospital",
+      "rural hospital emergency service closure November 11 2026",
+      "psychiatric behavioral health inpatient services shutdown November 11 2026",
+      "dialysis center patients closure suspension November 11 2026",
+      "cancer oncology clinic service stopped November 11 2026",
+      "primary care clinic unexpectedly closed patients November 11 2026 United States",
+      "ambulance EMS service suspended operations base closure November 11 2026",
+      "air ambulance helicopter base closes service November 11 2026 United States",
+      "hospital emergency room reopened services restored November 11 2026 USA",
+      "Puerto Rico Guam Virgin Islands Northern Mariana American Samoa hospital healthcare service closure November 11 2026",
+      "state health department hospital license emergency department suspension shutdown November 11 2026"
+    ],
+    "search_recency_days": 3,
+    "search_assessment": "No new verifiable, nonduplicated qualifying access-effect announcement or newly effective change identified in the bounded current-window recall. Twelve searches completed with no observed material failure.",
+    "reviewed_exclusions": [
+      {
+        "title": "U.S. DHHS cancels Medicare agreement with Kalamazoo Behavioral Health Hospital",
+        "publisher": "WWMT",
+        "url": "https://wwmt.com/news/local/kalamazoo-behavioral-health-hospital-medicare-agreement-cancelled-united-states-dhhs-investigation-license-patient-injuries-staff-failures-texas-township-west-michigan",
+        "reason": "Prior-reported termination, corresponding CMS notice dated October 30, 2026; not a new current-window event."
+      },
+      {
+        "title": "WVU Cancer Institute opens new facility at Summersville Regional Medical Center",
+        "publisher": "My Buckhannon",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "reason": "New expansion/opening announced November 10; no evidence of abrupt restoration of previously lost essential service, and reported before current window."
+      },
+      {
+        "title": "Sharon Regional hospital license revocation and suspension",
+        "publisher": "WVIA / Medical Daily",
+        "url": "https://www.wvia.org/news/local/2026-11-06/state-shuts-struggling-western-pa-hospital-rescued-by-tenor-health-but-officials-say-its-nepa-hospitals-arent-affected",
+        "reason": "Previously reported November 4-6 state action and suspension; prior-window duplicate."
+      },
+      {
+        "title": "Trump Promised to Care for America’s Veterans. The VA Is Now 'Collapsing From the Inside.'",
+        "publisher": "ProPublica",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "November 11 investigation describes longer-running operational/staffing and patient-care concerns, without a newly confirmed closure, suspension, or restoration in this observation window."
+      },
+      {
+        "title": "Four US territories top military enlistment rankings, but their veterans travel far for care",
+        "publisher": "Pasquines",
+        "url": "https://pasquines.us/2026/11/11/four-us-territories-top-military-enlistment-rankings-but-their-veterans-travel-far-for-care/",
+        "reason": "Broad longstanding access disparities; no specifically dated new service loss or reopening in current window."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices official table accessible and reviewed first.",
+      "Twelve additional targeted searches performed, each constrained to 3-day recency for November 11/12 2026 reporting.",
+      "Latest previous heartbeat obtained from the requested GitHub branch and used to define the exact comparison window.",
+      "No material source or search failures observed."
+    ],
+    "limitations": [
+      "Search engines may index some same-hour local reports after this observation window.",
+      "Bounded 12-query coverage cannot guarantee exhaustive coverage of all states or territories.",
+      "Published-on-November-11 stories describing prior access losses are not automatically new qualifying developments."
+    ],
+    "review_status": "No findings pending review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

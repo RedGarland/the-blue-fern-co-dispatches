@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T164328-0800-recall12-20261112T004328Z",
+  "scheduled_for": "2026-11-11T16:45:22-08:00",
+  "started_at": "2026-11-11T16:43:28-08:00",
+  "completed_at": "2026-11-11T16:44:50.783-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T15:42:09-08:00",
+    "end": "2026-11-11T16:44:50.783-08:00",
+    "prior_check_basis": "Prior care-line heartbeat care-line-watch-20261111T154041-0800-recall12-20261111T234041Z.json fetched from ops/watch-ledger; completed_at 15:42:09 PST."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territory healthcare-access recall; production collection is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices table opened and current first rows inspected: latest was 2026-11-10 Advanced Urgent Care (Illinois), limitation of CLIA certificate 14D2049789; next was 2026-11-09 Compassionate Home Health Services (Michigan), Medicare termination. No November 11 notices listed."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 11, 2026\" hospital emergency department closing reopening suspension evening",
+      "\"November 11, 2026\" hospital maternity obstetrics labor delivery closure suspended",
+      "\"November 11, 2026\" rural hospital emergency services temporarily closed diversion",
+      "\"November 11, 2026\" ambulance EMS base suspended service closure coverage",
+      "\"November 11, 2026\" air ambulance helicopter base suspended medical transport",
+      "\"November 11, 2026\" dialysis center clinic closure or suspended services",
+      "\"November 11, 2026\" behavioral health psychiatric unit hospital closure suspension",
+      "\"November 11, 2026\" oncology cancer infusion center clinic service suspension closure",
+      "\"November 11, 2026\" primary care clinic sudden closure patients",
+      "\"November 11, 2026\" hospital emergency department service resumes reopens outage",
+      "\"November 11, 2026\" CMS Medicare termination CLIA limitation suspension",
+      "\"November 11, 2026\" hospital clinic ambulance closure Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "No newly published/announced or concretely effective, independently verifiable high-value healthcare-access loss, restoration, or CMS access-risk action was identified between 15:42:09 and the recorded end time (PST). Search matches largely concerned unrelated/older events.",
+    "reviewed_exclusions": [
+      {
+        "title": "ProPublica East Orange Veterans Hospital investigation",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "November 11 feature (5:00 a.m.) documents historic and ongoing staffing/operating-room losses; no discrete new access change shown in the current hour. First published well before the previous checkpoint."
+      },
+      {
+        "title": "YubaNet November 11 air ambulance dispatch",
+        "url": "https://yubanet.com/featured/now/",
+        "reason": "2:10 p.m. reported air ambulance being requested for a road accident, not closure or suspension of medical transport; earlier than observation window."
+      },
+      {
+        "title": "Bermuda air ambulance plane tragedy",
+        "url": "https://bernews.com/2026/10/us-coast-guard-searching-for-air-ambulance/",
+        "reason": "October 2026 accident, not a current U.S. provider/base service change."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices was directly opened successfully before targeted searches.",
+      "All 12 targeted searches executed; no full-text access failures were encountered for sources needed to resolve a potential current-hour positive."
+    ],
+    "limitations": [
+      "Strictly capped recall is not exhaustive across all 50 states and U.S. territories.",
+      "Same-hour publication and indexing delays can conceal events; zero verified results do not imply no underlying service loss.",
+      "Previously noted Monadnock Community Hospital outage predates this window and remains a separate prior-window production reconciliation candidate."
+    ],
+    "review_status": "No new findings placed into review.",
+    "publication_action": false,
+    "approval_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

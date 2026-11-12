@@ -1,0 +1,124 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T074451-0800-r11-20261112T154539812Z",
+  "scheduled_for": "2026-11-12T07:44:51-08:00",
+  "started_at": "2026-11-12T07:43:05-08:00",
+  "completed_at": "2026-11-12T07:45:39-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T06:49:13.073-08:00",
+    "end": "2026-11-12T07:45:39-08:00",
+    "previous_run_completed_at": "2026-11-12T06:49:13.073-08:00",
+    "basis": "Authenticated previous hourly heartbeat on ops/watch-ledger; bounded search covers newly traceable developments since that completion; source publication/event time checked when available.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; production Gaza collector/publisher authoritative.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T064451-0800-r11-20261112T144634Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage checked directly; latest visible entry 11 Nov 2026 winter supplies statement, already covered; no newly posted Gaza item in observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Correctly cased WHO Gaza/OPT emergency page reached via WHO homepage; no dated new Gaza health update visible. A malformed initial WHO URL returned 404 and an alternate cased URL DisabledError, but canonical page was accessible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502 Bad Gateway from situation reports; regional health-crisis endpoint timed out. Same regional access restriction documented previously, no newly material deterioration."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int Gaza 12 November 2026 hospitals health medical evacuations latest",
+      "site:ochaopt.org Gaza 12 November 2026 aid shelter crossing situation",
+      "site:unrwa.org \"12 November 2026\" Gaza displacement food",
+      "site:unicef.org \"12 November 2026\" Gaza water healthcare children",
+      "site:reliefweb.int Gaza November 12 2026 OCHA WHO situation humanitarian access",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza killed wounded",
+      "Gaza 12 November 2026 latest 15:00 GMT 16:00 GMT Reuters AP civilians airstrikes killed",
+      "Gaza 12 November 2026 afternoon Deir al Balah Jabalia new strike hospital casualties",
+      "Gaza 12 November 2026 Rafah Kerem Shalom crossing aid shipments fuel water restriction",
+      "Gaza 12 November 2026 medical evacuations Nasser hospital surgeries surgical unit WHO recovery",
+      "Gaza 12 November 2026 ceasefire negotiations hostages Palestinian detainees latest",
+      "Gaza 12 November 2026 flood displaced winter tents storm WFP UNICEF food water updates"
+    ],
+    "search_engine": "Web targeted fast queries, recency=1 day. Additional direct source opens/clicks were verification, not searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176880",
+        "result": "Three-death roundup dated 12 Nov 16:20 as displayed: Deir al-Balah (Nashat Fouad Awwad), Jabalia al-Nazla, and previously logged Al-Shifa vicinity. Deir al-Balah and Jabalia incidents were captured in previous heartbeat; no new details."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest-news listing appeared stale, stopping at Nasser hospital 08:04; direct 16:20 story checked separately."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-israel-gaza-hospital-strike-november-12-88f4a90dad16eab5c6e859a1f0fc0f6c",
+        "result": "Nasser Hospital strike and related medical-service suspensions correspond to prior watches; no new verified increment."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Six-death Nasser hospital strike already logged."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 Nov winter-supply and crossing statement predates window and appeared in previous watch."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Hospital six deaths and at least 28 wounded, service suspensions",
+        "reason": "Previously logged; no separately verified new casualty revision."
+      },
+      {
+        "subject": "Al-Shifa vicinity, Deir al-Balah vehicle and Jabalia al-Nazla cemetery incidents",
+        "reason": "Previously logged in prior hourly heartbeats."
+      },
+      {
+        "subject": "Deir al-Balah fishermen detentions, flooding/displacement impacts",
+        "reason": "Previously reported; no independently verified new action in the window."
+      },
+      {
+        "subject": "Gaza casualty aggregates and historical humanitarian reports",
+        "reason": "Not discrete new developments since 06:49:13 PST; publication/event date outside the interval."
+      },
+      {
+        "subject": "Palestinian teenage detainee death/body transfer at Megiddo Prison",
+        "reason": "Available WAFA related story not established as a Gaza-specific development in this bounded check."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO regional endpoints continue returning 502/timeouts; useful coverage retained through OCHA OPT, WHO Global, twelve targeted searches, WAFA, Reuters and AP. No material new degradation identified.",
+    "limitations": "Indexing delays possible; WHO regional releases unavailable. WAFA latest-news index stale. Time zone in source publication times not guaranteed. No item crossed verification and novelty threshold during this interval.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publication, approval, change to schedule, credentials, production branch or runner."
+  }
+}

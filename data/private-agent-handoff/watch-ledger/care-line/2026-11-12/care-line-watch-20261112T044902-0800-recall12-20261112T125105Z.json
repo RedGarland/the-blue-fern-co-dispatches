@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T044902-0800-recall12-20261112T125105Z",
+  "scheduled_for": "2026-11-12T04:45:22-08:00",
+  "started_at": "2026-11-12T04:49:02-08:00",
+  "completed_at": "2026-11-12T04:51:05.796-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T03:44:05-08:00",
+    "end": "2026-11-12T04:51:05.796-08:00",
+    "prior_check_basis": "Exact completed_at from previous authenticated Care Line Watch heartbeat care-line-watch-20261112T034150-0800-recall12-20261112T114150Z.json, fetched on ops/watch-ledger; latest Care Line file identified by comparing previous known commit with current ops/watch-ledger.",
+    "event_time_basis": "Newly verifiable service-access changes since previous completed watch, distinguishing publication date from effective date and excluding older announcements."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall, not the authoritative production national collection.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_result": "Latest official CMS notice remains November 10, 2026 Advanced Urgent Care, Illinois (CLIA certificate limitation, 14D2049789), followed by November 9, 2026 Compassionate Home Health Services, Michigan (termination). No November 11-12 notice visible on direct check."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspension Thursday November 12 2026 United States",
+      "November 12 2026 maternity labor delivery obstetrics unit closing suspended hospital",
+      "November 12 2026 rural hospital emergency room closes stops services",
+      "November 12 2026 dialysis center clinic closes patients services",
+      "November 12 2026 oncology cancer treatment center suspended closing patients",
+      "November 12 2026 behavioral health psychiatric hospital unit closure services",
+      "November 12 2026 ambulance EMS service shutdown closure suspension base",
+      "November 12 2026 air ambulance medical helicopter base closure grounding",
+      "November 12 2026 primary care community health clinic closes immediately services",
+      "November 12 2026 emergency department maternity hospital reopens service restored",
+      "November 12 2026 Puerto Rico Guam US Virgin Islands hospital health clinic emergency services closed reopening",
+      "November 12 2026 state health department hospital certificate termination laboratory CLIA limited suspended"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "Twelve targeted current searches returned mostly older, off-topic, proposed or non-restoration expansions. No verified new qualifying, nonduplicate closure, suspension, access-risk action or previously lost essential-service restoration in the observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Aspirus Laurium Clinic Expands Access to Pediatric and Acute Care Services",
+        "publisher": "Aspirus Health",
+        "url": "https://www.aspirus.org/press-room/aspirus-laurium-clinic-expands-access-to-pediatric-5238",
+        "source_published_date": "2026-11-11",
+        "effective_date": "2026-11-12",
+        "reason": "Adding Thursday morning pediatric/acute physician hours, not a restoration of previously lost essential services; announcement also precedes observation window."
+      },
+      {
+        "title": "WVU Cancer Institute opens new facility at Summersville Regional Medical Center",
+        "publisher": "My Buckhannon / WVU Medicine news release",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "source_published_date": "2026-11-11",
+        "effective_date": "2026-11-10",
+        "reason": "New infusion and oncology facility expansion, not a documented restoration of previously lost service; event predates current window and previously excluded."
+      },
+      {
+        "title": "Delaware receives additional $160M for rural health support",
+        "publisher": "Spotlight Delaware",
+        "url": "https://spotlightdelaware.org/2026/11/12/delaware-receives-additional-160m-for-rural-health-support/",
+        "source_published_date": "2026-11-12",
+        "reason": "Funding award with no newly effective facility/service access change."
+      },
+      {
+        "title": "Monadnock Community Hospital network disruption",
+        "publisher": "All News Radio / prior Care Line Watch",
+        "url": "https://www.newsradiokeene.com/news/new-hampshire/network-failure-forces-monadnock-community-hospital-to-halt-elective-surgeries/",
+        "source_published_date": "2026-11-11",
+        "reason": "Already documented prior-window ambulance diversion/elective surgery disruption, not a new in-window development."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS Public Notices read directly before performing any targeted searches.",
+      "All 12 targeted web searches returned; results screened by article/event dates and concrete access effect.",
+      "Previous Care Line heartbeat independently fetched and used to anchor start; authenticated repository comparison established it as the most recent Care Line ledger file."
+    ],
+    "limitations": [
+      "Search-index latency means very recent hourly developments may not yet be discoverable.",
+      "Bounded recall does not exhaustively search every state or U.S. territory."
+    ],
+    "review_status": "No new qualifying findings; no pending review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

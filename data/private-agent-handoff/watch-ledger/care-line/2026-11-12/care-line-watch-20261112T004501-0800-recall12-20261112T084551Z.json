@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T004501-0800-recall12-20261112T084551Z",
+  "scheduled_for": "2026-11-12T00:45:22-08:00",
+  "started_at": "2026-11-12T00:45:01-08:00",
+  "completed_at": "2026-11-12T00:45:51-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-11T23:53:49.877-08:00",
+    "end": "2026-11-12T00:45:51-08:00",
+    "prior_check_basis": "Previous verified ops/watch-ledger Care Line heartbeat (care-line-watch-20261111T235212-0800-recall12-20261112T075349877Z) completed at 2026-11-11T23:53:49.877-08:00. This window begins at that exact prior completion time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Opened official CMS Public Notices before targeted searches. Most recent listed notice is 2026-11-10 Advanced Urgent Care, IL, limitation of CLIA certificate 14D2049789, followed by 2026-11-09 Compassionate Home Health Services, MI, termination. Neither is new to observation window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closed stopped accepting patients overnight USA",
+      "November 11 2026 maternity labor delivery unit suspended closed hospital",
+      "November 11 2026 rural hospital emergency services closure access patients",
+      "November 11 2026 ambulance service shutdown station base closing EMS",
+      "November 11 2026 dialysis clinic oncology center closure suspension",
+      "November 11 2026 behavioral health psychiatric hospital closed suspended services",
+      "hospital emergency room closed temporarily November 12 2026 US overnight",
+      "November 12 2026 November 11 2026 health clinic closed patients urgent care shut down local",
+      "November 12 2026 ambulance service discontinued base closed county US",
+      "November 12 2026 hospital dialysis oncology services suspended local news",
+      "November 11 2026 November 12 2026 hospital reopening emergency maternity behavioral health restored",
+      "November 11 2026 November 12 2026 Guam Puerto Rico Virgin Islands Northern Mariana Samoa hospital clinic ambulance service closure"
+    ],
+    "search_recency_days": "Fast batch 2 days; slow batch targeted with explicit November 11–12, 2026 dates.",
+    "search_assessment": "Twelve targeted searches completed; no verified newly announced or effective, nonduplicate US/territory closure/suspension, EMS loss, CMS action, or essential service restoration since prior check. Search results mostly historical, non-US, holiday notices, prospective plans, general funding, or business updates.",
+    "reviewed_exclusions": [
+      {
+        "title": "Sea Pines Rehabilitation Hospital in Melbourne closes indefinitely after flood damage",
+        "publisher": "Encompass Health",
+        "url": "https://www.encompasshealth.com/press-releases/encompass-health-announces-indefinite-closure-sea-pines",
+        "reason": "Official notice published November 6, 2026 regarding flood evacuation and closure November 1–2; before current hourly observation window."
+      },
+      {
+        "title": "Public hearing set for Nov. 24 on closure of inpatient labor and delivery services at Sanford Luverne Medical Center",
+        "publisher": "Minnesota Department of Health",
+        "url": "https://www.health.mn.gov/news/pressrel/2026/hearing111026.html",
+        "reason": "Notice dated November 10, 2026; service cessation proposed for April 28, 2027; outside window and prospective."
+      },
+      {
+        "title": "Governor Morrisey Announces Reopening of Labor and Delivery Services at Greenbrier Valley Medical Center",
+        "publisher": "West Virginia Department of Health",
+        "url": "https://health.wv.gov/article/governor-morrisey-announces-reopening-labor-and-delivery-services-greenbrier-valley-medical",
+        "reason": "November 6 plans/letter of intent; no newly effective reopening in this hourly window."
+      },
+      {
+        "title": "Sharon Regional's license revoked after unpaid electric bill, forcing Pennsylvania hospital to close",
+        "publisher": "Medical Daily",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "Older closure: state order November 4 and emergency service suspension November 6; previously reviewed."
+      },
+      {
+        "title": "WCCHC Clinic Closures",
+        "publisher": "Waianae Coast Comprehensive Health Center",
+        "url": "https://www.wcchc.com/News/Closures",
+        "reason": "Routine previously published Veterans Day holiday clinic closures November 11; ED remains open 24 hours. Excluded as routine holiday operations."
+      },
+      {
+        "title": "GBGH obstetrical closures continue as staffing challenges persist",
+        "publisher": "MidlandToday",
+        "url": "https://www.midlandtoday.ca/local-news/gbgh-obstetrical-closures-continue-as-staffing-challenges-persist-12985861",
+        "reason": "Ontario, Canada: outside US/territory scope."
+      },
+      {
+        "title": "Trump Promised to Care for America's Veterans. The VA Is Now Collapsing From the Inside.",
+        "publisher": "ProPublica",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "Prior-window November 11 investigation describing earlier disruptions; not new within observed hour."
+      }
+    ],
+    "source_access_notes": [
+      "CMS official notices table successfully inspected before all searches.",
+      "Previous run's heartbeat fetched and parsed from ops/watch-ledger to establish the exact boundary.",
+      "Twelve searches returned results; no material source access failure requiring DEGRADED status."
+    ],
+    "limitations": [
+      "Same-hour publication and indexing lag may conceal very recent changes.",
+      "Bounded targeted searches cannot ensure exhaustive coverage across all states and territories.",
+      "No publication, approval, schedule modification, or task disabling."
+    ],
+    "review_status": "No new qualifying findings; none pending review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

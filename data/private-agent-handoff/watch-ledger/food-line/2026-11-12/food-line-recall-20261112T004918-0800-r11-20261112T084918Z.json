@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261112T004918-0800-r11-20261112T084918Z",
+  "scheduled_for": "2026-11-12T00:45:54-08:00",
+  "started_at": "2026-11-12T00:49:18-08:00",
+  "completed_at": "2026-11-12T08:51:10.412Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-12T07:53:11.276Z",
+    "end_at": "2026-11-12T08:51:10.412Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "basis": "From verified previous Food Line heartbeat completion on Nov 11, 2026 at 23:53:11 PST to the current run completion. Local publication and incident times distinguished; no assumed national absence from limited recall.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-11/food-line-recall-20261111T235207-0800-r11-20261112T075207Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary watch for four high-value Food Line miss classes; primary production nationwide collection remains authoritative.",
+    "target_classes": [
+      "Loss or closure of community's only, sole, last, or full-service grocery store",
+      "Storm, flood, fire, outage, or facility damage cancels emergency food distribution",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "Official new SNAP/WIC or food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire flood November 11 2026 community",
+      "\"last grocery store\" closes OR burned OR flooded November 11 2026",
+      "\"sole grocery store\" closure fire flood November 2026",
+      "\"food distribution\" canceled storm flood November 11 2026",
+      "\"food bank\" distribution cancelled Thursday November 12 2026 storm",
+      "\"food pantry\" \"closed until further notice\" November 11 2026",
+      "\"food bank\" \"temporarily closed\" flood fire November 2026",
+      "site:gov \"SNAP\" \"benefits\" \"interruption\" November 11 2026 EBT outage",
+      "WIC EBT outage vendor suspended benefits \"November 12\" 2026 official",
+      "SNAP EBT system outage food assistance cards November 12 2026 state agency",
+      "November 12 2026 food pantry emergency closure weather distribution canceled USA",
+      "November 11 2026 \"grocery store\" \"only\" \"closed\" flooding fire USA"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible": 8,
+      "inaccessible": 4,
+      "failures": [
+        {
+          "url": "https://dhs.ri.gov/",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Intermittent Rhode Island DHS access restriction, formerly accessible; alternate state agency sources accessible."
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout fetching",
+          "impact": "Recurring Guam agency timeout; territory-specific direct verification limited."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA endpoint access restriction; other primary state sources and indexed reporting accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA newsroom access restriction; alternative sites accessible."
+        }
+      ],
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://dhs.georgia.gov/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://dhs.vi.gov/news/",
+        "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/",
+        "reason": "McCaysville, Georgia IGA only-grocery closure previously found at Nov 11 16:44 PST; article timestamp Nov 11 18:51 EST; duplicate/outside this search window."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Nov 12 08:00 UTC state processor maintenance entered 'in progress', with status 'Under Maintenance' across AL, AS, GA, IA, IN, MS, MT, NJ, OH, OK, PA, SC, and UT. Maintenance and anticipated 1.5-hour downtime announced Nov 2, already acknowledged in prior watch; no separately verified unscheduled or newly reported actual payment interruption."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "USVI Nov 9 automatic replacement SNAP benefits for STT/STJ power outages predates interval; no new within-window benefit suspension in latest notices."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Nov 21 documentation requirement upcoming, not immediate access interruption."
+      },
+      {
+        "url": "https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025",
+        "reason": "Older Oct 23 tracker and structural participation trend, not an immediate new official interruption."
+      },
+      {
+        "url": "https://kfoxtv.com/news/local/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+        "reason": "Storm-related early closures occurred in September, outside observation window."
+      }
+    ],
+    "search_quality": "All 12 targeted searches completed. Fresh indexed results provided no independently verified within-window qualifying grocery, pantry, distribution, or immediate assistance interruption. Search results heavily historical; direct primary pages checked. No finding is not nationwide absence proof.",
+    "technical_status_reason": "Direct source access was limited at four of twelve endpoints: two recurring USDA HTTP 403, recurring Guam timeout, intermittent Rhode Island DHS HTTP 403. Eight primary/source pages remained readable; this is nonmaterial recurring coverage degradation, so DEGRADED rather than FAILED.",
+    "material_degradation": false,
+    "signal_assessment": "No new verifiable qualifying high-value miss-class signal found since previous heartbeat.",
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

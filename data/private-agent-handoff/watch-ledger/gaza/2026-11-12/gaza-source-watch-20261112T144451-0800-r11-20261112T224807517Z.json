@@ -1,0 +1,175 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T144451-0800-r11-20261112T224807517Z",
+  "scheduled_for": "2026-11-12T14:44:51-08:00",
+  "started_at": "2026-11-12T14:45:32-08:00",
+  "completed_at": "2026-11-12T14:48:07.517-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T13:49:02-08:00",
+    "end": "2026-11-12T14:48:07.517-08:00",
+    "previous_run_completed_at": "2026-11-12T13:49:02-08:00",
+    "basis": "Verified previous heartbeat. New means distinct material source-derived development or previously unlogged quantified update discovered after prior check; does not assert incident necessarily occurred within observation interval.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-nasser-msf-52-wounded-care-capacity-followup",
+      "canonical_source_url": "https://www.msf.org/gaza-msf-condemns-another-deadly-attack-nasser-hospital",
+      "title": "Gaza: MSF condemns another deadly attack on Nasser hospital",
+      "publisher": "Médecins Sans Frontières (MSF)",
+      "source_publication_date": "2026-11-12",
+      "source_publication_time_local": null,
+      "event_date": "2026-11-12",
+      "event_time": null,
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Patients, healthcare workers, surgical and inpatient services at a major referral hospital serving an estimated 1.3 million people in southern Gaza",
+      "exact_supporting_passage": "The airstrike hit Nasser's surgery building, killing six people, including a child and a surgeon, and injuring 52 others.",
+      "source_type": "Primary humanitarian medical NGO field statement (MSF), indexed primary-source text; full direct open returned DisabledError",
+      "classification": "follow-up",
+      "confidence": "moderate-high (primary MSF statement indexed; precise publication hour and direct page body not independently fetchable)",
+      "discovery_context": {
+        "observation_window": "2026-11-12T13:49:02-08:00 through 2026-11-12T14:48:07.517-08:00",
+        "publication_novelty": "MSF primary statement dated November 12 surfaced in this watch; publication time not available, so not claimed to have been issued strictly after previous heartbeat.",
+        "significance": "MSF states 52 people were injured in the pre-existing Nasser strike, whereas the earlier AP report recorded at least 28 injured. Treat 52 as a revised reported total, NOT 24 separately confirmed new injuries. MSF additionally reports having operated on two wounded doctors and one other patient in a separate building; emergency, radiology, laboratory and operating departments remain out of service. These are quantified primary clinical observations of a previously recorded incident, not a second strike.",
+        "verification": "First-party MSF page surfaced with full key paragraphs in indexed web search; direct page fetch failed (DisabledError). AP directly retrieved, reporting 6 deaths and at least 28 injured, with service suspension. Cross-report discrepancy is flagged; 52 has not been independently corroborated.",
+        "duplicate_guard": "Previously logged Nasser Hospital strike (6 killed), earlier >=28 injury estimate, and suspended surgical/radiology/laboratory services are NOT counted as new incidents; only MSF's newly encountered injury total and first-hand treated staff/patient detail are promoted as follow-up.",
+        "categories": [
+          "civilian_casualties",
+          "healthcare_disruption",
+          "medical_personnel",
+          "hospital_functioning_capacity"
+        ],
+        "discovery_search_query": "site:palestinercs.org OR site:msf.org \"12 November 2026\" Gaza ambulance hospital",
+        "direct_fetch_status": "DisabledError",
+        "publication_time_verified": false
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only, not the primary Gaza daily collector/publisher.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T134451-0800-r11-20261112T214902Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest site update November 11 relief-chief winter-supplies appeal; no new operational Gaza report in observed interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Canonical global emergency page accessible, no newly dated operational hospital/evacuation entry."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Established regional access failure, unchanged from previous hour."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Health Cluster country page accessible, no newly timed incident/capacity update."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza November 12 2026 humanitarian situation report access update",
+      "site:who.int Gaza November 12 2026 hospital medical evacuation healthcare update"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"PM\" Gaza \"11:\"",
+      "site:english.wafa.ps/Pages/Details/ \"13/November/2026\" Gaza killed injured",
+      "Gaza November 12 2026 latest afternoon evening civilian killed wounded Reuters AP November 13",
+      "site:un.org OR site:palestine.un.org Gaza \"12 November 2026\" humanitarian access crossing hospital",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza \"12 November 2026\" water fuel aid",
+      "Gaza November 12 2026 medical evacuation hospital ambulance Nasser service resumed WHO Red Crescent",
+      "Gaza \"November 13, 2026\" overnight killed injured airstrikes Friday local",
+      "Gaza \"12 November 2026\" 23:00 23:30 ceasefire displaced food hospital",
+      "site:english.wafa.ps \"13/November/2026\" \"Gaza\"",
+      "site:reuters.com/world/middle-east/ \"2026-11-12\" Gaza hospital ceasefire aid latest",
+      "site:palestinercs.org OR site:msf.org \"12 November 2026\" Gaza ambulance hospital",
+      "Gaza November 12 2026 Rafah crossing medical evac fuel water humanitarian trucks blockade latest"
+    ],
+    "search_method": "OCHA OPT and WHO official pages and searches first, followed by exactly 12 targeted searches in two groups of six. Direct source opening not counted as search queries.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Most recent Gaza incident in archive remains Nov 12 16:20 Gaza local; later 19:26 report is diplomatic condemnation, not a new Gaza field event."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "6 killed, at least 28 wounded, service shutdown from existing Nasser strike; used as baseline."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-msf-condemns-another-deadly-attack-nasser-hospital",
+        "result": "Nov 12 primary-source indexed statement: 52 wounded, including two doctors treated surgically and third patient; emergency/radiology/lab/OR out of service; direct URL fetch disabled."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Al-Shifa, Deir al-Balah and Jabalia casualty reports",
+        "reason": "Previously logged; no newly verified separate case."
+      },
+      {
+        "subject": "Nasser Hospital 6 deaths and pre-existing service suspension",
+        "reason": "Not a new strike; follow-up only for 52-wounded reported total and direct MSF care observations."
+      },
+      {
+        "subject": "53-signatory aid-access appeal, OCHA winter-supplies appeal",
+        "reason": "Earlier watch already logged diplomatic appeal; no confirmed crossing or aid delivery change."
+      },
+      {
+        "subject": "Fishermen detentions",
+        "reason": "Previously logged, no new detainee/release."
+      },
+      {
+        "subject": "WAFA Hebron, Salfit, other West Bank developments",
+        "reason": "Outside Gaza geography."
+      },
+      {
+        "subject": "Other retrospective/older articles surfaced by search",
+        "reason": "Event timing excludes as recycled."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "MSF",
+        "status": "DIRECT_FETCH_DISABLED",
+        "previously_observed": null,
+        "materially_worsened": false,
+        "notes": "Indexed primary source text accessible, full direct-page fetch denied."
+      },
+      {
+        "publisher": "Noncanonical WHO URL",
+        "status": "HTTP_404",
+        "previously_observed": true,
+        "materially_worsened": false,
+        "notes": "Correct canonical WHO Global URL was accessible."
+      }
+    ],
+    "status_rationale": "DEGRADED due persistent WHO regional HTTP 502 and primary MSF page direct fetch failure; substantial official and established news coverage remained. One material primary-sourced, quantified follow-up identified, not a new strike.",
+    "limitations": "MSF publication hour unknown. The reported 52 injured differs from AP's earlier at-least-28 count and should be attributed, not treated as separate new injuries. Bounded search cannot prove events did not happen.",
+    "notification_warranted": true,
+    "changes_to_production": "None: no publication, approvals, schedule or task changes."
+  }
+}

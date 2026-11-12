@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T174455-0800-recall12-20261112T014551Z",
+  "scheduled_for": "2026-11-11T17:45:22-08:00",
+  "started_at": "2026-11-11T17:44:55-08:00",
+  "completed_at": "2026-11-11T17:45:51-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T16:44:50.783-08:00",
+    "end": "2026-11-11T17:45:51-08:00",
+    "prior_check_basis": "Latest independently fetched ops/watch-ledger care-line heartbeat: care-line-watch-20261111T164328-0800-recall12-20261112T004328Z.json, completed_at 2026-11-11T16:44:50.783-08:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary healthcare-access recall for all U.S. states and territories; not the production national collector. Production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "CMS official notice table searched first and opened directly. Newest listed notice remained 2026-11-10 Advanced Urgent Care, Illinois, Limitation of CLIA cert 14D2049789. Next was 2026-11-09 Compassionate Home Health Services, Michigan, termination. No 2026-11-11 notice observed; both earlier entries are duplicate/prior-window developments."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 11, 2026\" \"hospital\" \"emergency department\" closed suspended reopened",
+      "\"November 11, 2026\" maternity obstetrics labor delivery unit closing suspension hospital",
+      "\"November 11, 2026\" rural hospital emergency services closure diversion reopening",
+      "\"November 11, 2026\" ambulance service EMS base closure suspended stopped responding",
+      "\"November 11, 2026\" air ambulance helicopter base shutdown suspension service",
+      "\"November 11, 2026\" dialysis center service closure patients",
+      "\"November 11, 2026\" behavioral health psychiatric hospital clinic suspension closed",
+      "\"November 11, 2026\" cancer oncology infusion center closure suspended",
+      "\"November 11, 2026\" primary care medical clinic abruptly closes services",
+      "\"November 11, 2026\" hospital emergency unit resumes reopens operations",
+      "\"November 11, 2026\" CMS CLIA Medicare terminated provider rescinded notice",
+      "\"November 11, 2026\" hospital ambulance dialysis closure Puerto Rico Guam US Virgin Islands Mariana American Samoa"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "No verifiable new, qualifying, nonduplicate loss, suspension, CMS action, or restoration of a previously lost essential service was identified in 16:44:50-17:45:51 PST. All twelve targeted web queries executed and yielded mostly old or irrelevant material.",
+    "reviewed_exclusions": [
+      {
+        "title": "WVU Cancer Institute opens new facility at Summersville Regional Medical Center",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "reason": "November 11 report documents new oncology/infusion expansion and November 10 ribbon-cutting; not a reopening/restoration of a previously lost essential service and event predates this watch window."
+      },
+      {
+        "title": "UNM Health cyberattack closures",
+        "url": "https://abqraw.com/post/cyber-attack-cripples-university-of-new-mexico-hospital-system-forces-closures/",
+        "reason": "Reported October 2026 cyberattack disruption, not a new November 11 current-hour access change."
+      },
+      {
+        "title": "National Park Medical Center labor and delivery closure",
+        "url": "https://katv.com/news/local/national-park-medical-center-closes-labor-and-delivery-program-clinic-obgyn-pregnancies-womens-health-doctor-isolation-support-hospitals-doctors",
+        "reason": "July 2026 closure, not new during observation window."
+      },
+      {
+        "title": "Kalamazoo-Battle Creek airport commercial air-service suspension",
+        "url": "https://wwmt.com/news/local/kalamazoo-battle-creek-international-airport-to-suspend-commercial-air-service-one-week-runway-lighting-pavement-flights-travel",
+        "reason": "Not a healthcare or air-medical service suspension; September 2026."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS table fetched and directly opened successfully.",
+      "Twelve targeted search queries executed successfully; no relevant full-text retrieval block or search failure prevented assessment.",
+      "Reviewed current dated local release in full and excluded by exact scope."
+    ],
+    "limitations": [
+      "Bounded search cannot rule out unindexed developments in all 50 states and U.S. territories.",
+      "Same-hour release and search indexing delays may produce retrospective findings.",
+      "The watch records potential misses only; production collection remains authoritative."
+    ],
+    "review_status": "No new findings to review.",
+    "publication_action": false,
+    "approval_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "exact_profile_repair.py": {
+    "original_sha256": "18fc1bf7ab45d0a647d74a9c3a5d00ccc60043be33904a4b646d2e92c41f9011",
+    "synthetic_sha256": "38193e0662c318ffd2d361f1e47f9319b1c643f90bdc5c640ef480b980ead225",
+    "changed_bindings": [
+      "ROOT",
+      "ROWS"
+    ],
+    "logic_changes": false
+  },
+  "windows_backend.py": {
+    "original_sha256": "837d23b885ac3e188d394df9ce8476151344a3e083586d6c3ed12995399c090c",
+    "synthetic_sha256": "9a66238ece943520ab3630a4a25fdda1d312e4ca4eebec8518872ae1f272e4cb",
+    "changed_bindings": [
+      "TX_PARENT",
+      "TX_NAME"
+    ],
+    "logic_changes": false
+  }
+}

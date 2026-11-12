@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T094719-0800-recall12-20261112T174900Z",
+  "scheduled_for": "2026-11-12T09:45:22-08:00",
+  "started_at": "2026-11-12T09:47:19-08:00",
+  "completed_at": "2026-11-12T09:49:00.874-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T08:44:21-08:00",
+    "end": "2026-11-12T09:49:00.874-08:00",
+    "prior_check_basis": "Read back latest provided Care Line Watch ledger heartbeat on ops/watch-ledger, completed 2026-11-12 08:44:21 PST. This run assesses newly reportable/concrete access-effect changes observable since that check; out-of-window and previously indexed items are excluded.",
+    "event_time_basis": "A source must establish a previously unreported, verifiable change newly announced/observable within the window, or a distinct essential-service change effective in the window. Publication dates were separated from underlying event dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "current_page_crawled": "2026-11-12",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, IL, Limitation of CLIA cert, 14D2049789",
+      "preceding_notice": "2026-11-09 Compassionate Home Health Services, MI, Medicare termination notice",
+      "result": "Live first-party CMS Public Notices HTML was directly accessible and lists no notices dated November 11 or 12; the November 10 notice was already known to earlier runs."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_search_recency_days": 2,
+    "targeted_searches": [
+      "\"Prevea Washington Street Health Center\" closing \"November 13\" 2026",
+      "hospital emergency department closed ambulance diversion November 12 2026 US local news",
+      "maternity labor delivery obstetrics services closed suspended November 12 2026 hospital",
+      "psychiatric behavioral health hospital service closed suspends admissions November 12 2026",
+      "dialysis oncology cancer center closing services November 12 2026 patients",
+      "primary care clinic urgent care permanent closure November 12 2026 patients",
+      "rural hospital emergency department services shut down November 12 2026 critical access rural",
+      "ambulance EMS service stopped operating station closure suspension November 12 2026 county",
+      "air ambulance helicopter medical base shut down temporarily suspended November 12 2026",
+      "hospital emergency room reopens ambulance service resumes after closure November 12 2026",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices November 12 2026 termination CLIA",
+      "November 12 2026 Puerto Rico Guam USVI Northern Mariana American Samoa hospital emergency clinic services closure reopened"
+    ],
+    "assessment": "No newly established, qualifying, nonduplicate healthcare-access loss, CMS public notice, emergency/medical transport disruption, or concrete restoration in this observation window. All 12 targeted searches returned responses. Prevea indexed notice was a known unresolved candidate from prior watch, not newly reported here.",
+    "reviewed_exclusions": [
+      {
+        "source": "Prevea Washington Street Health Center, Green Bay WI",
+        "url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "details": "Search results crawled today reproduce a first-party notice that the site will permanently close with last patient care November 13, 2026; family medicine, urgent care, lab and radiology listed. Directly opened page snapshot crawled last month omits the closing message.",
+        "reason": "Same candidate already recorded at 08:44 check; no independently established new announcement or effective closure within current window. Still merits a follow-up source/date reconciliation by production; not a new watch finding."
+      },
+      {
+        "source": "WVU Cancer Institute at Summersville Regional Medical Center, WV",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "details": "November 11 release describes ribbon-cutting on November 10 and oncology expansion.",
+        "reason": "New/expanded service, not restoration of a previously lost essential service; event predates observation window."
+      },
+      {
+        "source": "Dartmouth Health emergency/ICU telehealth, VT",
+        "url": "https://vtdigger.org/2026/08/17/dartmouth-health-says-it-needs-to-close-telehealth-services-for-emergency-and-intensive-care/",
+        "details": "August 17 reporting of planned loss.",
+        "reason": "Historical announcement, no newly verified effective interruption."
+      },
+      {
+        "source": "Maine Medical Center Sisters Heliport, ME",
+        "details": "Maintenance closure described in an earlier-month report.",
+        "reason": "Outside observation window; no newly substantiated change."
+      },
+      {
+        "source": "Territories' veterans healthcare-access reporting",
+        "url": "https://pasquines.us/2026/11/11/four-us-territories-top-military-enlistment-rankings-but-their-veterans-travel-far-for-care/",
+        "details": "November 11 article on longstanding travel burden for veterans.",
+        "reason": "No newly effective facility or service change."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices directly opened successfully and showed latest notice dated November 10.",
+      "Twelve additional targeted searches were performed, with responses across all searches.",
+      "Prevea direct page snapshot was older than its indexed search extract, leaving evidence-version discrepancy; prior-hour note already captured this candidate.",
+      "Verified prior heartbeat directly via GitHub branch."
+    ],
+    "limitations": [
+      "Bounded search is not comprehensive across all U.S. jurisdictions and territories.",
+      "Same-hour indexing lag could delay identification of local/rural developments.",
+      "Prevea last-care-date report needs live provider or dated local corroboration before promotion."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

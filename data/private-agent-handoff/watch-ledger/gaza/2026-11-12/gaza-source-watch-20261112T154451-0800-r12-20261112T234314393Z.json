@@ -1,0 +1,140 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T154451-0800-r12-20261112T234314393Z",
+  "scheduled_for": "2026-11-12T15:44:51-08:00",
+  "started_at": "2026-11-12T15:41:22-08:00",
+  "completed_at": "2026-11-12T15:43:14.393-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T14:48:07.517-08:00",
+    "end": "2026-11-12T15:43:14.393-08:00",
+    "previous_run_completed_at": "2026-11-12T14:48:07.517-08:00",
+    "basis": "Previous heartbeat retrieved from ops/watch-ledger. Newly surfaced publications were screened for distinct source-verifiable operational changes or material, not previously logged quantified follow-ups; published date alone does not establish a new event.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not authoritative daily collector or publisher.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T144451-0800-r11-20261112T224807517Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza update was Nov 11 UN relief chief winter aid appeal; no Nov 12/13 new operational update on official list."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Emergency overview accessible; no newly timed field event."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Previously documented persistent access failure."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Country page available, no newly timed Gaza operational bulletin."
+      },
+      {
+        "publisher": "WHO HeRAMS",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-10",
+        "status": "ACCESSIBLE",
+        "result": "Nov 12 monthly infographics based on health-facility data only through Oct 31; retrospective document already noted in earlier watch, no independently established recent field change."
+      }
+    ],
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation report November 12 2026 OCHA OPT",
+      "site:who.int Gaza November 12 2026 health emergency WHO hospital medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"13/November/2026\" Gaza killed injured November 13",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"Gaza\" \"10:\" PM casualties",
+      "Gaza November 12 2026 latest 23:00 24:00 airstrike civilian casualties November 13 Gaza",
+      "site:un.org OR site:palestine.un.org \"Gaza\" \"12 November 2026\" humanitarian aid crossing hospital",
+      "Gaza November 12 2026 evening Reuters AP ceasefire hospital aid",
+      "site:msf.org OR site:palestinercs.org \"13 November 2026\" Gaza hospitals ambulances",
+      "Gaza Strip 13 November 2026 01:00 02:00 killed wounded strike Friday hospital",
+      "site:english.wafa.ps \"13/November/2026\" Gaza",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza \"12 November 2026\" displaced water shelter new",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"12 Nov 2026\" \"Gaza\" medical humanitarian",
+      "Gaza Rafah Kerem Shalom crossing 12 November 2026 late fuel aid medical evacuations reopen",
+      "Gaza ceasefire negotiations 12 November 2026 late update international stabilization force Gaza"
+    ],
+    "search_method": "Official OCHA/WHO targeted searches and direct pages first; two subsequent groups of six distinct targeted searches, no further searches. Direct opens used for verification only.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest index lists Nov 12 22:05 Gaza-unrelated West Bank vegetation-removal order; latest Gaza field report remains Nov 12 16:20 local, previously logged."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Detailed coverage confirms previously logged Nasser strike and other Thursday casualty incidents, not a newly distinct event."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-israel-gaza-hospital-strike-november-12-88f4a90dad16eab5c6e859a1f0fc0f6c",
+        "result": "Previously logged Nasser strike, 10 Thursday fatalities in multiple incidents, and >50-signatory aid-access appeal; no new crossings, aid deliveries or hospital recovery established."
+      },
+      {
+        "publisher": "Washington Post",
+        "url": "https://www.washingtonpost.com/world/2026/11/12/palestinians-fear-floods-other-storm-risks-tent-cities-gazas-displaced/",
+        "result": "Nov 12 retrospective account of earlier-week floods and tent damage, not new incident in observation window."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Hospital strike and MSF revised 52-wounded total",
+        "reason": "Already recorded including MSF clinical follow-up in previous run; no separate newly verified casualty event."
+      },
+      {
+        "subject": "Deir al-Balah, Jabalia, Al-Shifa and other Nov 12 casualty incidents",
+        "reason": "Already in prior hourly heartbeat history; later recaps are duplicates."
+      },
+      {
+        "subject": "53-country aid appeal and UN winter supplies appeals",
+        "reason": "Previously logged diplomatic statements without verified operational aid/crossing change."
+      },
+      {
+        "subject": "WHO October HeRAMS infographics",
+        "reason": "Previously observed in 12:50–13:49 watch; October data cannot establish interval-specific capacity changes from accessible summary."
+      },
+      {
+        "subject": "November 7–8 floods cited in November 12 articles",
+        "reason": "Retrospective coverage of pre-existing casualties and damage."
+      },
+      {
+        "subject": "New WAFA West Bank items and unrelated international stories",
+        "reason": "Not an in-scope Gaza development."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED because WHO EMRO continues returning HTTP 502, consistent with multiple preceding runs; OCHA OPT, WHO Global, Health Cluster, primary WAFA and established reporting remained accessible. No newly qualifying distinct development verified.",
+    "limitations": "Bounded search with indexing and reporting latency cannot establish complete absence of events, and public source publication times can be unknown. Observation time ends at completed_at. No new deterioration in access was established.",
+    "notification_warranted": false,
+    "changes_to_production": "None; production, publication, approvals, schedules and task enabled state unchanged.",
+    "scheduling_note": "Nominal scheduled_for follows hourly RRULE at :44:51 Pacific; this noninteractive execution began before the upcoming nominal boundary."
+  }
+}

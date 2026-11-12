@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T124451-0800-r11-20261112T205016Z",
+  "scheduled_for": "2026-11-12T12:44:51-08:00",
+  "started_at": "2026-11-12T12:48:30-08:00",
+  "completed_at": "2026-11-12T12:50:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T11:48:04-08:00",
+    "end": "2026-11-12T12:50:16-08:00",
+    "previous_run_completed_at": "2026-11-12T11:48:04-08:00",
+    "basis": "Authenticated preceding hourly heartbeat. Screened publications and event dates for genuinely incremental qualifying changes; retrospective releases without verified new operational change were not promoted to findings.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value Gaza recall only; primary daily Gaza collector/publisher remains authoritative.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T114451-0800-r11-20261112T194804Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage checked first. Most recent listed news item Nov 11 winter-supplies appeal, not a new confirmed operational change during this interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "INACCESSIBLE",
+        "result": "Direct endpoint timed out; repeated/previously documented regional WHO restriction, with no established material deterioration."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO global emergency page accessible. Newly released WHO HeRAMS October infographics posted Nov 12, but data end Oct 31 and no new hour-specific health service capacity change verified from publication landing page."
+      },
+      {
+        "publisher": "WHO Global publications",
+        "url": "https://www.who.int/publications/m/item/herams-opt-gaza-infographics-2026-10",
+        "status": "ACCESSIBLE_LANDING_PAGE_PDF_TOO_LARGE",
+        "result": "Nov 12 official release of 50-page HeRAMS October 2026 infographic report identified. Release covers Gaza facility functioning/barriers using data through Oct 31; source PDF could not be inspected through web retrieval due 12.3MB document-length limit. Deferred as background/baseline evidence, not a verified new operational change."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "No new dated update in interval on landing page."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org \"12 Nov 2026\" Gaza humanitarian situation report shelters aid",
+      "site:who.int Gaza \"12 November 2026\" hospital medical evacuation emergency",
+      "site:english.wafa.ps Gaza \"12/November/2026\" \"PM\" killed injured hospital",
+      "Gaza November 12 2026 latest killed wounded strike Thursday evening Reuters AP AFP",
+      "site:un.org \"12 November 2026\" Gaza aid crossing medical evac briefing",
+      "Gaza November 12 2026 Red Crescent ambulance hospital health medical evacuations WHO fuel",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"08:\" \"PM\" Gaza",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" \"09:\" \"PM\" Gaza",
+      "site:unrwa.org Gaza \"12 November 2026\" shelter aid latest",
+      "site:unicef.org Gaza \"12 November 2026\" water electricity displacement children",
+      "site:wfp.org Gaza 12 November 2026 food access shipments distribution",
+      "Gaza November 12 2026 10pm local Thursday latest crossings ceasefire patients detainees new developments"
+    ],
+    "search_method": "OCHA OPT and WHO were checked directly first. Exactly 12 additional targeted web search queries were executed (6+6); direct source opens/clicks for verification were not additional targeted searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Nov 12 entry at 22:05 Gaza time concerned West Bank vegetation removal; latest Gaza event reporting remained Nov 12 16:20 three strike deaths, already recorded in earlier watch."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Nasser Hospital six deaths and service disruption recorded in earlier watches; no confirmed new increment."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Nasser Hospital at least 28 wounded, surgical services suspended and six deaths: prior-watched event without new confirmed changes."
+      },
+      {
+        "publisher": "UN Palestine",
+        "url": "https://palestine.un.org/en/326143-gaza-winter-aid-%E2%80%98no-more-delay%E2%80%99-fletcher-tells-governments-stalling-support",
+        "result": "Nov 12 publication reiterates prior OCHA Nov 11 winter supplies appeal, not new relief entry or crossing change."
+      },
+      {
+        "publisher": "Houston Chronicle",
+        "url": "https://www.houstonchronicle.com/health/article/houston-medical-supplies-shipment-gaza-22525709.php",
+        "result": "Published Nov 11. Nonprofit states 15 tons of medical equipment arrived late October. Real access evidence but predates this observation window and is not newly published or verified as a new hour-level operation; excluded from positive hourly findings."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Hospital strike, injuries and surgery/radiology/lab disruptions",
+        "reason": "Previously entered in earlier hourly watch; no verified new incremental capacity or casualty update."
+      },
+      {
+        "subject": "Al-Shifa, Deir al-Balah and Jabalia strike deaths; Gaza fishermen detention",
+        "reason": "Previously recorded, no new verified increment."
+      },
+      {
+        "subject": "53 countries and organizations humanitarian access appeal",
+        "reason": "Previously recorded; no actual new crossing/aid access change confirmed."
+      },
+      {
+        "subject": "WHO HeRAMS Gaza October report posted Nov 12",
+        "reason": "New retrospective capacity evidence with data ending Oct 31, but PDF too large for direct web inspection; cannot establish a new changed facility status within the hourly observation period. Flag for primary collector historical capacity tracking."
+      },
+      {
+        "subject": "Medical Bridges supply arrival late October",
+        "reason": "Article dated Nov 11; arrival late October; previously available before this hour."
+      },
+      {
+        "subject": "WAFA Nov 12 22:05 West Bank vegetation order",
+        "reason": "Out of scope: no documented Gaza civilian impact."
+      },
+      {
+        "subject": "UN/UNOCHA November 11 winter relief appeal republished November 12",
+        "reason": "Recycled advocacy, no new delivery or crossing operation verified."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "TIMEOUT",
+        "previously_observed": true,
+        "materially_worsened": false,
+        "notes": "Known regional restriction persisted. WHO Global and Health Cluster accessible."
+      },
+      {
+        "publisher": "WHO HeRAMS PDF",
+        "status": "WEB_FETCH_SIZE_LIMIT",
+        "previously_observed": null,
+        "materially_worsened": false,
+        "notes": "12.3 MB official PDF exceeded retrieval size. Publication page accessible; no quantitative change claims drawn from inaccessible PDF."
+      }
+    ],
+    "status_rationale": "DEGRADED due to known WHO Eastern Mediterranean endpoint timeout and supplemental HeRAMS PDF retrieval limitation; useful OCHA, WHO Global, WHO Health Cluster, WAFA, AP, Reuters and UN coverage remained. Neither coverage restriction established material worsening compared to earlier runs. No unique qualifying hour-specific on-the-ground development verified.",
+    "limitations": "A negative finding in this bounded recall does not establish that no Gaza incident occurred; source indexing and event timestamps lag. October HeRAMS baseline may merit non-hourly primary-collector assessment, but no uninspected PDF statistics are asserted.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publication, approval, scheduling or task changes."
+  }
+}

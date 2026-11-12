@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T084451-0800-r11-20261112T165158755Z",
+  "scheduled_for": "2026-11-12T08:44:51-08:00",
+  "started_at": "2026-11-12T08:49:25-08:00",
+  "completed_at": "2026-11-12T08:51:58.755-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T07:45:39-08:00",
+    "end": "2026-11-12T08:51:58.755-08:00",
+    "previous_run_completed_at": "2026-11-12T07:45:39-08:00",
+    "basis": "Verified previous watch heartbeat on ops/watch-ledger; novelty assessed by report publication and prior-watch exclusions; exact event hour not established.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-53-country-joint-gaza-aid-access-statement",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176882",
+      "title": "53 countries and organizations urge Israel to allow unhindered humanitarian aid into Gaza",
+      "publisher": "WAFA",
+      "source_publication_date": "2026-11-12",
+      "source_publication_time_local": "18:04 (WAFA site; timezone offset not explicitly provided)",
+      "event_date": "2026-11-12",
+      "event_time": null,
+      "location": "United Nations Headquarters, New York, United States; requested changes concern Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Gaza civilians; humanitarian aid entry, shelter, fuel, water/sanitation, healthcare, medical evacuation, crossings",
+      "exact_supporting_passage": "the countries urged Israel to approve the entry of additional essential supplies, including items classified as \"dual-use,\"",
+      "source_type": "Established Palestinian news agency reporting a 53-signatory joint diplomatic statement delivered by the UK Permanent Representative at the UN",
+      "classification": "new",
+      "confidence": "moderate",
+      "discovery_context": {
+        "observation_window": "2026-11-12T07:45:39-08:00 through 2026-11-12T08:51:58.755-08:00",
+        "publication_novelty": "WAFA item dated 12 November, 18:04 on its site, absent from the prior heartbeat's checked listings; precise event time not independently verified.",
+        "significance": "New joint diplomatic appeal on aid access, dual-use approval, medical referrals to West Bank/East Jerusalem, and crossing reopening. Not an actual verified change in aid/crossing operations.",
+        "verification": "Direct WAFA article opened; 53 signatories and remarks reported by WAFA; underlying multi-state primary statement not independently retrieved in bounded window.",
+        "duplicate_guard": "Distinct from OCHA 11 November winter supplies appeal and 12 November morning reports on casualties, Nasser hospital, Al-Shifa, Jabalia, Deir al-Balah, and fishermen detentions.",
+        "categories": [
+          "aid_access",
+          "medical_evacuation",
+          "crossings",
+          "diplomatic_action"
+        ]
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza collector/publisher authoritative.",
+    "prior_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T074451-0800-r11-20261112T154539812Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest visible 11 November winter supplies appeal; no new OCHA Gaza item during current window. OCHA-specific indexed check completed."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Canonical global Gaza/OPT situation page accessible; no dated 12 November health update visible. Initial alternate URL returned 404."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502 Bad Gateway, same previously documented regional restriction, without observed worsening."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org 12 November 2026 Gaza crossing aid 12 Nov",
+      "site:who.int 12 November 2026 Gaza medical evacuations hospital",
+      "site:unrwa.org \"12 November 2026\" Gaza tents displaced food",
+      "site:unicef.org \"12 November 2026\" Gaza water children medicine",
+      "site:english.wafa.ps \"12/November/2026\" Gaza killed wounded Thursday 2026",
+      "Gaza November 12 2026 new strike killed wounded 16:00 GMT 17:00 GMT Reuters AP",
+      "Gaza 12 November 2026 evening local Gaza casualties Deir al Balah Jabalia Khan Younis",
+      "Gaza November 12 2026 Rafah Kerem Shalom crossings aid fuel water trucks blocked",
+      "Gaza November 12 2026 Nasser Al Shifa hospital capacity surgical ambulances evacuations",
+      "Gaza November 12 2026 fishing detainees hostages exchange ceasefire negotiations Israel Hamas",
+      "Gaza 12 November 2026 storm displaced flood deaths tents WFP UN aid",
+      "site:reliefweb.int Gaza 12 November 2026 humanitarian situation health aid operations"
+    ],
+    "searches": "12 additional fast searches with recency one day, plus two OCHA OPT / WHO official-first discovery searches and direct official site visits; no more than 12 additional searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176882",
+        "result": "18:04 local dated new 53-member diplomatic appeal, qualifying event; no change in actual crossing operations verified."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176880",
+        "result": "16:20 local three-death roundup including Al-Shifa, Deir al-Balah and Jabalia incidents already captured earlier, excluded as duplicate."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest visible item November 11, no fresh report."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Global page accessible without fresh publication."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Hospital six deaths, at least 28 injuries and surgical-capacity suspension",
+        "reason": "Previously recorded; no new verified change."
+      },
+      {
+        "subject": "Al-Shifa vicinity, Deir al-Balah vehicle and Jabalia cemetery airstrikes",
+        "reason": "Previously recorded casualties and damage; WAFA 16:20 local roundup recycled earlier incidents."
+      },
+      {
+        "subject": "Gaza fishermen detentions, storm displacement and winter stock shortages",
+        "reason": "Previously recorded; no discrete new situation change verified."
+      },
+      {
+        "subject": "UK representative's 53-state appeal implementation outcomes",
+        "reason": "No actual entry clearance, access restoration, evacuation or crossing change established; this is an advocacy action, not an operational outcome."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO EMRO HTTP 502; useful official and search coverage retained; one new distinct diplomatic aid-access action found.",
+    "limitations": "A single news-agency report was available for the 53-signatory statement in the bounded window; no primary joint text obtained. WAFA's offset for site timestamps is not explicitly given. WHO regional reporting inaccessible; indexing delays remain possible.",
+    "notification_warranted": true,
+    "changes_to_production": "None. No publication, approval, schedule changes, runners, production branches or credentials touched."
+  }
+}

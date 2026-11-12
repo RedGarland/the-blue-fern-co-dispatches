@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T214451-0800-r11-20261112T054701265Z",
+  "scheduled_for": "2026-11-11T21:44:51-08:00",
+  "started_at": "2026-11-11T21:45:23-08:00",
+  "completed_at": "2026-11-11T21:47:01.265-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T20:44:18.541-08:00",
+    "end": "2026-11-11T21:47:01.265-08:00",
+    "previous_run_completed_at": "2026-11-11T20:44:18.541-08:00",
+    "basis": "Verified preceding ops/watch-ledger heartbeat. Check for newly traceable developments or substantive follow-ups since prior completion; do not count preexisting Gaza events or revised aggregate reports without an attributable update.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch; primary Gaza production collector and publisher remain authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T204206-0800-r11-20261112T044418541Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed OCHA Gaza content remains 11 November appeal for winter supplies. No newly posted relevant update in this observation window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway on direct check; ongoing restriction documented in prior hourly watches, not a newly worsened failure."
+      },
+      {
+        "publisher": "WHO global situation hub fallback",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza health-service, hospital or medical-evacuation article in the website's listed latest news/publications."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 dawn Reuters AP Nasser Hospital latest death toll overnight 07:30 Gaza time",
+      "site:english.wafa.ps 12 November 2026 Gaza Thursday morning killed wounded strikes shelter",
+      "site:aa.com.tr/en/middle-east Gaza Nov 12 2026 early Thursday humanitarian latest",
+      "site:aljazeera.com/news/2026/11/12 Gaza latest Thursday morning hospital ceasefire attacks",
+      "site:un.org OR site:ochaopt.org Gaza Nov 12 2026 aid crossings flooding displacement new update",
+      "site:who.int OR site:emro.who.int Gaza Nov 12 2026 medical evacuations hospital supplies",
+      "site:palestinercs.org OR site:msf.org OR site:icrc.org Gaza November 12 2026 hospital ambulance fuel evacuation 07:00 local",
+      "site:unrwa.org OR site:wfp.org OR site:unicef.org Gaza 12 November 2026 food water floods shelter latest",
+      "Gaza Thursday 12 November 2026 07 08 morning civilian deaths infrastructure Khan Younis Rafah Reuters AP",
+      "Gaza 12 November 2026 Thursday ceasefire negotiations hostages detainees exchange Israeli operations civilians new",
+      "Gaza 12 November 2026 Thursday Rafah Kerem Shalom crossing medical evacuation aid fuel trucks latest",
+      "Gaza 12 November 2026 08:00 local humanitarian winter rainfall collapsed buildings medical clinic water sewage new"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza item dated 11 November 2026 20:42 Gaza-local, cumulative death-toll figure already observed in preceding watch; no new Gaza-specific item on latest feed."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Reports six killed, including surgeon Rezik Abushira, and 20 wounded, with damage to surgery department at Nasser Hospital; six deaths and surgical damage already documented in preceding hourly checks."
+      },
+      {
+        "publisher": "OCHA OPT heavy-rain assessment",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "result": "9 November retrospective assessment about 6–8 November flooding. No new within-window event."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "reason": "Nasser Hospital strike and six-death update previously recorded; Reuters still reports six, not a separate incident."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "reason": "Older storm assessment previously covered; no newly verified consequence in this search window."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "reason": "November 11 cumulative Gaza death-toll and earlier casualty reports precede current window; aggregate totals not independently novel events."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "search_quality_notes": "Exactly 12 additional targeted web searches after OCHA OPT and WHO first checks; searches returned substantial older or previously known material despite recency constraints. Official direct pages used for date filtering and duplicate suppression.",
+    "status_rationale": "DEGRADED owing to WHO regional site persistent HTTP 502; WHO global site and OCHA OPT available. Restriction documented in previous watches and no new material deterioration.",
+    "limitations": "Some early 12 November Gaza-local reports could emerge after this check; reported updates without verified update timestamps were not counted. Relative Gaza reporting dates reconciled to 11 November America/Los_Angeles watch window.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publication, approvals, schedule or task status changes."
+  }
+}

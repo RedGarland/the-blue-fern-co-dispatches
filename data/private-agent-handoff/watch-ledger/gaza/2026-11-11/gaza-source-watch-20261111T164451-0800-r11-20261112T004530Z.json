@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T164451-0800-r11-20261112T004530Z",
+  "scheduled_for": "2026-11-11T16:44:51-08:00",
+  "started_at": "2026-11-11T16:45:30-08:00",
+  "completed_at": "2026-11-11T16:47:33.519-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T15:42:34.388-08:00",
+    "end": "2026-11-11T16:47:33.519-08:00",
+    "previous_run_completed_at": "2026-11-11T15:42:34.388-08:00",
+    "basis": "Authenticated previous Gaza watch ledger completed_at; identify material new reporting/follow-up observed during this bounded window, not cumulative re-reporting or new incident from the previously logged hospital strike.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-nasser-hospital-strike-five-dead-surgeon-surgery-damage-reuters-followup-20261111",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+      "title": "Israeli strike on southern Gaza hospital kills five, Gaza civil defence says",
+      "publisher": "Reuters",
+      "source_publication_date": "2026-11-11",
+      "source_publication_at": "2026-11-11T23:26:00Z",
+      "source_update_at": null,
+      "event_date": "2026-11-12",
+      "event_at": null,
+      "location": "Nasser Hospital, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Reuters now reports at least five killed (one more than prior four), including surgeon Rezik Abushira, and 20 injured, and extensive damage to the surgery department. Anadolu independently quotes the hospital director describing intensive care and surgical-ward damage but cites four deaths. Facility service shutdown, surgery continuity, identities or civilian/combatant status of other victims, and exact incident time remain unverified.",
+      "exact_supporting_passage": "hit the surgery department at Nasser Hospital, causing extensive damage.",
+      "source_type": "established_international_news_agency_attributing_to_Gaza_Civil_Defence_and_medics",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_observed_at": "2026-11-12T00:47:33.519Z",
+        "discovery_method": "First of 12 targeted post-official searches identified updated Reuters report, opened directly; contemporaneous Reuters syndication and Anadolu item cross-checked.",
+        "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T154451-0800-r11-20261111T234008Z.json",
+        "previous_heartbeat_authenticated_read": true,
+        "change_from_prior": "Prior heartbeat reported Nasser Hospital strike with at least four deaths and unspecified several injuries; Reuters now reports five deaths, 20 injuries, identifies surgeon Rezik Abushira as among the dead, and attributes extensive surgery department damage to Gaza Civil Defence.",
+        "source_timestamp_basis": "Reuters webpage still displays original 11 Nov 23:26 UTC publication timestamp and does not disclose a precise update time. Reuters syndication at Straits Times is timestamped 12 Nov 07:48 Singapore (11 Nov 15:48 PST) and updated 08:16 Singapore (16:16 PST); full five-death and facility-damage version visible in current copy. Treat as newly observed material follow-up, not proof that the incident happened after previous check.",
+        "supporting_publication": "https://www.straitstimes.com/world/middle-east/israeli-strike-on-southern-gaza-hospital-kills-five-gaza-civil-defence-says",
+        "related_reporting": "https://www.aa.com.tr/en/middle-east/israeli-airstrike-kills-4-at-nasser-hospital-in-southern-gaza/4121545",
+        "overlap_warning": "Same Nasser Hospital incident already logged previous hour. This finding updates its impact; the five fatalities must NOT be added to the previous four.",
+        "independent_confirmation": "Anadolu also reports extensive damage to surgical and intensive-care wards according to hospital director, but quotes four deaths and partly overlaps Gaza Civil Defence source. No independent confirmation of five-death count or operating status.",
+        "qualification": "Material newly reported casualty and healthcare-facility-impact details within recall watch; not a new distinct strike, no production/publication authorization."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall; primary production collector/publisher authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T154451-0800-r11-20261111T234008Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest update remains 11 November UN humanitarian chief winter-supply entry appeal; no new in-window item."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Repeat pre-existing WHO regional endpoint failure, no evidence of newly worsened coverage.",
+        "global_alternative": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "global_alternative_status": "ACCESSIBLE",
+        "global_alternative_result": "Global WHO conflict hub accessible, latest news listing has no new 11 Nov/12 Nov oPt operational item."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 00:00 UTC Reuters hospital Nasser airstrike latest followup victims medical services",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza killed wounded hospital",
+      "site:apnews.com Gaza \"November 11, 2026\" \"hospital\" \"late\" OR \"Thursday\"",
+      "site:aljazeera.com/news/2026/11/12 Gaza airstrike hospital latest civilian aid",
+      "site:un.org Gaza \"12 November 2026\" humanitarian crossing casualties relief",
+      "site:unrwa.org OR site:unicef.org Gaza \"11 November 2026\" \"12 November 2026\" tents water children",
+      "site:wfp.org Gaza \"12 November 2026\" food trucks aid access",
+      "site:msf.org OR site:icrc.org Gaza \"12 November 2026\" medical hospital ambulance",
+      "site:palestinercs.org Gaza November 12 2026 ambulance patients Nasser hospital surgery attack",
+      "Gaza hospital Nasser November 12 2026 five killed surgeon Abushira hospital operating services 00:00 UTC",
+      "Gaza Rafah Kerem Shalom crossing November 12 2026 aid entry blocked fuel medical evacuation update",
+      "Gaza ceasefire November 12 2026 late November 11 new hostage detainees negotiation military strike civilians 00:00 UTC"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Updated current report: five dead including surgeon, 20 wounded, surgery department extensive damage; original published time unchanged, update time missing."
+      },
+      {
+        "publisher": "The Straits Times (Reuters syndication)",
+        "url": "https://www.straitstimes.com/world/middle-east/israeli-strike-on-southern-gaza-hospital-kills-five-gaza-civil-defence-says",
+        "result": "Reuters syndication publication 12 Nov 07:48 SGT, update 08:16 SGT, corroborates existence of updated five-death and damage copy during interval."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-airstrike-kills-4-at-nasser-hospital-in-southern-gaza/4121545",
+        "result": "Hospital director reported extensive intensive-care and surgical ward damage, while the agency quotes four deaths. Do not merge casualty numbers."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "No new 12 Nov Gaza-specific report displayed at time of check; 11 Nov casualties already logged."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "reason": "Old 11 Nov appeal previously reviewed, no new in-window logistics event."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/11/israeli-strikes-hit-tent-camp-as-five-killed-in-gaza",
+        "reason": "Wednesday Gaza City deaths already covered in earlier watch, not additive."
+      },
+      {
+        "url": "https://www.reuters.com/business/environment/four-killed-gaza-after-sand-embankment-collapses-tents-2026-11-09/",
+        "reason": "Older storm incident, no newly timed update."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/hamilton-urges-israel-let-gaza-aid-after-rafah-visit-2026-11-11/",
+        "reason": "Advocacy comments and observations, not a confirmed new in-window crossing change or delivery count."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED: regional WHO Palestine news returns HTTP 502, persistent previously documented limitation; OCHA and global WHO accessible; targeted searching completed.",
+    "limitations": "Reuters report's update timestamp unavailable. Reported casualties and infrastructure damage not independently verified with separate primary sources. In-window discovery proven; exact time of Reuters editorial revision cannot be established. Hospital service interruption not confirmed.",
+    "notification_warranted": true,
+    "changes_to_production": "None. No approval, publishing, scheduler, or automation changes."
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261112T044937-0800-r11-20261112T124937Z",
+  "scheduled_for": "2026-11-12T04:45:54-08:00",
+  "started_at": "2026-11-12T04:49:37-08:00",
+  "completed_at": "2026-11-12T12:51:29.219Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-12T11:51:01.306Z",
+    "end_at": "2026-11-12T12:51:29.219Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "basis": "Since verified previous Food Line Source Watch heartbeat completed at 2026-11-12 03:51:01 PST; targeted newly reported or changed high-value access-loss signals only.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-12/food-line-recall-20261112T034859-0800-r11-20261112T114859Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall for high-value miss classes only; production nationwide collection is authoritative.",
+    "target_classes": [
+      "Closure/loss/fire/disaster affecting only, sole, last, or full-service grocery in a community",
+      "Cancellation/suspension of emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption causing immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" flood fire November 2026 United States",
+      "\"sole grocery store\" damaged closed storm November 12 2026",
+      "\"last grocery store\" closure fire November 2026 town",
+      "\"food distribution\" canceled storm November 12 2026 food bank",
+      "\"food pantry\" \"closed\" \"flood\" November 2026",
+      "\"food bank\" \"suspended\" operations emergency November 2026",
+      "SNAP EBT outage benefits interrupted state agency November 12 2026",
+      "WIC benefits interrupted system outage November 12 2026 state",
+      "November 12 2026 grocery store only store closed fire flood rural town USA",
+      "November 12 2026 food bank pantry distribution cancelled canceled weather storm power outage",
+      "November 12 2026 food pantry closure sudden emergency services suspended United States",
+      "November 12 2026 SNAP WIC EBT benefits outage official state agency interrupted"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_result_limitation": "Search indexing returned predominantly old or nonqualifying stories even with November 12 2026 terms; absence of new findings is not proof of nationwide absence.",
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible": 9,
+      "inaccessible": 3,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://dhs.georgia.gov/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://dhs.ri.gov/",
+        "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring access restriction; official state agency and web-index coverage remain usable."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring access restriction; no new USDA newsroom notice independently verified."
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timed out",
+          "impact": "Recurring primary Guam direct-source gap; no new verified Guam disruption found via targeted indexed coverage."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/",
+        "reason": "McCaysville, Georgia sole grocery IGA flood loss was captured Nov 11 16:44 PST; no new distinct event or access consequence in this hourly interval."
+      },
+      {
+        "url": "https://www.walb.com/2026/11/11/mccaysville-businesses-cleanup-start-over-after-devastating-flooding/",
+        "reason": "Additional McCaysville flood recovery reporting concerns the same previously captured event; not a new distinct qualifying signal."
+      },
+      {
+        "url": "https://dailyprovo.com/ut/provo/news/2026-11-05/story-food-bank",
+        "reason": "Provo Community Action Services and Food Bank reported closed Nov 1, coverage Nov 5; historical event prior to hourly observation window."
+      },
+      {
+        "url": "https://provo.com/news/utah-county-warming-center-community-action-closure-november-2026/",
+        "reason": "Nov 6 background on Provo food bank closure; no verified newly developing closure in current interval."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Previously announced multistate EBT processor maintenance ran Nov 12 08:00-12:00 UTC and is marked completed at 12:00 UTC; no new unplanned interruption or extension. Connecticut Nov 15 conversion previously announced Aug 20."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Shepard Building and Pawtucket DHS offices still have undated pest-treatment remote service model with telephone, portal and alternative regional services; no verifiable new disruption since previous check."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Nov 21 housing and utility proof change is prospective and not an immediate new interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "No newly dated change in longstanding phone processing delays."
+      },
+      {
+        "url": "https://wck.org/news/central-florida-floods/",
+        "reason": "Nov 4 disaster meal response does not state newly canceled emergency food distribution."
+      }
+    ],
+    "interpretation": "No independently verified new qualifying signal in this interval. DEGRADED solely because of recurring USDA direct-page HTTP 403 and Guam direct-page timeout; 9 of 12 source checks accessible and all 12 targeted searches returned, so this is a nonmaterial recurring gap rather than a new material failure.",
+    "publication_or_approval_changes": false,
+    "production_collection_modified": false,
+    "schedule_or_task_changes": false
+  }
+}

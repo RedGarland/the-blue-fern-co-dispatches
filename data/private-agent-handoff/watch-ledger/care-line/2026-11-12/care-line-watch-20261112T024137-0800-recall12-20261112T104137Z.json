@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T024137-0800-recall12-20261112T104137Z",
+  "scheduled_for": "2026-11-12T02:45:22-08:00",
+  "started_at": "2026-11-12T02:41:37-08:00",
+  "completed_at": "2026-11-12T02:43:49.484-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T01:50:16-08:00",
+    "end": "2026-11-12T02:43:49.484-08:00",
+    "prior_check_basis": "Exact completed_at of the latest pre-run Care Line heartbeat on ops/watch-ledger, care-line-watch-20261112T014926-0800-recall12-20261112T095016Z.json.",
+    "event_time_basis": "Newly verifiable developments appearing after the prior completed check, with publication and effect dates distinguished."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; the primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_result": "The official CMS Public Notices table still begins with Advanced Urgent Care (Illinois), November 10, 2026 CLIA certificate limitation (14D2049789), followed by Compassionate Home Health Services (Michigan), November 9, 2026 termination. No November 11 or 12 notice was present at inspection."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspension shut down November 12 2026 US",
+      "hospital maternity labor delivery obstetrics unit closing November 11 12 2026",
+      "rural hospital emergency services suspended closed overnight November 12 2026",
+      "behavioral psychiatric inpatient mental health facility closure suspension November 12 2026",
+      "dialysis treatment center closure suspension patients November 12 2026",
+      "oncology cancer center clinic closure suspension care November 12 2026",
+      "primary care practice clinic sudden closure patients November 12 2026",
+      "ambulance EMS station base closure ambulance service suspended November 12 2026",
+      "air ambulance helicopter medical flight base closed grounded suspended November 12 2026",
+      "hospital ER birthing dialysis unit reopened restored services November 12 2026",
+      "site:gov November 11 2026 hospital health service closed suspended patients state department of health",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital clinic ambulance service closure November 12 2026"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "Twelve targeted recent searches covering essential facility closures/suspensions, emergency and rural losses, behavioral health, dialysis, oncology, primary care, EMS and air-medical bases, reopenings/restorations, state notices and U.S. territories. Returned reports did not substantiate a newly reported/effective, nonduplicate, qualifying healthcare-access event within this window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Lane Regional closing Labor and Delivery Unit",
+        "publisher": "WAFB",
+        "url": "https://www.wafb.com/2026/10/07/lane-regional-closing-labor-delivery-unit/",
+        "reason": "October 7, 2026 report of October 11 closure; older than this window."
+      },
+      {
+        "title": "Jersey City’s Heights University Hospital Delays Emergency Room Closure Two Weeks",
+        "publisher": "The Hoboken Girl",
+        "url": "https://www.hobokengirl.com/heights-university-hospital-jersey-city-close/",
+        "reason": "February 2026 announcement and March service loss, not new."
+      },
+      {
+        "title": "McKenzie-Willamette restores labor and delivery services with new OB-GYN hires",
+        "publisher": "KLCC",
+        "url": "https://www.klcc.org/health-medicine/2025-11-11/mckenzie-willamette-restores-labor-and-delivery-services-with-new-ob-gyn-hires",
+        "reason": "Restoration was reported November 11, 2025, not in 2026."
+      },
+      {
+        "title": "Centra South Side Community Hospital to close labor and delivery unit in Farmville",
+        "publisher": "Virginia Mercury",
+        "url": "https://virginiamercury.com/2025/11/07/centra-south-side-community-hospital-to-close-labor-and-delivery-unit-in-farmville/",
+        "reason": "November 7, 2025 report; historical, not a new event."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices read before the 12 targeted searches.",
+      "Latest existing heartbeat was fetched and read on the requested ops/watch-ledger branch before establishing the search start.",
+      "CMS and targeted web searches returned without observable access failure."
+    ],
+    "limitations": [
+      "Search index and publication latency can conceal reports from the current hour.",
+      "Bounded search does not ensure exhaustive coverage of every U.S. jurisdiction or territory.",
+      "The nominal scheduled minute (02:45:22 PST) is later than the automation invocation timestamp (02:41:37 PST); both preserved without altering the schedule."
+    ],
+    "review_status": "No new qualifying finding; none pending_review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

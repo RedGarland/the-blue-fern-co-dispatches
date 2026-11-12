@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T074914-0800-recall12-20261112T154914Z",
+  "scheduled_for": "2026-11-12T07:45:22-08:00",
+  "started_at": "2026-11-12T07:49:14-08:00",
+  "completed_at": "2026-11-12T07:50:42.274-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T06:51:12.534-08:00",
+    "end": "2026-11-12T07:50:42.274-08:00",
+    "prior_check_basis": "Verified prior completed heartbeat on ops/watch-ledger, care-line-watch-20261112T064935-0800-recall12-20261112T144935Z, reported completed_at 06:51:12.534 PST; checked for developments newly verifiable since that check and excluded older events/duplicate reporting.",
+    "event_time_basis": "Observed/published since prior check; compared article publication with actual announced/effective service-change dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch. National production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, Limitation of CLIA cert, #14D2049789",
+      "other_recent_notice": "2026-11-09 Compassionate Home Health Services, MI, termination",
+      "result": "CMS table accessed before 12 targeted searches; no newly dated November 11–12 notice found."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_search_recency_days": 2,
+    "targeted_searches": [
+      "November 12 2026 hospital emergency department shutdown suspended services rural hospital United States",
+      "November 12 2026 labor delivery maternity unit closed suspension hospital USA",
+      "November 12 2026 psychiatric behavioral health hospital admissions suspended closed",
+      "November 12 2026 dialysis center oncology clinic closure patients service suspended",
+      "November 12 2026 ambulance service station base closure suspension emergency medical services",
+      "November 12 2026 air ambulance helicopter base shutdown service closure United States",
+      "Nov 11 Nov 12 2026 rural emergency department temporarily closed diverted patients ambulance United States",
+      "Nov 11 Nov 12 2026 primary care clinic closing immediately patients displaced",
+      "Nov 11 Nov 12 2026 hospital emergency department reopens after closure maternity services restored",
+      "Nov 11 Nov 12 2026 Medicare CMS termination provider rescission CLIA suspension notice state",
+      "Nov 11 Nov 12 2026 Guam Puerto Rico US Virgin Islands American Samoa hospital clinic service suspension",
+      "November 12 2026 EMS ambulance district shutting down station emergency response service local news"
+    ],
+    "assessment": "No new qualifying nonduplicate healthcare-access service closure/suspension, emergency/rural loss, EMS/air-medical base loss, effective restoration, or CMS action verified for this observation window.",
+    "reviewed_exclusions": [
+      {
+        "title": "Teton County Voters Approve Levy That Could Double St. John's Health Tax Revenue as Rural Hospitals Face Losses",
+        "publisher": "Medical Daily",
+        "published_date": "2026-11-12",
+        "reason": "Tax levy and financial capacity discussion, not a newly effective closure/restoration or loss of patient services."
+      },
+      {
+        "title": "Sharon Regional's license revoked after unpaid electric bill, forcing Pennsylvania hospital to close",
+        "publisher": "Medical Daily",
+        "published_date": "2026-11-10",
+        "reason": "Previously reported state order Nov 4, emergency department suspension Nov 6, expected license action Nov 17; outside observation and duplicate."
+      },
+      {
+        "title": "Roseland Community Hospital labor and delivery unit closure",
+        "publisher": "ABC7 Chicago",
+        "published_date": "2026-10-28",
+        "reason": "Historical/previously announced, not newly established in this hour."
+      },
+      {
+        "title": "Fierce Healthcare layoff tracker: Ascension and Kootenai Health",
+        "publisher": "Fierce Healthcare",
+        "published_date": "2026-11-10",
+        "reason": "Staffing reductions alone do not establish concrete essential-service change."
+      },
+      {
+        "title": "Beaufort County takes over Chocowinity ambulance service as town-run EMS shuts down",
+        "publisher": "WCTI",
+        "published_date": "2026-07-01",
+        "reason": "Old EMS transition with replacement coverage; outside observation window."
+      },
+      {
+        "title": "Local initiative restores power, water supply to East Darfur hospital",
+        "publisher": "Radio Tamazuj",
+        "published_date": "2026-11-12",
+        "reason": "Sudan; outside United States and territories."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices returned the current public table.",
+      "All 12 additional targeted web searches returned usable responses.",
+      "Prior hourly heartbeat was retrieved directly from requested GitHub branch before determining window."
+    ],
+    "limitations": [
+      "Search-indexing lag for same-hour rural/local reporting.",
+      "Bounded searches sample but do not exhaustively cover all U.S. jurisdictions or territories.",
+      "Older service events occasionally appear in newly published articles; filtered against prior reporting and effective dates."
+    ],
+    "review_status": "No qualifying findings; no pending reviews.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T184919-0800-recall12-20261112T024919Z",
+  "scheduled_for": "2026-11-11T18:45:22-08:00",
+  "started_at": "2026-11-11T18:49:19-08:00",
+  "completed_at": "2026-11-11T18:51:01.535-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T17:45:51-08:00",
+    "end": "2026-11-11T18:51:01.535-08:00",
+    "prior_check_basis": "Read back latest 2026-11-11 care-line heartbeat from ops/watch-ledger, completed_at 2026-11-11T17:45:51-08:00; confirmed no newer file before this run."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary healthcare-access recall across U.S. states and territories. Production collection remains authoritative; this is not the primary national collector.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS table opened first. Newest listing remained November 10, 2026 Advanced Urgent Care (IL), limitation of CLIA certificate 14D2049789, followed by November 9 Compassionate Home Health Services (MI), termination. Neither is a new notice in this hour."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 11 2026 hospital emergency department closed suspended services today United States",
+      "November 11 2026 maternity obstetrics labor delivery service closing suspended hospital",
+      "November 11 2026 rural hospital emergency care temporarily shut down patients redirected",
+      "November 11 2026 ambulance service station base closed suspended coverage local",
+      "November 11 2026 air ambulance helicopter medical base shutdown suspension",
+      "November 11 2026 dialysis clinic closure patients transferred oncology clinic closed",
+      "November 11 2026 hospital reopened emergency department services after closure",
+      "November 11 2026 primary care clinic closing patients access",
+      "November 11 2026 behavioral health psychiatric hospital inpatient service suspended closed",
+      "November 11 2026 termination Medicare hospital CMS provider notice",
+      "November 11 2026 Puerto Rico Guam Virgin Islands American Samoa CNMI hospital clinic ambulance service closed suspended reopened",
+      "November 11 2026 emergency medical services coverage suspended ambulance county"
+    ],
+    "search_recency_days": 2,
+    "search_assessment": "All twelve bounded targeted searches returned usable results. No newly verified qualifying healthcare service closure/suspension, emergency/EMS loss, CMS action, or concrete restoration within the observation window. Date of coverage or report alone is not evidence of new access effect.",
+    "reviewed_exclusions": [
+      {
+        "title": "U.S. DHHS cancels Medicare agreement with Kalamazoo Behavioral Health Hospital",
+        "url": "https://wwmt.com/news/local/kalamazoo-behavioral-health-hospital-medicare-agreement-cancelled-united-states-dhhs-investigation-license-patient-injuries-staff-failures-texas-township-west-michigan",
+        "reason": "November 11 story/updated 5:13 p.m. ET describes the previously listed October 30 CMS termination notice with November 16 effective cutoff; previously reported and before this observation window."
+      },
+      {
+        "title": "Dogged by issues: officials call for Vista Medical Center East sale",
+        "url": "https://www.lakemchenryscanner.com/2026/11/11/dogged-by-issues-congressman-waukegan-mayor-call-for-owner-of-vista-medical-center-east-to-sell-hospital/",
+        "reason": "Ownership-focused November 11 story reiterates trauma designation revoked October 24 and prior anesthesia suspension; no fresh concrete service change."
+      },
+      {
+        "title": "Trump Promised to Care for America's Veterans. The VA Is Now Collapsing From the Inside",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "November 11 in-depth reporting includes an East Orange VA operating-room closure and access pressure but does not establish a newly effective loss during the current hour."
+      },
+      {
+        "title": "Gateway Regional's Medicare status in jeopardy after federal review",
+        "url": "https://www.firstalert4.com/2026/09/03/gateway-regionals-medicare-status-jeopardy-after-federal-review/",
+        "reason": "Projected November 17 termination based on August 20 CMS letter, publicly reported September 2; no new current-window action verified."
+      },
+      {
+        "title": "Sharon Regional's license revoked after unpaid electric bill",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006",
+        "reason": "November 9 report describes state November 4 order, ED service suspended November 6 and pending November 17 revocation; earlier access event."
+      }
+    ],
+    "source_access_notes": [
+      "CMS public notice table successfully fetched and read first.",
+      "Twelve additional targeted queries executed; no material search or fetch failure observed.",
+      "Prior watch heartbeat independently fetched; current folder listing inspected to confirm latest prior entry."
+    ],
+    "limitations": [
+      "Time-bounded search and uneven regional/territorial indexing cannot guarantee completeness.",
+      "Same-hour news and official notice indexing delays can cause later retrospective identification.",
+      "Newly published stories about older changes were not treated as new events."
+    ],
+    "review_status": "No qualifying findings pending review.",
+    "publication_action": false,
+    "approval_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

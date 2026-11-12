@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T004451-0800-r11-20261112T084638Z",
+  "scheduled_for": "2026-11-12T00:44:51-08:00",
+  "started_at": "2026-11-12T00:45:36-08:00",
+  "completed_at": "2026-11-12T00:46:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-11T23:54:36.827-08:00",
+    "end": "2026-11-12T00:46:38-08:00",
+    "previous_run_completed_at": "2026-11-12T07:54:36.827Z",
+    "basis": "Last authenticated Gaza Source Watch heartbeat on ops/watch-ledger, read before this run.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; production publisher/collector remains authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T234451-0800-r11-20261112T075057Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest posted November 11 call for immediate Gaza winter supplies, previously assessed; no new November 12 update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/index.html",
+        "status": "INACCESSIBLE",
+        "result": "Regional source inaccessible; same established access restriction as prior runs."
+      },
+      {
+        "publisher": "WHO global fallback",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Health situation page accessible, latest listed material predates window; no new Gaza healthcare change verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org \"12 November 2026\" Gaza humanitarian access crossing",
+      "site:who.int Gaza \"12 November 2026\" hospital evacuation medical",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza 10:00 fishermen deaths",
+      "site:unrwa.org Gaza November 12 2026 displacement shelters rain",
+      "site:unicef.org Gaza November 12 2026 water sanitation children",
+      "site:wfp.org Gaza November 12 2026 food aid access",
+      "site:reuters.com/world/middle-east/ Gaza November 12 2026 Thursday hospitals naval strike ceasefire",
+      "site:apnews.com/article/ Gaza November 12 2026 Thursday airstrikes humanitarian",
+      "site:aljazeera.com/news/2026/11/12/ Gaza Thursday November 12 civilians killed injured ceasefire",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"12 Nov 2026\" Gaza fuel hospital aid",
+      "Gaza November 12 2026 10 AM Palestine Gaza new casualties al Bureij Rafah fishermen",
+      "Gaza November 12 2026 Rafah Kerem Shalom crossing medical evacuation hostages Israeli operations displacement latest"
+    ],
+    "targeted_search_engine": "web fast with recency 2 days; low yield, supplemented by direct-source checks",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza postings were 12 Nov 09:15–09:17 Palestine time (11 Nov 23:15–23:17 PST), both recorded in immediately preceding watch; no newer Gaza post."
+      },
+      {
+        "publisher": "WAFA fishermen",
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "result": "Previously recorded Deir al-Balah detention event; no new whereabouts or fate verified."
+      },
+      {
+        "publisher": "WAFA civilian casualties",
+        "url": "https://english.wafa.ps/Pages/Details/176870",
+        "result": "Previously recorded al-Bureij/al-Mawasi shooting report, no verified revision; potential duplicate casualty remains flagged."
+      },
+      {
+        "publisher": "Reuters Nasser Hospital",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Six deaths, 20 injured and surgery-department damage are previously recorded; military account of alleged target present but its addition/change time not verified within window; not counted as fresh development."
+      },
+      {
+        "publisher": "Al Jazeera Palestine feed",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest listed November 12 Nasser Hospital video repeats known strike and casualty figures; no confirmed new development."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Direct article fetch inaccessible during this run."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/focus/gaza",
+        "result": "Direct focus page inaccessible during this run."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "reason": "Deir al-Balah fishermen incident already recorded in immediate previous watch."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176870",
+        "reason": "al-Bureij fatality and two injuries already recorded; unresolved deduplication of al-Bureij shooting."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "reason": "Nasser Hospital strike and six deaths/20 wounded previously logged; timing of Israeli military commentary not verified as new in current window."
+      },
+      {
+        "url": "https://www.ochaopt.org/updates",
+        "reason": "November 11 winter supplies appeal was previously reviewed."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "AP article direct fetch",
+        "status": "INACCESSIBLE",
+        "previously_observed": false,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UN News focus page direct fetch",
+        "status": "INACCESSIBLE",
+        "previously_observed": false,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED for persistent WHO regional failure and unavailable supplementary AP/UN direct pages. OCHA OPT, WHO global, Reuters, WAFA and Al Jazeera accessible; no material new loss of watch coverage.",
+    "limitations": "Search indexes can lag new source postings; exact article revisions are not reliably timestamped. No unsupported or duplicate incident counted as fresh.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no publication, approval, schedule, task or credential changes."
+  }
+}

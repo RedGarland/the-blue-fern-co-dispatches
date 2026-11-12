@@ -1,0 +1,168 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T234451-0800-r11-20261112T075057Z",
+  "scheduled_for": "2026-11-11T23:44:51-08:00",
+  "started_at": "2026-11-11T23:50:57-08:00",
+  "completed_at": "2026-11-12T07:54:36.827Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T22:44:26.526-08:00",
+    "end": "2026-11-12T07:54:36.827Z",
+    "previous_run_completed_at": "2026-11-11T22:44:26.526-08:00",
+    "basis": "Prior authenticated Gaza Source Watch heartbeat on ops/watch-ledger; Gaza-local Thursday November 12 is Wednesday November 11 Pacific after 14:00 PST.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-deir-al-balah-fishermen-naval-detention-wafa-176871",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176871",
+      "title": "Israeli navy opens fire on Gaza fishermen, detains several off Deir al-Balah coast",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12T09:17:00+02:00",
+      "event_date": "2026-11-12",
+      "event_time": null,
+      "location": "Mediterranean waters off Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "Palestinian fishermen; several reportedly detained; five reportedly thrown into the sea after questioning. Exact detention count, identities and whereabouts unknown.",
+      "exact_supporting_passage": "According to preliminary reports, Israeli forces threw five fishermen into the sea after interrogating them aboard a military vessel",
+      "source_type": "Official Palestinian news agency; preliminary field report, not independently corroborated",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_by": "WAFA latest-news direct-source inspection after 12 targeted searches",
+        "reported_local_time": "2026-11-12 09:17 (WAFA/Palestine time)",
+        "publication_time_pacific": "2026-11-11T23:17:00-08:00",
+        "within_window": true,
+        "corroboration": "Single traceable source; preliminary account. No confirmation of condition of fishermen reported thrown overboard.",
+        "duplicate_check": "Distinct from previously logged Nasser Hospital strike and Gaza City/flooding events."
+      }
+    },
+    {
+      "finding_id": "gaza-20261112-bureij-al-mawasi-civilian-gunfire-wafa-176870",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176870",
+      "title": "Palestinian killed, two others injured by Israeli gunfire in Gaza",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12T09:15:00+02:00",
+      "event_date": "2026-11-12",
+      "event_time": null,
+      "location": "East of al-Bureij refugee camp, central Gaza; Bir 19 area of al-Mawasi, west of Khan Younis",
+      "affected_population_system": "One Palestinian civilian identified as Hassan Abu Khreis reported killed, one wounded in abdomen east of al-Bureij; another wounded by gunfire in Bir 19 al-Mawasi.",
+      "exact_supporting_passage": "Palestinian civilian Hassan Abu Khreis was killed and another was wounded in the abdomen",
+      "source_type": "Official Palestinian news agency citing medical sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_by": "WAFA latest-news direct-source inspection after 12 targeted searches",
+        "reported_local_time": "2026-11-12 09:15 (WAFA/Palestine time)",
+        "publication_time_pacific": "2026-11-11T23:15:00-08:00",
+        "within_window": true,
+        "corroboration": "One named fatality and two distinct injuries reported by WAFA; other sources not independently checked within bounded search cap.",
+        "duplicate_check": "Earlier Nov 11 reporting also mentioned a fatal shooting east of al-Bureij. Thursday Nov 12 WAFA report names victim and reports Thursday incident plus new al-Mawasi injury, but exact distinctness of al-Bureij fatality versus prior reporting is unverified; DO NOT add death to prior casualty aggregates without deduplication."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only, not authoritative production collector or publisher.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T224451-0800-r11-20261112T064426526Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest item November 11 winter-supplies appeal; no new update in observed hour."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/index.html",
+        "status": "INACCESSIBLE",
+        "result": "Regional Palestine news path could not be opened; established restriction from earlier runs."
+      },
+      {
+        "publisher": "WHO global fallback",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new relevant Gaza health item listed during window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza \"November 12, 2026\" \"Nasser\" hospital latest surgeon strike 07:00 UTC",
+      "Gaza November 12 2026 new civilian deaths attacks Thursday WAFA",
+      "site:ochaopt.org Gaza 12 November 2026 humanitarian access rain",
+      "site:reliefweb.int Gaza 12 November 2026 aid hospital displacement",
+      "site:unrwa.org \"12 November 2026\" Gaza relief shelters",
+      "site:unicef.org \"12 November 2026\" Gaza water children flood",
+      "site:wfp.org Gaza \"12 November 2026\" food truck kitchen",
+      "site:reuters.com/world/middle-east/ Gaza 12 November 2026 \"Thursday\" Nasser strike ceasefire",
+      "site:english.wafa.ps/Pages/Details/ \"12/November/2026\" Gaza killed early morning Rafah Khan Younis",
+      "site:apnews.com/article Gaza Thursday November 12 2026 new health crossings humanitarian",
+      "site:aljazeera.com/news/2026/11/12/gaza Gaza strike displacement hospitals aid Thursday",
+      "Gaza November 12 2026 Rafah crossing fuel ambulances medical evacuations hostages ceasefire latest"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Two Nov 12 09:15/09:17 Palestine-time fresh Gaza items: shootings/injuries, fishermen detention."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176870",
+        "result": "One reported death, two injuries; Thursday morning; duplication risk for al-Bureij fatality explicitly flagged."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176871",
+        "result": "Israeli navy fishermen incident with reported arrests and five forced into sea, details preliminary."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "result": "Six Nasser Hospital deaths and 20 injured previously recorded; no newly verified material change."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "result": "Same Nasser Hospital strike, no distinct new event."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "reason": "Already reviewed Nov 11 call for winter-supply entry."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/176867",
+        "reason": "Previously reported Nasser Hospital six deaths and 20 wounded."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/11/israeli-strikes-hit-tent-camp-as-five-killed-in-gaza",
+        "reason": "Earlier Gaza City and al-Bureij casualty account, used to flag possible duplication of the new al-Bureij report."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-heavy-rains-gaza-strip-8-november-2026",
+        "reason": "Older Nov 6–8 flooding effects already recorded."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "INACCESSIBLE",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED for established WHO regional access failure despite useful OCHA, WHO global, and WAFA source coverage; two new traceable WAFA developments. No newly worsened source restriction.",
+    "limitations": "Single-source reports of fresh incidents need corroboration. The al-Bureij death may overlap an earlier same-location report; do not automatically increment aggregate casualties. Search engines lag breaking local news.",
+    "notification_warranted": true,
+    "changes_to_production": "None. No publishing, approvals, schedule or task changes."
+  }
+}

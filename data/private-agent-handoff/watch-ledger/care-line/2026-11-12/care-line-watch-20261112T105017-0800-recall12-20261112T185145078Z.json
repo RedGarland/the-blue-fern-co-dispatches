@@ -1,0 +1,92 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T105017-0800-recall12-20261112T185145078Z",
+  "scheduled_for": "2026-11-12T10:45:22-08:00",
+  "started_at": "2026-11-12T10:50:17-08:00",
+  "completed_at": "2026-11-12T10:51:45-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T09:49:00.874-08:00",
+    "end": "2026-11-12T10:51:45-08:00",
+    "prior_check_basis": "Read previous durable Care Line Watch heartbeat on ops/watch-ledger, completed 2026-11-12 09:49:00.874 PST.",
+    "event_time_basis": "Require a newly observable, verified development announced since the prior check, or an essential-service change effective within the window; separate publication dates from event/notice dates and exclude duplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary Care Line recall; national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, CLIA certificate limitation, 14D2049789",
+      "prior_notice": "2026-11-09 Compassionate Home Health Services, Michigan, termination notice",
+      "result": "Direct CMS HTML checked first. No new notices dated November 11 or November 12; newest notice was already seen on prior checks."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"Prevea Washington Street Health Center\" \"November 13\" 2026 closure",
+      "hospital emergency room closed ambulance diversion November 12 2026 US local",
+      "hospital labor delivery obstetrics maternity service suspension closure November 12 2026",
+      "behavioral health psychiatric hospital facility stopped accepting patients closure November 12 2026",
+      "dialysis oncology cancer center treatment service halted closed November 12 2026",
+      "family medicine primary care urgent care clinic closing November 12 2026 patients",
+      "rural hospital emergency department critical access suspended services November 12 2026",
+      "ambulance EMS provider station service stops operating county November 12 2026",
+      "air ambulance medical helicopter base shuts down operations November 12 2026 United States",
+      "emergency department reopens resumes service after closure November 12 2026 hospital",
+      "November 12 2026 Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital clinic closure emergency service",
+      "site:gov November 12 2026 hospital closure suspension patient care emergency medical services state health department"
+    ],
+    "search_result": "All 12 targeted search queries returned results. No new qualifying, nonduplicate service loss, transport loss, CMS regulatory action, or confirmed essential-service restoration in the observation window.",
+    "reviewed_exclusions": [
+      {
+        "source": "Prevea Washington Street Health Center, Green Bay WI",
+        "url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "evidence": "Current first-party page directly opened and states last day for patient care is November 13, 2026, permanently closing family medicine, primary care, urgent care, lab/pathology and radiology at 102 N. Washington St.",
+        "reason": "This candidate and closure date were already captured by previous hourly watches; first-party direct page now corroborates the event, but no new announcement timestamp or within-window effective change was established. Kept as existing unresolved production-review lead, not a fresh finding."
+      },
+      {
+        "source": "Kalamazoo Behavioral Health Hospital, Michigan",
+        "url": "https://dailykalamazoo.com/mi/kalamazoo/news/2026-11-12/behavioral-health-medicare",
+        "evidence": "New November 12 secondary story describes scheduled November 16 Medicare agreement cancellation for new admissions.",
+        "reason": "Underlying CMS termination notice dated October 30 and previously recorded in earlier watches; fresh article is repeat reporting, not a new notice or service change in this hourly window."
+      },
+      {
+        "source": "Winchester Family Medicine, Winchester NH",
+        "url": "https://mykeenenow.com/news/219912-cheshire-medical-center-to-close-winchester-family-medicine-clinic-in-november/",
+        "reason": "October 16 report of November 6 closure; historical, outside window."
+      },
+      {
+        "source": "Air Evac Lifeteam Decatur base, Illinois",
+        "url": "https://www.wandtv.com/2026/09/16/air-evac-closes-base-decatur-airport/",
+        "reason": "September 2026 base closure, outside window."
+      },
+      {
+        "source": "Guam Regional Medical City storm-related outpatient service changes",
+        "url": "https://www.grmc.gu/2026/10/17/grmc-to-suspend-visitation-on-saturday-due-to-typhoon-champi-outpatient-clinics-closed-on-monday/",
+        "reason": "October 2026 closure/reopening; historical."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices directly loaded; latest notice date November 10.",
+      "Prevea source-version discrepancy from prior runs resolved: current direct page now displays Nov 13 permanent closure, but first-announcement date unknown.",
+      "Twelve targeted searches completed with useful coverage; no search failures encountered.",
+      "Prior heartbeat read directly from GitHub ops/watch-ledger to anchor start boundary."
+    ],
+    "limitations": [
+      "Targeted supplementary searches do not exhaust all U.S. states and territories.",
+      "Search indexing and local news reporting may lag within an hour.",
+      "Prevea official notice has no publication date on page; production collector should reconcile prior review rather than treat as a new hourly finding."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

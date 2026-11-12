@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T094451-0800-r11-20261112T174812017Z",
+  "scheduled_for": "2026-11-12T09:44:51-08:00",
+  "started_at": "2026-11-12T09:45:50-08:00",
+  "completed_at": "2026-11-12T09:48:12.017-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T08:51:58.755-08:00",
+    "end": "2026-11-12T09:48:12.017-08:00",
+    "previous_run_completed_at": "2026-11-12T08:51:58.755-08:00",
+    "basis": "Previous heartbeat verified on ops/watch-ledger and compared against sources currently available. Report dates checked; publication-hour precision is uncertain for some pages.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; production Gaza daily collector and publisher remain authoritative.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T084451-0800-r11-20261112T165158755Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest visible 11 November 2026 winter shelter/aid appeal, already reported. No new 12 November OCHA Gaza report apparent."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Canonical OPT emergency page accessible. No fresh 12 November health service or medical evacuation update shown. An outdated variant WHO URL returned HTTP 404 before correct canonical page located."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "INACCESSIBLE",
+        "result": "HTTP 502 Bad Gateway, already documented in preceding runs; no material deterioration established."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org \"12 Nov 2026\" Gaza humanitarian update",
+      "site:who.int \"12 November 2026\" Gaza medical evacuations hospitals",
+      "site:unrwa.org Gaza 12 November 2026 aid displaced winter shelters",
+      "site:unicef.org Gaza November 12 2026 water health children",
+      "site:wfp.org Gaza 12 November 2026 food assistance crossing",
+      "site:english.wafa.ps/Pages/Details/ 12 November 2026 Gaza killed wounded Thursday evening",
+      "Gaza November 12 2026 newest civilian casualty airstrike Reuters Associated Press 17:00 GMT",
+      "Gaza November 12 2026 ceasefire negotiations hostages detainees Israel Hamas updates",
+      "Gaza November 12 2026 Rafah Kerem Shalom crossing aid fuel trucks restriction",
+      "Gaza November 12 2026 Nasser hospital Al Shifa ambulance operations medical evacuation capacity",
+      "site:reliefweb.int Gaza 12 Nov 2026 humanitarian health access situation report",
+      "Gaza 12 November 2026 rain displaced shelter destroyed water infrastructure fishing detained today"
+    ],
+    "targeted_search_method": "12 targeted fast web searches (one-day recency), following OCHA OPT / WHO direct checks and WHO canonical page discovery; direct page opens/clicks/finds are not additional searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest 12 November 18:48 site-time item concerns EU Commission examination of initiative; no Gaza operational humanitarian impact verified. 18:06 child/father injury report concerns West Bank, out of Gaza scope."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176884",
+        "result": "European Commission reviewing citizen-initiative request; no new verified Gaza crossing, delivery, healthcare or casualty change."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176882",
+        "result": "18:04 site-time 53-member joint humanitarian-access appeal already recorded in prior watch."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Latest Gaza-specific 9 November report of flooding, displaced families and four deaths is already known; no 12 November Gaza update visible."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "result": "Homepage direct request returned HTTP 403; indexed UNRWA situation report 238 is visible but covers 21 October–3 November, not a new hourly finding."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Emergency page accessible, no specifically dated 12 November operational change found."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 November statement urging winter supplies entry; previously covered, no verified new operational implementation."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "53-country joint Gaza aid-access diplomatic appeal (12 Nov, 18:04 WAFA site time)",
+        "reason": "Exact same intervention captured in previous heartbeat; excluded as duplicate."
+      },
+      {
+        "subject": "Nasser Hospital casualties and service suspension; Al-Shifa vicinity; Deir al-Balah car strike; Jabalia casualty strike; detained fishermen",
+        "reason": "Earlier hourly watches already captured; no verified new changes or higher-confirmation material in the checked window."
+      },
+      {
+        "subject": "UNICEF flooded shelters and child deaths; UNRWA fuel/oil and generator shortages",
+        "reason": "Earlier primary/source reporting; UNRWA 238 covers 21 Oct–3 Nov, not a new event."
+      },
+      {
+        "subject": "EU Commission consideration of initiative on EU-Israel association agreement",
+        "reason": "No demonstrated direct new Gaza humanitarian-access or civilian-impact outcome, excluded from high-value miss classes."
+      },
+      {
+        "subject": "WAFA settler attack on Palestinian child and father east of Ramallah",
+        "reason": "West Bank location, outside Gaza watch scope."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      },
+      {
+        "publisher": "UNRWA homepage",
+        "status": "HTTP_403",
+        "previously_observed": null,
+        "materially_worsened": false,
+        "notes": "Indexed UNRWA report accessible through search; no material impact on bounded recall verified."
+      }
+    ],
+    "status_rationale": "DEGRADED because of WHO Eastern Mediterranean 502 and UNRWA homepage 403, but OCHA OPT, WHO Global, UNICEF, WFP, WAFA and search index accessible. No material new degradation or qualifying Gaza development confirmed.",
+    "limitations": "Targeted search results sparse within one-day indexing; some source publication times lack explicit timezone offsets. A recently published item could appear after indexing delay. No independent evidence was found to establish new changes beyond prior ledger.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publication, approval, schedule changes, runner changes, credentials or production branches touched."
+  }
+}

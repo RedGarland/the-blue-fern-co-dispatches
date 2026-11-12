@@ -1,0 +1,85 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T014926-0800-recall12-20261112T095016Z",
+  "scheduled_for": "2026-11-12T01:45:22-08:00",
+  "started_at": "2026-11-12T01:49:26-08:00",
+  "completed_at": "2026-11-12T01:50:16-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T00:45:51-08:00",
+    "end": "2026-11-12T01:50:16-08:00",
+    "prior_check_basis": "Exact completed_at from prior independently verified Care Line heartbeat care-line-watch-20261112T004501-0800-recall12-20261112T084551Z on ops/watch-ledger."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; primary production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "result": "Official CMS Public Notices table read first. Most recent dated entry was November 10, 2026: Advanced Urgent Care (Illinois), limitation of CLIA certificate 14D2049789. The next entry was November 9, 2026: Compassionate Home Health Services (Michigan), termination. No new notice dated November 11 or 12 was listed at check time."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspension November 12 2026 US",
+      "hospital maternity labor delivery obstetrics service closing November 11 12 2026",
+      "rural hospital emergency room shutdown service suspended November 12 2026",
+      "behavioral health psychiatric hospital inpatient service closed November 12 2026",
+      "dialysis clinic closure suspended services November 12 2026",
+      "cancer oncology clinic service closure suspended November 12 2026",
+      "primary care clinic sudden closure patients November 12 2026",
+      "ambulance EMS base closing service suspended November 12 2026",
+      "air ambulance helicopter base closure grounding November 12 2026 US",
+      "hospital ER maternity reopen restore services November 12 2026",
+      "site:gov \"November 12, 2026\" \"hospital\" \"suspended\" services",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital clinic ambulance closure November 2026"
+    ],
+    "search_recency_days": 1,
+    "search_assessment": "Twelve targeted fresh searches completed after CMS inspection. No verifiable new U.S. or territory event within the observation window matching healthcare-service closure/suspension, EMS loss, official CMS access action, or concrete essential-service reopening. Search results skewed toward older reports, unrelated policy/business content, and non-U.S. events. No qualifying nonduplicate findings.",
+    "reviewed_exclusions": [
+      {
+        "title": "Henderson Hospital to end maternity and NICU services",
+        "publisher": "FOX5 Las Vegas",
+        "url": "https://www.fox5vegas.com/2026/08/12/henderson-hospital-end-maternity-nicu-services/",
+        "reason": "Published August 12, 2026; not a newly reported hourly change."
+      },
+      {
+        "title": "McKenzie-Willamette restores labor and delivery services with new OB-GYN hires",
+        "publisher": "KLCC",
+        "url": "https://www.klcc.org/health-medicine/2025-11-11/mckenzie-willamette-restores-labor-and-delivery-services-with-new-ob-gyn-hires",
+        "reason": "Published November 11, 2025; not new in November 2026."
+      },
+      {
+        "title": "Centra South Side Community Hospital to close labor and delivery unit in Farmville",
+        "publisher": "Virginia Mercury",
+        "url": "https://virginiamercury.com/2025/11/07/centra-south-side-community-hospital-to-close-labor-and-delivery-unit-in-farmville/",
+        "reason": "Published November 7, 2025; old planned service loss."
+      },
+      {
+        "title": "Copley Hospital shutters birthing center after contentious closure process",
+        "publisher": "VTDigger",
+        "url": "https://vtdigger.org/2025/11/07/copley-hospital-shutters-birthing-after-contentious-closure-process/",
+        "reason": "Published November 7, 2025; historical."
+      }
+    ],
+    "source_access_notes": [
+      "CMS official table accessible, inspected before all other targeted searches.",
+      "Prior heartbeat fetched via GitHub connector from ops/watch-ledger to establish precise starting boundary.",
+      "All twelve searches returned without tool errors. Search result relevance was limited; no underlying access failure established."
+    ],
+    "limitations": [
+      "Search indexing lag may conceal same-hour reports.",
+      "Bounded search is not exhaustive for all U.S. states and territories.",
+      "No approvals, publication, schedule changes, or task disabling."
+    ],
+    "review_status": "No qualifying new finding; none pending_review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

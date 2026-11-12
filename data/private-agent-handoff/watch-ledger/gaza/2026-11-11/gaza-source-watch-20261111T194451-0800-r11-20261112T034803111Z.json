@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T194451-0800-r11-20261112T034803111Z",
+  "scheduled_for": "2026-11-11T19:44:51-08:00",
+  "started_at": "2026-11-11T19:46:13-08:00",
+  "completed_at": "2026-11-11T19:48:03.111-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T18:45:57.907-08:00",
+    "end": "2026-11-11T19:48:03.111-08:00",
+    "previous_run_completed_at": "2026-11-11T18:45:57.907-08:00",
+    "basis": "Authenticated immediately preceding watch heartbeat; screen for distinct verified developments or materially new, traceable follow-ups since its completion.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; production daily Gaza publisher/collector remains authoritative.",
+    "prior_heartbeat_authenticated_read": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T184252-0800-r11-20261112T024557907Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest Gaza update remained November 11 winter-supplies appeal, covered by earlier watch. No November 12 Gaza update on listing."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Existing recurring regional endpoint restriction, unchanged from prior watch."
+      },
+      {
+        "publisher": "WHO global conflict hub (fallback)",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza hospital/service/evacuation bulletin or health update listed for this search window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza Nasser hospital November 12 2026 6 killed 20 injured new update after 03:00 UTC",
+      "site:english.wafa.ps/Pages/Details/ \"12/11/2026\" Gaza killed injured Thursday morning",
+      "Gaza Strip November 12 2026 early morning latest medical aid crossings hospital Thursday Reuters AP",
+      "site:un.org Gaza 12 November 2026 humanitarian rain fuel aid crossing health news",
+      "site:who.int \"12 November 2026\" Gaza hospital attack medical evacuation",
+      "site:ochaopt.org \"12 November 2026\" Gaza humanitarian update",
+      "Gaza 12 November 2026 05:00 Palestine time Israeli strikes killed injured Thursday Nasser hospital latest",
+      "Gaza hospital surgery shut down November 12 2026 Nasser operations director new details 05:00",
+      "site:aljazeera.com/news/2026/11/12/ Gaza latest casualties aid crossing hospital",
+      "site:apnews.com/article/ Gaza November 12 2026 aid hospital strike",
+      "site:icrc.org OR site:msf.org OR site:palestinercs.org Gaza November 12 2026 medical aid ambulance evacuation",
+      "Gaza 12 November 2026 ceasefire negotiations hostages detention humanitarian access crossings fuel WFP UNRWA UNICEF"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Most recent Gaza entry remains 11 November 20:42 Palestinian local time, before observation window. No distinct newly posted Gaza event."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-airstrike-kills-6-palestinians-at-nasser-hospital-in-southern-gaza/4121545",
+        "result": "Six deaths, >20 wounded, ICU and surgery ward damage; already recorded in preceding watch."
+      },
+      {
+        "publisher": "AFP as syndicated by Arab News",
+        "url": "https://www.arabnews.com/middle-east/israeli-strike-kills-six-at-southern-gaza-hospital-civil-defense-3011325",
+        "result": "06-death total confirmed by Nasser Hospital statement, report 04:20 Gaza time (18:20 PST), before previous heartbeat."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-airstrike-kills-6-palestinians-at-nasser-hospital-in-southern-gaza/4121545",
+        "reason": "Same six-death/20-plus-wounded Nasser strike, same ICU/surgical damage as prior heartbeat; not new casualty increment."
+      },
+      {
+        "url": "https://www.timesofisrael.com/liveblog_entry/israeli-strike-on-southern-gaza-hospital-kills-6-hamas-authorities-say/",
+        "reason": "Secondary claim that surgical ward operations stopped is already available in report timed 03:32 Gaza time (17:32 PST), predates prior watch, and lacks independent primary verification of shutdown."
+      },
+      {
+        "url": "https://www.ochaopt.org/updates",
+        "reason": "November 11 winter-supply appeal previously screened, no new operational change verified in observation window."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "reason": "Gaza City casualty items and cumulative toll predating window; duplicates, not newly sourced developments."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED for persistent WHO regional HTTP 502, with accessible WHO global and OCHA OPT plus all 12 targeted searches. No new verified qualifying Gaza event or material follow-up this run.",
+    "limitations": "Search indexing lag and publication/update timestamps can obscure exact timing. No verified new crossing, aid, water, displacement, evacuation, detention, ceasefire or combat-linked civilian impacts. No independent confirmation of suspension of surgical operations following Nasser strike.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no publication, approvals, scheduling or automation changes."
+  }
+}

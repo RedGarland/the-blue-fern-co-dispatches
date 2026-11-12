@@ -1,0 +1,93 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T134504-0800-recall12-20261112T214651695Z",
+  "scheduled_for": "2026-11-12T13:45:04-08:00",
+  "started_at": "2026-11-12T13:45:04-08:00",
+  "completed_at": "2026-11-12T13:46:51.695-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T12:42:25.494-08:00",
+    "end": "2026-11-12T13:46:51.695-08:00",
+    "prior_check_basis": "Read latest committed Care Line Watch heartbeat on ops/watch-ledger; it completed 2026-11-12T12:42:25.494-08:00.",
+    "event_time_basis": "Newly announced, newly effective, or newly verifiable concrete essential-healthcare service access change during hourly observation window; previously reported incidents excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; primary national production collection remains authoritative.",
+    "run_timestamp_note": "scheduled_for reflects supplied automation invocation timestamp 13:45:04 PST; nominal recurrence second was :22.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care (IL), limitation of CLIA certification, 14D2049789",
+      "next_notice_date": "2026-11-09",
+      "next_notice": "Compassionate Home Health Services (MI), termination notice",
+      "result": "Direct CMS table checked before all additional searches; no newly dated November 11 or November 12 notice."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 12 2026 hospital emergency department closing closed suspension access patients United States",
+      "November 12 2026 maternity labor delivery unit closing suspending births hospital",
+      "November 12 2026 rural hospital emergency room service closing temporary interruption",
+      "November 12 2026 behavioral health psychiatric mental health hospital clinic closing patients",
+      "November 12 2026 dialysis clinic treatment center closing patients",
+      "November 12 2026 cancer oncology infusion clinic closing services patients",
+      "November 12 2026 primary care health clinic closure patients medical practice",
+      "November 12 2026 ambulance service EMS station closing suspending coverage county",
+      "November 12 2026 air ambulance helicopter medical base closing emergency transport",
+      "November 12 2026 emergency department hospital maternity services reopen resume after closure",
+      "November 12 2026 CMS Medicare provider termination rescission CLIA limitation suspension notice",
+      "November 12 2026 Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa hospital clinic ambulance closed service"
+    ],
+    "search_result": "No confirmed within-window, nonduplicate U.S. or territory healthcare service closure, suspension, CMS access-risk notice, or concrete previously-lost essential-service restoration.",
+    "reviewed_exclusions": [
+      {
+        "source": "Tri-Cities Area Journal of Business",
+        "title": "New 32-bed mental health facility to open in Kennewick",
+        "url": "https://www.tricitiesbusinessnews.com/articles/aristo-to-open",
+        "published_date": "2026-11-12",
+        "reason": "New Hopes Kennewick proposes opening November 17 at a facility dormant since construction. This is newly added capacity, not proven restoration/reopening of a previously lost essential service; direct article fetch failed, indexed report supplied classification."
+      },
+      {
+        "source": "KRTV/MTN News",
+        "title": "Benefis Health System to restructure services, citing financial pressure",
+        "url": "https://www.krtv.com/news/benefis-health-system-to-restructure-services-citing-financial-pressure",
+        "reason": "Previously published before this hourly window; announced future December 19 Great Falls service restructuring and prior Helena oncology/infusion changes, not a new within-window announcement or effective change."
+      },
+      {
+        "source": "ProPublica",
+        "title": "Trump Promised to Care for America’s Veterans. The VA Is Now 'Collapsing From the Inside.'",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey",
+        "reason": "Published November 11; investigates preexisting staffing/service problems, without specific newly effective service closure in this hourly window."
+      },
+      {
+        "source": "Prevea Health",
+        "title": "Prevea Washington Street Health Center",
+        "url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "reason": "Previously corroborated Green Bay healthcare facility cessation with final care date November 13, already identified in prior hourly checks and not newly announced or effective in this window."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS Public Notices accessed successfully first.",
+      "Twelve additional targeted search requests completed; all returned useful search responses.",
+      "Follow-up direct retrieval of Tri-Cities Area Journal of Business article returned DisabledError. Search result metadata was sufficient to identify nonqualifying new facility opening; no material gap for an otherwise qualifying service-loss event.",
+      "Prior durable GitHub heartbeat independently read before selecting the observation window and deduplicating."
+    ],
+    "retrieval_failure_count": 1,
+    "limitations": [
+      "One nonessential secondary article could not be retrieved directly; classify DEGRADED as requested when any checked source fails, but no material surveillance failure was established.",
+      "Search indexing and local/territorial reporting can lag the hourly observation window.",
+      "Supplementary bounded searches are not exhaustive national and territorial coverage."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

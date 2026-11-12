@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261111T184252-0800-r11-20261112T024557907Z",
+  "scheduled_for": "2026-11-11T18:44:51-08:00",
+  "started_at": "2026-11-11T18:42:52-08:00",
+  "completed_at": "2026-11-11T18:45:57.907-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T17:42:56.313-08:00",
+    "end": "2026-11-11T18:45:57.907-08:00",
+    "previous_run_completed_at": "2026-11-11T17:42:56.313-08:00",
+    "basis": "Authenticated preceding watch heartbeat. Include materially new or newly discovered follow-ups absent from prior heartbeat, flagging publication-time uncertainty and possible retrospective discovery.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261112-nasser-hospital-six-deaths-followup",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-airstrike-kills-6-palestinians-at-nasser-hospital-in-southern-gaza/4121545",
+      "title": "Israeli airstrike kills 6 Palestinians at Nasser Hospital in southern Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-12",
+      "publication_date": "2026-11-12",
+      "publication_at": null,
+      "event_date": "2026-11-12",
+      "event_at": null,
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Patients, hospital staff and surgical/intensive-care services at Nasser Medical Complex; precise civilian/combatant status of casualties unverified",
+      "supporting_passage": "An Israeli airstrike killed six Palestinians and wounded more than 20 others at Nasser Medical Complex in southern Gaza early Thursday, Gaza’s Civil Defense said.",
+      "source_type": "Established wire agency citing Gaza Civil Defence and the hospital director",
+      "classification": "follow-up",
+      "confidence": "medium-high (attributed six-death count corroborated by Al Jazeera; independent casualty verification unavailable)",
+      "newly_verified_change": "Six deaths and more than 20 injured, revised from five deaths and 20 injured in previous watch; same single strike, NOT six additional deaths. Hospital director also described ICU and surgical ward damage, previously known.",
+      "corroborating_urls": [
+        "https://www.aljazeera.com/video/newsfeed/2026/11/12/israel-strikes-intensive-care-at-gazas-nasser-hospital",
+        "https://www.timesofisrael.com/liveblog_entry/israeli-strike-on-southern-gaza-hospital-kills-6-hamas-authorities-say/"
+      ],
+      "bounded_discovery_context": {
+        "first_detected_during_watch": true,
+        "prior_watch_recorded": "Five deaths, 20 injured, surgery and intensive-care damage at the same Nasser Hospital strike",
+        "materially_new_detail": "One additional death in the reported total (five to six), and higher reported injury floor (>20 versus 20)",
+        "exact_update_time_verified": false,
+        "temporal_caveat": "An Israel-time 03:32 November 12 liveblog entry referring to six deaths corresponds to 17:32 PST November 11, ten minutes before the preceding heartbeat finished. This is a retrospectively detected, previously missed material follow-up, NOT proof it was first published in the present observation window.",
+        "operational_status_caveat": "A secondary report attributes a surgical-ward operations shutdown to Al Jazeera, but the primary text located did not independently verify service stoppage; no confirmed shutdown recorded.",
+        "no_double_count": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; production publisher/collector remains authoritative.",
+    "previous_heartbeat_authenticated_read": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-11/gaza-source-watch-20261111T174026-0800-r11-20261112T014215934Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest listed report remained November 11 winter-supplies appeal; no distinct new in-window report."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Persistently inaccessible as in previous watches, no new deterioration established."
+      },
+      {
+        "publisher": "WHO global conflict hub, direct fallback",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza service, medical evacuation or attack update in latest news."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 12 2026 02:00 UTC Nasser Hospital casualties latest Reuters AP",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 12 2026 killed injured Thursday",
+      "Gaza November 12 2026 hospital bombing Nasser operation surgeon wards latest 2 am UTC",
+      "site:ochaopt.org \"12 November 2026\" Gaza humanitarian supplies crossings",
+      "site:who.int \"12 November 2026\" Gaza hospital medical evacuation",
+      "site:un.org OR site:unrwa.org 12 November 2026 Gaza aid access flood tents",
+      "Nasser Hospital Khan Younis November 12 2026 six killed surgery ward shut operations Reuters Al Jazeera",
+      "Nasser medical complex 12 November 2026 04:00 local hospital surgical department stops operations intensive care damage",
+      "site:aljazeera.com/news/2026/11/12 Gaza Nasser hospital six medical services surgery",
+      "site:apnews.com/article/ November 12 2026 Gaza hospital strike six dead wounded",
+      "site:icrc.org OR site:msf.org OR site:palestinercs.org Gaza November 12 2026 hospital ambulances medical",
+      "Gaza November 12 2026 02:00 UTC Rafah crossing aid food water evacuation ceasefire civilians UNRWA UNICEF WFP"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Most recent Gaza item November 11 20:42 Palestine time, cumulative death tally, predating current window."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-airstrike-kills-6-palestinians-at-nasser-hospital-in-southern-gaza/4121545",
+        "result": "Updated six-death and >20 injured attributed Civil Defence count; published/updated November 12 Gaza local, precise time unavailable."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/12/israel-strikes-intensive-care-at-gazas-nasser-hospital",
+        "result": "Corroborates at least six killed and at least 20 injured including staff."
+      },
+      {
+        "publisher": "Times of Israel liveblog",
+        "url": "https://www.timesofisrael.com/liveblog_entry/israeli-strike-on-southern-gaza-hospital-kills-6-hamas-authorities-say/",
+        "result": "Report 03:32 local Nov 12 (17:32 PST November 11) identifies same six-death tally, illustrating possibility this development was missed by preceding run."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-southern-gaza-hospital-kills-four-gaza-civil-defence-says-2026-11-11/",
+        "reason": "Existing five-fatality/20-wounded hospital account already logged. The six-death revision refers to same strike, not new incident."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "reason": "Older Gaza City casualty reports and cumulative death tally, not new distinct in-window developments."
+      },
+      {
+        "url": "https://www.timesofisrael.com/liveblog_entry/israeli-strike-on-southern-gaza-hospital-kills-6-hamas-authorities-say/",
+        "reason": "Uncorroborated operative service shutdown attribution not recorded as verified. Six-death tally considered with primary-source reporting."
+      }
+    ],
+    "known_access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean Palestine News",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED for pre-existing WHO regional HTTP 502; OCHA, WHO global and 12 targeted searches available. Materially updated Nasser Hospital casualty count newly observed, though exact publication time and in-window novelty cannot be confirmed.",
+    "limitations": "Near-real-time indices may lag; source update timestamps are incomplete. Six deaths are an attributed casualty report, not independently confirmed. No independent confirmation of surgery shutdown. No other new crossing, aid, displacement, ceasefire, detention, or medical evacuation change verified.",
+    "notification_warranted": true,
+    "changes_to_production": "None; no approval, publication, scheduling, or automation changes."
+  }
+}

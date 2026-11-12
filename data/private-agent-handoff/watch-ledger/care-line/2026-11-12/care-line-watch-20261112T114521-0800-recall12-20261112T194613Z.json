@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T114521-0800-recall12-20261112T194613Z",
+  "scheduled_for": "2026-11-12T11:45:22-08:00",
+  "started_at": "2026-11-12T11:45:21-08:00",
+  "completed_at": "2026-11-12T11:46:13-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T10:51:45-08:00",
+    "end": "2026-11-12T11:46:13-08:00",
+    "prior_check_basis": "Read the latest durable Care Line Watch heartbeat on ops/watch-ledger, with completed_at 2026-11-12T10:51:45-08:00.",
+    "event_time_basis": "Newly verifiable notices announced since the prior check or concrete essential-service changes effective within the window; articles republishing earlier changes and known leads excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary Care Line recall only; primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, CLIA certificate limitation (14D2049789)",
+      "next_notice_date": "2026-11-09",
+      "next_notice": "Compassionate Home Health Services, Michigan, termination notice",
+      "result": "Direct CMS table checked before any targeted searches, with no newer notice dated November 11 or 12. Latest entries previously seen."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspension November 12 2026 United States today",
+      "maternity labor delivery unit closing services November 12 2026 hospital",
+      "behavioral health psychiatric hospital sudden closure suspension November 12 2026",
+      "dialysis clinic oncology cancer treatment service closing November 12 2026",
+      "ambulance EMS station air medical base service closure November 12 2026",
+      "rural hospital emergency service suspended lost November 12 2026",
+      "November 12 2026 reopened emergency department restored ambulance hospital service U.S. local news",
+      "November 12 2026 primary care clinic closing patients",
+      "November 12 2026 suspended ambulance EMS service rural",
+      "November 12 2026 healthcare closures Puerto Rico Guam U.S. Virgin Islands American Samoa CNMI",
+      "November 12 2026 state health department notice hospital license suspension emergency department closure",
+      "November 12 2026 medicare provider termination rescission CLIA laboratory notice CMS"
+    ],
+    "search_result": "All twelve targeted queries returned usable results. No qualifying nonduplicate new healthcare-access loss or confirmed restoration was verified in the observation interval.",
+    "reviewed_exclusions": [
+      {
+        "source": "Pennsylvania Capital-Star, November 12: In Bradford, a community reels after hospital closes",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/",
+        "reason": "New article dated November 12 at 12:38 pm ET recounts Bradford Regional Medical Center emergency closure of May 17, 2026 and earlier regional maternity/inpatient losses. No newly effective within-window change."
+      },
+      {
+        "source": "WKZO, November 12: US DHHS cancels Medicare agreement with Kalamazoo Behavioral Health Hospital",
+        "url": "https://wkzo.com/2026/11/12/us-dhhs-cancels-medicare-agreement-with-kalamazoo-behavioral-health-hospital/",
+        "reason": "Report dated 6:49 am local time repeats known October 30 CMS termination with upcoming November 16 Medicare-payment effect and planned state license action. Pre-existing notice and publication before observation window."
+      },
+      {
+        "source": "Prevea Washington Street Health Center, Green Bay WI",
+        "url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+        "reason": "Known previously flagged November 13 permanent primary-care/urgent-care closure. Corroborated in the previous hourly heartbeat; no new announcement or effective change within this interval. Preserve for primary collector review."
+      },
+      {
+        "source": "WVU Cancer Institute, Summersville Regional Medical Center",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/",
+        "reason": "November 10 expansion/opening of oncology and infusion service, not verified restoration of a previously lost essential service, and prior to interval."
+      },
+      {
+        "source": "Boston Globe, Mass General Brigham Downtown Crossing primary care clinic",
+        "url": "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+        "reason": "November 4 report of scheduled December 18 clinic closure; outside observation interval and not a newly observable announcement."
+      },
+      {
+        "source": "Oregon Public Broadcasting, Planned Parenthood affiliate consolidation",
+        "url": "https://www.opb.org/article/2026/11/10/oregon-planned-parenthood-lane-county-rogue-valley-health/",
+        "reason": "November 10 report explicitly indicates clinics remain open; organizational restructuring without new direct service reduction."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices page directly loaded successfully and current table inspected first.",
+      "Twelve additional targeted web searches completed without source/search failure.",
+      "Read previous durable heartbeat from GitHub to establish observation start and known duplicate candidates.",
+      "Directly opened Bradford and Kalamazoo primary/local reports to distinguish report date from event date."
+    ],
+    "limitations": [
+      "Supplementary bounded searches are not exhaustive across every state, locality and territory.",
+      "Same-hour indexing and reporting delays may defer discovery to later runs.",
+      "Production national collection, not this recall, is authoritative."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T144522-0800-recall12-20261112T225040Z",
+  "scheduled_for": "2026-11-12T14:45:22-08:00",
+  "started_at": "2026-11-12T14:49:44-08:00",
+  "completed_at": "2026-11-12T14:50:40-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T13:46:51.695-08:00",
+    "end": "2026-11-12T14:50:40-08:00",
+    "prior_check_basis": "Directly read the prior durable Care Line Watch heartbeat on ops/watch-ledger, completed 2026-11-12T13:46:51.695-08:00.",
+    "event_time_basis": "New announcements, newly effective access loss, concrete essential-service restoration, or newly verifiable developments since the previous heartbeat; previously identified events excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded recall; national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care (Illinois), CLIA certification limitation; 14D2049789.",
+      "next_notice_date": "2026-11-09",
+      "next_notice": "Compassionate Home Health Services (Michigan), Medicare termination notice.",
+      "result": "No newly dated November 11 or November 12 notice on current official table."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended diverted ambulances November 12 2026 United States",
+      "rural hospital emergency services closure suspension November 12 2026",
+      "hospital labor delivery maternity unit closure November 12 2026",
+      "mental health behavioral health inpatient hospital closure November 12 2026",
+      "dialysis clinic closure treatment suspended November 12 2026",
+      "oncology cancer center patients services closing November 12 2026",
+      "primary care clinic permanent closure patients November 12 2026",
+      "ambulance service closing shutting down base November 12 2026",
+      "air ambulance helicopter medical base closure suspension November 12 2026",
+      "hospital reopened emergency department restored services November 12 2026",
+      "November 12 2026 hospital health care closure Puerto Rico Guam US Virgin Islands Northern Mariana Islands American Samoa",
+      "site:cms.gov/medicare/health-safety-standards/certification-compliance/public-notices November 12 2026 termination CLIA"
+    ],
+    "targeted_search_method": "12 category-specific fresh web searches with one-day recency settings; one consolidated CMS-indexed result appeared; no new qualifying local-service report surfaced.",
+    "search_result": "No confirmed new nonduplicate U.S. state or territory healthcare-access closure, suspension, emergency transport base loss, official CMS access-risk change, or previously-lost essential-service restoration in the hourly observation window.",
+    "reviewed_exclusions": [
+      {
+        "event": "Prevea Washington Street Health Center, Green Bay, WI",
+        "reason": "Previously corroborated planned November 13 last patient-care date; no newly announced or effective event during this window."
+      },
+      {
+        "event": "Advanced Urgent Care (IL) CLIA limitation",
+        "reason": "CMS notice dated November 10, previously covered; duplicate."
+      },
+      {
+        "event": "New Kennewick mental-health facility",
+        "reason": "Previously reviewed November 12 opening article adds planned capacity, not a verified reopening of a previously lost essential service."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS Public Notices opened and inspected directly before targeted searches.",
+      "All 12 targeted search requests were submitted; only an already-known CMS page surfaced in the returned consolidated results.",
+      "Prior heartbeat read directly from ops/watch-ledger and used for start time and deduplication."
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Search results were sparse, so this bounded recall cannot establish exhaustive U.S. or territory coverage.",
+      "Search-indexing latency may hide same-hour local reporting.",
+      "Absence of verified findings does not establish absence of service changes."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

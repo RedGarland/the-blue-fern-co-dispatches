@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T084200-0800-recall12-20261112T164421Z",
+  "scheduled_for": "2026-11-12T08:45:22-08:00",
+  "started_at": "2026-11-12T08:42:00-08:00",
+  "completed_at": "2026-11-12T08:44:21-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T07:50:42.274-08:00",
+    "end": "2026-11-12T08:44:21-08:00",
+    "prior_check_basis": "Verified latest Care Line Watch heartbeat on ops/watch-ledger (care-line-watch-20261112T074914-0800-recall12-20261112T154914Z.json) completed at 07:50:42.274 PST. Filtered candidates against prior-hour coverage and dated effective changes.",
+    "event_time_basis": "Newly established/observable announcement or concrete effective essential-service change since prior completed heartbeat; event dates considered separately from newly indexed or recirculated stories."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, IL, limitation of CLIA certificate, 14D2049789",
+      "recent_existing_notice": "2026-11-09 Compassionate Home Health Services, MI, Medicare termination",
+      "result": "Direct CMS Public Notices fetch timed out twice; a same-day-crawled search index displayed the current notices table. No notice dated November 11 or 12 appeared in that indexed table.",
+      "direct_access": "FAILED_TIMEOUT_TWICE",
+      "fallback": "CURRENT_DAY_SEARCH_INDEX"
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_search_recency_days": 2,
+    "targeted_searches": [
+      "November 12 2026 hospital emergency department closure temporary suspension rural hospital ambulance diversion US",
+      "November 12 2026 labor delivery maternity hospital unit closing suspended patients",
+      "November 12 2026 behavioral health psychiatric hospital services suspended admissions closure",
+      "November 12 2026 dialysis center oncology cancer care clinic shut down patients",
+      "November 12 2026 ambulance EMS station service closure suspension emergency calls local",
+      "November 12 2026 medical helicopter air ambulance base closing suspended flight service",
+      "November 12 2026 rural emergency room temporarily closed diverted ambulances United States",
+      "November 12 2026 primary care urgent care clinic closes immediately displaced patients America",
+      "November 12 2026 hospital ER reopens restored after service shutdown USA",
+      "November 12 2026 CMS CLIA certificate limitation suspension provider Medicare termination rescission notice",
+      "November 12 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital clinic closure services",
+      "November 12 2026 local news EMS ambulance service stopped running station shutdown county"
+    ],
+    "assessment": "No new, independently verifiable, nonduplicate in-window closure/suspension, emergency/rural service loss, ambulance/air-medical base loss, CMS action or essential-service restoration established. One indexed official provider notice requires reconciliation before treatment as a new in-window finding.",
+    "reviewed_exclusions": [
+      {
+        "source": "Prevea Health location page (https://www.prevea.com/find-a-location/prevea-washington-street-health-center)",
+        "details": "Search index displayed a notice that Prevea Washington Street Health Center, Green Bay WI, would close permanently with last patient-care day November 13, 2026; listed family medicine, urgent care, laboratory and radiology. But separately opened cached provider page did not contain closure text, and no source publication/announcement date verified. Treat as unresolved candidate, not confirmed newly announced in this watch window.",
+        "reason": "Conflicting retrieval versions and no verified in-window announcement; needs direct provider confirmation."
+      },
+      {
+        "source": "Sharon Regional Medical Center, PA",
+        "details": "Order Nov 4, ED suspension Nov 6, repeated in Nov 10 report.",
+        "reason": "Previously reported out-of-window event."
+      },
+      {
+        "source": "University of New Mexico Hospital, NM",
+        "details": "Ambulance diversion during Oct 26 cyberattack; appeared in search results.",
+        "reason": "Historical event outside observation window."
+      },
+      {
+        "source": "Guam Regional Medical City and Guam Memorial Hospital, Guam",
+        "details": "Typhoon Champi outpatient service suspensions/restorations October 16–20, 2026.",
+        "reason": "Historical resolved event."
+      },
+      {
+        "source": "UMass Memorial Marlborough, MA",
+        "details": "February 2026 hospital reopening after utility failure.",
+        "reason": "Historical event."
+      },
+      {
+        "source": "Fierce Healthcare layoffs tracker",
+        "details": "Nov 10 article on staffing cuts.",
+        "reason": "No verified concrete essential-service closure or restoration."
+      }
+    ],
+    "source_access_notes": [
+      "Official CMS page was attempted before the targeted searches; direct CMS access timed out twice.",
+      "CMS search-index fallback showed the notice table and latest dated entries, but does not replace live first-party access.",
+      "All twelve targeted searches returned search responses.",
+      "Prevea closing note appeared in search-index extract, but open-page text (older cache) omitted it; no newness timestamp could be established.",
+      "Prior hourly heartbeat was fetched directly from the designated GitHub branch."
+    ],
+    "limitations": [
+      "CMS live-site direct fetch failure materially limits verification of same-hour changes; fallback search index may lag.",
+      "Potential Prevea health-center closure needs provider-page refresh or dated local corroboration.",
+      "Same-hour search indexing lags, especially local/rural and territories.",
+      "Twelve targeted searches provide bounded recall rather than exhaustive jurisdictional coverage."
+    ],
+    "review_status": "No qualifying findings placed pending_review; unresolved Prevea indexed notice listed in exclusions for later validation.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261112T034859-0800-r11-20261112T114859Z",
+  "scheduled_for": "2026-11-12T03:45:54-08:00",
+  "started_at": "2026-11-12T03:48:59-08:00",
+  "completed_at": "2026-11-12T11:51:01.306Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-12T10:44:06.994Z",
+    "end_at": "2026-11-12T11:51:01.306Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "basis": "Since latest verified prior hourly food-line heartbeat completed at Nov 12 2026 02:44:06 PST; current verification Nov 12 around 03:49-03:50 PST. New developments only; historical or previously recorded signals are excluded.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-12/food-line-recall-20261112T024205-0800-r11-20261112T104205Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for four high-value food-access miss classes; primary nationwide production collection remains authoritative.",
+    "target_classes": [
+      "Closure/loss/fire/disaster affecting the sole/only/last/full-service grocery in a community",
+      "Storm/flood/fire/outage/facility-damage-caused food distribution cancellation or suspension",
+      "Abrupt pantry/food bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" fire flood November 12 2026",
+      "\"last grocery store\" closed November 11 12 2026",
+      "\"sole grocery\" \"closed\" \"November\" 2026 town",
+      "\"full service grocery store\" burned flood closed November 2026",
+      "\"food distribution\" canceled storm flooding November 12 2026",
+      "\"emergency food distribution\" postponed canceled \"November 12\" 2026",
+      "\"food pantry\" closed \"power outage\" \"November 12\" 2026",
+      "\"food pantry\" \"closed until further notice\" November 2026",
+      "\"food bank\" temporary closure fire flood November 2026",
+      "site:gov \"SNAP\" \"outage\" \"November 12, 2026\" benefits",
+      "site:gov \"WIC\" \"interruption\" November 2026 benefits",
+      "\"EBT\" \"down\" \"November 12\" 2026 food stamps"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_result_limitation": "Search results were sparse despite all 12 queries being attempted; not exhaustive evidence that no other disruptions exist.",
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible": 9,
+      "inaccessible": 3,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://dhs.georgia.gov/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://dhs.ri.gov/",
+        "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA site access restriction; state agency and indexed coverage still checked."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA newsroom restriction; alternate official state and local news coverage accessible."
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout fetching",
+          "impact": "Recurring Guam primary agency direct-source gap; indexed recent notices were available and inspected but not fully verifiable from homepage this run."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/",
+        "reason": "McCaysville, Georgia sole-IGA flood closure previously captured in Nov 11 16:44 PST watch; duplicate, not newly published in current interval."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Pre-announced Nov 12 08:00–12:00 UTC EBT processor maintenance affecting AL, AS, GA, IA, IN, MS, MT, NJ, OH, OK, PA, SC, UT was already reviewed during earlier hourly checks. Still listed as in progress, no newly verified unplanned incident or extension."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Remote-service change at two offices due to pest treatment remained undated, with alternative appointments, portal, call center and other regional offices; cannot establish new qualifying interruption since prior check."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "SNAP housing/utility documentation requirement begins Nov 21; not immediate new service interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing processing delays without new timestamp in this observation interval."
+      },
+      {
+        "url": "https://dphss.guam.gov/",
+        "reason": "Indexed Guam notice from Nov 10 reminds Summer EBT beneficiaries of Nov 16 expiry; not a new disruption or direct verified publication in interval."
+      }
+    ],
+    "interpretation": "No newly verified qualifying food-access access-loss signal found within this narrow observation window. DEGRADED represents recurring 2 USDA HTTP 403 and Guam timeout, not a material loss of the entire search; no user notification warranted absent new findings or material degradation.",
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

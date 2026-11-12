@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261111T224543-0800-recall12-20261112T064716385Z",
+  "scheduled_for": "2026-11-11T22:45:22-08:00",
+  "started_at": "2026-11-11T22:45:43-08:00",
+  "completed_at": "2026-11-11T22:47:16.385-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "start": "2026-11-11T21:46:01.440-08:00",
+    "end": "2026-11-11T22:47:16.385-08:00",
+    "prior_check_basis": "Fetched immediately preceding persisted Care Line Watch heartbeat on ops/watch-ledger (run care-line-watch-20261111T214330-0800-recall12-20261112T054601440Z); completed_at 2026-11-11T21:46:01.440-08:00, SUCCESS/no_findings. Coverage targets newly published or newly effective and newly verifiable service changes since that point."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; authoritative national and U.S. territories collection remains production.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "checked_result": "Official CMS Public Notices table retrieved before any other search. Latest notice dated 2026-11-10, Advanced Urgent Care, IL, limitation of CLIA certificate 14D2049789. Next dated 2026-11-09, Compassionate Home Health Services, MI, termination. Both precede the current search window and were previously recorded; no newer official notice shown."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspension November 11 2026 United States",
+      "hospital labor delivery maternity obstetrics unit closure suspended November 11 2026",
+      "behavioral health psychiatric hospital inpatient unit closing suspended November 11 2026",
+      "dialysis center oncology cancer infusion clinic closes services suspended November 11 2026",
+      "rural hospital primary care clinic closure shutdown effective November 11 2026",
+      "ambulance EMS station base service closure suspended November 11 2026",
+      "air medical helicopter air ambulance base closes suspends November 11 2026",
+      "emergency room rural medical service loss diverted ambulances November 11 2026",
+      "hospital emergency department labor delivery reopening services restored November 11 2026",
+      "state department health hospital suspension termination emergency care November 11 2026",
+      "Puerto Rico Guam Virgin Islands CNMI American Samoa hospital clinic service closure suspension November 2026",
+      "November 11 2026 dialysis behavioral health urgent care clinic shutter closure patients"
+    ],
+    "search_recency_days": 2,
+    "search_assessment": "Twelve targeted web searches completed; no new verifiable nonduplicate qualifying U.S./territory service closure, suspension, effective restoration, or new CMS access-risk action in the 21:46–completion Pacific window. No material search or source-access failure observed.",
+    "reviewed_exclusions": [
+      {
+        "title": "Sharon Regional Health System suspends operations a year after rescue from closure",
+        "publisher": "Pittsburgh Business Times",
+        "url": "https://www.bizjournals.com/pittsburgh/news/2026/11/05/sharon-regional-hospital-suspension.html",
+        "reason": "First reported November 4–5, suspension November 6; earlier and already covered, not a new current-window development."
+      },
+      {
+        "title": "‘Betting against the odds’: Struggling Sharon Regional hospital to suspend operations",
+        "publisher": "Pittsburgh Post-Gazette",
+        "url": "https://www.post-gazette.com/business/healthcare-business/2026/11/04/sharon-regional-medical-center-suspends-operations-nov-6/stories/202611040058",
+        "reason": "Same prior event; no newly effective change in current window."
+      },
+      {
+        "title": "Chicago-Area Mothers Struggle to Find Care as Labor and Delivery Units End Services",
+        "publisher": "WTTW",
+        "url": "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services",
+        "reason": "November 2 reporting of previously concluded maternity-service losses; not newly effective this hour."
+      },
+      {
+        "title": "Greenbrier Valley Medical Center reopening maternity ward",
+        "publisher": "WDBJ7",
+        "url": "https://www.wdbj7.com/2026/11/05/greenbrier-valley-medical-center-reopening-maternity-ward-wv-governor-announces/",
+        "reason": "November 5 announcement, predates observation window; article establishes an agreement to reopen but not a newly verified effective restoration in this window."
+      },
+      {
+        "title": "Plans for New Air Ambulance Base Recommended for Approval",
+        "publisher": "Harborough FM",
+        "url": "https://harboroughfm.co.uk/plans-for-new-air-ambulance-base-recommended-for-approval/",
+        "reason": "Outside U.S./territories and a proposal, not an operational access change."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices accessed directly and verified before 12 additional targeted searches.",
+      "Previous heartbeat fetched directly from the requested GitHub ledger branch for comparison.",
+      "Search result dates were compared to actual reported event dates; several recent search results describe older events."
+    ],
+    "limitations": [
+      "Bounded searches cannot guarantee nationwide or full territorial exhaustiveness.",
+      "Same-hour reports may enter search indexes after this run.",
+      "No production approval, publication, schedule, permission or task modification performed."
+    ],
+    "review_status": "No new findings; none pending review.",
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

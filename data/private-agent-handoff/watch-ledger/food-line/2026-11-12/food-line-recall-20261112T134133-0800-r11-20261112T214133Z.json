@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261112T134133-0800-r11-20261112T214133Z",
+  "scheduled_for": "2026-11-12T13:45:54-08:00",
+  "started_at": "2026-11-12T13:41:33-08:00",
+  "completed_at": "2026-11-12T13:42:22-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-12T12:43:38.336-08:00",
+    "end_at": "2026-11-12T13:42:22-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "basis": "Since prior read-back-verified Food Line Source Watch heartbeat completion; targeted searches used three-day engine recency to catch late-indexed local reporting, but only newly verified disruptions qualify.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-12/food-line-recall-20261112T124158-0800-r11-20261112T204158Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value-miss recall only. Production nationwide collector remains authoritative and unchanged. Negative results are not evidence of complete nationwide absence.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery closure, fire, or disaster",
+      "Emergency food distributions canceled/suspended due to storm, flood, fire, outage, or facility damage",
+      "Abrupt food pantry or food bank closure or major access reduction",
+      "New official SNAP, WIC, or other food assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_recency_days": 3,
+    "search_queries": [
+      "\"only grocery store\" closed fire \"November\" \"2026\"",
+      "\"sole grocery store\" \"closed\" OR \"fire\" November 2026",
+      "\"last grocery store\" community \"November 12\" 2026",
+      "\"only full-service grocery\" shuttered November 2026",
+      "\"food distribution\" \"canceled\" \"storm\" OR \"flood\" November 2026",
+      "\"mobile pantry\" \"cancelled\" weather November 12 2026",
+      "\"food pantry\" \"closed\" \"power outage\" November 2026",
+      "\"food bank\" \"closed\" \"fire\" OR \"flood\" November 2026",
+      "\"food pantry\" \"suspended services\" November 2026",
+      "state SNAP benefits EBT outage November 12 2026 agency notice",
+      "WIC benefits unavailable outage Thursday November 12 2026",
+      "SNAP issuance delay suspended November 12 2026 site:gov"
+    ],
+    "search_errors_observed": 0,
+    "search_result_limitation": "Searches surfaced no verified newly qualifying incidents within this interval; results were dominated by September Spencer NY fire, November 8-9 Kalona IA grocery buyer search, older 2026 or 2025 cases, upcoming/prospective assistance rules, and generic unrelated news. Publication dates and event dates were differentiated.",
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible_on_initial_open": 9,
+      "inaccessible_on_initial_open": 3,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.sjcs.org/thepantry-vadc",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring federal FNS news direct-access gap; no material expansion compared with prior run."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring federal SNAP page direct-access gap; alternative state/provider searches remained available."
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Request timeout",
+          "impact": "Recurring territorial official source gap; no new material watch-wide degradation."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer NY only grocery store fire dated September 14, 2026; historical, not new."
+      },
+      {
+        "url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Kalona IA only full-service grocery was seeking a buyer while remaining open; report dated November 8-9, not a confirmed new closure."
+      },
+      {
+        "url": "https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-",
+        "reason": "El Paso TX storm-damaged food bank was closed in September; not newly reported this hour."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Processor maintenance on November 12 completed by 12:00 UTC (04:00 PST), already known; Connecticut Nov 15 conversion announced August 20, not a current new interruption. Status presently all systems operational."
+      },
+      {
+        "url": "https://www.sjcs.org/thepantry-vadc",
+        "reason": "November 11 Annandale VA pop-up listed canceled without source-stated storm, flood, fire, outage, or facility-damage cause; not newly verified."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon SNAP documentation requirements take effect Nov 21 and are not a new immediate assistance interruption."
+      },
+      {
+        "url": "https://katu.com/news/local/oregon-will-check-income-on-more-than-80000-snap-supplemental-nutrition-assistance-program-cases-heres-what-to-do-oregon-department-of-human-services",
+        "reason": "Nov 10 report of case income checks is not evidence of immediate benefit issuance disruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing SNAP processing/call-center delays were undated, without a new event or verifiable new disruption in this interval."
+      }
+    ],
+    "interpretation": "No newly qualifying verifiable food-access disruption from bounded searches or 12 direct source checks. DEGRADED solely for the same three recurring source-access failures; useful alternative coverage remained, with no new material watch-wide failure.",
+    "publication_or_approval_changes": false,
+    "production_collection_modified": false,
+    "schedule_or_task_changes": false
+  }
+}

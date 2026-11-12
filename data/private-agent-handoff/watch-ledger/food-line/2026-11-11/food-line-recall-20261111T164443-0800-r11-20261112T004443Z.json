@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261111T164443-0800-r11-20261112T004443Z",
+  "scheduled_for": "2026-11-11T16:45:54-08:00",
+  "started_at": "2026-11-11T16:44:43-08:00",
+  "completed_at": "2026-11-11T16:46:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start_at": "2026-11-11T15:45:58.229-08:00",
+    "end_at": "2026-11-11T16:46:33-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-11",
+    "basis": "Previous independently fetched food-line supplementary heartbeat completed at 15:45:58.229 PST. Newly published primary reporting within interval accepted even when damage occurred earlier; historical and already-known impacts excluded.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-11/food-line-recall-20261111T154406-0800-r11-20261111T234406Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [
+    {
+      "finding_id": "food-line-20261111-mccaysville-ga-iga-sole-grocery-flood",
+      "canonical_source_url": "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/",
+      "source_url": "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/",
+      "publisher": "WSB-TV Channel 2 Atlanta",
+      "source_published_at": "2026-11-11T18:51:00-05:00",
+      "title": "As flooded town works to rebuild, some wonder what’s next",
+      "exact_supporting_passage": "Edward Vest owns the only grocery store, IGA, in McCaysville. He’s uncertain about if he will rebuild.",
+      "summary": "New local reporting at 3:51 p.m. PST says McCaysville's only grocery store, IGA, was damaged by flooding and is not operating; owner Edward Vest cannot say when it will reopen or whether he will rebuild, estimating $2 million–$3 million to restore it. Roughly 22–24 employees and community grocery access are affected. The flood occurred days earlier, but this specific sole-grocery loss was newly verified and surfaced within the observation window. No reopening date confirmed.",
+      "location": "McCaysville, Fannin County, Georgia, USA",
+      "state": "GA",
+      "scope": "Local community; sole grocery store",
+      "affected_groups": [
+        "McCaysville residents dependent on the only local grocery store",
+        "IGA workers (owner estimates 22–24 employees)"
+      ],
+      "pressure_type": "sole_grocery_store_disaster_closure",
+      "confidence": "high",
+      "source_role": "local_primary_reporting",
+      "evidence_level": "named_owner_interview_and_reporter_confirmed_site_impact",
+      "bounded_query_context": {
+        "query": "McCaysville Georgia flood food pantry grocery store closed November 11 2026",
+        "query_group": "sole/only grocery fire/flood/closure; local flood impact",
+        "recency_days": 1,
+        "first_observed_source_published_at": "2026-11-11T15:51:00-08:00",
+        "previous_checkpoint": "2026-11-11T15:45:58.229-08:00",
+        "observation": "Newly published in-window reporting, not claimed as a flood onset within the hour."
+      },
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "event_occurred_at": null
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Food Line recall for four audited miss classes; production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery disaster or closure",
+      "Disaster-related emergency distribution suspension/cancellation",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance access interruption"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" \"November 11\" \"2026\"",
+      "\"only grocery store\" fire \"November 11\" \"2026\"",
+      "\"last grocery store\" closed November 2026 small town",
+      "\"full-service grocery\" closure \"November 11\" 2026",
+      "\"food distribution\" canceled storm \"November 11\" 2026",
+      "\"food pantry\" closed flooding \"November 11\" 2026",
+      "\"food bank\" \"distribution canceled\" November 11 2026",
+      "\"food bank\" \"unexpectedly closed\" November 11 2026",
+      "SNAP EBT system outage November 11 2026 benefits cannot use state agency",
+      "WIC benefits outage November 11 2026 office service interruption",
+      "site:gov \"SNAP\" \"interruption\" \"November 11\" 2026",
+      "McCaysville Georgia flood food pantry grocery store closed November 11 2026"
+    ],
+    "search_recency_days": 1,
+    "search_errors_observed": 0,
+    "direct_source_checks": {
+      "distinct_urls": 12,
+      "accessible": 8,
+      "inaccessible": 4,
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout fetching",
+          "impact": "Recurring Guam source outage; bounded territory coverage gap remains."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA restriction; other federal/state and targeted sources checked."
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Recurring USDA restriction; other sources checked."
+        },
+        {
+          "url": "https://www.forgottenharvest.org/find-food/",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Food locator direct fetch refused; no separate new outage evidence; no retry bypass attempted."
+        }
+      ],
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://dhs.georgia.gov/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.ri.gov/",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://masonfoodpantry.org/"
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://cbs2iowa.com/news/local/jws-foods-owners-seek-buyer-as-they-plan-next-chapter",
+        "reason": "Kalona's only full-service grocery JW's Foods remains open while owners seek buyer; hypothetical future closure, not present loss."
+      },
+      {
+        "url": "https://abcnews.com/Politics/trump-administration-moves-drop-millions-snap-proposal/story?id=138031618",
+        "reason": "November 11 policy proposal has prospective effect, not immediate SNAP benefit interruption."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "No current outage; Nov 12 multi-state maintenance posted Nov 2, and Nov 15 Connecticut conversion posted Aug 20."
+      },
+      {
+        "url": "https://masonfoodpantry.org/",
+        "reason": "November 11 Veterans Day closure not shown to be sudden disaster/facility-related cancellation."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Nov 21 documentation change prospective, not present interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "General undated call-center delays; no new verified interruption in window."
+      },
+      {
+        "url": "https://dhs.georgia.gov/",
+        "reason": "Previously restored EBT IVR and prior October card security changes, not new."
+      }
+    ],
+    "source_validated": "https://www.wsbtv.com/news/local/flooded-town-works-rebuild-some-wonder-whats-next/Q5GBYQUOSVG6ROAV65DVY45YRI/",
+    "signal_assessment": "One newly reported qualifying sole-grocery closure from flood damage in McCaysville, GA, reported six minutes after prior heartbeat. Other searched misses not confirmed. Not a claim of nationwide exhaustive absence.",
+    "material_degradation": false,
+    "technical_status_reason": "Four direct-source access failures (including three recurring restrictions) make direct-source coverage technically DEGRADED despite usable research and a verified finding.",
+    "approvals_or_publication": false,
+    "changes_to_production": false,
+    "schedule_changed": false,
+    "task_disabled": false,
+    "notification_reason": "New qualifying sole-grocery access loss requires review."
+  }
+}

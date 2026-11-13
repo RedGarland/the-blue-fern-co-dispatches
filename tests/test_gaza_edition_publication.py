@@ -145,7 +145,7 @@ def test_executor_dry_run_has_exact_diff_and_repeat_receipt_guard(tmp_path: Path
     assert not receipt_path.exists()
 
     receipt_path.write_text(json.dumps({"local_application_executed": True}), encoding="utf-8")
-    with pytest.raises(GazaPublicationError, match="already executed"):
+    with pytest.raises(GazaPublicationError, match="already executed.*no idempotent re-application"):
         execute_authorization(src, pages, authorization_path, receipt_path)
 
 
@@ -167,16 +167,16 @@ def test_executor_applies_only_bound_files_and_records_rollback_evidence(tmp_pat
     assert receipt["rollback_evidence"][0]["prior_sha256"] is None
 
 
-def test_cli_copy_failure_returns_nonzero_and_preserves_receipt_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_buffer_write_failure_returns_nonzero_and_preserves_receipt_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     src, pages, request_path, _ = setup_case(tmp_path)
     authorization_path = src / "publication-authorizations/gaza/edition/test.json"
     create_authorization(src, pages, request_path, authorization_path)
     receipt_path = tmp_path / "receipt.json"
 
-    def fail_copy(*args: object, **kwargs: object) -> None:
-        raise OSError("injected copy failure")
+    def fail_write(*args: object, **kwargs: object) -> None:
+        raise OSError("injected buffer write failure")
 
-    monkeypatch.setattr(publication.shutil, "copyfile", fail_copy)
+    monkeypatch.setattr(publication, "_write_validated_bytes", fail_write)
     code = main(["--mode", "execute", "--repo-root", str(src), "--pages-root", str(pages), "--authorization", str(authorization_path), "--receipt", str(receipt_path)])
     assert code == 1
     output = capsys.readouterr().out
@@ -186,6 +186,94 @@ def test_cli_copy_failure_returns_nonzero_and_preserves_receipt_state(tmp_path: 
     assert receipt["local_application_executed"] is False
     assert receipt["publication_state"] == "rolled_back_local_application"
     assert not (pages / "index.html").exists()
+
+
+def test_executor_rejects_staged_path_drift_before_any_page_write(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    src, pages, request_path, request = setup_case(tmp_path)
+    authorization_path = src / "publication-authorizations/gaza/edition/test.json"
+    create_authorization(src, pages, request_path, authorization_path)
+    staged = Path(request["package_root"]) / "index.html"
+    receipt_path = tmp_path / "receipt.json"
+    calls = 0
+    writes: list[Path] = []
+    original_recheck = publication._recheck_execution_inputs
+
+    def mutate_after_receipt(pages_root: Path, files: list[dict[str, object]], pages_head: str) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            staged.write_text("tampered after authorization\n", encoding="utf-8")
+        original_recheck(pages_root, files, pages_head)
+
+    monkeypatch.setattr(publication, "_recheck_execution_inputs", mutate_after_receipt)
+    monkeypatch.setattr(publication, "_write_validated_bytes", lambda path, content: writes.append(path))
+    result = execute_authorization(src, pages, authorization_path, receipt_path, dry_run=False)
+
+    assert result["status"] == "rolled_back"
+    assert writes == []
+    assert not (pages / "index.html").exists()
+    assert "staged artifact changed immediately before write" in result["receipt"]["error"]
+
+
+def test_executor_rechecks_target_baseline_before_each_buffer_write(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    src, pages, request_path, request = setup_case(tmp_path)
+    authorization_path = src / "publication-authorizations/gaza/edition/test.json"
+    create_authorization(src, pages, request_path, authorization_path)
+    receipt_path = tmp_path / "receipt.json"
+    calls = 0
+    writes: list[Path] = []
+    original_recheck = publication._recheck_execution_row
+
+    def mutate_target_before_row_check(row: dict[str, object]) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 3:
+            Path(row["live"]).write_text("external target drift\n", encoding="utf-8")
+        original_recheck(row)
+
+    monkeypatch.setattr(publication, "_recheck_execution_row", mutate_target_before_row_check)
+    monkeypatch.setattr(publication, "_write_validated_bytes", lambda path, content: writes.append(path))
+    result = execute_authorization(src, pages, authorization_path, receipt_path, dry_run=False)
+
+    assert result["status"] == "rolled_back"
+    assert writes == []
+    assert (pages / "index.html").read_text(encoding="utf-8") == "external target drift\n"
+    assert "Pages target changed immediately before write" in result["receipt"]["error"]
+
+
+def test_executor_rolls_back_all_attempted_files_after_multi_file_partial_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    src, pages, request_path, request = setup_case(tmp_path)
+    pkg = Path(request["package_root"])
+    (pkg / "archive.html").write_text("archive corrected\n", encoding="utf-8")
+    manifest_path = pkg / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    archive_sha = hashlib.sha256((pkg / "archive.html").read_bytes()).hexdigest()
+    manifest["representations"].append({"public_path": "archive.html", "role": "archive", "sha256": archive_sha})
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    request["package_manifest_sha256"] = "sha256:" + hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+    request_path.write_text(json.dumps(request), encoding="utf-8")
+    authorization_path = src / "publication-authorizations/gaza/edition/test.json"
+    create_authorization(src, pages, request_path, authorization_path)
+    receipt_path = tmp_path / "receipt.json"
+    writes = 0
+
+    def fail_on_second_write(path: Path, content: bytes) -> None:
+        nonlocal writes
+        writes += 1
+        if writes == 2:
+            raise OSError("injected second-file failure")
+        path.write_bytes(content)
+
+    monkeypatch.setattr(publication, "_write_validated_bytes", fail_on_second_write)
+    result = execute_authorization(src, pages, authorization_path, receipt_path, dry_run=False)
+
+    assert result["status"] == "rolled_back"
+    assert writes == 2
+    assert not (pages / "index.html").exists()
+    assert not (pages / "archive.html").exists()
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["local_application_executed"] is False
+    assert receipt["publication_state"] == "rolled_back_local_application"
 
 
 def test_executor_revalidates_package_manifest_before_copy(tmp_path: Path) -> None:

@@ -3,11 +3,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import shutil
+import os
 import subprocess
+import tempfile
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+from bluefern_dispatches.gaza_pages_preservation import (
+    GazaPagesPreservationError,
+    assert_no_update_pages_preserve_baseline,
+)
 
 SCHEMA = "gaza_edition_correction_publication_authorization_v1"
 REQUEST_SCHEMA = "gaza_edition_correction_publication_request_v1"
@@ -61,6 +68,103 @@ def _repo_path(root: Path, value: str, field: str) -> Path:
     if root.resolve() not in resolved.parents:
         raise GazaPublicationError(f"{field} escapes repository")
     return resolved
+
+
+def _validate_no_update_preservation(
+    *,
+    manifest: dict[str, Any],
+    package_root: Path,
+    pages_root: Path,
+    rows: list[dict[str, Any]],
+    diff: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]] | None:
+    """Run the whole-document guard for a Gaza no-update package.
+
+    The contract is intentionally opt-in only when the manifest explicitly
+    declares ``package_type=gaza_no_update``.  Ordinary correction fixtures
+    and packages remain unaffected, while a no-update package cannot silently
+    omit its landing/archive paths, baseline, candidate, edition-date, or hash
+    bindings.
+    """
+
+    required_paths = {"gaza/index.html", "gaza/archive.html"}
+    package_type = str(manifest.get("package_type") or "").strip()
+    package_paths = {str(row.get("public_path") or "") for row in rows}
+    no_update_paths = {
+        str(row.get("public_path") or "")
+        for row in rows
+        if str(row.get("role") or "").strip().lower().startswith("gaza_no_update")
+        or str(row.get("public_path") or "") in required_paths
+    }
+    if package_type != "gaza_no_update":
+        if no_update_paths and (
+            manifest.get("no_update_preservation") is not None
+            or any(
+                str(row.get("role") or "").strip().lower().startswith("gaza_no_update")
+                for row in rows
+            )
+        ):
+            raise GazaPublicationError(
+                "staged no-update Gaza package must explicitly declare package_type=gaza_no_update"
+            )
+        return None
+    if no_update_paths and not required_paths.issubset(package_paths):
+        raise GazaPublicationError(
+            "staged no-update Gaza package must include both landing and archive pages"
+        )
+    if not required_paths.issubset(package_paths):
+        raise GazaPublicationError("staged no-update Gaza package must include both landing and archive pages")
+
+    contract = manifest.get("no_update_preservation")
+    if not isinstance(contract, dict):
+        raise GazaPublicationError("staged no-update Gaza package is missing preservation contract")
+    edition_date = str(contract.get("edition_date") or "").strip()
+    if not edition_date:
+        raise GazaPublicationError("staged no-update Gaza package is missing preservation edition_date")
+    if contract.get("allow_idempotent") is not True:
+        raise GazaPublicationError("staged no-update Gaza package must explicitly allow idempotent retry")
+
+    baseline_hashes = contract.get("baseline_sha256")
+    candidate_hashes = contract.get("candidate_sha256")
+    if not isinstance(baseline_hashes, dict) or not isinstance(candidate_hashes, dict):
+        raise GazaPublicationError("staged no-update Gaza package is missing preservation hash bindings")
+    if set(baseline_hashes) != required_paths or set(candidate_hashes) != required_paths:
+        raise GazaPublicationError("staged no-update Gaza preservation hash bindings are incomplete")
+    expected_new_row_html = contract.get("expected_new_row_html")
+    if not isinstance(expected_new_row_html, dict) or set(expected_new_row_html) != required_paths:
+        raise GazaPublicationError("staged no-update Gaza package is missing exact new-row markup bindings")
+
+    diff_by_path = {str(row["public_path"]): row for row in diff}
+    for path in required_paths:
+        if diff_by_path[path]["prior_sha256"] != str(baseline_hashes[path]).removeprefix("sha256:"):
+            raise GazaPublicationError(f"staged no-update Gaza baseline hash binding differs: {path}")
+        if diff_by_path[path]["staged_sha256"] != str(candidate_hashes[path]).removeprefix("sha256:"):
+            raise GazaPublicationError(f"staged no-update Gaza candidate hash binding differs: {path}")
+
+    baseline_pages: dict[str, str] = {}
+    candidate_pages: dict[str, str] = {}
+    for path in required_paths:
+        live = pages_root / path
+        staged = package_root / path
+        if not live.is_file():
+            raise GazaPublicationError(f"staged no-update Gaza baseline page is missing: {path}")
+        # Decode bytes directly so the hash binding is over the exact staged
+        # and live bytes; Path.read_text() may apply platform newline
+        # translation on Windows before the guard hashes the text.
+        baseline_pages[path] = live.read_bytes().decode("utf-8")
+        candidate_pages[path] = staged.read_bytes().decode("utf-8")
+    try:
+        return assert_no_update_pages_preserve_baseline(
+            baseline_pages=baseline_pages,
+            candidate_pages=candidate_pages,
+            edition_date=edition_date,
+            allow_idempotent=True,
+            expected_baseline_sha256=baseline_hashes,
+            expected_candidate_sha256=candidate_hashes,
+            expected_new_row_html=expected_new_row_html,
+        )
+    except GazaPagesPreservationError as exc:
+        raise GazaPublicationError(str(exc)) from exc
 
 
 def _approval(source_root: Path, request: dict[str, Any]) -> tuple[dict[str, Any], str]:
@@ -142,6 +246,17 @@ def _manifest(package_root: Path, request: dict[str, Any], pages_root: Path) -> 
         live = pages_root / public_path
         prior = _sha(live.read_bytes()) if live.is_file() else None
         diff.append({"public_path": public_path, "role": row.get("role"), "prior_sha256": prior, "staged_sha256": row["sha256"], "action": "add" if prior is None else "replace"})
+    preservation = _validate_no_update_preservation(
+        manifest=manifest,
+        package_root=package_root,
+        pages_root=pages_root,
+        rows=rows,
+        diff=diff,
+    )
+    if preservation is not None:
+        # Keep the validation in the in-memory result for review and receipts;
+        # it is not written back into the staged package or Pages.
+        manifest["preservation_validation"] = preservation
     return manifest, rows, diff
 
 
@@ -272,18 +387,108 @@ def _validate_authorization(repo_root: Path, pages_root: Path, authorization_pat
     for row in diff:
         staged = _repo_path(package_root, row["public_path"], "staged public path")
         live = _repo_path(pages_root, row["public_path"], "Pages public path")
+        staged_bytes = staged.read_bytes()
+        if _sha(staged_bytes) != row["staged_sha256"]:
+            raise GazaPublicationError(f"staged artifact changed during execution validation: {row['public_path']}")
         prior_bytes = live.read_bytes() if live.is_file() else None
+        if (None if prior_bytes is None else _sha(prior_bytes)) != row["prior_sha256"]:
+            raise GazaPublicationError(f"Pages target changed during execution validation: {row['public_path']}")
         expected.append({"public_path": row["public_path"], "staged": staged, "live": live, "prior_bytes": prior_bytes, "prior_sha256": row["prior_sha256"], "staged_sha256": row["staged_sha256"], "action": row["action"]})
+        expected[-1]["staged_bytes"] = staged_bytes
     return authorization, expected, request["pages_head"]
 
 
+def _recheck_execution_inputs(pages_root: Path, files: list[dict[str, Any]], pages_head: str) -> None:
+    """Fail closed if the validated Pages baseline or staged bytes drifted."""
+
+    if _git(pages_root, "rev-parse", "HEAD") != pages_head:
+        raise GazaPublicationError("Pages target head changed immediately before write")
+    if _git(pages_root, "status", "--porcelain"):
+        raise GazaPublicationError("Pages target became dirty immediately before write")
+    for row in files:
+        _recheck_execution_row(row)
+
+
+def _recheck_execution_row(row: dict[str, Any]) -> None:
+    public_path = str(row["public_path"])
+    live = row["live"]
+    current_live = live.read_bytes() if live.is_file() else None
+    current_live_sha = None if current_live is None else _sha(current_live)
+    if current_live_sha != row["prior_sha256"]:
+        raise GazaPublicationError(f"Pages target changed immediately before write: {public_path}")
+    staged = row["staged"]
+    if not staged.is_file():
+        raise GazaPublicationError(f"staged artifact disappeared immediately before write: {public_path}")
+    if _sha(staged.read_bytes()) != row["staged_sha256"]:
+        raise GazaPublicationError(f"staged artifact changed immediately before write: {public_path}")
+
+
+def _write_validated_bytes(path: Path, content: bytes) -> None:
+    """Write the immutable validation snapshot, never reread staged content."""
+
+    path.write_bytes(content)
+
+
+@contextmanager
+def _pages_execution_lock(pages_root: Path):
+    """Coordinate cooperating local publishers without changing repo permissions."""
+
+    lock_name = "bluefern-gaza-pages-" + _sha(str(pages_root.resolve()).encode("utf-8")) + ".lock"
+    lock_path = Path(tempfile.gettempdir()) / lock_name
+    with lock_path.open("a+b") as handle:
+        handle.seek(0, os.SEEK_END)
+        if handle.tell() == 0:
+            handle.write(b"0")
+            handle.flush()
+        handle.seek(0)
+        locked = False
+        try:
+            if os.name == "nt":
+                import msvcrt
+
+                try:
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                except OSError as exc:
+                    raise GazaPublicationError("Pages execution lock is held") from exc
+            else:
+                import fcntl
+
+                try:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError as exc:
+                    raise GazaPublicationError("Pages execution lock is held") from exc
+            locked = True
+            yield
+        finally:
+            if locked:
+                if os.name == "nt":
+                    import msvcrt
+
+                    handle.seek(0)
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    import fcntl
+
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
 def execute_authorization(repo_root: Path, pages_root: Path, authorization_path: Path, receipt_path: Path, *, dry_run: bool = True) -> dict[str, Any]:
+    resolved_pages_root = pages_root.resolve(strict=True)
+    with _pages_execution_lock(resolved_pages_root):
+        return _execute_authorization_unlocked(repo_root, resolved_pages_root, authorization_path, receipt_path, dry_run=dry_run)
+
+
+def _execute_authorization_unlocked(repo_root: Path, pages_root: Path, authorization_path: Path, receipt_path: Path, *, dry_run: bool = True) -> dict[str, Any]:
     receipt_path = receipt_path.resolve()
     if receipt_path.exists():
         prior = _read(receipt_path)
         if prior.get("local_application_executed") is True:
-            raise GazaPublicationError("publication authorization was already executed")
+            raise GazaPublicationError(
+                "publication authorization retry rejected: receipt records local_application_executed=true "
+                "(already executed); no idempotent re-application is claimed"
+            )
     authorization, files, pages_head = _validate_authorization(repo_root.resolve(strict=True), pages_root.resolve(strict=True), authorization_path)
+    _recheck_execution_inputs(pages_root, files, pages_head)
     receipt = {
         "schema_version": "gaza_edition_correction_publication_receipt_v1",
         "correction_id": authorization["correction_id"],
@@ -303,15 +508,22 @@ def execute_authorization(repo_root: Path, pages_root: Path, authorization_path:
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     receipt["status"] = "prepared"
     receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    attempted: list[dict[str, Any]] = []
     try:
+        # Recheck after preparing the receipt and immediately before applying
+        # any Pages bytes. The staged path is checked for drift, but the
+        # immutable snapshot captured during authorization is what gets used.
+        _recheck_execution_inputs(pages_root, files, pages_head)
         for row in files:
+            _recheck_execution_row(row)
             row["live"].parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(row["staged"], row["live"])
+            attempted.append(row)
+            _write_validated_bytes(row["live"], row["staged_bytes"])
         receipt["local_application_executed"] = True
         receipt["status"] = "local_applied_uncommitted"
         receipt["publication_state"] = "local_applied_uncommitted"
     except Exception as exc:
-        for row in files:
+        for row in attempted:
             if row["prior_bytes"] is None:
                 row["live"].unlink(missing_ok=True)
             else:

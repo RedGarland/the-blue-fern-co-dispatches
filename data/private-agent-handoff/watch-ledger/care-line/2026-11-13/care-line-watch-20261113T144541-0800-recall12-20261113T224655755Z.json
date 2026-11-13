@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T144541-0800-recall12-20261113T224655755Z",
+  "scheduled_for": "2026-11-13T14:45:22-08:00",
+  "started_at": "2026-11-13T14:45:41-08:00",
+  "completed_at": "2026-11-13T14:46:55.755-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T13:51:39.830-08:00",
+    "end": "2026-11-13T14:46:55.755-08:00",
+    "prior_check_basis": "Prior verified Care Line Watch heartbeat care-line-watch-20261113T134954-0800-recall12-20261113T215139Z completed 2026-11-13 13:51:39.830 PST.",
+    "newness_rule": "New, source-supported U.S./territory service closure, suspension, access restriction, effective essential-service reopening or new CMS notice since previous check; duplicate and nonconcrete actions excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; production Care Line national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_after_prior_check": 0,
+      "previously_recorded_notice_duplicates": [
+        "Cypress Hospice, California, CCN B31731, November 13 termination notice.",
+        "AZURE HOME HEALTH, California, CCN 757304, November 13 termination notice."
+      ],
+      "retrieval_status": "SUCCESS: canonical CMS page opened and current listing inspected. An earlier search excerpt showed an outdated November 10 listing; live canonical page displayed both November 13 notices, already logged at 11:47 PST."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended services \"November 13, 2026\" United States",
+      "hospital labor delivery maternity unit closure suspended November 13 2026",
+      "behavioral health psychiatric inpatient facility closed admissions stopped November 13 2026",
+      "dialysis center oncology clinic services closing November 13 2026",
+      "rural hospital urgent care primary care shutdown Friday November 13 2026",
+      "ambulance EMS service suspended shut down base November 13 2026",
+      "air medical helicopter service base closure suspension November 13 2026",
+      "hospital emergency department reopen restored service November 13 2026",
+      "CMS CLIA laboratory suspension rescission notice November 13 2026 termination provider",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital emergency healthcare services closure November 2026",
+      "hospital clinic stops accepting patients closes Friday Nov 13 2026",
+      "Vista Medical Center East Waukegan November 13 2026 inpatient floor admission closure updates"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "CMS notices, Cypress Hospice / AZURE HOME HEALTH, California",
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Both November 13 notices were logged earlier at 11:47 PST. No newly listed notice since 13:51 PST."
+      },
+      {
+        "title": "Vista Medical Center East fifth-floor closure, Waukegan, Illinois",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/",
+        "reason": "Existing November 13 article documents November 12 inpatient-floor closure; already logged at 09:49 PST; proposed takeover is not an effective service restoration."
+      },
+      {
+        "title": "Newark-Wayne Community Hospital maternity service loss, New York",
+        "source_url": "https://www.fingerlakesdailynews.com/local/newark-wayne-hospital-birthing-unit-to-close/",
+        "reason": "Older August announcement, not new in this observation window."
+      },
+      {
+        "title": "National FAA ground stop, United States",
+        "source_url": "https://www.reuters.com/world/us/faa-issues-national-ground-stop-due-extraordinary-circumstance-reasons-safety-2026-11-13/",
+        "reason": "No verified specific air-ambulance/base service suspension or closure; not an access-specific qualified event on available sources."
+      },
+      {
+        "title": "MaineHealth Damariscotta labor/delivery litigation",
+        "source_url": "https://www.boothbayregister.com/article/mainehealth-sued-over-potential-closure-labor-and-delivery-unit/273131",
+        "reason": "Potential/proposed closure and earlier litigation; no newly effective service change."
+      }
+    ],
+    "limitations": [
+      "Twelve bounded non-CMS searches provide selective, not exhaustive national, rural, and territorial coverage.",
+      "Search results include stale, future-timestamped, out-of-jurisdiction and unrelated material; publication dates and concrete service effects require case-by-case confirmation.",
+      "Search-index latency can conceal same-hour changes; this does not imply production collector completeness.",
+      "No confirmed new, nonduplicate qualifying changes since prior 13:51:39 PST check."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

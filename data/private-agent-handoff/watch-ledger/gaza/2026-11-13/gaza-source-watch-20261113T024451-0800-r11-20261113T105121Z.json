@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T024451-0800-r11-20261113T105121Z",
+  "scheduled_for": "2026-11-13T02:44:51-08:00",
+  "started_at": "2026-11-13T02:49:11-08:00",
+  "completed_at": "2026-11-13T10:51:21.967Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T01:51:30.804-08:00",
+    "end": "2026-11-13T10:51:21.967Z",
+    "previous_run_completed_at": "2026-11-13T09:51:30.804Z",
+    "basis": "Previous completed hourly watch read directly from the ops/watch-ledger branch. Newly discoverable material was screened for event/publication recency and prior-run duplication.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production collector/publisher authoritative, no publication or approval action.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T014451-0800-r11-20261113T095130Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage and updates index show 13 November Humanitarian Country Team appeal as newest Gaza item; over 150,000 winter tents waiting outside Gaza documented by preceding hourly checks, not newly qualifying.",
+        "follow_up_url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza"
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current WHO emergency overview, health operations and dated news reviewed; no new interval-dated Gaza operational change. Incorrect legacy URL yielded 404, then canonical WHO URL worked."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Landing and reports inspected; country figures as of September 2026. No new interval event."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Known persistent regional restriction; not newly worsened."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza \"13 Nov 2026\" new situation hospital casualties humanitarian",
+      "site:who.int Gaza \"13 November 2026\" medical evacuation hospital health",
+      "site:unicef.org Gaza \"13 November 2026\" storm children shelters water",
+      "site:wfp.org Gaza \"13 November 2026\" crossing food distribution",
+      "site:reliefweb.int Gaza \"13 Nov 2026\" flash update health water displacement",
+      "Gaza 13 November 2026 killed wounded Friday morning Reuters AP ceasefire strike",
+      "Gaza 13 November 2026 Nasser Hospital new emergency services ambulance wounded latest",
+      "Gaza 13 November 2026 Rafah Kerem Shalom crossing humanitarian convoy fuel update",
+      "Gaza November 13 2026 hostage detainee ceasefire negotiations changes today",
+      "site:english.wafa.ps \"13/November/2026\" Gaza killed injured displaced strike",
+      "site:msf.org Gaza \"13 November 2026\" Nasser Hospital surgery displacement",
+      "site:icrc.org Gaza \"13 November 2026\" ambulance detainee access hospitals"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "13 November winter aid statement remains newest; previously covered."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "At observation, newest 13 November item 11:43 local Jerusalem time concerns al-Mughayyir, West Bank; other items 10:39 Bethlehem and 10:02 condemnation are not new Gaza events. 09:30 Gaza fatalities already present in earlier heartbeat."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new medical evacuation, facility-function or WHO health response notice."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "13 November OCHA winterization appeal with 150,000+ tents pending",
+        "reason": "Already captured in preceding heartbeats."
+      },
+      {
+        "subject": "13 November WAFA al-Tuffah gunfire death and late-12-November al-Mawasi drone death",
+        "reason": "Already captured in 00:44 run and explicitly de-duplicated in 01:44 run."
+      },
+      {
+        "subject": "Nasser Hospital November 12 strike, six killed, MSF 52 injured and four departments out of service",
+        "reason": "Previously recorded. New article publication dates and reactions do not document a new event or changed capacity."
+      },
+      {
+        "subject": "WAFA November 13 West Bank items, Arab Parliament condemnation; old crossing and winter reports",
+        "reason": "Out of Gaza scope, reaction-only, or stale."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED solely for persistent WHO Eastern Mediterranean HTTP 502; OCHA, WHO Global, WHO Health Cluster, WAFA and established reporting were accessible. No newly observed material degradation.",
+    "limitations": "Search recency and article indexing may lag events; this no_findings result means no newly verified non-duplicate qualifying report in this bounded interval, not proof no incident occurred.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no publish, approve, merge, task modification or disabling."
+  }
+}

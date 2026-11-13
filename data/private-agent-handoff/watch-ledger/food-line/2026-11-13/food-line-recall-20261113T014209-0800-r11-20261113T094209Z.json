@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T014209-0800-r11-20261113T094209Z",
+  "scheduled_for": "2026-11-13T01:45:54-08:00",
+  "started_at": "2026-11-13T01:42:09-08:00",
+  "completed_at": "2026-11-13T01:44:20-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T00:48:43-08:00",
+    "end_at": "2026-11-13T01:44:20-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "Previous read-back-verified Food Line heartbeat completed_at to end of current scan; two/three-day query recency for publication lag. Supplementary non-exhaustive recall.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T004648-0800-r11-20261113T084648Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative nationwide publication/collection unchanged. No findings is not proof of no incidents.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery closure/loss/fire/disaster",
+      "Emergency food distribution cancelled or suspended by storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food bank closure or major access reduction",
+      "Official SNAP/WIC/food assistance immediate access interruption"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" \"November 13, 2026\" closed fire",
+      "\"last grocery store\" \"November 12, 2026\" closed town",
+      "\"only full-service grocery\" November 13 2026 closing fire community",
+      "food pantry emergency closure November 13 2026 storm fire power outage",
+      "food bank distribution canceled November 13 2026 flooding storm",
+      "food distribution suspended November 12 2026 damage building storm",
+      "SNAP EBT outage benefits delayed November 13 2026 state agency",
+      "WIC appointments suspended November 13 2026 official agency outage",
+      "\"food pantry\" \"Nov. 13, 2026\" closed cancelled emergency",
+      "\"food distribution\" \"November 13, 2026\" canceled weather",
+      "\"only grocery store\" fire closing \"November 12\" \"2026\"",
+      "\"EBT\" \"November 13, 2026\" outage interruption benefits"
+    ],
+    "search_errors_observed": 0,
+    "search_limitations": "All 12 targeted searches executed; results were primarily historical grocery events, routine program/holiday guidance and unverified cancellation statements. New hyperlocal incidents may not yet be indexed.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 8,
+      "inaccessible": 5,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.sjcs.org/thepantry-vadc"
+      ],
+      "failures": [
+        {
+          "url": "https://www.buncombenc.gov/AlertCenter.aspx",
+          "error": "HTTP 403",
+          "impact": "Intermittent known county alert-page access restriction"
+        },
+        {
+          "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap",
+          "error": "HTTP 403",
+          "impact": "Intermittent known Rhode Island SNAP-page restriction"
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA newsroom restriction"
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA SNAP restriction"
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam DPHSS timeout"
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "No November 13 incident; November 12 maintenance completed before observation; Connecticut November 15 migration announced August 20 and is prospective."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "November 21 verification requirement prospective, no newly confirmed immediate interruption."
+      },
+      {
+        "url": "https://www.sjcs.org/thepantry-vadc",
+        "reason": "November 11 Annandale pop-up cancellation before window, no established weather/fire/outage/damage cause."
+      },
+      {
+        "url": "https://www.bountifulfoodpantry.org/",
+        "reason": "November 11 Veterans Day closure routine, reopened November 12."
+      },
+      {
+        "url": "https://bigreddoor.org/events",
+        "reason": "Generic bad-weather closure policy, no newly confirmed specific cancellation."
+      },
+      {
+        "url": "https://wichitaonthecheap.com/free-meals-thanksgiving-food-distribution-at-central-community-church/",
+        "reason": "Holiday food resource guide, excluded."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "No newly verified weather/damage-related distribution cancellation."
+      }
+    ],
+    "interpretation": "DEGRADED due to five direct-source access failures. USDA and Guam restrictions recur; Buncombe and Rhode Island have failed intermittently previously. Eight direct sources and all targeted searches remained accessible. No new material coverage breakdown or qualifying finding substantiated.",
+    "material_new_degradation": false,
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

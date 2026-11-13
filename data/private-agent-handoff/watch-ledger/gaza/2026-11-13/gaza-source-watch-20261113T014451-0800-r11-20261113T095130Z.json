@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T014451-0800-r11-20261113T095130Z",
+  "scheduled_for": "2026-11-13T01:44:51-08:00",
+  "started_at": "2026-11-13T01:49:35-08:00",
+  "completed_at": "2026-11-13T09:51:30.804Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T00:52:31.291-08:00",
+    "end": "2026-11-13T09:51:30.804Z",
+    "previous_run_completed_at": "2026-11-13T00:52:31.291-08:00",
+    "basis": "Prior hourly heartbeat fetched and verified from ops/watch-ledger; searches for newly discoverable reports since previous completed watch, with earlier dated material screened for prior documentation and duplicates.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production remains authoritative. No publication, authorization, schedule change, or disabling.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T004451-0800-r11-20261113T085012Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "13 November HCT winter-supplies appeal remains most recent; 150,000 procured tents outside Gaza was already recorded in preceding heartbeat. No newer qualifying bulletin."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Verified by navigation from WHO emergencies and homepage; no new dated Gaza health operations or evacuation development. Initial obsolete/lowercase URL yielded DisabledError but canonical link resolved."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Landing data as of September 2026; no interval-dated operational change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Previously documented regional 502 persists, not independently shown to have worsened."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int Gaza 13 November 2026 hospital emergency medical evacuation health",
+      "site:ochaopt.org Gaza November 13 2026 humanitarian situation update casualties crossings shelter",
+      "site:unicef.org Gaza November 13 2026 water children flood access",
+      "site:wfp.org Gaza 13 November 2026 food assistance truck access",
+      "site:reliefweb.int Gaza 13 November 2026 flash update displacement health",
+      "Gaza November 13 2026 civilian killed wounded airstrike Reuters AP latest",
+      "Gaza 13 November 2026 Nasser Hospital health services medical evacuation new developments",
+      "Gaza 13 November 2026 crossing Rafah Kerem Shalom aid trucks crossing status",
+      "Gaza November 13 2026 ceasefire negotiations hostage release detainees latest",
+      "Gaza 13 November 2026 flood destroyed tents displaced families latest",
+      "Gaza 13 November 2026 ambulance hospital fuel emergency medical services MSF ICRC",
+      "site:english.wafa.ps Gaza 13 November 2026 killed injured gunfire drone strike"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA HCT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "result": "13 November statement reviewed; existing prior-run quantitative finding, not new."
+      },
+      {
+        "publisher": "OCHA updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No Gaza update newer than the 13 November HCT winter-supplies statement."
+      },
+      {
+        "publisher": "WHO emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Current WHO Global page accessible through official linked canonical path, no new dated Gaza change."
+      },
+      {
+        "publisher": "WHO global latest news",
+        "url": "https://www.who.int/",
+        "result": "No new Gaza news item; WHO Global site accessible."
+      },
+      {
+        "publisher": "WAFA latest index",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest 13 November 10:02 local Arab Parliament condemnation adds no new Gaza operational or casualty facts; 09:30 al-Tuffah and al-Mawasi incidents already in preceding heartbeat."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "13 November OCHA winter relief statement, 150,000 tents outside Gaza",
+        "reason": "Exact statement and quantified obstruction captured in previous hourly heartbeat; duplicate."
+      },
+      {
+        "subject": "WAFA 13 November 09:30 al-Tuffah and late-12-November al-Mawasi fatalities",
+        "reason": "Same source and incident URLs already recorded in preceding heartbeat."
+      },
+      {
+        "subject": "13 November Arab Parliament condemnation of Nasser Hospital strike",
+        "reason": "Reaction to previously documented 12 November hospital strike; no independent new casualty/functional update."
+      },
+      {
+        "subject": "11–12 November Nasser Hospital strike and MSF casualty/department updates; older rain/displacement reports",
+        "reason": "Previously recorded; newer news syndications repeat known events."
+      },
+      {
+        "subject": "News search results without new dated, traceable Gaza developments",
+        "reason": "Mostly stale, historical, or republished material; excluded."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO Eastern Mediterranean 502. WHO Global, WHO Health Cluster, OCHA and WAFA accessible. This restriction was documented in prior runs and does not constitute a newly observed material degradation.",
+    "limitations": "Search index freshness is imperfect; dates of republication were distinguished from event dates. Twelve targeted searches only after the OCHA/WHO first checks. The absence of newly verified findings is not evidence that no unreported incident occurred.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no approval, publication, branch merge, schedule modification or disabling."
+  }
+}

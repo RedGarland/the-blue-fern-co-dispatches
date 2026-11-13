@@ -614,6 +614,7 @@ def _write_gaza_success_run_manifest(
         "pages_push_ok": True,
         "remote_tree_verify_ok": True,
         "live_http_ok": True,
+        "live_archive_ok": True,
         "public_story_count": public_story_count,
         "pages_commit_sha": "b29b4bdf5795857f1e569269f3945b6e9eefee16",
         "bluesky_status": bluesky_status,
@@ -659,6 +660,84 @@ def _write_gaza_bluesky_receipt(
     }
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     return path
+
+
+def _write_gaza_bluesky_verification_artifact(
+    recovery_dir: Path,
+    *,
+    date: str,
+    post_uri: str,
+    local_receipt_sha256: str,
+    verified_at: str | None = None,
+    edition_url_matches_after_post: int = 1,
+) -> tuple[Path, str]:
+    path = recovery_dir / "bluesky_verification.json"
+    payload = {
+        "schema_version": "gaza_bluesky_public_verification_v1",
+        "verified_at": verified_at or f"{date}T18:55:00Z",
+        "status": "verified_once",
+        "edition_date": date,
+        "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{date}/",
+        "post_uri": post_uri,
+        "duplicate_check": {
+            "result": "single_matching_post",
+            "edition_url_matches_after_post": edition_url_matches_after_post,
+            "matching_uri_count": 1,
+            "duplicate_post_count": 0,
+        },
+        "side_effects": {
+            "pages_mutated": False,
+            "audio_generated": False,
+            "email_sent": False,
+            "second_post_attempted": False,
+            "force_post": False,
+        },
+        "local_receipt_binding": "exact_adjacent_receipt_bytes",
+        "local_receipt_path": "bluesky_post_receipt.json",
+        "local_receipt_sha256": local_receipt_sha256,
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    return path, hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _write_gaza_live_verification_artifact(
+    recovery_dir: Path,
+    *,
+    date: str,
+    pages_commit: str,
+    source_head: str,
+) -> tuple[Path, str]:
+    edition_body = (
+        f'<html data-dispatch="gaza" data-edition-date="{date}">'
+        f"<main>Dispatches from Gaza {date}</main></html>\n"
+    ).encode("utf-8")
+    archive_body = f"<html><main>gaza archive {date}</main></html>\n".encode("utf-8")
+    edition_path = recovery_dir / "edition.html"
+    archive_path = recovery_dir / "archive.html"
+    edition_path.write_bytes(edition_body)
+    archive_path.write_bytes(archive_body)
+    artifact = {
+        "schema_version": "bluefern_gaza_live_verification_artifact_v1",
+        "edition_date": date,
+        "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{date}/",
+        "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html",
+        "pages_commit_sha": pages_commit,
+        "source_head": source_head,
+        "verified_at": "2026-09-10T18:55:00Z",
+        "edition": {
+            "path": "edition.html",
+            "ok": True,
+            "sha256": hashlib.sha256(edition_body).hexdigest(),
+        },
+        "archive": {
+            "path": "archive.html",
+            "ok": True,
+            "sha256": hashlib.sha256(archive_body).hexdigest(),
+        },
+    }
+    artifact_path = recovery_dir / "live_verification.json"
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    return artifact_path, hashlib.sha256(artifact_path.read_bytes()).hexdigest()
 
 
 def _write_gaza_delayed_live_run_manifest(source: Path, *, date: str = DATE) -> Path:
@@ -1899,9 +1978,12 @@ def test_gaza_success_manifest_recovers_older_failed_receipt(tmp_path: Path) -> 
         exported_at="2026-09-10T20:01:00Z",
     )
 
-    assert status["aggregate_status"] == "SUCCESS"
-    assert status["recovery_lifecycle"] == "HEALTHY"
-    assert status["stale_observability"] is False
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_health_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_run_status"] == "FAILED"
+    assert status["recovery_lifecycle"] == "RECOVERED"
+    assert status["current_publication_state"]["status"] == "pages_only_published"
+    assert status["stale_observability"] is True
     assert status["publication_attempted"] is True
     assert status["publication_status"] == "pages_only_published"
     assert status["publication_recovery_applied"] is True
@@ -1915,12 +1997,11 @@ def test_gaza_success_manifest_recovers_older_failed_receipt(tmp_path: Path) -> 
     assert status["publication_recovery_evidence"]["release_workflow_attempted"] is False
     assert any("limited-source update" in item for item in status["publication_recovery_evidence"]["warnings"])
     assert status["effective_receipt_count"] == 1
-    assert status["non_authoritative_receipt_count"] == 1
-    assert status["non_authoritative_receipts"][0]["reason"] == "superseded_by_same_day_publication_manifest"
-    assert status["task_summaries"][0]["status"] == "SUCCESS"
-    assert status["task_summaries"][0]["publication_status"] == "pages_only_published"
-    assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
-    assert status["debug_summary"]["attention_task_count"] == 0
+    assert status["non_authoritative_receipt_count"] == 0
+    assert status["task_summaries"][0]["status"] == "FAILED"
+    assert status["task_summaries"][0]["publication_status"] == "visual_validation_failed"
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_OBSERVABILITY"
+    assert status["debug_summary"]["attention_task_count"] == 1
 
 
 def test_gaza_failed_receipt_without_success_manifest_remains_failed(tmp_path: Path) -> None:
@@ -1960,21 +2041,17 @@ def test_gaza_pages_only_manifest_accepts_skipped_bluesky_and_audio(tmp_path: Pa
         exported_at="2026-09-10T20:01:00Z",
     )
 
-    assert status["aggregate_status"] == "SUCCESS"
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_health_status"] == "STALE_OBSERVABILITY"
+    assert status["recovery_lifecycle"] == "RECOVERED"
     assert status["publication_recovery_applied"] is True
     assert status["public_side_effects"] == {
         "publication_attempted": True,
         "publication_status": "pages_only_published",
     }
     details = status["task_summaries"][0]["diagnostics"]
-    assert details is None or "failure" not in details
-    assert status["task_summaries"][0]["public_side_effects"] == {
-        "audio": False,
-        "bluesky": False,
-        "pages": True,
-        "public_output": True,
-        "release_workflow": False,
-    }
+    assert details is not None and "failure" in details
+    assert status["task_summaries"][0]["public_side_effects"] == {"pages": False}
 
 
 def test_gaza_delayed_live_manifest_and_bluesky_receipt_recover_missed_publication(tmp_path: Path) -> None:
@@ -1989,8 +2066,11 @@ def test_gaza_delayed_live_manifest_and_bluesky_receipt_recover_missed_publicati
         exported_at="2026-09-10T20:01:00Z",
     )
 
-    assert status["aggregate_status"] == "SUCCESS"
-    assert status["recovery_lifecycle"] == "HEALTHY"
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_health_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_run_status"] == "FAILED"
+    assert status["recovery_lifecycle"] == "RECOVERED"
+    assert status["current_publication_state"]["status"] == "published_and_posted"
     assert status["publication_recovery_applied"] is True
     assert status["publication_status"] == "published_and_posted"
     assert status["publication_recovery_evidence"]["path"] == str(manifest)
@@ -2011,14 +2091,8 @@ def test_gaza_delayed_live_manifest_and_bluesky_receipt_recover_missed_publicati
     assert status["publication_recovery_evidence"]["audio_generated"] is False
     assert status["publication_recovery_evidence"]["release_workflow_attempted"] is False
     assert any("3 saved source records from 2 publishers" in item for item in status["publication_recovery_evidence"]["warnings"])
-    assert status["task_summaries"][0]["publication_status"] == "published_and_posted"
-    assert status["task_summaries"][0]["public_side_effects"] == {
-        "audio": False,
-        "bluesky": True,
-        "pages": True,
-        "public_output": True,
-        "release_workflow": False,
-    }
+    assert status["task_summaries"][0]["publication_status"] == "visual_validation_failed"
+    assert status["task_summaries"][0]["public_side_effects"] == {"pages": False}
 
 
 def test_gaza_delayed_live_manifest_without_successful_bluesky_receipt_does_not_recover(tmp_path: Path) -> None:
@@ -2035,6 +2109,585 @@ def test_gaza_delayed_live_manifest_without_successful_bluesky_receipt_does_not_
 
     assert status["aggregate_status"] == "STALE_OBSERVABILITY"
     assert status["recovery_lifecycle"] == "INCIDENT_OPEN"
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_external_one_story_recovery_manifest_supersedes_failed_receipt(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    _init_git_repo(source)
+    source_head = _git(source, "rev-parse", "HEAD")
+    in_tree_manifest = _write_gaza_success_run_manifest(source, public_story_count=3)
+    manifest_payload = json.loads(in_tree_manifest.read_text(encoding="utf-8"))
+    manifest_payload.update(
+        {
+            "mode": "manual-recovery",
+            "source_count": 1,
+            "publisher_count": 1,
+            "publishers": ["UNICEF"],
+            "public_story_count": 1,
+            "pages_commit_sha": "f703e278d22475d96e58ec92e23fbfbf588fce68",
+            "recovery_proof": {
+                "edition_date": DATE,
+                "pages_commit_sha": "f703e278d22475d96e58ec92e23fbfbf588fce68",
+                "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{DATE}/",
+                "live_verification_status": "verified",
+                "source_head": source_head,
+                "bluesky_verification_status": "verified",
+                "bluesky_post_uri": "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t",
+            },
+            "bluesky_status": "success",
+            "bluesky_reason": "normal_guarded_post_only",
+            "actual_run_local_time": "2026-10-16T13:29:00-07:00",
+            "completed_at": "2026-10-16T20:29:00Z",
+            "warnings": [
+                "This is a limited-source update generated from 1 saved source record from 1 publisher.",
+                "All rendered public stories in this edition rely on sources from UNICEF.",
+                "audio not generated in daily run",
+            ],
+        }
+    )
+    recovery_dir = tmp_path / "manual-recovery"
+    recovery_dir.mkdir()
+    _artifact_path, artifact_sha256 = _write_gaza_live_verification_artifact(
+        recovery_dir,
+        date=DATE,
+        pages_commit="f703e278d22475d96e58ec92e23fbfbf588fce68",
+        source_head=source_head,
+    )
+    in_tree_bluesky = _write_gaza_bluesky_receipt(source)
+    receipt_sha256 = hashlib.sha256(in_tree_bluesky.read_bytes()).hexdigest()
+    _social_path, social_sha256 = _write_gaza_bluesky_verification_artifact(
+        recovery_dir,
+        date=DATE,
+        post_uri="at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t",
+        local_receipt_sha256=receipt_sha256,
+    )
+    manifest_payload["recovery_proof"]["live_verification_artifact"] = "live_verification.json"
+    manifest_payload["recovery_proof"]["live_verification_artifact_sha256"] = artifact_sha256
+    manifest_payload["recovery_proof"]["bluesky_verification_artifact"] = "bluesky_verification.json"
+    manifest_payload["recovery_proof"]["bluesky_verification_artifact_sha256"] = social_sha256
+    recovery_manifest = recovery_dir / "run_manifest.json"
+    recovery_manifest.write_text(json.dumps(manifest_payload), encoding="utf-8")
+    (recovery_dir / "bluesky_post_receipt.json").write_text(in_tree_bluesky.read_text(encoding="utf-8"), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-10-16T21:00:00Z",
+        exported_at="2026-10-16T21:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_health_status"] == "STALE_OBSERVABILITY"
+    assert status["recovery_lifecycle"] == "RECOVERED"
+    assert status["publication_recovery_applied"] is True
+    assert status["publication_status"] == "published_and_posted"
+    assert status["public_story_count"] == 1
+    assert status["pages_commit_sha"] == "f703e278d22475d96e58ec92e23fbfbf588fce68"
+    assert status["bluesky_post_uri"].startswith("at://")
+    assert status["publication_recovery_evidence"]["path"] == str(recovery_manifest.resolve())
+    assert status["non_authoritative_receipt_count"] == 0
+
+
+def _write_explicit_recovery_fixture(
+    tmp_path: Path,
+    *,
+    include_bluesky: bool = True,
+    proof_overrides: dict[str, Any] | None = None,
+    manifest_overrides: dict[str, Any] | None = None,
+) -> tuple[Path, Path]:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    _init_git_repo(source)
+    in_tree_manifest = _write_gaza_success_run_manifest(source, public_story_count=3)
+    payload = json.loads(in_tree_manifest.read_text(encoding="utf-8"))
+    pages_commit = "f703e278d22475d96e58ec92e23fbfbf588fce68"
+    post_uri = "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mxrpfngcof2t"
+    source_head = _git(source, "rev-parse", "HEAD")
+    recovery_dir = tmp_path / "explicit-recovery"
+    recovery_dir.mkdir()
+    in_tree_bluesky = _write_gaza_bluesky_receipt(source, post_uri=post_uri)
+    receipt_sha256 = hashlib.sha256(in_tree_bluesky.read_bytes()).hexdigest()
+    _social_path, social_sha256 = _write_gaza_bluesky_verification_artifact(
+        recovery_dir,
+        date=DATE,
+        post_uri=post_uri,
+        local_receipt_sha256=receipt_sha256,
+    )
+    _artifact_path, artifact_sha256 = _write_gaza_live_verification_artifact(
+        recovery_dir,
+        date=DATE,
+        pages_commit=pages_commit,
+        source_head=source_head,
+    )
+    payload.update(
+        {
+            "date": DATE,
+            "mode": "manual-recovery",
+            "source_count": 1,
+            "publisher_count": 1,
+            "publishers": ["UNICEF"],
+            "public_story_count": 1,
+            "pages_commit_sha": pages_commit,
+            "bluesky_status": "success" if include_bluesky else "skipped",
+            "bluesky_reason": "normal_guarded_post_only" if include_bluesky else "not_attempted",
+            "completed_at": "2026-09-10T18:54:16Z",
+            "recovery_proof": {
+                "edition_date": DATE,
+                "pages_commit_sha": pages_commit,
+                "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{DATE}/",
+                "live_verification_status": "verified",
+                "source_head": source_head,
+                "live_verification_artifact": "live_verification.json",
+                "live_verification_artifact_sha256": artifact_sha256,
+                "bluesky_verification_status": "verified" if include_bluesky else "not_posted",
+                "bluesky_post_uri": post_uri if include_bluesky else None,
+                "bluesky_verification_artifact": "bluesky_verification.json" if include_bluesky else None,
+                "bluesky_verification_artifact_sha256": social_sha256 if include_bluesky else None,
+            },
+        }
+    )
+    if proof_overrides:
+        payload["recovery_proof"].update(proof_overrides)
+    if manifest_overrides:
+        payload.update(manifest_overrides)
+    recovery_manifest = recovery_dir / "run_manifest.json"
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+    if include_bluesky:
+        (recovery_dir / "bluesky_post_receipt.json").write_text(
+            in_tree_bluesky.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+    return source, recovery_manifest
+
+
+def test_gaza_explicit_recovery_does_not_upgrade_scheduled_failure(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["scheduled_run_status"] == "FAILED"
+    assert status["recovery_lifecycle"] == "RECOVERED"
+    assert status["publication_recovery_applied"] is True
+    assert status["current_publication_state"]["status"] == "published_and_posted"
+    assert status["current_publication_state"]["proof_binding_status"] == "EXACT_DATE_AND_HASH_BOUND"
+    assert status["current_publication_state"]["source_head"] == _git(source, "rev-parse", "HEAD")
+    assert status["non_authoritative_receipt_count"] == 0
+    assert status["scheduled_publication_attempted"] is False
+    assert status["recovery_publication_attempted"] is True
+
+
+def test_gaza_explicit_recovery_rejects_unbound_live_proof(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"].pop("live_verification_artifact", None)
+    payload["recovery_proof"].pop("live_verification_artifact_sha256", None)
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_altered_live_artifact_bytes(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "live_verification.json"
+    artifact_path.write_text(artifact_path.read_text(encoding="utf-8") + "\nALTERED\n", encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+def test_gaza_explicit_recovery_rejects_wrong_live_content_even_with_rehashed_artifact(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "live_verification.json"
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    edition_path = recovery_manifest.parent / artifact["edition"]["path"]
+    edition_path.write_text("<html><body>wrong edition</body></html>\n", encoding="utf-8")
+    artifact["edition"]["sha256"] = hashlib.sha256(edition_path.read_bytes()).hexdigest()
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["live_verification_artifact_sha256"] = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+def test_gaza_explicit_recovery_rejects_missing_archive_proof(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "live_verification.json"
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    artifact.pop("archive")
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["live_verification_artifact_sha256"] = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+@pytest.mark.parametrize("posted_at", ["2020-09-10T18:54:16Z", "2099-09-10T18:54:16Z"])
+def test_gaza_explicit_recovery_rejects_stale_or_future_bluesky_receipt(tmp_path: Path, posted_at: str) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    receipt_path = recovery_manifest.parent / "bluesky_post_receipt.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["posted_at"] = posted_at
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+def test_gaza_explicit_recovery_rejects_missing_manifest_timestamp(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    for key in ("completed_at", "actual_run_local_time", "started_at"):
+        payload.pop(key, None)
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+@pytest.mark.parametrize("field", ["source_adequacy_status", "source_count", "publisher_count"])
+def test_gaza_recovery_rejects_missing_source_adequacy_metadata(tmp_path: Path, field: str) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload.pop(field, None)
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+def test_gaza_explicit_recovery_rejects_truncated_or_mismatched_source_head(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(
+        tmp_path,
+        proof_overrides={"source_head": "9c94bf7"},
+    )
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+def test_gaza_in_tree_manifest_requires_explicit_archive_success(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="visual_validation_failed")
+    manifest = _write_gaza_success_run_manifest(source)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload.pop("live_archive_ok")
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["publication_recovery_applied"] is False
+
+
+def test_gaza_explicit_recovery_rejects_future_evidence(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(
+        tmp_path,
+        manifest_overrides={"completed_at": "2026-09-10T21:00:00Z"},
+    )
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+
+
+def test_gaza_explicit_recovery_rejects_mismatched_date(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(
+        tmp_path,
+        manifest_overrides={"date": "2026-09-09"},
+    )
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_changed_pages_hash(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(
+        tmp_path,
+        proof_overrides={"pages_commit_sha": "a" * 40},
+    )
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_missing_bluesky_post(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    (recovery_manifest.parent / "bluesky_post_receipt.json").unlink()
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_missing_bluesky_verification_artifact(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    artifact_name = payload["recovery_proof"]["bluesky_verification_artifact"]
+    (recovery_manifest.parent / artifact_name).unlink()
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_changed_bluesky_verification_hash(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["bluesky_verification_artifact_sha256"] = "0" * 64
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_captured_live_proof_count_mismatch(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["public_story_count"] = 3
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_bluesky_verification_before_post(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "bluesky_verification.json"
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    artifact["verified_at"] = "2026-09-10T18:53:00Z"
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["bluesky_verification_artifact_sha256"] = hashlib.sha256(
+        artifact_path.read_bytes()
+    ).hexdigest()
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_conflicting_bluesky_duplicate_counts(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "bluesky_verification.json"
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    artifact["duplicate_check"]["edition_url_matches_after_post"] = 2
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["bluesky_verification_artifact_sha256"] = hashlib.sha256(
+        artifact_path.read_bytes()
+    ).hexdigest()
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_unbound_adjacent_bluesky_receipt(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "bluesky_verification.json"
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    artifact["local_receipt_sha256"] = "6850ef022bf7ccc33dd0b7c41f23cdf1c43c832592d1152f0f47bc3bd3041075"
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["bluesky_verification_artifact_sha256"] = hashlib.sha256(
+        artifact_path.read_bytes()
+    ).hexdigest()
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_old_live_verification_timestamp(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(tmp_path)
+    artifact_path = recovery_manifest.parent / "live_verification.json"
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    artifact["verified_at"] = "2020-01-01T00:00:00Z"
+    artifact_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    payload = json.loads(recovery_manifest.read_text(encoding="utf-8"))
+    payload["recovery_proof"]["live_verification_artifact_sha256"] = hashlib.sha256(
+        artifact_path.read_bytes()
+    ).hexdigest()
+    recovery_manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
+    assert status["publication_recovery_applied"] is False
+    assert status["publication_recovery_evidence"] is None
+
+
+def test_gaza_explicit_recovery_rejects_partial_live_proof(tmp_path: Path) -> None:
+    source, recovery_manifest = _write_explicit_recovery_fixture(
+        tmp_path,
+        proof_overrides={"live_verification_status": "partial"},
+    )
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+        recovery_manifest_path=recovery_manifest,
+    )
+
     assert status["publication_recovery_applied"] is False
     assert status["publication_recovery_evidence"] is None
 

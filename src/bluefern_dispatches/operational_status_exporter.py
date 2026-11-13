@@ -39,6 +39,8 @@ SUPPORTED_TASK_STATUSES = {status.value for status in OperationalStatus}
 SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
+FULL_HEX_HEAD_RE = re.compile(r"^[0-9a-f]{40}$", re.IGNORECASE)
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 GAZA_RUNNER_LOG_RE = re.compile(r"^runner-gaza-(?P<date>\d{8})-\d{6}\.log$")
 GAZA_DAILY_LOG_RE = re.compile(r"^gaza-daily-(?P<date>\d{8})-\d{6}\.log$")
@@ -755,15 +757,12 @@ def _gaza_receipt_failed_before_public_side_effect(receipt: dict[str, Any]) -> b
     return True
 
 
-def _gaza_manifest_time(manifest: dict[str, Any], path: Path) -> datetime:
+def _gaza_manifest_time(manifest: dict[str, Any], path: Path) -> datetime | None:
     for key in ("completed_at", "actual_run_local_time", "started_at"):
         parsed = parse_timestamp(str(manifest.get(key) or ""))
         if parsed is not None:
             return parsed
-    try:
-        return datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
-    except OSError:
-        return datetime.min.replace(tzinfo=timezone.utc)
+    return None
 
 
 def _gaza_manifest_skipped_audio(manifest: dict[str, Any]) -> bool:
@@ -782,8 +781,13 @@ def _gaza_manifest_has_release_workflow(manifest: dict[str, Any]) -> bool:
     return any("release" in str(action).lower() for action in actions)
 
 
-def _gaza_successful_bluesky_receipt(source_root: Path, date: str) -> dict[str, Any] | None:
-    path = source_root / GAZA_RUN_MANIFEST_RELATIVE / date / "bluesky_post_receipt.json"
+def _gaza_successful_bluesky_receipt(
+    source_root: Path,
+    date: str,
+    receipt_path: Path | None = None,
+    not_after: datetime | None = None,
+) -> dict[str, Any] | None:
+    path = (receipt_path or (source_root / GAZA_RUN_MANIFEST_RELATIVE / date / "bluesky_post_receipt.json")).resolve()
     receipt = _load_json_object(path)
     if not receipt:
         return None
@@ -796,14 +800,29 @@ def _gaza_successful_bluesky_receipt(source_root: Path, date: str) -> dict[str, 
     post_uri = str(receipt.get("post_uri") or "").strip()
     if not post_uri.startswith("at://"):
         return None
-    posted_at = _iso(parse_timestamp(str(receipt.get("posted_at") or "")) or _gaza_manifest_time(receipt, path))
+    public_url = str(receipt.get("public_url") or "").strip()
+    if public_url and public_url != f"https://dispatches.thebluefernco.com/gaza/editions/{date}/":
+        return None
+    posted_at_value = parse_timestamp(str(receipt.get("posted_at") or ""))
+    if posted_at_value is None:
+        return None
+    if not_after is not None and posted_at_value > not_after:
+        return None
+    if posted_at_value.date().isoformat() != date:
+        return None
+    posted_at = _iso(posted_at_value)
+    try:
+        receipt_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
     return {
         "path": str(path),
         "path_relative": (GAZA_RUN_MANIFEST_RELATIVE / date / "bluesky_post_receipt.json").as_posix(),
+        "receipt_sha256": receipt_sha256,
         "posted_at": posted_at,
         "status": "success",
         "post_uri": post_uri,
-        "public_url": str(receipt.get("public_url") or ""),
+        "public_url": public_url,
         "embed_type": str(receipt.get("embed_type") or ""),
         "thumb_status": str(receipt.get("thumb_status") or ""),
     }
@@ -843,12 +862,370 @@ def _gaza_delayed_live_success_manifest(manifest: dict[str, Any], bluesky_receip
     return all(any(fragment in str(error).lower() for fragment in allowed_fragments) for error in errors)
 
 
-def _gaza_successful_publication_manifest(source_root: Path, date: str) -> dict[str, Any] | None:
-    path = source_root / GAZA_RUN_MANIFEST_RELATIVE / date / "run_manifest.json"
+def _gaza_recovery_artifact_path(recovery_root: Path, value: Any) -> Path | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    candidate = Path(value)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        return None
+    try:
+        root = recovery_root.resolve()
+        resolved = (root / candidate).resolve()
+        if not resolved.is_relative_to(root):
+            return None
+    except OSError:
+        return None
+    return resolved
+
+
+def _gaza_recovery_manifest_contract_valid(manifest: dict[str, Any], date: str) -> bool:
+    if any(
+        manifest.get(key) != value
+        for key, value in (
+            ("date", date),
+            ("mode", "manual-recovery"),
+            ("source_mode", "manual"),
+            ("source_adequacy_status", "limited_source_update"),
+            ("source_count", 1),
+            ("publisher_count", 1),
+            ("public_story_count", 1),
+        )
+    ):
+        return False
+    return manifest.get("publishers") == ["UNICEF"]
+
+
+def _gaza_live_verification_artifact_valid(
+    manifest: dict[str, Any],
+    proof: dict[str, Any],
+    *,
+    date: str,
+    pages_commit: str,
+    source_head: str,
+    recovery_manifest_path: Path,
+    not_after: datetime | None,
+) -> bool:
+    recovery_root = recovery_manifest_path.parent
+    artifact_path = _gaza_recovery_artifact_path(
+        recovery_root,
+        proof.get("live_verification_artifact"),
+    )
+    artifact_sha256 = str(proof.get("live_verification_artifact_sha256") or "").lower()
+    if artifact_path is None or not SHA256_RE.fullmatch(artifact_sha256):
+        return False
+    try:
+        artifact_bytes = artifact_path.read_bytes()
+    except OSError:
+        return False
+    if hashlib.sha256(artifact_bytes).hexdigest() != artifact_sha256:
+        return False
+    try:
+        artifact = json.loads(artifact_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(artifact, dict):
+        return False
+    if not _gaza_recovery_manifest_contract_valid(manifest, date):
+        return False
+    # A preserved publication-verification receipt is a valid private proof
+    # artifact when it binds the exact gh-pages commit and records every
+    # live byte/hash check. It intentionally does not require captured copies
+    # of public files: the receipt itself is the immutable evidence saved from
+    # the already-authorized publication.
+    if artifact.get("propagation_status") == "live verification passed":
+        expected_url = f"https://dispatches.thebluefernco.com/gaza/editions/{date}/"
+        if artifact.get("source_head") is not None and str(artifact.get("source_head")) != source_head:
+            return False
+        if str(artifact.get("local_head") or "") != pages_commit:
+            return False
+        remote_head = str(artifact.get("remote_head") or "")
+        if not remote_head.startswith(f"{pages_commit}\trefs/heads/gh-pages"):
+            return False
+        verified_at = parse_timestamp(str(artifact.get("verified_at") or ""))
+        if verified_at is None or (not_after is not None and verified_at > not_after):
+            return False
+        if verified_at.date().isoformat() != date:
+            return False
+        if artifact.get("food_paths_in_commit"):
+            return False
+        live_items = artifact.get("live")
+        if not isinstance(live_items, list):
+            return False
+        by_name = {
+            str(item.get("name") or ""): item
+            for item in live_items
+            if isinstance(item, dict)
+        }
+        required_names = (
+            "edition",
+            "edition_manifest",
+            "sources_manifest",
+            "curation_manifest",
+            "archive",
+            "gaza_index",
+            "rss",
+        )
+        if any(name not in by_name for name in required_names):
+            return False
+        for name in required_names:
+            item = by_name[name]
+            if item.get("status") != 200 or item.get("hash_matches") is not True:
+                return False
+            sha256 = str(item.get("sha256") or "").lower()
+            expected_sha256 = str(item.get("expected_sha256") or "").lower()
+            if not SHA256_RE.fullmatch(sha256) or sha256 != expected_sha256:
+                return False
+        expected_urls = {
+            "edition": expected_url,
+            "edition_manifest": f"{expected_url}edition_manifest.json",
+            "sources_manifest": f"{expected_url}sources_manifest.json",
+            "curation_manifest": f"{expected_url}curation_manifest.json",
+            "archive": "https://dispatches.thebluefernco.com/gaza/archive.html",
+            "gaza_index": "https://dispatches.thebluefernco.com/gaza/index.html",
+            "rss": "https://dispatches.thebluefernco.com/gaza/rss.xml",
+        }
+        if any(by_name[name].get("url") != url for name, url in expected_urls.items()):
+            return False
+        edition_checks = by_name["edition_manifest"].get("json_checks")
+        if not isinstance(edition_checks, dict):
+            return False
+        if any(
+            edition_checks.get(key) != value
+            for key, value in (
+                ("edition_date", date),
+                ("source_adequacy_status", "limited_source_update"),
+                ("story_count", 1),
+                ("source_count", 1),
+                ("publisher_count", 1),
+            )
+        ):
+            return False
+        sources_checks = by_name["sources_manifest"].get("json_checks")
+        curation_checks = by_name["curation_manifest"].get("json_checks")
+        if not isinstance(sources_checks, dict) or not isinstance(curation_checks, dict):
+            return False
+        if sources_checks.get("publisher") != "UNICEF":
+            return False
+        if curation_checks.get("attribution") != "UNICEF":
+            return False
+        return True
+
+
+    if artifact.get("schema_version") != "bluefern_gaza_live_verification_artifact_v1":
+        return False
+    if str(artifact.get("edition_date") or "") != date:
+        return False
+    expected_url = f"https://dispatches.thebluefernco.com/gaza/editions/{date}/"
+    if str(artifact.get("public_url") or "") != expected_url:
+        return False
+    if str(artifact.get("archive_url") or "") != "https://dispatches.thebluefernco.com/gaza/archive.html":
+        return False
+    if str(artifact.get("pages_commit_sha") or "") != pages_commit:
+        return False
+    if str(artifact.get("source_head") or "") != source_head:
+        return False
+    verified_at = parse_timestamp(str(artifact.get("verified_at") or ""))
+    if verified_at is None or (not_after is not None and verified_at > not_after):
+        return False
+    if verified_at.date().isoformat() != date:
+        return False
+    for key, required_markers in (
+        (
+            "edition",
+            (
+                'data-dispatch="gaza"',
+                f'data-edition-date="{date}"',
+            ),
+        ),
+        (
+            "archive",
+            (
+                "gaza",
+                date,
+            ),
+        ),
+    ):
+        item = artifact.get(key)
+        if not isinstance(item, dict) or item.get("ok") is not True:
+            return False
+        captured_path = _gaza_recovery_artifact_path(recovery_root, item.get("path"))
+        expected_sha256 = str(item.get("sha256") or "").lower()
+        if captured_path is None or not SHA256_RE.fullmatch(expected_sha256):
+            return False
+        try:
+            captured_bytes = captured_path.read_bytes()
+        except OSError:
+            return False
+        if hashlib.sha256(captured_bytes).hexdigest() != expected_sha256:
+            return False
+        try:
+            captured_text = captured_bytes.decode("utf-8")
+        except UnicodeDecodeError:
+            return False
+        if any(marker not in captured_text for marker in required_markers):
+            return False
+    return True
+
+
+def _gaza_bluesky_verification_artifact_valid(
+    proof: dict[str, Any],
+    *,
+    date: str,
+    public_url: str,
+    bluesky_receipt: dict[str, Any],
+    recovery_manifest_path: Path,
+    not_after: datetime | None,
+) -> bool:
+    recovery_root = recovery_manifest_path.parent
+    artifact_path = _gaza_recovery_artifact_path(
+        recovery_root,
+        proof.get("bluesky_verification_artifact"),
+    )
+    artifact_sha256 = str(proof.get("bluesky_verification_artifact_sha256") or "").lower()
+    if artifact_path is None or not SHA256_RE.fullmatch(artifact_sha256):
+        return False
+    try:
+        artifact_bytes = artifact_path.read_bytes()
+    except OSError:
+        return False
+    if hashlib.sha256(artifact_bytes).hexdigest() != artifact_sha256:
+        return False
+    try:
+        artifact = json.loads(artifact_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(artifact, dict):
+        return False
+    if artifact.get("schema_version") != "gaza_bluesky_public_verification_v1":
+        return False
+    if artifact.get("status") != "verified_once":
+        return False
+    if artifact.get("edition_date") != date or artifact.get("public_url") != public_url:
+        return False
+    if artifact.get("local_receipt_binding") != "exact_adjacent_receipt_bytes":
+        return False
+    if artifact.get("local_receipt_path") != "bluesky_post_receipt.json":
+        return False
+    receipt_sha256 = str(bluesky_receipt.get("receipt_sha256") or "").lower()
+    if not SHA256_RE.fullmatch(receipt_sha256):
+        return False
+    if str(artifact.get("local_receipt_sha256") or "").lower() != receipt_sha256:
+        return False
+    post_uri = str(bluesky_receipt.get("post_uri") or "")
+    if not post_uri or artifact.get("post_uri") != post_uri:
+        return False
+    verified_at = parse_timestamp(str(artifact.get("verified_at") or ""))
+    if verified_at is None or verified_at.date().isoformat() != date:
+        return False
+    if not_after is not None and verified_at > not_after:
+        return False
+    posted_at = parse_timestamp(str(bluesky_receipt.get("posted_at") or ""))
+    if posted_at is None or verified_at < posted_at:
+        return False
+    duplicate_check = artifact.get("duplicate_check")
+    if not isinstance(duplicate_check, dict):
+        return False
+    if any(
+        duplicate_check.get(key) != value
+        for key, value in (
+            ("result", "single_matching_post"),
+            ("edition_url_matches_after_post", 1),
+            ("matching_uri_count", 1),
+            ("duplicate_post_count", 0),
+        )
+    ):
+        return False
+    side_effects = artifact.get("side_effects")
+    if not isinstance(side_effects, dict):
+        return False
+    if any(
+        side_effects.get(key) is not False
+        for key in ("pages_mutated", "audio_generated", "email_sent", "second_post_attempted", "force_post")
+    ):
+        return False
+    return True
+
+
+def _gaza_recovery_proof_valid(
+    manifest: dict[str, Any],
+    *,
+    source_root: Path,
+    date: str,
+    bluesky_receipt: dict[str, Any] | None,
+    recovery_manifest_path: Path | None,
+    not_after: datetime | None,
+) -> bool:
+    proof = manifest.get("recovery_proof")
+    if not isinstance(proof, dict):
+        return recovery_manifest_path is None
+    if str(proof.get("edition_date") or "") != date:
+        return False
+    pages_commit = _safe_head(manifest.get("pages_commit_sha"))
+    if not pages_commit or not FULL_HEX_HEAD_RE.fullmatch(pages_commit):
+        return False
+    if str(proof.get("pages_commit_sha") or "") != pages_commit:
+        return False
+    expected_url = f"https://dispatches.thebluefernco.com/gaza/editions/{date}/"
+    if str(proof.get("public_url") or "") != expected_url:
+        return False
+    if str(proof.get("live_verification_status") or "") != "verified":
+        return False
+    source_head = str(proof.get("source_head") or "")
+    if not FULL_HEX_HEAD_RE.fullmatch(source_head):
+        return False
+    actual_source_head = _runner_git_identity(source_root).get("current_runner_head")
+    if not actual_source_head or source_head != actual_source_head:
+        return False
+    if recovery_manifest_path is None:
+        return False
+    if not _gaza_live_verification_artifact_valid(
+        manifest,
+        proof,
+        date=date,
+        pages_commit=pages_commit,
+        source_head=actual_source_head,
+        recovery_manifest_path=recovery_manifest_path,
+        not_after=not_after,
+    ):
+        return False
+    if bluesky_receipt is not None:
+        if str(proof.get("bluesky_verification_status") or "") != "verified":
+            return False
+        if str(proof.get("bluesky_post_uri") or "") != bluesky_receipt.get("post_uri"):
+            return False
+        if not _gaza_bluesky_verification_artifact_valid(
+            proof,
+            date=date,
+            public_url=expected_url,
+            bluesky_receipt=bluesky_receipt,
+            recovery_manifest_path=recovery_manifest_path,
+            not_after=not_after,
+        ):
+            return False
+    elif str(manifest.get("bluesky_status") or "") == "skipped":
+        if str(proof.get("bluesky_verification_status") or "") != "not_posted":
+            return False
+    else:
+        return False
+    return True
+
+
+def _gaza_successful_publication_manifest(
+    source_root: Path,
+    date: str,
+    recovery_manifest_path: Path | None = None,
+    not_after: datetime | None = None,
+) -> dict[str, Any] | None:
+    path = (recovery_manifest_path or (source_root / GAZA_RUN_MANIFEST_RELATIVE / date / "run_manifest.json")).resolve()
     manifest = _load_json_object(path)
     if not manifest:
         return None
     if str(manifest.get("date") or "") != date:
+        return None
+    completed_at = _gaza_manifest_time(manifest, path)
+    if completed_at is None:
+        return None
+    if not_after is not None and completed_at > not_after:
         return None
     required_publish_true = (
         "generation_ok",
@@ -864,19 +1241,49 @@ def _gaza_successful_publication_manifest(source_root: Path, date: str) -> dict[
     )
     if any(manifest.get(key) is not True for key in required_publish_true):
         return None
-    bluesky_receipt = _gaza_successful_bluesky_receipt(source_root, date)
+    adjacent_bluesky_receipt = path.parent / "bluesky_post_receipt.json" if recovery_manifest_path else None
+    bluesky_receipt = _gaza_successful_bluesky_receipt(
+        source_root,
+        date,
+        adjacent_bluesky_receipt,
+        not_after=not_after,
+    )
     live_success = (
         manifest.get("ok") is True
         and manifest.get("pipeline_ok") is True
         and manifest.get("live_http_ok") is True
-        and manifest.get("live_archive_ok") is not False
+        and manifest.get("live_archive_ok") is True
     )
     delayed_live_success = _gaza_delayed_live_success_manifest(manifest, bluesky_receipt)
     if not live_success and not delayed_live_success:
         return None
-    if _positive_int(manifest.get("public_story_count")) != 3:
+    if not _gaza_recovery_proof_valid(
+        manifest,
+        source_root=source_root,
+        date=date,
+        bluesky_receipt=bluesky_receipt,
+        recovery_manifest_path=recovery_manifest_path,
+        not_after=not_after,
+    ):
         return None
-    if str(manifest.get("source_adequacy_status") or "") != "limited_source_update":
+    raw_public_story_count = manifest.get("public_story_count")
+    raw_source_count = manifest.get("source_count")
+    raw_publisher_count = manifest.get("publisher_count")
+    if any(
+        isinstance(value, bool) or not isinstance(value, int) or value < 1
+        for value in (raw_public_story_count, raw_source_count, raw_publisher_count)
+    ):
+        return None
+    public_story_count = int(raw_public_story_count)
+    source_count = int(raw_source_count)
+    publisher_count = int(raw_publisher_count)
+    source_adequacy_status = str(manifest.get("source_adequacy_status") or "")
+    if source_adequacy_status not in {"limited_source_update", "daily_briefing"}:
+        return None
+    if source_adequacy_status == "limited_source_update":
+        if public_story_count < 1 or source_count < 1 or publisher_count < 1:
+            return None
+    elif public_story_count != 3:
         return None
     if bluesky_receipt is None:
         if str(manifest.get("bluesky_status") or "") != "skipped":
@@ -891,20 +1298,25 @@ def _gaza_successful_publication_manifest(source_root: Path, date: str) -> dict[
     if not pages_commit:
         return None
     warnings = [str(item) for item in manifest.get("warnings") or [] if str(item).strip()]
-    completed_at = _iso(_gaza_manifest_time(manifest, path))
+    completed_at = _iso(completed_at)
     bluesky_status = bluesky_receipt["status"] if bluesky_receipt else str(manifest.get("bluesky_status") or "")
     bluesky_reason = "posted_after_delayed_live_verification" if bluesky_receipt else str(manifest.get("bluesky_reason") or "")
     return {
         "path": str(path),
         "path_relative": (GAZA_RUN_MANIFEST_RELATIVE / date / "run_manifest.json").as_posix(),
         "completed_at": completed_at,
+        "evidence_date": date,
+        "proof_binding_status": "EXACT_DATE_AND_HASH_BOUND" if recovery_manifest_path else "MANIFEST_BOUND",
+        "source_head": (manifest.get("recovery_proof") or {}).get("source_head")
+        if isinstance(manifest.get("recovery_proof"), dict)
+        else _safe_head(manifest.get("source_head")),
         "pages_commit_sha": pages_commit,
         "live_verify_status": "LIVE_OK" if live_success or delayed_live_success else None,
         "delayed_live_success": bool(delayed_live_success),
-        "source_adequacy_status": str(manifest.get("source_adequacy_status") or ""),
-        "source_count": _positive_int(manifest.get("source_count")),
-        "publisher_count": _positive_int(manifest.get("publisher_count")),
-        "public_story_count": _positive_int(manifest.get("public_story_count")),
+        "source_adequacy_status": source_adequacy_status,
+        "source_count": source_count,
+        "publisher_count": publisher_count,
+        "public_story_count": public_story_count,
         "bluesky_status": bluesky_status,
         "bluesky_reason": bluesky_reason,
         "bluesky_post_uri": bluesky_receipt.get("post_uri") if bluesky_receipt else None,
@@ -2516,36 +2928,26 @@ def build_gaza_status(
     evaluated_at: str,
     exported_at: str,
     recovery: RecoveryContext | None = None,
+    recovery_manifest_path: Path | None = None,
 ) -> dict[str, Any]:
     receipts = load_gaza_receipts(source_root, date)
     effective_receipts, non_authoritative_receipts = _gaza_effective_receipts(receipts)
+    scheduled_effective_receipts = list(effective_receipts)
     runner_identity = _runner_git_identity(source_root)
-    publication_recovery_evidence = _gaza_successful_publication_manifest(source_root, date)
+    publication_recovery_evidence = _gaza_successful_publication_manifest(
+        source_root,
+        date,
+        recovery_manifest_path=recovery_manifest_path,
+        not_after=parse_timestamp(evaluated_at),
+    )
     publication_recovery_applied = False
     if (
         publication_recovery_evidence
         and _gaza_manifest_newer_than_failed_receipts(publication_recovery_evidence, receipts)
     ):
-        recovery_receipt = _gaza_manifest_recovery_receipt(
-            publication_recovery_evidence,
-            date=date,
-            runner_identity=runner_identity,
-        )
-        recovered_effective: list[dict[str, Any]] = []
-        recovered_non_authoritative = list(non_authoritative_receipts)
-        recovery_time = _receipt_sort_time(recovery_receipt)
-        for receipt in effective_receipts:
-            if (
-                str(receipt.get("task_key") or "") == "gaza_daily_dispatch"
-                and _gaza_receipt_failed_before_public_side_effect(receipt)
-                and _gaza_receipt_operational_time(receipt) < recovery_time
-            ):
-                recovered_non_authoritative.append(receipt)
-                continue
-            recovered_effective.append(receipt)
-        recovered_effective.append(recovery_receipt)
-        effective_receipts = recovered_effective
-        non_authoritative_receipts = recovered_non_authoritative
+        # A later publication proof is a separate evidence dimension.  It must
+        # never be materialized as a synthetic SUCCESS scheduled receipt: the
+        # original scheduled receipt remains the authority for scheduled health.
         publication_recovery_applied = True
     completeness, linkage = receipt_completeness(
         effective_receipts, source_root=source_root, expectations=GAZA_TASK_EXPECTATIONS
@@ -2556,9 +2958,10 @@ def build_gaza_status(
             "scheduled_for": _iso(_expected_run(date, "06:00", "America/Los_Angeles")),
         }
     ]
+    health_receipts = scheduled_effective_receipts if publication_recovery_applied else effective_receipts
     aggregate = evaluate_dispatch_health(
         dispatch="gaza",
-        receipts=effective_receipts,
+        receipts=health_receipts,
         expectations=GAZA_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
         recovery=recovery,
@@ -2568,7 +2971,10 @@ def build_gaza_status(
     stale_observability = bool(aggregate.get("stale_observability"))
     dry_run_recovery_proof = _latest_gaza_dry_run_recovery_proof(source_root, date)
     dry_run_recovery_applied = False
-    if _monitor_success_overrides_stale(aggregate, effective_receipts, task_key="gaza_daily_dispatch"):
+    if (
+        not publication_recovery_applied
+        and _monitor_success_overrides_stale(aggregate, effective_receipts, task_key="gaza_daily_dispatch")
+    ):
         aggregate_status = OperationalStatus.SUCCESS.value
         stale_observability = False
     if not effective_receipts and aggregate_status == OperationalStatus.SUCCESS.value:
@@ -2590,6 +2996,67 @@ def build_gaza_status(
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in effective_receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in effective_receipts if receipt.get("publication_status")]
+    scheduled_receipts = [
+        receipt
+        for receipt in receipts
+        if str(receipt.get("task_key") or "") == "gaza_daily_dispatch"
+    ]
+    latest_scheduled_receipt = max(scheduled_receipts, key=_receipt_sort_time) if scheduled_receipts else None
+    scheduled_run_status = (
+        str(latest_scheduled_receipt.get("status") or aggregate_status)
+        if latest_scheduled_receipt
+        else aggregate_status
+    )
+    scheduled_run_classification = (
+        str(latest_scheduled_receipt.get("classification") or "unknown")
+        if latest_scheduled_receipt
+        else None
+    )
+    recovery_publication_status = None
+    if publication_recovery_applied and publication_recovery_evidence:
+        recovery_publication_status = (
+            "published_and_posted"
+            if publication_recovery_evidence.get("bluesky_status") == "success"
+            else "pages_only_published"
+        )
+    current_publication_state = {
+        "status": recovery_publication_status or (publication_statuses[-1] if publication_statuses else "not_proven"),
+        "proof_status": "verified" if publication_recovery_applied else "not_proven",
+        "source_adequacy_status": publication_recovery_evidence.get("source_adequacy_status")
+        if publication_recovery_evidence
+        else None,
+        "public_story_count": publication_recovery_evidence.get("public_story_count")
+        if publication_recovery_evidence
+        else None,
+        "pages_commit_sha": publication_recovery_evidence.get("pages_commit_sha")
+        if publication_recovery_evidence
+        else None,
+        "bluesky_status": publication_recovery_evidence.get("bluesky_status")
+        if publication_recovery_evidence
+        else None,
+        "bluesky_post_uri": publication_recovery_evidence.get("bluesky_post_uri")
+        if publication_recovery_evidence
+        else None,
+        "audio_generated": False,
+        "evidence_path": publication_recovery_evidence.get("path")
+        if publication_recovery_evidence
+        else None,
+        "evidence_date": date if publication_recovery_evidence else None,
+        "source_head": publication_recovery_evidence.get("source_head")
+        if publication_recovery_evidence
+        else None,
+        "proof_binding_status": publication_recovery_evidence.get("proof_binding_status")
+        if publication_recovery_evidence
+        else "NOT_PROVEN",
+    }
+    scheduled_publication_attempted = any(
+        receipt.get("publication_attempted") is True for receipt in effective_receipts
+    )
+    scheduled_publication_status = publication_statuses[-1] if publication_statuses else None
+    current_publication_attempted = bool(
+        scheduled_publication_attempted or publication_recovery_applied
+    )
+    current_publication_status = recovery_publication_status or scheduled_publication_status
     return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "gaza",
@@ -2597,12 +3064,24 @@ def build_gaza_status(
         "observed_date": date,
         "aggregate_status": aggregate_status,
         "scheduled_health_authoritative": bool(receipts),
-        "recovery_lifecycle": RecoveryState.RECOVERY_PENDING_RUNTIME_PROOF.value
-        if dry_run_recovery_applied
-        else _recovery_state(aggregate_status, recovery),
+        "recovery_lifecycle": RecoveryState.RECOVERED.value
+        if publication_recovery_applied
+        else (
+            RecoveryState.RECOVERY_PENDING_RUNTIME_PROOF.value
+            if dry_run_recovery_applied
+            else _recovery_state(aggregate_status, recovery)
+        ),
+        "scheduled_health_status": aggregate_status,
+        "scheduled_run_status": scheduled_run_status,
+        "scheduled_run_classification": scheduled_run_classification,
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "publication_recovery_evidence": publication_recovery_evidence,
         "publication_recovery_applied": publication_recovery_applied,
+        "scheduled_publication_attempted": scheduled_publication_attempted,
+        "scheduled_publication_status": scheduled_publication_status,
+        "recovery_publication_attempted": publication_recovery_applied,
+        "recovery_publication_status": recovery_publication_status,
+        "current_publication_state": current_publication_state,
         "source_adequacy_status": publication_recovery_evidence.get("source_adequacy_status") if publication_recovery_evidence else None,
         "public_story_count": publication_recovery_evidence.get("public_story_count") if publication_recovery_evidence else None,
         "pages_commit_sha": publication_recovery_evidence.get("pages_commit_sha") if publication_recovery_evidence else None,
@@ -2633,11 +3112,11 @@ def build_gaza_status(
         ],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,
-        "publication_attempted": publication_attempted,
-        "publication_status": publication_statuses[-1] if publication_statuses else None,
+        "publication_attempted": current_publication_attempted,
+        "publication_status": current_publication_status,
         "public_side_effects": {
-            "publication_attempted": publication_attempted,
-            "publication_status": publication_statuses[-1] if publication_statuses else None,
+            "publication_attempted": current_publication_attempted,
+            "publication_status": current_publication_status,
         },
         "stale_observability": stale_observability,
         "last_receipt_at": max((_handoff_time(item) for item in effective_receipts), default=None).isoformat().replace("+00:00", "Z") if effective_receipts else None,
@@ -3051,6 +3530,9 @@ def build_system_status(
             "aggregate_status": gaza_status["aggregate_status"],
             "recovery_lifecycle": gaza_status["recovery_lifecycle"],
             "scheduled_health_available": bool(gaza_status.get("scheduled_health_authoritative")),
+            "scheduled_health_status": gaza_status.get("scheduled_health_status"),
+            "scheduled_run_status": gaza_status.get("scheduled_run_status"),
+            "current_publication_state": gaza_status.get("current_publication_state"),
             "observed_date": gaza_status.get("observed_date"),
             "latest_runtime_proof_date": gaza_status.get("latest_runtime_proof_date"),
             "latest_recovery_proof_at": gaza_status.get("latest_recovery_proof_at"),
@@ -3166,6 +3648,7 @@ def export_status(
     care_expected_instances: Iterable[dict[str, Any]] | None = None,
     gaza_source_root: Path | None = None,
     ice_source_root: Path | None = None,
+    gaza_recovery_manifest: Path | None = None,
     force_refresh_dispatches: Iterable[str] | None = None,
 ) -> dict[str, Any]:
     source_root = source_root.resolve()
@@ -3211,6 +3694,7 @@ def export_status(
             evaluated_at=evaluated_at,
             exported_at=exported_at,
             recovery=recovery,
+            recovery_manifest_path=gaza_recovery_manifest,
         ) if gaza_source_root is not None else None
         gaza_path = status_checkout / "ops" / "status" / "gaza" / "latest.json"
         if gaza_payload is not None:

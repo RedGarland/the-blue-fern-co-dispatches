@@ -1,0 +1,149 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T124655-0800-r11-20261113T204655Z",
+  "scheduled_for": "2026-11-13T12:45:54-08:00",
+  "started_at": "2026-11-13T12:46:55-08:00",
+  "completed_at": "2026-11-13T20:48:52.529Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T19:47:38.672Z",
+    "end_at": "2026-11-13T20:48:52.529Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "Since last independently verified hourly Food Line recall heartbeat; targeted search recency 2 days to catch delayed indexing. Primary nationwide production collection remains authoritative.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T114605-0800-r11-20261113T194605Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall of high-value missed food-access disruptions, not an exhaustive primary collector; no discovered finding does not establish absence of unindexed local incidents.",
+    "target_classes": [
+      "Closure, loss, fire or disaster affecting only/sole/last/full-service local grocery",
+      "Emergency food distribution canceled or suspended by storm, flood, fire, power outage or facility damage",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "November 13 2026 \"only grocery store\" \"closed\" fire community",
+      "November 13 2026 \"last grocery store\" town shutdown",
+      "November 13 2026 \"full service grocery\" store closure rural",
+      "November 13 2026 food pantry closed suddenly operations disruption",
+      "November 13 2026 food bank pantry closure fire flood damage",
+      "November 13 2026 food distribution canceled storm flood outage",
+      "November 13 2026 emergency food distribution postponed cancelled weather",
+      "November 13 2026 SNAP benefits outage interruption EBT state official",
+      "November 13 2026 WIC assistance interruption appointment closure outage state agency",
+      "November 13 2026 food pantry distribution suspended power outage",
+      "site:gov \"November 13, 2026\" \"SNAP\" \"interruption\" OR \"outage\" OR \"delayed\"",
+      "\"November 13, 2026\" \"food pantry\" \"closed\" OR \"canceled\" OR \"suspended\""
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_limitations": "Targeted results primarily returned older events, 2025 SNAP funding coverage, routine schedules or generic items. Fast and slow web indexing cannot guarantee discovery within the hour; no fresh verified qualifying event surfaced.",
+    "direct_source_checks": {
+      "distinct_valid_urls": 15,
+      "accessible": 12,
+      "inaccessible": 3,
+      "accessible_urls": [
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://dhs.ri.gov/",
+        "https://dhs.ri.gov/press-releases",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "https://www.vi.gov/governor-bryan-announces-automatic-snap-relief-for-3755-households-affected-by-power-outages/",
+        "https://status.joinforage.app/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://dhs.vi.gov/news/"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Not accessible via web fetch",
+          "impact": "Recurring USDA direct-page restriction; other sources and searches accessible."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA direct-page restriction; alternative sources checked."
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam DPHSS restriction; incomplete direct territorial verification."
+        }
+      ],
+      "additional_attempt": "https://www.dhs.gov.vi/ did not resolve via web retrieval; agency news checked successfully using https://dhs.vi.gov/news/ instead. Excluded this erroneous URL from valid-source availability counts."
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.mprnews.org/story/2018/11/13/town-of-cooks-only-grocery-burns-but-owners-vow-to-rebuild",
+        "reason": "Cook, Minnesota only-grocery fire was in 2018, not new."
+      },
+      {
+        "url": "https://www.fastcompany.com/91591192/grocery-outlet-closing-stores-2026-list-of-shuttered-locations",
+        "reason": "Nationwide 2026 outlet closures from August reporting; no newly verified sole community grocery loss in window."
+      },
+      {
+        "url": "https://www.aol.com/articles/not-gone-away-community-action-021730000.html",
+        "reason": "Provo, Utah food bank closure announced Oct 31, effective Nov 1, not new in hourly window."
+      },
+      {
+        "url": "https://www.ksl.com/article/51641260/utah-county-nonprofit-to-close-heber-city-food-pantry-announces-layoffs",
+        "reason": "Heber City/Provo pantry reductions announced Oct 26; no new November 13 interruption verified."
+      },
+      {
+        "url": "https://pasquines.us/2026/11/13/automatic-snap-replacement-st-thomas-st-john-outages/",
+        "reason": "New Nov 13 article recounts October USVI power losses and SNAP replacements already deposited Nov 7; no newly occurring interruption."
+      },
+      {
+        "url": "https://www.vi.gov/governor-bryan-announces-automatic-snap-relief-for-3755-households-affected-by-power-outages/",
+        "reason": "Official USVI announcement dated Nov 9 describes replacement/restoration, not newly interrupted benefits."
+      },
+      {
+        "url": "https://dhs.ri.gov/",
+        "reason": "Undated remote-service notice for Shepard and Pawtucket offices during pest treatment; alternative customer access remains; not verified as a new immediate food-benefit interruption."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Provider reports all systems operational and no November 13 incidents; Nov 15 Connecticut conversion preannounced Aug 20, prospective."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Nov 21 housing/utility verification requirement is prospective and does not show new immediate interruption."
+      },
+      {
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC reports services active, no interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing nonspecific interview/call delays; no new dated urgent event."
+      },
+      {
+        "url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Last revised Oct 16; no current interruption."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "No disaster/outage-related distribution cancellation found."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "No new Nov 13 food access interruption shown."
+      }
+    ],
+    "material_new_degradation": false,
+    "interpretation": "DEGRADED because recurring USDA direct-source access restrictions and Guam timeout persist, not because a new material watch failure occurred. Twelve searches completed; usable official/provider and local-news sources remained. No new qualifying signal found.",
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

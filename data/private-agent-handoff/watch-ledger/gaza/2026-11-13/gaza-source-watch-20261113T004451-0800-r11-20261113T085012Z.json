@@ -1,0 +1,178 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T004451-0800-r11-20261113T085012Z",
+  "scheduled_for": "2026-11-13T00:44:51-08:00",
+  "started_at": "2026-11-13T00:50:12-08:00",
+  "completed_at": "2026-11-13T08:52:31.291+00:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-12T23:44:42-08:00",
+    "end": "2026-11-13T08:52:31.291+00:00",
+    "previous_run_completed_at": "2026-11-12T23:44:42-08:00",
+    "basis": "Previous 23:44:42 PST completion verified by authenticated reading of the prior ledger heartbeat on ops/watch-ledger. Newly discoverable primary reports during this check; foreign-local publication times can precede U.S. Pacific index appearance.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261113-ocha-hct-150k-tents-outside-gaza",
+      "canonical_source_url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+      "title": "Urgent appeal to expedite the entry of winter supplies into Gaza",
+      "publisher": "UN OCHA OPT / Humanitarian Country Team",
+      "source_date": "2026-11-13",
+      "publication_date": "2026-11-13",
+      "publication_time": null,
+      "event_date": null,
+      "location": "Gaza Strip; tents staged primarily in Al Arish, Egypt",
+      "affected_population_or_system": "Displaced families requiring emergency shelter; restricted winter relief and crossing access",
+      "supporting_passage": "more than 150,000 tents procured by humanitarian partners and Member States are outside Gaza, ready for dispatch",
+      "source_type": "primary humanitarian coordination statement",
+      "classification": "follow-up",
+      "confidence": "high",
+      "discovery_context": "Newly published 13 November HCT statement quantifies at least 150,000 tents awaiting entry outside Gaza, chiefly in Al Arish, and names multiple approval requirements, restricted crossing capacity and delivery windows. Earlier 11 November appeals and 8 November flood impacts were known; the quantified awaiting-delivery figure is new source-grounded detail, not a newly imposed policy or new storm."
+    },
+    {
+      "finding_id": "gaza-20261113-wafa-tuffah-gaza-city-fatal-shooting",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176889",
+      "title": "Palestinian killed by Israeli forces east of Gaza City",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-13",
+      "publication_date": "2026-11-13",
+      "publication_time": "09:30, publisher local time; timezone not explicitly specified",
+      "event_date": "2026-11-13",
+      "location": "Al-Tuffah neighborhood, east of Gaza City, Gaza Strip",
+      "affected_population_or_system": "One reported Palestinian fatality; civilian status not independently verified",
+      "supporting_passage": "A Palestinian was killed early Friday morning by Israeli forces' gunfire",
+      "source_type": "established Palestinian news agency report",
+      "classification": "new",
+      "confidence": "moderate",
+      "discovery_context": "WAFA index displayed report dated 13 November at 09:30 local; the prior verified heartbeat had found no Gaza news later than 12 November 22:05 on the same index. Single-agency reporting; no identity, medical confirmation or independent casualty verification in source. Do not combine with previously recorded 12 November toll."
+    },
+    {
+      "finding_id": "gaza-20261112-wafa-al-mawasi-late-night-drone-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176889",
+      "title": "WAFA reports separate late-night fatal drone strike near a tent in Al-Mawasi",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-13",
+      "publication_date": "2026-11-13",
+      "publication_time": "09:30, publisher local time; timezone not explicitly specified",
+      "event_date": "2026-11-12",
+      "location": "Al-Mawasi, west of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "One reported Palestinian fatality near a tent; civilian status not independently verified",
+      "supporting_passage": "Another Palestinian was killed late Thursday night",
+      "source_type": "established Palestinian news agency report",
+      "classification": "new",
+      "confidence": "moderate",
+      "discovery_context": "Same 13 November WAFA report distinguishes a late-Thursday Al-Mawasi drone-strike fatality from the Friday al-Tuffah shooting. Incident was not among three 12 November afternoon fatalities reported by WAFA (Al-Shifa, Deir al-Balah, Jabalia). Exact time and independent confirmation unavailable. Avoid asserting this increases any aggregate tally."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not primary Gaza production collector/publisher; no authorization, publishing or schedule activity.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T234451-0800-r11-20261113T074442532Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "13 November Humanitarian Country Team urgent winter-supplies statement appeared, documenting 150,000+ procured tents awaiting entry; 11 November OCHA relief chief appeal was previously seen."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-israel-and-opt",
+        "status": "ACCESSIBLE",
+        "result": "No new interval-dated health-service or evacuation changes visible on the current situation page."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Longstanding regional access restriction; this run did not establish new material deterioration."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Landing material and Health Cluster figures dated as of September 2026; no fresh operational-change evidence."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int Gaza health \"13 November 2026\" hospital medical evacuation",
+      "site:ochaopt.org \"13 Nov 2026\" Gaza crossing shelter aid",
+      "site:unicef.org Gaza November 13 2026 children water winter",
+      "site:wfp.org Gaza November 13 2026 food aid trucks",
+      "site:reliefweb.int Gaza November 13 2026 situation update rain displacement",
+      "Gaza November 13 2026 civilian deaths airstrike Reuters AP",
+      "Gaza November 13 2026 Nasser hospital injured wounded medical facility",
+      "Gaza November 12 13 2026 Rafah crossing Kerem Shalom humanitarian supplies",
+      "Gaza November 13 2026 ceasefire negotiations hostages detainees",
+      "Gaza November 13 2026 flood destroyed tents rainfall shelter casualties",
+      "Gaza November 13 2026 ambulance hospital fuel medical evacuation ICRC MSF",
+      "Gaza November 13 2026 infrastructure water wastewater network damage UNICEF"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA HCT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "result": "Direct 13 November HCT statement accessible; specific shelter-supply staging claim verified."
+      },
+      {
+        "publisher": "OCHA relief chief",
+        "url": "https://www.ochaopt.org/content/no-more-delay-un-relief-chief-urges-immediate-entry-winter-supplies-gaza",
+        "result": "11 November appeal checked for novelty; does not include newly quantified 150,000 tent staging figure."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "13 November latest-news index showed report on al-Tuffah killing and separately referenced late Thursday al-Mawasi death; direct incident report retrieved."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176889",
+        "result": "Direct report verified two separately dated fatalities; independent confirmation, identities and aggregate de-duplication unavailable."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176880",
+        "result": "12 November afternoon fatalities described in other locations, so not obviously duplicates of Friday and late-Thursday events."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-msf-condemns-another-deadly-attack-nasser-hospital",
+        "result": "12 November Nasser Hospital casualties and service disruptions rechecked, excluded as previously recorded."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Hospital six fatalities, 52 injured, departmental outages",
+        "reason": "12 November attack and clinical update previously recorded in earlier watch, not a new interval change."
+      },
+      {
+        "subject": "8 November heavy-rain shelter destruction and 11 November UN relief-chief appeal",
+        "reason": "Repeated earlier material; 13 November 150,000-tent figure separately qualified as a fresh quantification."
+      },
+      {
+        "subject": "Historical WHO/Health Cluster capacity data, historic UNICEF/WFP reports and search results",
+        "reason": "No newly verified interval-dated change."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED: WHO Eastern Mediterranean 502 persists. OCHA OPT, WHO Global/Health Cluster, WAFA and MSF accessible. Newly surfaced verified OCHA aid-access quantitative statement and two single-source WAFA incident reports.",
+    "limitations": "12 additional targeted searches only, after direct first checks of OCHA and WHO. Web search returned substantial older material despite recency filtering; direct current dated sources take precedence. WAFA reports are attributed and provisional; civilian status unverified. OCHA publication time unspecified. No claim events occurred strictly after prior check or have independent confirmation.",
+    "notification_warranted": true,
+    "changes_to_production": "None; no approval, publication, merge, schedule modification or disabling."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T164651-0800-recall12-20261113T004651Z",
+  "scheduled_for": "2026-11-12T16:45:22-08:00",
+  "started_at": "2026-11-12T16:46:51-08:00",
+  "completed_at": "2026-11-12T16:48:03.280-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T15:51:17.039-08:00",
+    "end": "2026-11-12T16:48:03.280-08:00",
+    "prior_check_basis": "Previous durable Care Line heartbeat read on ops/watch-ledger; completed_at 2026-11-12T15:51:17.039-08:00.",
+    "event_time_basis": "Newly reported or effective concrete essential healthcare-access change since previous heartbeat; historical/previously recorded developments excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; national production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois; limitation of CLIA certification; laboratory 14D2049789.",
+      "next_notice_date": "2026-11-09",
+      "result": "Directly checked CMS official public notices table; no notices dated after November 10."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency room ER closes diverts ambulances November 12 2026",
+      "hospital maternity labor delivery obstetrics closes services November 12 2026",
+      "rural hospital primary care clinic closure November 12 2026",
+      "behavioral health psychiatric hospital unit closes suspends November 12 2026",
+      "dialysis clinic stops treatments closes November 12 2026",
+      "cancer oncology chemotherapy infusion center closing services November 12 2026",
+      "ambulance EMS service suspending closing operations November 12 2026",
+      "air ambulance helicopter medical base closure November 12 2026",
+      "hospital emergency department reopened service restored ambulance diversion ended November 12 2026",
+      "2026-11-12 hospital clinic care services closed suspended site:gov",
+      "November 12 2026 Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic ambulance service closure",
+      "November 12 2026 physician practice primary care urgent care mental health service closed announced patients"
+    ],
+    "targeted_search_method": "Twelve focused fresh web searches, recency 1-2 days, spanning essential service closure, interruption, restoration, transport, and territories.",
+    "search_result": "No newly verified qualifying nonduplicate access loss, CMS notice or concrete restoration within observation period.",
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center, Bradford, Pennsylvania",
+        "reason": "November 12 feature addresses previously documented closure, not a new within-window event."
+      },
+      {
+        "event": "Prevea Washington Street Health Center, Green Bay, Wisconsin",
+        "reason": "Already identified and corroborated in prior watches; November 13 last-care date is not new within this interval."
+      },
+      {
+        "event": "WVU Cancer Institute at Summersville Regional Medical Center, West Virginia",
+        "reason": "November 10 oncology expansion reported November 11; not a restoration of a previously lost service, outside current search interval."
+      },
+      {
+        "event": "New Hopes mental health facility in Kennewick, Washington",
+        "reason": "Previously reviewed planned new facility, not an abrupt restoration of lost service."
+      },
+      {
+        "event": "Historical ambulance-base closures and service cuts",
+        "reason": "Returned dates in preceding months, not new within-window developments."
+      }
+    ],
+    "source_access_notes": [
+      "CMS Public Notices page retrieved directly before targeted searches.",
+      "Prior hourly Care Line heartbeat retrieved from the designated GitHub branch.",
+      "All 12 targeted searches returned results without a tool-level error; most hits historical or unrelated."
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Broad nationwide and territorial completeness is not established by this bounded recall watch.",
+      "Search indexing can lag same-hour local announcements.",
+      "No findings should not be interpreted as proof that no healthcare-access change occurred."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

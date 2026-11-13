@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T084950-0800-recall12-20261113T165130Z",
+  "scheduled_for": "2026-11-13T08:45:22-08:00",
+  "started_at": "2026-11-13T08:49:50-08:00",
+  "completed_at": "2026-11-13T08:51:30.829-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T07:48:17-08:00",
+    "end": "2026-11-13T08:51:30.829-08:00",
+    "prior_check_basis": "Previous watch heartbeat independently fetched from ops/watch-ledger; completed at 07:48:17 PST on 2026-11-13.",
+    "newness_rule": "Only newly surfaced, verified concrete healthcare access changes since prior hourly check; exclude previous coverage, proposals and ownership/finance without service impact."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary Care Line recall; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care; limitation of CLIA certificate 14D2049789; Illinois.",
+      "new_notices_since_prior_check": 0,
+      "method": "CMS-specific lookups first; official CMS canonical Public Notices listing returned with current first row 2026-11-10. No new dated CMS notice."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 13 2026 November 12 2026 US",
+      "rural hospital emergency room maternity obstetrics closure announced November 13 2026",
+      "hospital psychiatric behavioral health inpatient unit closing November 13 2026",
+      "dialysis center services suspended closing November 13 2026 local news",
+      "cancer oncology clinic suspended services closed November 13 2026",
+      "ambulance service EMS station base shut down suspended November 13 2026",
+      "medical helicopter air ambulance base closure service November 2026 Nov 13",
+      "primary care clinic abrupt closing patients November 12 13 2026 local news",
+      "hospital emergency department reopening resumed services November 13 2026",
+      "health care facility closure service suspension US territories Puerto Rico Guam November 13 2026",
+      "\"November 13, 2026\" \"will close\" \"emergency\" hospital United States",
+      "\"November 13, 2026\" \"reopened\" hospital clinic ambulance service"
+    ],
+    "results": "No new sufficiently verified nonduplicate hospital, ED, maternity, psychiatric, dialysis, oncology, primary care, EMS/air-medical loss or newly effective essential-care restoration in bounded results.",
+    "reviewed_exclusions": [
+      {
+        "title": "Rural Missouri mothers face long drives to reach delivery centers",
+        "source_url": "https://www.kttn.com/rural-missouri-mothers-face-long-drives-to-reach-delivery-centers/",
+        "reason": "Nov 13 report describes existing longstanding maternity-care gaps, not a new service loss; previously reviewed."
+      },
+      {
+        "title": "Alabama sends $40 million to Jackson Hospital after bankruptcy exit",
+        "source_url": "https://www.alreporter.com/2026/11/13/alabama-sends-40-million-to-jackson-hospital-after-bankruptcy-exit",
+        "reason": "New financial transfer to a previously operating hospital; no newly effective clinical access change."
+      },
+      {
+        "title": "In Bradford, a community reels after hospital closes",
+        "source_url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/",
+        "reason": "Retrospective on closure already covered by prior checks."
+      },
+      {
+        "title": "UPMC touts expanded capacity amid Sharon Regional uncertainty",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/",
+        "reason": "Existing/previously covered regional access issue; no newly effective qualifying restoration."
+      },
+      {
+        "title": "Bookmark Medical Ashland City clinic opening",
+        "source_url": "https://smokeybarn.com/bookmark-medical-celebrates-ashland-city-clinic-opening-with-november-12-ribbon-cutting/",
+        "reason": "New primary care option opened Nov 9; not abrupt restoration of previously lost essential service, and outside current watch window."
+      },
+      {
+        "title": "Air Evac Lifeteam Decatur Airport base closure",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "Older October report, not newly announced or effective in this interval."
+      }
+    ],
+    "limitations": [
+      "Search indexing lag can conceal events announced during this same observation hour.",
+      "CMS lists formal notices, not all operational suspensions; 12 bounded targeted searches cannot exhaustively cover every locality, state or territory.",
+      "Some broad web results were unrelated or stale and excluded by event and publication dates."
+    ],
+    "review_status": "No pending positive findings.",
+    "publication_action": "NONE",
+    "approval_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

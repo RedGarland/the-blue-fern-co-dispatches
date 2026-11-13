@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T094740-0800-r11-20261113T174740Z",
+  "scheduled_for": "2026-11-13T09:45:54-08:00",
+  "started_at": "2026-11-13T09:47:40-08:00",
+  "completed_at": "2026-11-13T09:49:12.457-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T08:50:33.246-08:00",
+    "end_at": "2026-11-13T09:49:12.457-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "Since last GitHub read-back-verified Food Line watch heartbeat; indexing-lag lookback only for new verification. Primary nationwide production collection remains authoritative.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T084845-0800-r11-20261113T164845Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall only, not nationwide completeness. Zero findings does not rule out unindexed or hyperlocal disruptions.",
+    "target_classes": [
+      "Closure/fire/disaster affecting only, sole, last or full-service grocery store",
+      "Emergency food distribution canceled/suspended due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 13 2026 community",
+      "\"last grocery store\" closed fire November 2026 town",
+      "\"sole grocery store\" closure November 2026",
+      "\"only full-service grocery store\" closing November 2026",
+      "food pantry closed unexpectedly November 13 2026",
+      "food bank pantry emergency closure November 13 2026",
+      "food distribution canceled storm November 13 2026",
+      "food distribution suspended flooding power outage November 2026",
+      "SNAP benefits interruption November 13 2026 state agency",
+      "WIC benefits interrupted card outage November 13 2026 state",
+      "emergency food pantry distribution canceled fire facility damage November 2026",
+      "SNAP EBT outage issuance delayed November 13 2026 state official"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_limitations": "All 12 targeted searches completed, but prominent matches were older incidents, future processor maintenance, general distribution listings, promotions, and previously known grocery closures; no newly verified qualifying disruption since 08:50 PST. Search indexing delay remains a limitation.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 10,
+      "inaccessible": 3,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.sjcs.org/thepantry-vadc",
+        "https://www.buncombenc.gov/AlertCenter.aspx",
+        "https://dhs.vi.gov/news/",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA access restriction"
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA access restriction"
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam DPHSS timeout"
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.mprnews.org/story/2018/11/13/town-of-cooks-only-grocery-burns-but-owners-vow-to-rebuild",
+        "reason": "Only-grocery fire occurred on November 13, 2018; stale date-match."
+      },
+      {
+        "url": "https://www.bangordailynews.com/2026/08/29/down-east/downeast-business/eastport-grocery-store-iga-close-next-week-joam40zk0w/",
+        "reason": "Only grocery closure announced August 2026, outside current watch window."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Grocery-chain closure report published October 13, 2026, not new in watch window."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "No incidents reported November 13 as of check; announced Connecticut November 15 conversion was posted August 20."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "November 21 proof-of-housing/utility requirement is prospective, not a new immediate benefit interruption."
+      },
+      {
+        "url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Existing QUEST PIN reset advisory; page last revised October 16, 2026."
+      },
+      {
+        "url": "https://www.sjcs.org/thepantry-vadc",
+        "reason": "November 11 canceled Annandale pop-up predates watch window; eligible adverse cause not shown."
+      },
+      {
+        "url": "https://www.buncombenc.gov/AlertCenter.aspx",
+        "reason": "County Microsoft-service alert does not confirm a new food-access disruption."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "No newly verified November 13 immediate food-assistance interruption."
+      }
+    ],
+    "material_new_degradation": false,
+    "interpretation": "DEGRADED due to three unchanged access issues (USDA newsroom and SNAP pages HTTP 403; Guam DPHSS timeout). Ten direct official/provider sources and 12 targeted searches remained accessible; no material degradation beyond prior watch.",
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

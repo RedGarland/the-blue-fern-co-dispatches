@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T154451-0800-r11-20261113T234554406Z",
+  "scheduled_for": "2026-11-13T15:44:51-08:00",
+  "started_at": "2026-11-13T15:44:30-08:00",
+  "completed_at": "2026-11-13T15:45:54-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T14:47:06.072-08:00",
+    "end": "2026-11-13T15:45:54-08:00",
+    "previous_run_completed_at": "2026-11-13T14:47:06.072-08:00",
+    "basis": "Authenticated previous watch heartbeat readback, OCHA/WHO direct checks, 12 bounded targeted web searches, WAFA latest feed direct review; event and publication dates distinguished from discovery.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; daily Gaza production collector and publisher remain authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T144451-0800-r11-20261113T224706Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Current 13 November situation report directly read; its principal Gaza reporting period is 3–9 November. Flooding, aid/truck decline, water/medicine shortages, health services and illness findings were logged in earlier hourly checks."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "13 November Humanitarian Country Team appeal directly read; >150,000 tents held outside Gaza, especially Al Arish, already documented by prior watch; no independently verified new hourly restriction or supply entry."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current emergency situation overview directly checked; no distinct newly dated operational change."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Direct cluster page read; formal indicators dated September 2026, no new Gaza event."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Repeated known regional endpoint failure. WHO Global and Health Cluster alternatives were accessible; no newly material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 23:00 UTC latest civilian casualties Israeli strike ceasefire Friday November 14",
+      "site:aa.com.tr/en/middle-east Gaza November 13 2026 Friday night latest killed injured",
+      "site:english.wafa.ps Gaza \"14 November 2026\" deaths wounded dawn Saturday",
+      "site:aljazeera.com/news/2026/11/13 Gaza overnight November 14 2026 new developments ceasefire",
+      "site:ochaopt.org Gaza November 13 2026 winter shelters 150000 tents aid blockage new update",
+      "site:who.int Gaza \"13 November 2026\" medicines ambulance evacuation hospitals response",
+      "Gaza \"14 November 2026\" Saturday dawn civilian fatalities ambulances shelters",
+      "site:reuters.com/world/middle-east Gaza November 13 2026 2026 Israeli aid crossings Friday latest",
+      "site:msf.org Gaza 13 November 2026 November 14 hospitals medical services new disruption",
+      "site:unicef.org Gaza November 13 2026 child hypothermia winter floods entry new",
+      "site:wfp.org Gaza November 13 2026 food deliveries ration winter displacement new",
+      "site:palestinercs.org Gaza November 13 2026 November 14 ambulance rescue healthcare attacks"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "detail": "Latest feed inspected through 13 November 22:11 Palestine time; latest items related to West Bank; Gaza 19:02 casualty and 18:54 Nasser health items duplicates of prior watches."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/hamilton-urges-israel-let-gaza-aid-after-rafah-visit-2026-11-11/",
+        "detail": "Search surfaced November 11 Rafah visit and aid observations, not a new operational change in this window."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-injure-8-in-gaza-amid-ceasefire-violations/4124535",
+        "detail": "Search surfaced November 13 already documented casualties; no distinct fresh identity confirmed."
+      }
+    ],
+    "duplicate_exclusions": [
+      "OCHA 13 November Gaza humanitarian situation: 3–9 November developments and conditions, previously logged.",
+      "Humanitarian Country Team urgent appeal concerning 150,000 tents outside Gaza and winter supply entry, previously logged.",
+      "Deir al-Balah Al-Qastal Towers casualties, Khan Younis strike, Rafah child injury and Nasser Hospital deaths/clinical disruptions/unexploded ordnance previously logged.",
+      "Eight mobile medical units held near Cairo including maternity and dialysis capacity, documented in immediately preceding 14:47 PST watch.",
+      "November 11–13 secondary reporting and response statements about Nasser Hospital and Gaza ceasefire, without independent new operational change."
+    ],
+    "limitations": "WHO Eastern Mediterranean regional page returned recurring HTTP 502; alternative WHO sources accessible. Search indexing and WAFA latest index may lag current Palestine-local time. No fresh event was verified within or late-discovered during the observation window.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

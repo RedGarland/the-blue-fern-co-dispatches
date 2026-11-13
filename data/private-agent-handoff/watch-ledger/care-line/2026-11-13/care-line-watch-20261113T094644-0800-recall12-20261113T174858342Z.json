@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T094644-0800-recall12-20261113T174858342Z",
+  "scheduled_for": "2026-11-13T09:45:22-08:00",
+  "started_at": "2026-11-13T09:46:44-08:00",
+  "completed_at": "2026-11-13T09:48:58.342-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T08:51:30.829-08:00",
+    "end": "2026-11-13T09:48:58.342-08:00",
+    "prior_check_basis": "Read-back of prior hourly Care Line Watch heartbeat on ops/watch-ledger; completed 08:51:30.829 PST.",
+    "newness_rule": "First reported within this watch interval or newly effective and independently verified; exclude previously reported/duplicated changes, proposals and financial stories lacking a new concrete clinical service change."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-20261113-il-waukegan-vista-east-fifth-floor-closure",
+      "canonical_source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/",
+      "title": "Vista Medical Center East down to 21 patients and closes a floor amid reports doctors may take over Waukegan hospital",
+      "publisher": "Lake and McHenry County Scanner",
+      "exact_supporting_passage": "Vista Medical Center East had 21 patients on Thursday morning and that the hospital closed its fifth floor.",
+      "source_published_date": "2026-11-13",
+      "state": "IL",
+      "city": "Waukegan",
+      "county": "Lake",
+      "territory": null,
+      "event_type": "partial_hospital_inpatient_floor_closure",
+      "service_line": "hospital inpatient care; fifth floor",
+      "access_consequences": "A fifth-floor inpatient area was taken out of use. The report says 15 fifth-floor patients were relocated: four to the ICU and the rest to the second floor. It does not establish that admissions were refused, how many staffed beds were lost, or that a distinct specialty service was suspended. Pre-existing ambulance diversion and loss of trauma designation are not new findings.",
+      "affected_population": "Vista Medical Center East inpatients; 15 patients reportedly relocated, with unknown impact on prospective admissions.",
+      "effective_date": "2026-11-12",
+      "announcement_date": "2026-11-13",
+      "confidence": "medium",
+      "source_role": "independent_local_reporting_employee_account",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; authoritative national production collection unchanged.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care (IL), limitation of CLIA certificate 14D2049789.",
+      "new_notices_since_prior_check": 0,
+      "access_status": "Official canonical listing successfully retrieved."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 13 2026 hospital emergency department closed suspended services patients United States",
+      "November 13 2026 labor delivery maternity unit closes suspends births hospital",
+      "November 13 2026 rural hospital emergency services shutdown service loss",
+      "November 13 2026 ambulance EMS station base closure suspension",
+      "November 13 2026 dialysis center closure suspension patients",
+      "November 13 2026 psychiatric behavioral health inpatient unit closes suspends",
+      "November 13 2026 oncology cancer infusion service closure suspended treatment clinic",
+      "November 13 2026 primary care clinic closing immediately patients appointments",
+      "November 13 2026 air ambulance helicopter base closure medical transport service",
+      "November 13 2026 emergency department reopened reinstated services hospital",
+      "November 13 2026 hospital or clinical laboratory CMS CLIA suspension termination rescission notice",
+      "November 13 2026 Puerto Rico Guam Virgin Islands hospital clinic emergency services closed reopened"
+    ],
+    "finding_verification": "New November 13 local report based on anonymous hospital employee says fifth floor closed by Thursday November 12, with 15 existing patients relocated. Hospital spokesperson was asked but management had not responded at publication. This is an actual floor closure, not a confirmed entire-hospital or specialist service shutdown. Pending production review.",
+    "reviewed_exclusions": [
+      {
+        "title": "UH Seidman Cancer Center Geneva consolidation",
+        "source_url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-as-geneva-cancer-center-closes/",
+        "reason": "Older September announcement of planned November 13 closure; no new same-hour proof of completion or abrupt newly reported loss."
+      },
+      {
+        "title": "Sharon Regional and prior Vista EMS/trauma access losses",
+        "reason": "Earlier reported service changes, not first observed in this interval."
+      },
+      {
+        "title": "Rural Missouri maternity care gaps",
+        "reason": "Background on existing access gaps rather than a new unit closure."
+      },
+      {
+        "title": "Air Evac Decatur Airport base closure",
+        "reason": "Previously effective September 16, outside window."
+      }
+    ],
+    "limitations": [
+      "Fifth-floor closure relies on one local news outlet's anonymous employee account, not confirmed by hospital leadership; clinical capacity implications unmeasured.",
+      "Same-hour search indexing delays and 12-query national/territory cap mean some new developments may not yet be discoverable.",
+      "CMS notice list does not necessarily capture real-time operational service interruptions."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

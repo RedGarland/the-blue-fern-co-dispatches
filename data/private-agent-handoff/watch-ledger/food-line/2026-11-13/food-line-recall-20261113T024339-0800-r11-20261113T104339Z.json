@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T024339-0800-r11-20261113T104339Z",
+  "scheduled_for": "2026-11-13T02:45:54-08:00",
+  "started_at": "2026-11-13T02:43:39-08:00",
+  "completed_at": "2026-11-13T02:45:04-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T01:44:20-08:00",
+    "end_at": "2026-11-13T02:45:04-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "From completed_at of previous read-back-verified Food Line watch heartbeat; targeted web queries with two-day recency to detect indexed late reports. Findings required to be newly reported or discovered in this interval; no new qualifying evidence.",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T014209-0800-r11-20261113T094209Z.json",
+    "prior_run_status": "DEGRADED",
+    "prior_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary, nonexhaustive recall of high-value miss classes only; primary nationwide collector remains authoritative. No findings is not confirmation that no disruptions occurred.",
+    "target_classes": [
+      "Loss, closure, fire, disaster at a community's only, sole, last or full-service grocery store",
+      "Storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry or food-bank closure or major access reduction",
+      "Official immediate SNAP/WIC/food-assistance service or benefit interruption"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" fire November 12 2026 town",
+      "\"only grocery store\" \"November 13, 2026\" closure",
+      "\"last grocery store\" closes November 2026 rural",
+      "\"full service grocery\" closed fire \"November 12\" 2026",
+      "\"food bank\" \"distribution canceled\" storm November 13 2026",
+      "\"food distribution\" \"cancelled\" \"November 12, 2026\" flood storm",
+      "\"mobile pantry\" \"canceled\" weather November 13 2026",
+      "\"food pantry\" \"closed\" \"November 13, 2026\" power outage damage",
+      "\"food bank\" temporarily closed fire storm November 2026",
+      "site:gov SNAP EBT outage delay November 13 2026 benefits",
+      "site:gov WIC suspended services appointments outage November 12 13 2026",
+      "SNAP benefits system outage November 13 2026 state agency food assistance"
+    ],
+    "search_errors_observed": 0,
+    "search_limitations": "Twelve targeted searches completed but mostly returned historical closures, generic or unrelated results, and prior notices. Very fresh hyperlocal events may not be indexed or searchable in this window.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 9,
+      "inaccessible": 4,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.sjcs.org/thepantry-vadc",
+        "https://www.buncombenc.gov/AlertCenter.aspx"
+      ],
+      "failures": [
+        {
+          "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap",
+          "error": "HTTP 403",
+          "impact": "Previously observed intermittent Rhode Island SNAP-page restriction"
+        },
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA FNS newsroom restriction"
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA SNAP restriction"
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam DPHSS timeout"
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "November 13 shows no incidents; November 12 scheduled processor maintenance completed before observation; Connecticut November 15 migration and January processor maintenances are prospective, announced previously."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "November 21 SNAP verification rule is prospective; no new immediate access interruption."
+      },
+      {
+        "url": "https://www.sjcs.org/thepantry-vadc",
+        "reason": "November 11 Annandale pop-up canceled before current window; no verified storm, fire, outage, flood or facility-damage cause."
+      },
+      {
+        "url": "https://www.buncombenc.gov/AlertCenter.aspx",
+        "reason": "November 12 Microsoft/Outlook/Exchange interruption is a county IT notice, not verified immediate food assistance or SNAP access interruption; older food assistance alert unrelated."
+      },
+      {
+        "url": "https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-",
+        "reason": "September 28 El Paso food-bank storm closure historical and previously outside window."
+      },
+      {
+        "url": "https://www.pa.gov/agencies/dhs/newsroom/due-to-federal-shutdown--november-snap-payments-will-not-be-made",
+        "reason": "Pennsylvania November SNAP warning is dated October 20, 2025, not a November 2026 event."
+      },
+      {
+        "url": "https://www.cdph.ca.gov/Programs/CFH/DWICSN/Pages/California-WIC-Updates.aspx",
+        "reason": "California WIC service guidance dates September 2, 2026 and earlier; explicitly says services continue, no new interruption."
+      }
+    ],
+    "interpretation": "DEGRADED because four direct-source access checks failed; all twelve web searches and nine direct pages were accessible. The same four sources have failed in prior runs, while Buncombe County is now accessible, so no new material coverage degradation was established. No qualifying newly confirmed incident found.",
+    "material_new_degradation": false,
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

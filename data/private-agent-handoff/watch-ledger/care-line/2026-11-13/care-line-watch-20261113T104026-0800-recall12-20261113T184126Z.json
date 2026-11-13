@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T104026-0800-recall12-20261113T184126Z",
+  "scheduled_for": "2026-11-13T10:45:22-08:00",
+  "started_at": "2026-11-13T10:40:26-08:00",
+  "completed_at": "2026-11-13T10:41:54.427-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T09:48:58.342-08:00",
+    "end": "2026-11-13T10:41:54.427-08:00",
+    "prior_check_basis": "Prior hourly Care Line Watch heartbeat on ops/watch-ledger, independently fetched; completed 2026-11-13 09:48:58.342 PST.",
+    "newness_rule": "Look for newly observed, source-supported effective service loss/restoration or CMS access-risk notices since prior check; exclude duplicates, older announcements without new implementation evidence, proposals, business-only news and unsupported claims."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only. Primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care (Illinois), CLIA certificate limitation 14D2049789",
+      "new_notices_since_prior_check": 0,
+      "access_status": "Official canonical CMS page successfully retrieved and notice table inspected (2026-11-13)."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 13 2026 hospital emergency room closed suspended services patients Friday local news",
+      "November 13 2026 maternity labor delivery unit suspended closed hospital today",
+      "November 13 2026 rural hospital emergency department closure suspension ambulance diversion",
+      "November 13 2026 EMS ambulance service station base closing immediate Friday",
+      "November 13 2026 air ambulance medical helicopter base shutdown service closure",
+      "November 13 2026 dialysis clinic closed patients transferred services suspended",
+      "November 13 2026 behavioral health psychiatric hospital unit closure suspended admissions",
+      "November 13 2026 oncology cancer clinic infusion services shut down closure",
+      "November 13 2026 primary care clinic abruptly closes patients appointments",
+      "November 13 2026 hospital emergency department reopened restored after closure service",
+      "November 13 2026 CLIA certificate suspension CMS provider termination health care notice",
+      "November 13 2026 Puerto Rico Guam US Virgin Islands hospital emergency clinic ambulance closure suspension"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East, Waukegan fifth-floor closure",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/",
+        "reason": "Already entered as medium-confidence pending-review finding in previous hourly heartbeat; no additional newly verified clinical access change."
+      },
+      {
+        "title": "UH Seidman Cancer Center Geneva",
+        "source_url": "https://www.cleveland19.com/2026/09/20/ill-just-have-go-further-patients-brace-longer-commutes-geneva-cancer-center-closes/",
+        "reason": "September report announces projected November 13 closure; no new, same-window primary-source proof of completion."
+      },
+      {
+        "title": "Sharon Regional Medical Center, Pennsylvania",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/",
+        "reason": "Older reported access threat; November 12 article describes nearby UPMC capacity rather than new or confirmed loss/restoration."
+      },
+      {
+        "title": "Cornwall Regional Hospital accident and emergency reopening in Montego Bay",
+        "source_url": "https://jamaica-gleaner.com/article/news/20261113/cornwall-regional-hospital-saved-36-billion-through-makeshift-operating",
+        "reason": "Outside U.S. and territories (Jamaica)."
+      },
+      {
+        "title": "Planned Parenthood Texas Medicaid litigation",
+        "source_url": "https://blavity.com/health/planned-parenthood-medicaid-lawsuit",
+        "reason": "Litigation and potential future closures, not confirmed clinical service change."
+      },
+      {
+        "title": "Puerto Rico/Guam/U.S. Virgin Islands search returns prior Guam April 2026 advisory",
+        "source_url": "https://ghs.guam.gov/node/4161",
+        "reason": "Old disaster-related restriction, outside observation window."
+      }
+    ],
+    "limitations": [
+      "Same-hour publication and search-indexing lags; only 12 targeted queries, not comprehensive all-county source coverage.",
+      "Search result dates sometimes reflect crawl date or ambiguous timezone; no unverified same-hour candidates promoted.",
+      "CMS Public Notices listing is not a real-time feed of operational closures."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE",
+    "nominal_schedule_note": "Scheduled_for follows the existing hourly recurrence; this run's provided start time was earlier than nominal 10:45:22 PST, and no future due run was labeled missed."
+  }
+}

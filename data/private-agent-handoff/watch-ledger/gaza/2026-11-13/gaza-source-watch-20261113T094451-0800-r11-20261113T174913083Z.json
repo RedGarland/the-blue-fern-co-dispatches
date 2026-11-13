@@ -1,0 +1,266 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+  "scheduled_for": "2026-11-13T09:44:51-08:00",
+  "started_at": "2026-11-13T09:45:26-08:00",
+  "completed_at": "2026-11-13T09:49:13.083-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T08:42:45-08:00",
+    "end": "2026-11-13T09:49:13.083-08:00",
+    "previous_run_completed_at": "2026-11-13T08:42:45-08:00",
+    "basis": "Authenticated prior hourly watch-ledger heartbeat; includes explicitly labeled late-discovery event outside publication window.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261113-deir-al-balah-qastal-artillery-3-killed",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176901",
+      "title": "Artillery hits residential area near Al-Qastal Towers, killing three and injuring at least ten",
+      "publisher": "WAFA",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": "2026-11-13T09:02:00-08:00",
+      "event_date": "2026-11-13",
+      "event_start_date": "2026-11-13",
+      "event_end_date": null,
+      "location": "Al-Qastal Towers vicinity, east Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Three people killed, including a child and woman; ten or more injured and transferred for hospital care",
+      "summary": "WAFA's correspondent reports Israeli artillery shelling near the Al-Qastal Towers residential complex killing three Palestinians, including a woman and a child, and injuring about 20. Anadolu separately reports three killed and at least ten injured in the same attack, citing an Al-Aqsa Martyrs Hospital medical source and witnesses. WAFA's story introduction inconsistently states six deaths across Friday attacks; the incident-specific count is three. Treat wound count as at least ten and exact total unconfirmed.",
+      "exact_supporting_passage": "claiming the lives of three Palestinians, including a child and a woman",
+      "source_type": "Palestinian news agency on-scene report, corroborated by Anadolu medical-source reporting",
+      "classification": "new",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+        "previous_heartbeat_completed_at": "2026-11-13T08:42:45-08:00",
+        "source_section": "WAFA November 13 7:02 PM Palestine local publication; corroborated by Anadolu Nov 13",
+        "publication_in_observation_window": true,
+        "newly_verified_detail": "Distinct Al-Qastal shelling first reported inside watch interval",
+        "corroborating_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+        "injury_count_discrepancy": "WAFA approximately 20 at scene; Anadolu at least 10 for the incident and approximately 20 across Gaza",
+        "source_total_fatality_count_conflict": "WAFA article lead says six across incidents; incident-specific count three"
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-khan-younis-turkish-slaughterhouse-drone-killed",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+      "title": "Israeli drone strike near Khan Younis kills one and injures five",
+      "publisher": "Anadolu Agency",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": "2026-11-13",
+      "event_start_date": "2026-11-13",
+      "event_end_date": null,
+      "location": "Turkish Slaughterhouse area, southwest of Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "One 36-year-old Palestinian man killed and five other Palestinians injured",
+      "summary": "Anadolu reports that a drone struck a group of Palestinians in the Turkish Slaughterhouse area, killing a 36-year-old man and injuring five. The source gives the date but not the incident clock time. Neither is the previously recorded November 12 al-Mawasi tent casualty.",
+      "exact_supporting_passage": "killed and five others injured",
+      "source_type": "Established wire reporting with medical-source/witness context",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+        "previous_heartbeat_completed_at": "2026-11-13T08:42:45-08:00",
+        "source_section": "Anadolu November 13 composite field report",
+        "publication_in_observation_window": null,
+        "newly_verified_detail": "Distinct location and casualties not found in earlier heartbeat",
+        "incident_clock_time_verified": false,
+        "independent_corrob": null
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-rafah-mawasi-child-shot-tents",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+      "title": "Girl shot and seriously injured at displacement tents in al-Mawasi, Rafah",
+      "publisher": "Anadolu Agency",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": "2026-11-13",
+      "event_start_date": "2026-11-13",
+      "event_end_date": null,
+      "location": "Al-Mawasi, Rafah, southern Gaza Strip",
+      "affected_population_or_system": "Displaced child at a tent site, with reported serious neck gunshot injury",
+      "summary": "Anadolu reports Israeli fire on tents sheltering displaced people and that a girl was shot in the neck, seriously injured. Distinct from previously recorded November 12 al-Mawasi drone-strike death near a tent; no independently confirmed identity or incident time.",
+      "exact_supporting_passage": "a Palestinian girl was shot in the neck",
+      "source_type": "Established wire reporting",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+        "previous_heartbeat_completed_at": "2026-11-13T08:42:45-08:00",
+        "source_section": "Anadolu November 13 Gaza field report",
+        "publication_in_observation_window": null,
+        "newly_verified_detail": "Separate shooting injury affecting displaced tents",
+        "independent_corrob": null,
+        "distinct_from_prior": "November 12 al-Mawasi fatal drone incident"
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-nasser-seventh-fatality-eyad-al-jazzar",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+      "title": "Nasser Hospital strike fatality count reportedly rises to seven after wounded man dies",
+      "publisher": "Anadolu Agency",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-11-12",
+      "event_end_date": null,
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Fatalities from November 12 hospital strike, including 20-year-old Eyad Mohammed al-Jazzar",
+      "summary": "Anadolu reports that Eyad Mohammed al-Jazzar, 20, died of wounds from the November 12 strike, raising the previously reported six-death hospital toll to seven. This is a casualty update to an already logged attack, not a new attack. Exact time of death not specified; verification remains single-source.",
+      "exact_supporting_passage": "brought the toll from the hospital attack to seven",
+      "source_type": "Established wire reporting",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+        "previous_heartbeat_completed_at": "2026-11-13T08:42:45-08:00",
+        "source_section": "Anadolu Nov 13 composite article",
+        "publication_in_observation_window": null,
+        "newly_verified_detail": "New reported seventh fatality from recorded strike",
+        "prior_hospital_death_count": 6,
+        "incident_already_logged": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-nasser-unexploded-munitions-unhr-office",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/un-warns-israeli-attacks-have-pushed-gazas-health-system-to-brink-of-collapse/4124515",
+      "title": "UN Human Rights Office warns of unexploded ordnance remaining from Nasser Hospital strike",
+      "publisher": "Anadolu Agency reporting UN Human Rights Office in Palestine statement",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": "2026-11-12",
+      "event_start_date": "2026-11-12",
+      "event_end_date": null,
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Hospital patients, staff and civilians exposed to potentially unexploded munitions",
+      "summary": "Anadolu quotes a November 13 UN Human Rights Office in Palestine statement reporting three missiles were used in the hospital strike, but only one detonated. The office warned the remaining unexploded ordnance posed an added danger. This adds a distinct safety and functioning-capacity consequence of the already recorded November 12 hospital strike; the original UN statement was not directly retrieved.",
+      "exact_supporting_passage": "Three missiles were used in the attack, but only one detonated",
+      "source_type": "Established wire reporting attributing operational detail to UN Human Rights Office",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+        "previous_heartbeat_completed_at": "2026-11-13T08:42:45-08:00",
+        "source_section": "Anadolu November 13 article reporting UN Human Rights Office statement",
+        "publication_in_observation_window": null,
+        "newly_verified_detail": "New unexploded-ordnance threat at already affected hospital",
+        "primary_statement_directly_verified": false,
+        "parallel_report_url": "https://english.wafa.ps/Pages/Details/176900"
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-al-mawasi-infant-hypothermia-first-winter-death",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176896",
+      "title": "Nine-month-old infant dies from hypothermia in al-Mawasi; first reported cold-related death this winter",
+      "publisher": "WAFA",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": "2026-11-13T04:45:00-08:00",
+      "event_date": "2026-11-12",
+      "event_start_date": "2026-11-12",
+      "event_end_date": null,
+      "location": "Al-Mawasi, Khan Younis, southern Gaza Strip; transferred from Kuwaiti Hospital to Nasser Medical Complex",
+      "affected_population_or_system": "Displaced infants and families exposed to freezing conditions and shortage of heated shelter; nine-month-old Kinan Ahmad Arqiq",
+      "summary": "WAFA reports medical sources and forensic medicine attributing the death of nine-month-old Kinan Ahmad Arqiq to a severe drop in body temperature. The infant arrived at Nasser Medical Complex already dead on November 12, after transfer from Kuwaiti Hospital. Article published at 04:45 PST, outside this run's publication window, but no prior watch heartbeat inspected recorded this specific fatality; logged as bounded late-discovery recall rather than an incident arising during the current hour.",
+      "exact_supporting_passage": "nine-month-old Kinan Ahmad Arqiq died due to a severe drop in body temperature",
+      "source_type": "Palestinian national news agency citing medical sources and forensic assessment",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z",
+        "previous_heartbeat_completed_at": "2026-11-13T08:42:45-08:00",
+        "source_section": "WAFA November 13 2:45 PM Palestine local",
+        "publication_in_observation_window": false,
+        "newly_verified_detail": "Previously missed identified hypothermia death associated with November 12 weather impacts",
+        "retrospective_discovery": true,
+        "prior_watch_window": "The report was available before the prior heartbeat; time of detection now differs from incident/publication time",
+        "independent_corrob": null
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall. Production daily Gaza collector and publisher remain authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T084451-0800-r11-20261113T164245Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Home and November 13 humanitarian situation report and urgent winter supplies statement inspected; material previously logged."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency overview checked; no new dated WHO posting identified."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Country dashboard overview checked; latest visible figures September 2026, no newly dated hourly change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Ongoing previously recorded regional WHO access restriction, not newly deteriorated."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 latest Reuters aid crossing strikes 17 GMT",
+      "Gaza Nov 13 2026 Associated Press Gaza hospital displacement casualties latest",
+      "site:english.wafa.ps \"13/November/2026\" Gaza killed wounded displaced",
+      "site:aljazeera.com/news/2026/11/13 Gaza Israeli strikes civilians aid hospital",
+      "site:unicef.org \"Gaza\" \"13 November 2026\" shelter children aid",
+      "site:wfp.org \"Gaza\" \"13 November 2026\" food aid crossings",
+      "site:msf.org \"Gaza\" \"13 November 2026\" hospital or clinic",
+      "site:unrwa.org \"Gaza\" \"13 November 2026\" flood health",
+      "site:ohchr.org 13 November 2026 Nasser Hospital three missiles only one exploded danger unexploded ordnance",
+      "site:icrc.org Gaza November 13 2026 detainees hostages ambulances medical",
+      "site:palestinercs.org Gaza November 13 2026 ambulance shelling Deir al Balah",
+      "Deir al Balah Qastal towers November 13 2026 three killed 20 injured shelling Gaza"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176901",
+        "detail": "Direct article retrieved, with local source timestamp and incident-specific figures; discrepancy between intro and headline documented."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+        "detail": "Direct composite report examined; differentiated prior al-Tuffah and Thursday Nasser casualties from newly reported locations and updated hospital toll."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176896",
+        "detail": "Retrospective hypothermia fatality; medical-source report dated November 13, published before this observation interval."
+      },
+      {
+        "publisher": "UN Human Rights Office via Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/un-warns-israeli-attacks-have-pushed-gazas-health-system-to-brink-of-collapse/4124515",
+        "detail": "Unexploded ordnance follow-up; attribution clear, direct original UN statement not obtained."
+      }
+    ],
+    "duplicate_exclusions": [
+      "November 13 OCHA report of flooding, 226,000 displaced affected, medicine shortages, 119 evacuations, 42% lower aid truck volume and 413 probable meningitis cases already in earlier heartbeat.",
+      "Nasser Hospital November 12 initial six reported fatalities, closures, and suspension of specialized treatment captured in prior hourly watches; only new reported seventh fatality and unexploded ordnance hazard included.",
+      "Earlier November 13 Gaza City al-Tuffah gunshot fatality previously recorded; excluded from Anadolu six-fatality composite to avoid duplication.",
+      "Earlier al-Mawasi November 12 drone-strike fatality and MSF facial-burn mask supply shortage already captured.",
+      "November 12 wedding-hall vehicle strike reporting predates this window; excluded."
+    ],
+    "limitations": "WHO EMRO HTTP 502 persists from earlier runs; direct original UN Human Rights Office statement not retrieved; some Anadolu reports lack exact times, and independent confirmation is not available for all casualties. WAFA article has internal total-count inconsistency. Searches are bounded, not exhaustive.",
+    "meaningful_new_findings": 6,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

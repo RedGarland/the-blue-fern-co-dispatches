@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T034932-0800-recall12-20261113T115053Z",
+  "scheduled_for": "2026-11-13T03:45:22-08:00",
+  "started_at": "2026-11-13T03:49:32-08:00",
+  "completed_at": "2026-11-13T03:50:53.680-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T02:43:38.783-08:00",
+    "end": "2026-11-13T03:50:53.680-08:00",
+    "prior_check_basis": "Previous verified Care Line heartbeat run_id care-line-watch-20261113T024142-0800-recall12-20261113T104142Z completed at 02:43:38.783 PST.",
+    "newness_rule": "New concrete and effective care-access loss or restoration, or newly posted official CMS notice since prior check; new reporting about earlier known changes is not a new finding."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary targeted recall for U.S. states, DC and territories; not the national production collector; production remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care; IL; limitation of CLIA certificate; 14D2049789",
+      "new_notices_since_previous_hour": 0
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspended services November 13 2026 rural hospital -proposal",
+      "hospital labor delivery maternity unit closed suspended November 12 13 2026",
+      "hospital behavioral health psychiatric inpatient unit closes suspends admissions November 12 13 2026",
+      "dialysis center closing suspended patients November 12 13 2026",
+      "oncology cancer treatment center closed suspended services November 12 13 2026",
+      "primary care medical clinic closure immediate patients November 12 13 2026",
+      "ambulance service ceases operations emergency EMS November 12 13 2026",
+      "air ambulance medical helicopter base shuts down service November 12 13 2026",
+      "rural hospital emergency services shutdown reopening November 12 13 2026",
+      "hospital reopens emergency department restored services November 12 13 2026",
+      "healthcare access hospitals clinic closures Puerto Rico Guam US Virgin Islands November 12 13 2026",
+      "state department health notice facility closure license suspension patients November 13 2026"
+    ],
+    "search_execution": "Twelve targeted web searches completed, covering hospitals and key service lines, rural and emergency care, ground/air ambulance, official regulatory action and territories. Searches used a one-day recency filter where supported. Relevant pages were opened and checked for dates and effective changes. No search or source retrieval failure established.",
+    "reviewed_exclusions": [
+      {
+        "event": "Sharon Regional Medical Center, Sharon, Pennsylvania",
+        "reason": "Already identified and excluded in immediately preceding verified hourly heartbeat. The Nov 12 Becker's article reprises Nov 4 suspension of all hospital services, Nov 6 emergency care cessation and existing order effective Nov 17; no newly effective change in this window.",
+        "url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "event": "Bradford Regional Medical Center, Bradford, Pennsylvania",
+        "reason": "Nov 12 follow-up describes an emergency department already closed May 17, 2026, rather than an incident in the observation window; excluded in previous heartbeat.",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/"
+      },
+      {
+        "event": "Saint Mary's Regional Medical Center inpatient oncology unit, Reno, Nevada",
+        "reason": "Previously recorded as pending review in Nov 12 Care Line watch; duplicate rather than a new development.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      },
+      {
+        "event": "Waupaca hospital emergency department investment, Wisconsin",
+        "reason": "Emergency department expansion/investment rather than restoration of previously lost essential service.",
+        "url": "https://fox11online.com/news/local/thedacare-makes-16-million-investment-in-waupaca-hospital-emergency-room-expansion"
+      },
+      {
+        "event": "Denny's River volunteer ambulance, Maine",
+        "reason": "October 13 closure report predates the hourly observation window.",
+        "url": "https://www.bangordailynews.com/2026/10/13/down-east/downeast-police-courts/dennys-river-volunteer-ambulance-service-closing/"
+      }
+    ],
+    "limitations": [
+      "Same-hour indexing and selective coverage can delay local-report discovery; bounded searches do not cover every state or territory individually.",
+      "Search engines sometimes surface prior-year stories or recently refreshed pages with old underlying events."
+    ],
+    "review_status": "No new pending-review findings generated.",
+    "publication_action": "NONE",
+    "review_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

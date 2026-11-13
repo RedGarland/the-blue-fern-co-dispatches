@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T044451-0800-r11-20261113T125044Z",
+  "scheduled_for": "2026-11-13T04:44:51-08:00",
+  "started_at": "2026-11-13T04:48:58-08:00",
+  "completed_at": "2026-11-13T04:50:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T03:52:02-08:00",
+    "end": "2026-11-13T04:50:44-08:00",
+    "previous_run_completed_at": "2026-11-13T03:52:02-08:00",
+    "basis": "Previous verified GitHub heartbeat completed at 03:52:02 PST; bounded supplementary recall with late-capture duplicate screening.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza daily collection/publication remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T034451-0800-r11-20261113T115202Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Newest dated report is 13 Nov winter-aid appeal; more than 150,000 tents outside Gaza already recorded during previous runs; no new interval-dated operational evidence."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current emergency overview inspected; no new dated operational health development."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "WHO Health Cluster overview inspected; headline cluster figures date to September 2026; no new interval-dated update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "detail": "Previously documented regional endpoint restriction persists, no new material deterioration."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org \"13 Nov 2026\" Gaza updates shelter infrastructure hospital",
+      "site:who.int \"13 November 2026\" Gaza patients hospital medical evacuation",
+      "site:unicef.org Gaza November 13 2026 water shelter children flooding",
+      "site:wfp.org Gaza November 13 2026 food assistance access deliveries",
+      "site:english.wafa.ps 13 November 2026 Gaza Friday morning killed wounded Israeli fire latest",
+      "Gaza Friday November 13 2026 latest Reuters Associated Press Gaza casualties hospital ceasefire",
+      "site:unrwa.org Gaza 13 November 2026 aid rain shelter access",
+      "site:msf.org Gaza November 13 2026 medical healthcare supplies evacuation hospital",
+      "site:icrc.org Gaza 13 November 2026 detainees hostages Red Cross medical transfer",
+      "Gaza Rafah Kerem Shalom crossing Friday 13 November 2026 aid trucks fuel ambulance latest",
+      "Gaza November 13 2026 13:00 14:00 local hospital evacuation injury strike families displaced",
+      "Gaza Israel November 13 2026 ceasefire hostages negotiations airstrikes civilian impact AP Reuters Al Jazeera today"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "result": "November 13 statement; >150,000 procured tents outside Gaza previously captured; no new developments in this run."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest news at 14:23 Palestinian local time concerned Jerusalem; earlier Gaza City killing at 09:30 previously logged."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176894",
+        "result": "Palestinian official's 13:49 local-time conference remarks describe historical destruction of Gaza transport sector but specify no new interval event, measurement or operational change; excluded."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176870",
+        "result": "November 12 central/south Gaza shootings; not a new event in the interval and no evidence of newly revised figures."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "November 13 OCHA appeal, >150,000 tents waiting outside Gaza",
+        "reason": "Duplicate of earlier recorded finding."
+      },
+      {
+        "subject": "November 13 Reuters/MSF facial-burn mask consumables stock-out",
+        "reason": "Recorded in preceding verified heartbeat."
+      },
+      {
+        "subject": "November 13 WAFA killing east of Gaza City",
+        "reason": "Previously logged; no new count confirmed."
+      },
+      {
+        "subject": "Nasser Hospital strike, casualties and service suspensions",
+        "reason": "Previously recorded developments; no independently confirmed change this interval."
+      },
+      {
+        "subject": "WAFA environment authority statement on transport destruction",
+        "reason": "General retrospective description without a new dated operational incident."
+      },
+      {
+        "subject": "WFP food-ration reductions",
+        "reason": "Older report, not interval-new."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED solely because the WHO Eastern Mediterranean regional situation-report endpoint returned HTTP 502, a previously documented restriction; OCHA OPT, WHO Global, WHO Health Cluster, WAFA and other established sources remained accessible.",
+    "limitations": "Twelve targeted searches plus direct source checks cannot establish exhaustive absence. Search indexing can lag publication; no new qualifying nonduplicate event was verified in this bounded interval.",
+    "notification_warranted": false,
+    "changes_to_production": "None; no approval, publication, schedule change, or disabling."
+  }
+}

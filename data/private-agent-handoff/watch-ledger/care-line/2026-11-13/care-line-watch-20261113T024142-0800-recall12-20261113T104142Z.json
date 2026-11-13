@@ -1,0 +1,89 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T024142-0800-recall12-20261113T104142Z",
+  "scheduled_for": "2026-11-13T02:45:22-08:00",
+  "started_at": "2026-11-13T02:41:42-08:00",
+  "completed_at": "2026-11-13T02:43:38.783-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T01:47:50-08:00",
+    "end": "2026-11-13T02:43:38.783-08:00",
+    "prior_check_basis": "Verified previous ops/watch-ledger Care Line heartbeat completed_at 2026-11-13T01:47:50-08:00; this supplementary recall covers the period since that successful check.",
+    "event_time_basis": "Only a newly established concrete access change or an official qualifying notice, not merely a fresh article timestamp, qualifies."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall for U.S., D.C. and territories, not production national collection. Production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care; Illinois; CLIA certificate limitation; 14D2049789",
+      "new_notices_since_prior_check": 0
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 12 13 2026 local news",
+      "maternity labor delivery unit suspended closure November 12 13 2026 hospital",
+      "rural hospital emergency services shut down temporarily November 12 13 2026",
+      "mental behavioral health inpatient psychiatric hospital closure November 12 13 2026",
+      "ambulance service closes base stops responding November 12 2026 November 13 2026 United States",
+      "air ambulance medical helicopter base shuts down closes November 12 2026",
+      "dialysis treatment center clinic shuts down closes November 12 2026",
+      "oncology cancer treatment center closure services suspended November 12 2026",
+      "site:*.gov hospital clinic closed reopened health department November 12, 2026 urgent care",
+      "primary care rural clinic closing closed November 12 2026 November 13 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana hospital clinic services suspended November 12 2026",
+      "hospital emergency department clinic ambulance reopened resumed service November 12 2026 November 13 2026"
+    ],
+    "search_execution": "Twelve targeted web searches succeeded (4 each for hospital/maternity/rural/psychiatric, EMS/dialysis/oncology, and official/primary-care/territory/restoration). No material search failure. Results yielded no demonstrably new and nonduplicate qualifying access change in the observation window.",
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center emergency department, Pennsylvania",
+        "reason": "November 12 follow-up is about a preexisting closure, not a new access change.",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/"
+      },
+      {
+        "event": "Saint Mary's Regional Medical Center oncology unit, Reno, Nevada",
+        "reason": "Previously logged for review in an earlier November 12 Care Line watch; duplicate.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      },
+      {
+        "event": "UMass Memorial Emergency Medical Center of Groton, Massachusetts",
+        "reason": "November 13 report describes a planned opening in February 2027; not an effective reopening.",
+        "url": "https://harvardpress.com/2026/11/new-groton-emergency-medical-center-set-to-open-in-february/"
+      },
+      {
+        "event": "Harrison Central school-based clinic, Ohio",
+        "reason": "November 12 funding to expand future services; no concrete restoration of a lost essential service.",
+        "url": "https://www.mybuckhannon.com/harrison-central-school-based-health-and-wellness-clinic-awarded-more-than-600000-to-expand-services/"
+      },
+      {
+        "event": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "Existing known closure and regional capacity story, without a separately effective new service change.",
+        "url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "event": "Tehama County air ambulance base, California",
+        "reason": "Source describes an event from September 2026, outside the hourly window.",
+        "url": "https://krcrtv.com/news/local/tehama-county-air-ambulance-base-closes-amid-insurer-dispute-adding-to-response-times"
+      }
+    ],
+    "limitations": [
+      "Same-hour indexing can delay discovery of local developments.",
+      "A capped 12-search recall is selective, not comprehensive state-by-state or territory-by-territory monitoring.",
+      "Several current results are older events surfaced by recently indexed or updated pages."
+    ],
+    "scheduling_note": "The nominal scheduled_for for this cycle is 02:45:22 PST; execution was invoked before that nominal tick. Actual start/end times are recorded separately. No future run is classified as missed.",
+    "publication_action": "NONE",
+    "review_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

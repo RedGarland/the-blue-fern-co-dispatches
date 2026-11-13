@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T064451-0800-r11-20261113T144657361Z",
+  "scheduled_for": "2026-11-13T06:44:51-08:00",
+  "started_at": "2026-11-13T06:44:21-08:00",
+  "completed_at": "2026-11-13T06:46:57-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T05:46:14.206-08:00",
+    "end": "2026-11-13T06:46:57-08:00",
+    "previous_run_completed_at": "2026-11-13T05:46:14.206-08:00",
+    "basis": "Last verified watch-ledger heartbeat; exclude already captured items.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261113-nasser-specialty-services-suspended-lemonde",
+      "canonical_source_url": "https://www.lemonde.fr/en/international/article/2026/11/13/how-can-medical-staff-and-patients-be-exposed-to-this-gaza-s-nasser-hospital-hit-again-by-israel-amid-hamas-accusations_6779898_4.html",
+      "title": "Nasser Hospital operating rooms, radiology, laboratory and surgical inpatient departments confirmed suspended after November 12 strike",
+      "publisher": "Le Monde",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": "2026-11-13T06:01:00-08:00",
+      "event_date": "2026-11-12",
+      "event_start_date": "2026-11-12",
+      "event_end_date": null,
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Surgical and diagnostic care for an approximately one-million-person hospital catchment, including displaced patients",
+      "summary": "Hospital director Ahmed Al-Farra told Le Monde that Nasser Hospital's Al-Yasin building surgical operating rooms, imaging/radiology, laboratories and surgical inpatient facilities have ceased activity following the November 12 strike; the closure remains in effect on November 13. This is a newly documented specificity of an already recorded hospital attack, not a newly occurring strike.",
+      "exact_supporting_passage": "operating rooms, radiology departments, laboratories and surgical inpatient units – all of which have now ceased activity",
+      "source_type": "Established reporting with direct hospital director and staff interviews",
+      "classification": "follow-up",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T064451-0800-r11-20261113T144657361Z",
+        "prior_heartbeat_completed_at": "2026-11-13T05:46:14.206-08:00",
+        "source_section": "Le Monde November 13 article, paragraphs describing Al-Yasin building shutdown",
+        "earlier_incident_already_recorded": true,
+        "newly_verified_detail": "Specific shutdown of radiology, laboratories, surgical inpatient departments, and operating rooms; continuing as of November 13",
+        "independent_corrob": "AP November 12 reported suspended surgeries and services, but this source newly specifies the affected departments and duration",
+        "publication_in_observation_window": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; the primary production collection and publication pipeline remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Read November 13 weekly Gaza report; earlier heartbeat captured ten OCHA/WHO findings from the report and WHO press briefing; avoid duplicating."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Global oPt emergency page inspected; no newly timestamped operational development visible."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Health Cluster country page accessed; tabular country data labeled September 2026; no hourly change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "detail": "Continuing previously documented endpoint failure; other WHO sources remained available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 latest Reuters 14:00 GMT 15:00 GMT civilian deaths strikes ceasefire",
+      "site:english.wafa.ps/Pages/Details/ Gaza Friday November 13 2026 killed injured morning",
+      "site:unicef.org Gaza November 13 2026 flooding shelter children hospitals water",
+      "site:wfp.org Gaza November 13 2026 food aid convoy entry crossings",
+      "site:msf.org Gaza November 13 2026 healthcare supplies hospital clinic ambulances",
+      "site:icrc.org Gaza November 13 2026 detainees hostages medical evacuations",
+      "site:unrwa.org/newsroom Gaza November 13 2026 14:00 UTC rain displaced health supplies",
+      "site:ohchr.org Gaza 13 November 2026 civilian fatalities ceasefire detention",
+      "Gaza November 13 2026 14:30 UTC latest aid crossing hospital strike news",
+      "site:reuters.com/world/middle-east/ Gaza 2026-11-13 13 14 UTC killed water crossings",
+      "site:apnews.com/article/gaza November 13 2026 flooding casualties aid hospitals",
+      "site:aljazeera.com/news/2026/11/13/gaza ceasefire attacks killed flooded hospital displaced"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Le Monde",
+        "url": "https://www.lemonde.fr/en/international/article/2026/11/13/how-can-medical-staff-and-patients-be-exposed-to-this-gaza-s-nasser-hospital-hit-again-by-israel-amid-hamas-accusations_6779898_4.html",
+        "detail": "Published November 13 at 15:01 Paris time (06:01 PST), after previous heartbeat; specific loss of surgical and diagnostic capacity verified with hospital director and staff quotations."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176889",
+        "detail": "Gaza City and al-Mawasi fatalities already captured in an earlier watch; excluded."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/50b547b5a82388b6b415aee4d776fbfb",
+        "detail": "November 12 Nasser strike coverage provides existing related hospital closure context; no extra incident counted."
+      }
+    ],
+    "duplicate_exclusions": "November 13 OCHA 10 findings; November 13 WHO respiratory illness count; earlier Gaza City/al-Mawasi casualties; Nasser deaths and initial attack; winter tent and aid restrictions; MSF burn mask materials stockout.",
+    "limitations": "WHO Eastern Mediterranean returning HTTP 502, unchanged from prior runs. Search engine recency and indexing are imperfect. Le Monde finding is a follow-up providing newly verified operational scope for an already recorded incident, not a second strike.",
+    "production_publication_schedule_unchanged": true
+  }
+}

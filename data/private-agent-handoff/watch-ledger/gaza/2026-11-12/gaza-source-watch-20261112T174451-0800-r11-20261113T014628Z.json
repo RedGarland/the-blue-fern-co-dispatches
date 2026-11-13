@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T174451-0800-r11-20261113T014628Z",
+  "scheduled_for": "2026-11-12T17:44:51-08:00",
+  "started_at": "2026-11-12T17:45:15-08:00",
+  "completed_at": "2026-11-12T17:46:28-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T16:48:43-08:00",
+    "end": "2026-11-12T17:46:28-08:00",
+    "previous_run_completed_at": "2026-11-12T16:48:43-08:00",
+    "basis": "Previous run's committed ops/watch-ledger JSON read from GitHub. Screen newly reported or materially changed Gaza developments since last heartbeat, excluding repeats and pre-existing reports.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall watch only; authoritative production daily collector and publisher remain unchanged.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T164451-0800-r11-20261113T004843608Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest Gaza-related entry dated November 11 (winter supplies appeal); latest dated OCHA Gaza situation report November 9. No new interval-specific Gaza operational update found."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Current emergency overview and listings accessible; no newly dated Gaza health event or medical evacuation change for this interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Persistent known endpoint outage as in verified previous run; not materially worse."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Country overview accessible, but not an interval-dated bulletin; no new verified capacity change."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"13/November/2026\" killed injured midnight",
+      "site:english.wafa.ps \"12/November/2026\" Gaza evening hospitals crossings",
+      "Gaza November 13 2026 early Friday killed injured airstrikes 2026",
+      "site:reuters.com/world/middle-east/ Gaza Nov 12 2026 late Nov 13 aid ceasefire civilian",
+      "site:apnews.com/article/ Gaza November 13 2026 civilians hospital flooded ceasefire",
+      "site:un.org OR site:palestine.un.org Gaza November 12 2026 13 November humanitarian winter aid crossings evacuation",
+      "site:msf.org Gaza November 12 2026 November 13 Nasser Hospital damage medical evacuation updated",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"13 Nov 2026\" Gaza hospital access displacement",
+      "site:unicef.org Gaza November 13 2026 12 November flooding water children",
+      "site:wfp.org Gaza 12 November 2026 13 November 2026 food distributions crossing",
+      "Gaza 13 November 2026 03:00 local casualties hospital water fuel trucks Rafah",
+      "site:english.wafa.ps/Pages/Details/ \"13/November/2026\" \"GAZA\""
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest visible article dated November 12 at 22:05 Palestine local, concerning West Bank vegetation order. Most recent substantive Gaza strike coverage dated November 12 at 16:20 Palestine local, already covered. No new verifiable Gaza event in this observation interval."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/gaza-israel-hospital-hamas-palestinians-25d0ebb9cc014c7366bede100d0ee5cf",
+        "result": "November 12 overview of Gaza health system and Nasser strike; no independently established interval-specific change."
+      },
+      {
+        "publisher": "United Nations report mirrored by Mirage News",
+        "url": "https://www.miragenews.com/six-killed-in-israeli-airstrike-on-gazas-nasser-1776717/",
+        "result": "13 November 08:48 AEDT publication is 12 November 13:48 UTC (05:48 PST), predating previous watch; repeats Nasser strike, UN-facility incident and flood effects."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Medical Complex strike, six killed, injury estimates 27/28/52 and service damage",
+        "reason": "Earlier coverage and MSF revised casualty follow-up already recorded; no independent later service change established."
+      },
+      {
+        "subject": "November 12 Al-Shifa/Deir al-Balah/Jabalia casualties and fishermen detentions",
+        "reason": "Previously logged or published before window; no new casualty incident confirmed."
+      },
+      {
+        "subject": "53-country aid access appeal, OCHA winter supplies appeal and other condemnations",
+        "reason": "Previously documented statements; no confirmed crossing opening, delivery change or medical evacuation in window."
+      },
+      {
+        "subject": "November 6–9 flooding, shelter/clinic damage, child fatalities",
+        "reason": "Retrospective earlier events and appeals, not new interval-specific findings."
+      },
+      {
+        "subject": "AP hospital overview, UN statement about Nasser and WHO October HeRAMS",
+        "reason": "Context/retrospective reporting already addressed by prior runs, not newly verified operational changes."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO Eastern Mediterranean HTTP 502, consistent with prior runs. OCHA OPT, WHO Global, WHO Health Cluster, WAFA, AP and indexed reporting were available. No material new source degradation or qualifying new development verified.",
+    "limitations": "A bounded public-source recall cannot prove absence of events; publication/indexing lag applies. WHO EMRO detail was inaccessible during this run.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publication, approval, branch promotion, schedule or task status changes."
+  }
+}

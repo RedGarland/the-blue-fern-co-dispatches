@@ -1,0 +1,83 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T014522-0800-recall12-20261113T094750Z",
+  "scheduled_for": "2026-11-13T01:45:22-08:00",
+  "started_at": "2026-11-13T01:45:37-08:00",
+  "completed_at": "2026-11-13T01:47:50-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T00:49:29-08:00",
+    "end": "2026-11-13T01:47:50-08:00",
+    "prior_check_basis": "Previous hourly Care Line Watch execution last-run timestamp 2026-11-13T08:49:29.121832Z (00:49:29 PST); current run began 01:45:37 PST. This is a supplementary recall window, not a full national collection.",
+    "event_time_basis": "Require an established new concrete access change or newly announced official notice within observation window; publication date alone does not establish same-hour novelty."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary U.S. and territories recall only; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, limitation of CLIA certificate, 14D2049789",
+      "result": "No November 12 or 13 notices and no new notice since prior hourly watch. Initial obsolete CMS URL was inaccessible; correct CMS Public Notices URL then located and successfully opened directly."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closing temporarily suspended operations November 12 2026 November 13 2026 US",
+      "hospital maternity labor delivery unit closing suspended November 12 2026 November 13 2026",
+      "rural hospital closure emergency services loss November 12 2026 November 13 2026",
+      "ambulance service air medical base closure suspension November 12 2026 November 13 2026",
+      "dialysis center clinic closing suspended patients November 12 2026 November 13 2026",
+      "behavioral health psychiatric inpatient oncology unit service closure suspended November 12 2026 November 13 2026",
+      "\"Nov 13, 2026\" \"hospital\" \"closure\" \"emergency\" USA",
+      "\"Nov 12, 2026\" \"clinic\" \"closing\" patients health",
+      "\"November 13, 2026\" \"ambulance\" \"service\" \"closed\"",
+      "\"November 12, 2026\" \"dialysis\" \"closed\" \"patients\"",
+      "\"November 12, 2026\" \"hospital\" \"reopened\" \"emergency department\"",
+      "\"November 12, 2026\" \"maternity\" \"closing\" \"hospital\" service"
+    ],
+    "search_execution": "Direct CMS official notices review and 12 additional targeted searches (6 recency-filtered fast, 6 phrase-targeted slow), covering hospital/ED, rural/maternity/behavioral/oncology/dialysis/primary care, ambulance/air-medical, and restoration. No material tool failure after correct CMS site retrieval. Searches yielded sparse same-hour qualifying results.",
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center ED, Pennsylvania",
+        "reason": "November 12 follow-up story reports May 17, 2026 emergency department closure, already covered; no new concrete access change in this hourly window.",
+        "url": "https://www.newsfromthestates.com/article/bradford-community-reels-after-hospital-closes"
+      },
+      {
+        "event": "Schenectady VA Community Based Outpatient Clinic, New York",
+        "reason": "November 12 secondary summary describes clinic closure effective August 28, 2026; not a new November 13 event, and article explicitly reuses other outlet's reporting.",
+        "url": "https://wisevoter.com/world/us/ny/schenectady/2026/11/12/va-closes-schenectady-clinic-redirects-veterans"
+      },
+      {
+        "event": "Saint Mary's Regional Medical Center dedicated oncology unit, Reno, Nevada",
+        "reason": "November 12 nursing-union report previously logged as a pending review finding; no newly supported separate service change.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      },
+      {
+        "event": "Dauphin Regional Health Centre reopening, Manitoba, Canada",
+        "reason": "Outside U.S. and its territories and restoration announcement predates the current window.",
+        "url": "https://www.winnipegfreepress.com/breakingnews"
+      },
+      {
+        "event": "Long Beach clinic business-record listings",
+        "reason": "Record-based openings/closings lacked an official or local report establishing essential patient-care access effects and were older than the window.",
+        "url": "https://bizsleuth.com/ca/long-beach/clinics"
+      }
+    ],
+    "limitations": [
+      "Same-hour search indexing can lag local announcements.",
+      "Twelve-search cap necessarily leaves some facilities and territories uninspected.",
+      "The search results include older events republished or indexed November 12; freshness of page indexing alone is not proof of a new event."
+    ],
+    "publication_action": "NONE",
+    "review_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

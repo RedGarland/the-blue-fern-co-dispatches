@@ -1,0 +1,87 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T194144-0800-recall12-20261113T034144Z",
+  "scheduled_for": "2026-11-12T19:41:44-08:00",
+  "started_at": "2026-11-12T19:41:44-08:00",
+  "completed_at": "2026-11-12T19:43:13.100-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T18:42:11-08:00",
+    "end": "2026-11-12T19:43:13.100-08:00",
+    "prior_check_basis": "Previous verified persisted hourly Care Line Watch heartbeat completed at 2026-11-12T18:42:11-08:00; latest observed upstream source publication dates were checked for novelty.",
+    "event_time_basis": "Bounded recall for announcements and effective healthcare access changes newly surfaced since prior completed watch; dates without evidence of first report in current window are not counted as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded recall; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care (Illinois), Limitation of CLIA certification (14D2049789)",
+      "result": "No November 11 or 12 notices on the official CMS public list at check time."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department shuts down closure diverted November 12 2026 last hours",
+      "hospital labor delivery maternity services closing suspended announced November 12 2026",
+      "rural hospital emergency service loss closed announced November 12 2026 United States",
+      "behavioral health psychiatric inpatient unit closing November 12 2026 service",
+      "dialysis center shutting down closing patients November 12 2026",
+      "oncology cancer treatment infusion unit closed suspended November 12 2026 hospital",
+      "November 12 2026 ambulance EMS station service ceases operations base closure United States",
+      "November 12 2026 air medical medevac helicopter base closed suspended service",
+      "November 12 2026 primary care medical clinic urgent care permanently closing patients",
+      "November 12 2026 emergency room reopened services resumed hospital maternity reopened",
+      "November 12 2026 hospital clinic ambulance closure Puerto Rico Guam Virgin Islands American Samoa Mariana",
+      "site:gov \"Nov 12, 2026\" \"termination\" hospital Medicare CLIA or suspended services"
+    ],
+    "search_execution": "All 12 targeted web searches completed; no transport or source-fetch failure requiring DEGRADED status. Search relevance sparse.",
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center emergency-service closure (Pennsylvania)",
+        "reason": "November 12 community reporting recapitulates previously reported hospital closure; duplicate, not an event first surfacing in current hour."
+      },
+      {
+        "event": "Saint Mary's Regional Medical Center inpatient oncology unit (Reno, Nevada)",
+        "reason": "Union-reported October 26 service change was identified in the 17:52 watch and deduplicated by the 18:42 watch; no new verified change."
+      },
+      {
+        "event": "Roseland Community Hospital maternity ward closure (Chicago, Illinois)",
+        "reason": "November 6 news item describes an earlier loss of services; outside current search window."
+      },
+      {
+        "event": "AdventHealth / Coalition for the Homeless proposed onsite clinic (Florida)",
+        "reason": "New clinic proposal/expansion, not concrete restoration of a previously lost essential service."
+      },
+      {
+        "event": "Air Evac Lifeteam Decatur airport base (Illinois)",
+        "reason": "Reported in an older September 2026 item, not a newly surfaced change this hour."
+      },
+      {
+        "event": "New legal-policy proposal on insurance denials",
+        "reason": "Advocacy proposal without concrete immediate loss or restoration of a healthcare service."
+      },
+      {
+        "event": "Non-U.S. hospital restoration articles",
+        "reason": "Outside U.S. states, DC and territories."
+      }
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Hour-specific indexing is delayed and may miss newly announced facilities, especially rural and U.S. territories.",
+      "Search results returned a mixture of historic news and date-only current articles; these were not promoted without established timing and concrete access consequence.",
+      "No production collector contents, permissions, publication, approvals, or schedules were changed."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

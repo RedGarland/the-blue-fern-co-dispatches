@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T124451-0800-r11-20261113T204958825Z",
+  "scheduled_for": "2026-11-13T12:44:51-08:00",
+  "started_at": "2026-11-13T12:47:16-08:00",
+  "completed_at": "2026-11-13T12:49:58.825-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T11:46:13.241-08:00",
+    "end": "2026-11-13T12:49:58.825-08:00",
+    "previous_run_completed_at": "2026-11-13T11:46:13.241-08:00",
+    "basis": "Authenticated readback of preceding 11:44 scheduled watch heartbeat and bounded late-discovery inspection; previously logged event identities excluded.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall-only; Gaza daily production collector/publisher remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T114451-0800-r11-20261113T194613241Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Checked first by focused official search then direct report. November 13 situation-report flooding, water and health, aid-offloading and evacuation details match earlier logged findings. No newly dated separate development."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked second by focused official search then direct WHO emergency page; listed updates did not describe a newly dated Gaza event."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal Health Cluster status currently labeled September 2026; no newly dated operations change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Failed with HTTP 502; longstanding regional restriction, not a newly material deterioration; alternative WHO Global and Health Cluster available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 19:00 UTC 20:00 UTC Reuters AP civilians killed injured Friday latest",
+      "Gaza November 13 2026 Friday evening bombardment artillery attack wounded Deir al Balah Khan Younis",
+      "site:english.wafa.ps/Pages/Details/ Gaza Friday November 13 2026 killed injured evening",
+      "site:aljazeera.com/news/2026/11/13 Gaza civilians deaths aid ceasefire latest November 13",
+      "site:un.org OR site:news.un.org Gaza November 13 2026 hospital aid winter new statement",
+      "site:msf.org Gaza \"13 November 2026\" hospital medical patients ambulance supplies",
+      "site:unicef.org \"Gaza\" \"13 November 2026\" flood displacement water children new",
+      "site:wfp.org \"Gaza\" \"13 November 2026\" food access supplies deliveries",
+      "site:unrwa.org \"Gaza\" \"13 November 2026\" shelters rains schools health",
+      "site:palestinercs.org \"13 November 2026\" Gaza ambulance emergency medical services",
+      "site:ohchr.org \"13 November 2026\" Gaza Nasser shelling civilian casualties",
+      "Gaza November 13 2026 ceasefire hostages crossings new deal Friday evening Reuters AFP AP 20:00 UTC"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "detail": "Published November 13; most measured events dated November 3–9. Previously logged November 13 prior cycles."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "detail": "No new dated health event visible in global emergency feed."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "detail": "No new dated formal health capacity record."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "detail": "Live November 13 index inspected through 22:11 Palestine local time; Gaza items at 19:02 and 18:54 Palestine local were already excluded in earlier heartbeats, with later visible items focused on West Bank."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176894",
+        "detail": "Older statement at 13:49 Palestine time about accumulated Gaza transportation infrastructure damage; does not establish a new destruction event or operational change in hourly window."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-israel-war",
+        "detail": "Gaza situation page inspected; no new qualifying dated change confirmed."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "detail": "November 13 releases listed non-Gaza topics; last Gaza-specific food cuts statement older."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "detail": "WHO 33,000 excess acute respiratory infections and 11% consultations were logged in an earlier cycle."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/six-year-old-gaza-burn-victim-caught-israeli-dispute-over-aid-2026-11-13/",
+        "detail": "MSF facial-burn mask shortage previously logged."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+        "detail": "Deir al-Balah shelling casualties, Khan Younis strike and Nasser follow-up already recorded before this window."
+      }
+    ],
+    "duplicate_exclusions": [
+      "OCHA November 13 report: flooding affecting ~46,000 households, >40,000 damaged shelters, >42% decline in aid offloading, medicine stockouts, water insecurity, probable meningitis, medical evacuations and pediatric capacity previously logged.",
+      "OCHA November 13 winter aid restrictions and ~150,000 tents waiting outside Gaza previously logged.",
+      "November 13 Deir al-Balah Al-Qastal Towers shelling with three killed including child, 10–20 injured, previously recorded.",
+      "November 12 Nasser Hospital strike, seventh subsequent reported death, unexploded ordnance and suspended clinical services previously recorded.",
+      "November 13 MSF facial-burn mask material shortage, WHO respiratory infections, infant hypothermia death and older Gaza casualties previously recorded.",
+      "Later November 13 media summaries repeated older events; no verified distinct new civilian impact.",
+      "WAFA transportation sector destruction characterized as historical/systemic, without dated new incident or measured operational transition."
+    ],
+    "limitations": "WHO Eastern Mediterranean regional website continues HTTP 502; this is a recurring restriction not newly material degradation. news.un.org returned nonretryable robots.txt access restriction during a targeted search; OCHA and WHO official alternatives were accessible. Some press-index search results are delayed or contaminated by unrelated region/country stories. No finding with a distinct supported event/publication development since prior verified heartbeat.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

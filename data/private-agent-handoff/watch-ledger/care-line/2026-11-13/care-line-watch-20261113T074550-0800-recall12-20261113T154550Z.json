@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T074550-0800-recall12-20261113T154550Z",
+  "scheduled_for": "2026-11-13T07:45:22-08:00",
+  "started_at": "2026-11-13T07:45:50-08:00",
+  "completed_at": "2026-11-13T07:48:17-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T06:50:57-08:00",
+    "end": "2026-11-13T07:48:17-08:00",
+    "prior_check_basis": "Verified previous heartbeat completed at 2026-11-13T06:50:57-08:00.",
+    "newness_rule": "Only newly surfaced, verifiable, concrete U.S./territory healthcare-access change since preceding check; no duplicate or merely proposed services."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, limitation of CLIA certificate 14D2049789",
+      "new_notices_since_prior_check": 0,
+      "source_checked": "Official CMS Public Notices opened and its listed dates verified; no new 11/13 or 11/12 notices.",
+      "initial_retrieval_issue": "Initial obsolete/noncanonical CMS URL yielded access error, recovered immediately via canonical CMS Public Notices page."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 13 2026 United States local news",
+      "maternity labor delivery unit closure November 13 2026 hospital local news",
+      "rural hospital emergency services closing temporarily November 13 2026",
+      "behavioral health psychiatric inpatient program closure November 13 2026 hospital",
+      "dialysis center closed suspension patients November 13 2026",
+      "oncology cancer treatment clinic closed suspended November 13 2026",
+      "November 13 2026 ambulance EMS station base closing suspended emergency medical transport town",
+      "November 13 2026 air ambulance medical helicopter base closure service halt",
+      "November 13 2026 primary care family medicine clinic shut down patients lose access",
+      "November 13 2026 hospital emergency department reopened after shut down patients",
+      "November 12 13 2026 dialysis hospital oncology maternity closure local official",
+      "November 13 2026 Puerto Rico Guam Virgin Islands Samoa Mariana Islands hospital clinic service closure"
+    ],
+    "results": "No new qualifying, nonduplicate hospital, ED, maternity, psychiatric, dialysis, oncology, primary-care, EMS/air-medical service loss; no effective essential-service restoration.",
+    "reviewed_exclusions": [
+      {
+        "title": "New Groton emergency medical center set to open in February",
+        "source_url": "https://harvardpress.com/2026/11/new-groton-emergency-medical-center-set-to-open-in-february/",
+        "reason": "Future planned Feb 2027 opening, not current restoration; already reviewed."
+      },
+      {
+        "title": "Rural Missouri mothers face long drives to reach delivery centers",
+        "source_url": "https://www.kttn.com/rural-missouri-mothers-face-long-drives-to-reach-delivery-centers/",
+        "reason": "Longstanding access gap; not newly effective loss in current window; seen prior check."
+      },
+      {
+        "title": "UPMC expands capacity amid Sharon Regional uncertainty",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/",
+        "reason": "Older published report; service loss already covered, expansion lacks newly verified restored essential service."
+      },
+      {
+        "title": "Air Evac Lifeteam Decatur base closure",
+        "source_url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3",
+        "reason": "September 2026 closure, outside observation window and previously reviewed."
+      },
+      {
+        "title": "Harrison Central school-based clinic funding",
+        "source_url": "https://www.mybuckhannon.com/harrison-central-school-based-health-and-wellness-clinic-awarded-more-than-600000-to-expand-services/",
+        "reason": "November 12 award for future expansion, not effective restoration of care."
+      },
+      {
+        "title": "CMS extended hospice and home health new enrollment moratoria",
+        "source_url": "https://www.cms.gov/newsroom/press-releases/cms-extends-modifies-nationwide-freeze-new-medicare-hospice-home-health-enrollment-six-months-combat",
+        "reason": "November 12 release predates this recall window; continuation of an established enrollment freeze, not a new listed CMS provider termination or rescission."
+      }
+    ],
+    "source_retrieval_degradation": {
+      "failure": "Initial noncanonical CMS URL could not be retrieved.",
+      "recovery": "Official canonical CMS listing successfully accessed and confirmed before the twelve targeted searches.",
+      "material_impact": "No apparent CMS notice coverage loss; marked DEGRADED in adherence to one-source-error rule."
+    },
+    "limitations": [
+      "12 bounded searches cannot be exhaustive across states and territories.",
+      "Indexing delays may conceal newly announced same-hour service changes."
+    ],
+    "review_status": "No new positive findings pending review.",
+    "publication_action": "NONE",
+    "approval_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

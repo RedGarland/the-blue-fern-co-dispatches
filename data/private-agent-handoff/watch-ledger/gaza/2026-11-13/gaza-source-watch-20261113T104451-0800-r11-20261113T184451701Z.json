@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T104451-0800-r11-20261113T184451701Z",
+  "scheduled_for": "2026-11-13T10:44:51-08:00",
+  "started_at": "2026-11-13T10:42:32-08:00",
+  "completed_at": "2026-11-13T18:44:51.701Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T09:49:13.083-08:00",
+    "end": "2026-11-13T10:44:51-08:00",
+    "previous_run_completed_at": "2026-11-13T09:49:13.083-08:00",
+    "basis": "Readback of preceding verified GitHub watch-ledger heartbeat, with a bounded late-discovery check and exclusion of already-recorded humanitarian findings.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall watch only; daily production Gaza publisher/collector remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T094451-0800-r11-20261113T174913083Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Official home checked first. November 13 Humanitarian Situation Report and winter-supplies appeal inspected; substantive reports already captured in earlier watch heartbeats."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Correct global emergency overview checked immediately after OCHA; latest public listed updates predate window."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Country dashboard checked; formal snapshot visible as September 2026, no newly dated development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Repeat of an already documented regional endpoint failure, not newly materially degraded."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 18:00 GMT Reuters latest deaths injured aid hospital",
+      "Gaza November 13 2026 AP news civilians ceasefire Israeli shelling afternoon",
+      "site:english.wafa.ps/Pages/Details/ \"13/November/2026\" Gaza killed wounded 2026 noon",
+      "site:aljazeera.com/news/2026/11/13 Gaza killed aid displacement attacks Friday latest",
+      "site:msf.org Gaza November 13 2026 hospital burned aid medications health clinic",
+      "site:unicef.org Gaza \"13 November 2026\" rain water displaced children",
+      "site:wfp.org \"Gaza\" \"13 November 2026\" food trucks access supplies",
+      "site:unrwa.org \"Gaza\" \"13 November 2026\" schools clinics tents",
+      "site:icrc.org \"Gaza\" \"13 November 2026\" medical evacuation detainees hostages",
+      "site:palestinercs.org \"13 November 2026\" Gaza ambulance wounded",
+      "site:ohchr.org \"13 November 2026\" \"Gaza\" hospital health rights",
+      "Gaza November 13 2026 18:30 UTC 19:00 UTC new airstrikes wounded crossings aid ceasefire 13 Nov latest"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "detail": "Flood, water, medicine, disease, medical transport, evacuation, shelters, pediatric beds and access claims compared against 05:44- and 09:44-cycle records; no distinct new development."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "detail": "More than 150,000 procured tents waiting outside Gaza already recorded."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "detail": "No new dated WHO posting."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "detail": "No new dated Health Cluster entry."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176901",
+        "detail": "Al-Qastal Towers deaths/injuries already reported in prior watch; article timestamp 13 Nov 19:02 local Palestine, pre-window."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/six-year-old-gaza-burn-victim-caught-israeli-dispute-over-aid-2026-11-13/",
+        "detail": "MSF burn-mask plastic-sheet and filament shortage previously logged."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/5d73a23b5b8647d2515c35b267b36c08",
+        "detail": "Three Deir al-Balah fatalities and infant hypothermia death already captured; independently reinforces prior facts without new incident."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/gaza-israel-war",
+        "detail": "Latest listed Gaza item 12 Nov Nasser hospital condemnation; no newly dated 13 Nov item."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news",
+        "detail": "Checked current release index; no relevant Gaza item newly dated 13 Nov."
+      }
+    ],
+    "duplicate_exclusions": [
+      "13 November OCHA update: 226,000 people affected by flooding, 40,000-plus shelters damaged, aid-truck offloading down 42%, water insecurity, 413 probable meningitis cases, medical stockouts, 119 medical evacuations and reduced pediatric capacity already recorded earlier today.",
+      "13 November OCHA winter statement: more than 150,000 procured tents waiting outside Gaza already recorded.",
+      "13 November al-Qastal Towers artillery casualties, Khan Younis drone strike and injured girl at displacement tents previously logged in preceding run.",
+      "Nasser Hospital November 12 strike casualties, seventh reported death, unexploded munitions hazard and service disruptions previously logged.",
+      "MSF facial burn mask shortage (70 patients, 20 urgently needing masks) previously recorded.",
+      "AP November 13 composite recaps the al-Qastal fatalities and a nine-month-old infant hypothermia death, previously logged.",
+      "October medical-supply delivery reported November 12 was outside the new hourly event/publication window and not independently established as a new operational change."
+    ],
+    "limitations": "WHO Eastern Mediterranean regional website returned HTTP 502; longstanding endpoint restriction. Initial attempt at an outdated WHO Global URL returned HTTP 404, but the corrected WHO Global page and WHO Health Cluster were successfully checked. Search index recency and timestamps vary, and this is not an exhaustive country-wide collector. No independently verified new high-value change was identified within this observation window.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

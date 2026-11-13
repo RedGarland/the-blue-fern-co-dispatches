@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T084451-0800-r11-20261113T164245Z",
+  "scheduled_for": "2026-11-13T08:44:51-08:00",
+  "started_at": "2026-11-13T08:41:20-08:00",
+  "completed_at": "2026-11-13T08:42:45-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T07:43:36.970-08:00",
+    "end": "2026-11-13T08:42:45-08:00",
+    "previous_run_completed_at": "2026-11-13T07:43:36.970-08:00",
+    "basis": "Prior authenticated watch-ledger heartbeat read back from ops/watch-ledger; this is a bounded supplementary recall interval, not production collection.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary source recall; production Gaza collector/publisher remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T074451-0800-r11-20261113T154147Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "November 13 situation report and winter supplies appeal inspected. Report covers predominantly November 3–9 and both publications were captured by prior watches; no new distinct development verified."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Reviewed emergency overview and latest news; no newly dated qualifying health or medical-evacuation change found."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Country overview checked; visible formal Health Cluster figures are dated September 2026 and no new hourly update was verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "detail": "Continuing previously recorded access failure; alternative WHO Global and Health Cluster sources checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 Reuters latest 16 GMT civilians strikes ceasefire humanitarian",
+      "Gaza November 13 2026 Associated Press latest Israel Gaza hospital humanitarian aid",
+      "site:english.wafa.ps November 13 2026 Gaza killed wounded medical crossing",
+      "site:aljazeera.com/news/2026/11/13 Gaza casualties strikes aid healthcare",
+      "site:unicef.org Gaza November 13 2026 children water shelter",
+      "site:wfp.org Gaza November 13 2026 food supplies crossing",
+      "site:msf.org Gaza November 13 2026 clinic hospital medical supplies update",
+      "site:unrwa.org Gaza 13 November 2026 floods displaced shelters medical",
+      "site:icrc.org Gaza November 13 2026 hostages detained medical evacuation",
+      "site:who.int Gaza \"13 November 2026\" health medical evacuations outbreak",
+      "site:palestinercs.org Gaza 13 November 2026 ambulance hospital rescue",
+      "Gaza Friday 13 November 2026 latest 8 am Pacific civilians killed humanitarian trucks Rafah"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "detail": "Read original source; historic-period November 3–9 findings already captured in earlier ledger."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "detail": "November 13 tent access concern already captured in prior watch."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "detail": "Regional feed inspected; no new qualifying Gaza report verified within observation interval."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/",
+        "detail": "Direct request timed out; targeted search did not verify distinct new incident in bounded window."
+      }
+    ],
+    "duplicate_exclusions": [
+      "November 13 OCHA humanitarian situation report: flooding, shelter and facility damage, aid trucks, water insecurity, medicine shortages, medical evacuations and illness signals already recorded by previous watch.",
+      "OCHA winter supply/tent access appeal and November 13 Nasser Hospital operational disruptions already captured.",
+      "November 12 Nasser Hospital strike and previously reported Gaza City/al-Mawasi casualties; contemporaneous AP syndicated article rehashes November 12 attack.",
+      "Previously reported MSF clinic burn-mask shortage."
+    ],
+    "limitations": "WHO EMRO HTTP 502 and WAFA direct-homepage timeout persist from the prior interval; source publication time can lag event time, and targeted search indexing is not exhaustive. No materially new deterioration in overall coverage was established.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

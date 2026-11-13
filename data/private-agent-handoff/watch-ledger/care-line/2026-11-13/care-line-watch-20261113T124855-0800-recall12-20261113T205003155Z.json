@@ -1,0 +1,94 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T124855-0800-recall12-20261113T205003155Z",
+  "scheduled_for": "2026-11-13T12:45:22-08:00",
+  "started_at": "2026-11-13T12:48:55-08:00",
+  "completed_at": "2026-11-13T20:50:03-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T11:47:26-08:00",
+    "end": "2026-11-13T20:50:03-08:00",
+    "prior_check_basis": "Previous verified Care Line Watch heartbeat run_id care-line-watch-20261113T114551-0800-recall12-20261113T194726Z; completed 11:47:26 PST.",
+    "newness_rule": "New, nonduplicated concrete service loss/restoration or official provider-access restriction since last hourly check. Already logged findings and proposals without current service effect excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary Care Line recall; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "access_status": "Successfully opened the canonical CMS Public Notices listing; live content displayed two November 13 notices at the top.",
+      "latest_notice_date": "2026-11-13",
+      "newly_observed_notice_count": 0,
+      "prior_notice_duplicates": [
+        "Cypress Hospice (CA, B31731), 2026-11-13 termination notice, previously recorded in 11:47 PST heartbeat.",
+        "AZURE HOME HEALTH (CA, 757304), 2026-11-13 termination notice, previously recorded in 11:47 PST heartbeat."
+      ],
+      "data_retrieval_note": "Initial web search excerpt for the CMS listing was stale and showed November 10 as latest; opening canonical CMS live listing confirmed the November 13 notices. Canonical listing considered authoritative."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 13 2026 hospital emergency department temporarily closed suspended services reopened United States",
+      "November 13 2026 labor delivery maternity unit hospital closes suspends services",
+      "November 13 2026 rural hospital emergency room closure service loss ambulance diversion",
+      "November 13 2026 ambulance EMS station base closure service suspended air medical helicopter",
+      "November 13 2026 dialysis clinic closes stops operating patients transferred",
+      "November 13 2026 oncology chemotherapy cancer infusion services closure suspended",
+      "November 13 2026 behavioral health inpatient psychiatric unit closures suspends admissions",
+      "November 13 2026 primary care clinic closes abruptly patients transferred",
+      "November 13 2026 reopened hospital emergency department maternity medical services restoration",
+      "November 13 2026 Guam Puerto Rico US Virgin Islands American Samoa Northern Mariana Islands clinic hospital EMS service suspension",
+      "November 13 2026 Medicare provider termination CLIA limitation rescission emergency access official state agency",
+      "November 13 2026 local news hospital closes inpatient floor emergency services November 13"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East, Waukegan inpatient fifth-floor closure",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/",
+        "reason": "November 13 report identified and logged in prior Care Line Watch run; duplicate, with no new independently established service change."
+      },
+      {
+        "title": "Cypress Hospice and AZURE HOME HEALTH CMS notices",
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Both official notices newly logged during immediately previous check; duplicates, not new this hour."
+      },
+      {
+        "title": "Bradford hospital closure",
+        "source_url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/",
+        "reason": "November 12 story describing earlier closure; previously reviewed."
+      },
+      {
+        "title": "Newark-Wayne birthing unit closure",
+        "reason": "August 2026 closure, outside current watch window."
+      },
+      {
+        "title": "Texas Planned Parenthood Medicaid litigation",
+        "source_url": "https://blavity.com/health/planned-parenthood-medicaid-lawsuit",
+        "reason": "Litigation and possible future financial/service risk; no confirmed new closure or care service change."
+      },
+      {
+        "title": "Martin County NC rural emergency hospital restoration plan",
+        "source_url": "https://www.northcarolinahealthnews.org/2026/07/13/martin-general-funds-budget/",
+        "reason": "Funding/planning proposal, no newly effective reopening."
+      },
+      {
+        "title": "Military outpatient holiday hours and historical U.S./Canada hospital closures",
+        "reason": "Scheduled holiday changes or out-of-window/out-of-jurisdiction historical events, not qualifying new access losses."
+      }
+    ],
+    "limitations": [
+      "12 targeted searches only; geographic/service recall not exhaustive, particularly smaller local outlets and U.S. territories.",
+      "Some search results were older or tangential despite Nov 13 constraints; same-hour indexing lag can delay discovery.",
+      "No formal confirmation of new service loss or restoration found after previous check in available targeted results."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T134954-0800-recall12-20261113T215139Z",
+  "scheduled_for": "2026-11-13T13:45:22-08:00",
+  "started_at": "2026-11-13T13:49:54-08:00",
+  "completed_at": "2026-11-13T13:51:39.830-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T12:50:03-08:00",
+    "end": "2026-11-13T13:51:39.830-08:00",
+    "prior_check_basis": "Prior verified Care Line Watch heartbeat care-line-watch-20261113T124855-0800-recall12-20261113T205003155Z completed 2026-11-13 12:50:03 PST.",
+    "newness_rule": "Require new concrete U.S./territory service closure, suspension, access restriction, or effective restoration, or new official CMS notice; exclude previously logged notices/events and proposals."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; primary Care Line production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_after_prior_check": 0,
+      "previously_recorded_notice_duplicates": [
+        "Cypress Hospice, California, CCN B31731, November 13 termination notice.",
+        "AZURE HOME HEALTH, California, CCN 757304, November 13 termination notice."
+      ],
+      "retrieval_status": "DEGRADED: initial obsolete/noncanonical CMS URL returned inaccessible; canonical CMS Public Notices was located and opened successfully. Search-engine initial CMS listing excerpt was stale (November 10 latest), but the opened canonical live listing showed both November 13 entries. No CMS notice coverage gap identified after recovery."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department temporarily closed service suspended November 13 2026 US",
+      "hospital maternity labor delivery closure suspension November 13 2026 local news",
+      "rural hospital emergency room ambulance diversion shutdown November 13 2026",
+      "ambulance EMS air medical base shuts down suspends service November 13 2026",
+      "dialysis center clinic closing November 13 2026 patients",
+      "oncology chemotherapy infusion services closed suspended November 13 2026",
+      "psychiatric behavioral health hospital inpatient unit closes admissions suspended November 13 2026 United States",
+      "primary care doctors office clinic suddenly closed patients November 13 2026",
+      "emergency department reopened hospital service resumed November 13 2026 official",
+      "Puerto Rico Guam USVI Northern Mariana American Samoa hospital clinic EMS shut down November 13 2026",
+      "Medicare CLIA lab certificate suspended revoked rescinded November 13 2026 provider agency",
+      "hospital clinic emergency ambulance oncology services closure November 13 2026 state health department official notices"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Cypress Hospice and Azure Home Health CMS terminations",
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Both November 13 notices recorded at 11:47 PST; no new action since 12:50 PST."
+      },
+      {
+        "title": "Vista Medical Center East fifth-floor inpatient closure, Waukegan, Illinois",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/",
+        "reason": "Concrete change already recorded at 09:49 PST; duplicate."
+      },
+      {
+        "title": "Air-medical helicopter crash near Lone Wolf, Oklahoma",
+        "source_url": "https://okcfox.com/news/local/one-person-injured-after-medical-helicopter-crashes-near-lone-wolf",
+        "reason": "November 13 confirmed aircraft crash with one crew member injured; no source-supported closure/suspension of medical air service or base. Follow as possible downstream access consequence, not a qualifying service-loss finding now."
+      },
+      {
+        "title": "Reynolds County, Missouri rural maternity travel burden",
+        "source_url": "https://www.kttn.com/rural-missouri-mothers-face-long-drives-to-reach-delivery-centers/",
+        "reason": "November 13 report describes longstanding absence of local labor/delivery services and one contracted ambulance, not new loss this window."
+      },
+      {
+        "title": "Texas Planned Parenthood Medicaid lawsuit",
+        "source_url": "https://blavity.com/health/planned-parenthood-medicaid-lawsuit",
+        "reason": "Current litigation without newly effective confirmed clinic closure or interruption."
+      },
+      {
+        "title": "Newark-Wayne Community Hospital maternity loss",
+        "source_url": "https://13wham.com/news/local/labor-delivery-services-at-newark-wayne-community-hospital-to-end-next-week-august-september-2026-rochester-regional-health",
+        "reason": "August/September 2026 action, out of window."
+      },
+      {
+        "title": "UNM HSC services restored following cybersecurity incident",
+        "source_url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc",
+        "reason": "Restoration was October 28, not newly effective in November 13 search window."
+      }
+    ],
+    "limitations": [
+      "CMS retrieval had recoverable noncanonical-URL failure; classified DEGRADED per rule to record any failed source call.",
+      "Only 12 non-CMS targeted searches; not exhaustive across local outlets, rural jurisdictions and territories.",
+      "Search results include historical/non-U.S. cases despite date filters and may lag by hours; no independent comprehensive completeness claim.",
+      "No new concrete qualifying closure/suspension/official notice/reopening established since 12:50 PST."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

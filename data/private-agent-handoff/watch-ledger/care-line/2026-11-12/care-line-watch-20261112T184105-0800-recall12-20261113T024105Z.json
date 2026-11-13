@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T184105-0800-recall12-20261113T024105Z",
+  "scheduled_for": "2026-11-12T18:41:05-08:00",
+  "started_at": "2026-11-12T18:41:05-08:00",
+  "completed_at": "2026-11-12T18:42:11-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T17:52:26-08:00",
+    "end": "2026-11-12T18:42:11-08:00",
+    "prior_check_basis": "Prior persisted Care Line Watch heartbeat on ops/watch-ledger completed at 2026-11-12T17:52:26-08:00 and contained the Saint Mary's oncology-unit report. Its findings were used for deduplication.",
+    "event_time_basis": "New qualifying access-effect announcements, interruptions, or concrete restorations first surfaced since prior completion; older reports screened only as recall and excluded if duplicate."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, limitation of CLIA certification (14D2049789)",
+      "result": "No new dated notices after 2026-11-10 on the official listing; November 9 home-health termination also predates the window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 12, 2026\" hospital emergency department closed ambulance diversion suspended healthcare",
+      "\"November 12, 2026\" maternity labor delivery obstetrics unit closure halted hospital",
+      "\"November 12, 2026\" rural hospital emergency services closure suspended November",
+      "\"November 12, 2026\" behavioral health psychiatric hospital unit closing patients",
+      "\"November 12, 2026\" dialysis center patients closing services November 2026",
+      "\"November 12, 2026\" oncology cancer infusion clinic closed suspended services",
+      "\"November 12, 2026\" ambulance EMS service shuts down ceased operations November",
+      "\"November 12, 2026\" air ambulance medevac helicopter base closure suspended flights",
+      "\"November 12, 2026\" primary care clinic medical center permanently closing patients",
+      "\"November 12, 2026\" emergency room maternity hospital reopened resumed services after closure",
+      "\"November 12, 2026\" Puerto Rico Guam US Virgin Islands Northern Mariana American Samoa hospital clinic emergency ambulance closed",
+      "site:gov \"November 12, 2026\" \"hospital\" \"closure\" services emergency clinic"
+    ],
+    "search_execution": "All 12 targeted search queries executed and returned indexed results; no search-level error observed.",
+    "reviewed_exclusions": [
+      {
+        "event": "Saint Mary's Regional Medical Center inpatient oncology unit, Reno NV",
+        "reason": "Reported in preceding Care Line Watch heartbeat (union press release Nov 12; reported unit loss since Oct 26). Duplicate; no new change."
+      },
+      {
+        "event": "Kalamazoo Behavioral Health Hospital, MI",
+        "reason": "CMS notice dated Oct 30 and follow-up November 12 local article; already known and outside observation window."
+      },
+      {
+        "event": "Bradford Regional Medical Center, PA",
+        "reason": "November 12 retrospective article covers previously reported emergency-service closure; not a new event."
+      },
+      {
+        "event": "Brigham and Women's Hospital, Boston MA",
+        "reason": "Nurses strike averted by late November 11 agreement; no actual service closure or new restoration in this window."
+      },
+      {
+        "event": "New Whatcom County behavioral care center, WA",
+        "reason": "Construction planned for 2028, not presently effective restoration or service loss."
+      },
+      {
+        "event": "AdventHealth/Coalition for the Homeless onsite clinic, FL",
+        "reason": "November 12 announcement describes proposed future service expansion, not restoration of previously lost essential care."
+      },
+      {
+        "event": "Boone Health sale, Columbia MO",
+        "reason": "Ownership/business transaction without concrete currently effective service closure or restoration."
+      },
+      {
+        "event": "Rockwell Medical hemodialysis assets acquisition",
+        "reason": "Business transaction concerning dialysis products with no shown dialysis treatment-site suspension."
+      },
+      {
+        "event": "Brigham nursing strike, Massachusetts",
+        "reason": "Averted before commencing; no demonstrated loss of services."
+      },
+      {
+        "event": "Veterans Day office closures",
+        "reason": "Routine holiday administrative closure rather than qualifying essential healthcare-service loss."
+      }
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Bounded search index coverage cannot exclude late-indexed local and territorial notices; overnight recall may surface earlier events.",
+      "Sources with date-only November 12 timestamps were not treated as new this hour without sufficient announcement-time evidence.",
+      "No production collector records were changed or superseded."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

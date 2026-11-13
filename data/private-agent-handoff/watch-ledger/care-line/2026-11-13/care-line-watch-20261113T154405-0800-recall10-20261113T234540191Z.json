@@ -1,0 +1,86 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T154405-0800-recall10-20261113T234540191Z",
+  "scheduled_for": "2026-11-13T15:45:22-08:00",
+  "started_at": "2026-11-13T15:44:05-08:00",
+  "completed_at": "2026-11-13T15:45:40.191-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T14:46:55.755-08:00",
+    "end": "2026-11-13T15:45:40.191-08:00",
+    "prior_check_basis": "Previous verified Care Line Watch heartbeat run care-line-watch-20261113T144541-0800-recall12-20261113T224655755Z completed 2026-11-13T14:46:55.755-08:00.",
+    "newness_rule": "Include only new, sourced and concrete U.S./territory service losses, suspensions, access restrictions, effective restoration, CMS termination, rescission or CLIA restrictions; exclude previously recorded, planned-only, unrelated and uncorroborated claims."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only. Production Care Line national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_after_prior_check": 0,
+      "previously_recorded_notice_duplicates": [
+        "Cypress Hospice, California, CCN B31731, November 13 Medicare termination notice; previously recorded.",
+        "AZURE HOME HEALTH, California, CCN 757304, November 13 Medicare termination notice; previously recorded."
+      ],
+      "retrieval_status": "DEGRADED (recovered): initial obsolete/noncanonical CMS URL failed retrieval; searched for and directly fetched official CMS Public Notices, confirmed current list and no entries later than November 13. No apparent CMS coverage gap.",
+      "retrieval_error_url": "https://www.cms.gov/medicare/medicaid-coordination/about/public-notices"
+    },
+    "additional_targeted_search_count": 10,
+    "targeted_searches": [
+      "hospital emergency department closed suspended admissions today November 13 2026 United States",
+      "maternity labor delivery unit abruptly closed suspended November 13 2026 hospital",
+      "rural hospital emergency room closure temporary November 13 2026",
+      "behavioral health psychiatric inpatient unit closure November 13 2026",
+      "dialysis center closed patients November 13 2026 state",
+      "oncology cancer clinic closure services November 13 2026",
+      "primary care clinic shut down patient care today November 13 2026",
+      "ambulance EMS service ceased operations November 13 2026 county",
+      "air medical helicopter base closing suspended November 13 2026",
+      "hospital emergency clinic reopens service restored November 13 2026"
+    ],
+    "cms_locator_queries_count": 2,
+    "reviewed_exclusions": [
+      {
+        "title": "Cypress Hospice and AZURE HOME HEALTH, California CMS terminations",
+        "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+        "reason": "Already entered in the Care Line watch on November 13 at approximately 11:47 PST; no newer CMS notice."
+      },
+      {
+        "title": "Sharon Regional Medical Center, Pennsylvania",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/",
+        "reason": "Previously reported state-ordered future hospital closure, not a newly effected closure in the observation window."
+      },
+      {
+        "title": "Cornwall Regional Hospital emergency department reopening, Jamaica",
+        "source_url": "https://jamaica-gleaner.com/article/news/20261113/cornwall-regional-hospital-saved-36-billion-through-makeshift-operating",
+        "reason": "Out of U.S./territory jurisdiction."
+      },
+      {
+        "title": "Advanced Prostate Cancer Clinic expansion, Southern Tier, Pennsylvania",
+        "source_url": "https://solomonswords.net/advanced-prostate-cancer-clinic-brings-specialized-cancer-care-closer-to-home-for-southern-tier-patients/",
+        "reason": "New clinic/service expansion without evidence of restoration of previously lost essential service."
+      },
+      {
+        "title": "Harrison Central school-based clinic, Ohio",
+        "source_url": "https://www.mybuckhannon.com/harrison-central-school-based-health-and-wellness-clinic-awarded-more-than-600000-to-expand-services/",
+        "reason": "Funding for prospective expansion; no actual newly effective restoration."
+      }
+    ],
+    "limitations": [
+      "Ten additional targeted non-CMS searches are supplementary, selective, and do not provide exhaustive state, rural or territory surveillance.",
+      "Search-index latency can obscure changes released within the current hour.",
+      "Two CMS-specific discovery searches were needed after the attempted obsolete CMS link was inaccessible; the canonical page was subsequently inspected.",
+      "Search results included stale older news, unrelated content, and out-of-jurisdiction results; none supplied a new independently substantiated change in the review interval."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

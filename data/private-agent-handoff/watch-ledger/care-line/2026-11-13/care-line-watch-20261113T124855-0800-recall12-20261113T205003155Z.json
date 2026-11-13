@@ -5,14 +5,14 @@
   "run_id": "care-line-watch-20261113T124855-0800-recall12-20261113T205003155Z",
   "scheduled_for": "2026-11-13T12:45:22-08:00",
   "started_at": "2026-11-13T12:48:55-08:00",
-  "completed_at": "2026-11-13T20:50:03-08:00",
+  "completed_at": "2026-11-13T12:50:03-08:00",
   "status": "SUCCESS",
   "outcome": "no_findings",
   "search_window": {
     "timezone": "America/Los_Angeles",
     "observation_date": "2026-11-13",
     "start": "2026-11-13T11:47:26-08:00",
-    "end": "2026-11-13T20:50:03-08:00",
+    "end": "2026-11-13T12:50:03-08:00",
     "prior_check_basis": "Previous verified Care Line Watch heartbeat run_id care-line-watch-20261113T114551-0800-recall12-20261113T194726Z; completed 11:47:26 PST.",
     "newness_rule": "New, nonduplicated concrete service loss/restoration or official provider-access restriction since last hourly check. Already logged findings and proposals without current service effect excluded."
   },

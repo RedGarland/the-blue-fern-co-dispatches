@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T034451-0800-r11-20261113T115202Z",
+  "scheduled_for": "2026-11-13T03:44:51-08:00",
+  "started_at": "2026-11-13T03:48:56-08:00",
+  "completed_at": "2026-11-13T03:52:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T02:51:21.967-08:00",
+    "end": "2026-11-13T03:52:02-08:00",
+    "previous_run_completed_at": "2026-11-13T10:51:21.967Z",
+    "basis": "Previous hourly watch heartbeat retrieved on ops/watch-ledger; bounded search for newly verifiable non-duplicate operational developments, including late-discovered material overlooked previously.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-msf-burn-mask-materials-stockout-20261113-reuters",
+      "canonical_source_url": "https://www.reuters.com/business/healthcare-pharmaceuticals/six-year-old-gaza-burn-victim-caught-israeli-dispute-over-aid-2026-11-13/",
+      "title": "Six-year-old Gaza burn victim caught in Israeli dispute over aid",
+      "publisher": "Reuters",
+      "source_date": "2026-11-13",
+      "publication_date": "2026-11-13T09:11:00Z",
+      "event_date": null,
+      "location": "Gaza City, Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Facial-burn rehabilitation at MSF's Gaza City clinic; 70 patients (50 children) in care, 20 urgently requiring individually fitted 3D-printed masks, according to MSF supervisor Mohammed Al-Qatrawi.",
+      "exact_supporting_passage": "We have now exhausted our stock of plastic sheets and printer filament",
+      "source_type": "Established international news reporting with direct MSF clinical staff interview and Israeli COGAT comment",
+      "classification": "follow-up",
+      "new_or_followup": "follow-up",
+      "confidence": "HIGH",
+      "category": "healthcare_disruption_medical_supply_access",
+      "discovery_context": {
+        "found_in_run": "gaza-source-watch-20261113T034451-0800-r11-20261113T115202Z",
+        "first_discovered_at": "2026-11-13T03:52:02-08:00",
+        "reported_operational_change": "MSF burn-mask clinic reports exhausted consumables for 3D-printed facial-burn masks; at least 20 patients urgently need masks.",
+        "underlying_import_restriction_since": "2026-02",
+        "stock_depletion_date": null,
+        "previously_logged_in_verified_prior_heartbeat": false,
+        "publication_relative_to_prior_run": "Published at 01:11 PST, before prior watch completed at 02:51 PST; recorded as previously missed newly verified healthcare follow-up, not an incident newly occurring inside the observation interval.",
+        "verification": "Reuters direct article inspected, including the MSF physiotherapy supervisor's stock-out and caseload statement and COGAT response.",
+        "no_duplicate_attack_or_casualty_count": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative primary Gaza collector/publisher untouched.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T024451-0800-r11-20261113T105121Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest dated update November 13 appeal for winter supplies, already recorded; no newer Gaza update found."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO Gaza health situation page checked; no new interval-dated health event identified."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Operational page checked; headline cluster figures as of September 2026; no interval update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Existing, persistent inaccessible regional endpoint; not a newly worsened restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza \"13 Nov 2026\" hospital water ceasefire latest",
+      "site:who.int Gaza \"13 November 2026\" evacuation trauma patients hospital",
+      "site:unicef.org \"Gaza\" \"13 November 2026\" shelter children drinking water",
+      "site:wfp.org \"Gaza\" \"13 November 2026\" food convoys aid",
+      "site:reliefweb.int \"Gaza\" \"13 Nov 2026\" hospital displacement emergency update",
+      "site:english.wafa.ps \"13/November/2026\" Gaza killed injured early morning",
+      "Gaza November 13 2026 Friday morning Reuters AP airstrike ceasefire casualties displacement",
+      "Gaza 13 November 2026 Nasser hospital MSF patient service surgical operations latest update",
+      "Gaza 13 November 2026 Rafah Kerem Shalom crossing fuel ambulances medical evacuation update",
+      "Gaza November 13 2026 hostage detention ceasefire negotiations new Friday",
+      "site:msf.org Gaza 13 November 2026 field report hospital flood water",
+      "site:icrc.org Gaza 13 November 2026 missing detainees ambulance hostage transfer"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/six-year-old-gaza-burn-victim-caught-israeli-dispute-over-aid-2026-11-13/",
+        "result": "Direct article accessible; first-person MSF staff reports confirmed current stock-out and 20 urgent mask needs."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest Gaza-related casualty item at 09:30 Palestine local time already logged in prior watches; subsequent headlines concern West Bank or reaction to earlier Nasser strike."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/gaza-israel-hospital-hamas-palestinians-25d0ebb9cc014c7366bede100d0ee5cf",
+        "result": "Nasser hospital strike background and system-level context; no separable new medical operational event."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "OCHA November 13 appeal: 150,000-plus tents held outside Gaza",
+        "reason": "Previously logged; duplicate."
+      },
+      {
+        "subject": "WAFA November 13 al-Tuffah killing and late-November-12 al-Mawasi killing",
+        "reason": "Previously logged, no updated independently verified count."
+      },
+      {
+        "subject": "Nasser Hospital strike and MSF 52 wounded, four service departments suspended",
+        "reason": "Already recorded in previous watches; subsequent reporting largely restates same incident."
+      },
+      {
+        "subject": "AP November 13 hospital overview and political condemnations",
+        "reason": "Context/response and older events, no novel time-bounded impact."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED due to persistent WHO regional endpoint HTTP 502, while OCHA, WHO Global, WHO Health Cluster, WAFA, Reuters and AP remained accessible. One material previously unrecorded healthcare operational follow-up verified.",
+    "limitations": "Reuters report was published before previous watch ended; precise day supplies were exhausted is unknown. This is a newly identified, late-captured operational follow-up, not evidence of an interval-dated new incident. Bounded search and indexing may miss other events.",
+    "notification_warranted": true,
+    "changes_to_production": "None; no approval, publication, schedule modification or disabling."
+  }
+}

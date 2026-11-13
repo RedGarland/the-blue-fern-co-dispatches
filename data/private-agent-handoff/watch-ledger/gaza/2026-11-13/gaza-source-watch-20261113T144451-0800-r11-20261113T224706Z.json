@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T144451-0800-r11-20261113T224706Z",
+  "scheduled_for": "2026-11-13T14:44:51-08:00",
+  "started_at": "2026-11-13T14:44:08-08:00",
+  "completed_at": "2026-11-13T14:47:06.072-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T13:44:40-08:00",
+    "end": "2026-11-13T14:47:06.072-08:00",
+    "previous_run_completed_at": "2026-11-13T13:44:40-08:00",
+    "basis": "Authenticated readback of prior watch heartbeat; bounded supplementary late-discovery scan. Incident/publication dates separated from detection time.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261113-eight-mobile-clinics-held-near-cairo-maternity-dialysis",
+      "canonical_source_url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/13/maternidades-moveis-aguardam-entrada-em-gaza-ha-ate-dois-anos.ghtm",
+      "title": "Eight mobile medical units, including six maternity clinics and one dialysis clinic, reportedly still await entry to Gaza near Cairo",
+      "publisher": "UOL (reporting The Independent's investigation and quoting aid groups and COGAT)",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": "2026-11-13T05:22:00-08:00",
+      "original_source_publication_date": null,
+      "event_date": null,
+      "event_start_date": null,
+      "event_end_date": null,
+      "location": "Near Cairo, Egypt; intended deployment in Gaza Strip",
+      "affected_population_or_system": "Planned maternity, newborn, dialysis and general medical care for Gaza patients; eight mobile medical units not yet delivering service",
+      "summary": "UOL reported, citing The Independent, that eight mobile medical units (six maternity units, one dialysis clinic and one general-care unit) remained near Cairo pending permission to enter Gaza, with some waiting up to two years. Aid groups Palestine Aid UK and Medics Worldwide alleged Israeli restrictions/dual-use classifications were responsible. Israel's COGAT disputed the allegation, stated other mobile clinics had entered Gaza and three additional clinics had recently been approved, and said qualifying formal requests for these eight would be assessed. No approval, shipment, arrival, or new obstruction event during the current hourly interval was independently verified.",
+      "exact_supporting_passage": "As unidades incluem seis maternidades, uma clínica de diálise e outra de atendimento geral.",
+      "source_type": "Established news outlet summarizing another established outlet's reporting, with named humanitarian-group claims and Israeli authority response; original not directly retrieved",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T144451-0800-r11-20261113T224706Z",
+        "previous_heartbeat_completed_at": "2026-11-13T13:44:40-08:00",
+        "publication_in_observation_window": false,
+        "source_date": "2026-11-13",
+        "original_reporting_attributed_to": "The Independent",
+        "original_article_url": null,
+        "verified_source_access": "Direct UOL article text read; source reported and quoted named groups and COGAT",
+        "unique_miss_class": "Medical care capacity / blocked mobile maternity and dialysis services",
+        "why_included": "Previously unrecorded concrete blocked-care capacity with current status in a same-day news report; bounded late discovery, not a newly occurring hourly incident",
+        "primary_claim_not_independently_corrob": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall-only; primary daily production collector/publisher remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T134451-0800-r11-20261113T214440223Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "November 13 report read; Nov 3-9 flooding, aid, disease, water, medicine and health effects all previously logged."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct emergency page read, no newly dated Gaza operational update."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Direct cluster page read, formal displayed indicators as of September 2026."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously documented 502 Bad Gateway; alternative official WHO coverage remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 13 2026 22:00 UTC latest attack killed injured Reuters AP ceasefire Friday",
+      "site:aa.com.tr/en/middle-east Gaza 13 November 2026 14 November strike civilians killed Friday evening",
+      "site:english.wafa.ps Gaza \"14 November 2026\" casualty hospital displacement",
+      "site:aljazeera.com/news/2026/11/13 Gaza latest live killed wounded November 13 evening",
+      "site:msf.org Gaza November 13 2026 health services medical equipment ambulances Nasser",
+      "site:unicef.org Gaza November 13 2026 November 14 storm children killed flooding drinking water",
+      "Gaza November 13 2026 22:00 23:00 UTC fresh Reuters aid crossings fuel healthcare Nasser hospital",
+      "site:wfp.org Gaza November 13 2026 food trucks bread pipeline closure latest",
+      "site:unrwa.org \"13 November 2026\" Gaza water clinics shelter winter supply",
+      "site:palestinercs.org Gaza \"13 November 2026\" ambulance new incidents rescue",
+      "site:ohchr.org Gaza \"13 November 2026\" civilian deaths hospitals investigation",
+      "Gaza Israel Hamas hostages ceasefire talks November 13 2026 late Friday evening changes AFP Reuters"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "detail": "Winter supplies statement and 150,000 tents waiting outside Gaza already logged in earlier watch."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "detail": "Latest index through 22:11 Palestine time, with newer visible entries concerning West Bank; earlier Gaza reports already logged."
+      },
+      {
+        "publisher": "UOL",
+        "url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/13/maternidades-moveis-aguardam-entrada-em-gaza-ha-ate-dois-anos.ghtm",
+        "detail": "Direct text of same-day story; reports eight undelivered mobile units and includes aid-group allegations and COGAT denial; original Independent article not directly verified."
+      },
+      {
+        "publisher": "UOL",
+        "url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/13/tres-palestinos-morrem-em-ataques-gaza-soma-11-mortos-desde-cedo.ghtm",
+        "detail": "Recap of prior-day deaths and ambiguous 11-person aggregate without traceable new post-window incident; excluded."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-6-palestinians-injure-around-20-in-gaza-despite-ceasefire/4124535",
+        "detail": "Search result points to previously logged November 13 composite, direct page extraction limited."
+      }
+    ],
+    "duplicate_exclusions": [
+      "OCHA November 13 flood effects, shelter damage, 42% truck reduction, medicine stockouts, 119 medical evacuations and water disease metrics previously recorded.",
+      "Deir al-Balah al-Qastal Towers, Khan Younis drone strike, al-Mawasi child shooting and Nasser seventh-fatality/unexploded-ordnance follow-ups already recorded.",
+      "WHO November 13 respiratory infections and MSF burn rehabilitation supplies already recorded.",
+      "WFP October ration cut, 150,000 tents outside Gaza, earlier November casualties and Nasser clinical suspension already recorded.",
+      "UOL casualty recap described November 12 incidents and non-attributed aggregate, not verified fresh incidents."
+    ],
+    "limitations": "Eastern Mediterranean WHO regional page returned recurrent HTTP 502. Several targeted searches yielded outdated or unrelated indexed results; WAFA latest feed visible content lagged the current Palestine-local time. The new capacity finding is a late-discovered same-day secondary-source report, not independent confirmation of a newly occurring hourly denial; the original Independent report was not directly retrieved.",
+    "meaningful_new_findings": 1,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

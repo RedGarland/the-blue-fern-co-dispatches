@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261112T164451-0800-r11-20261113T004843608Z",
+  "scheduled_for": "2026-11-12T16:44:51-08:00",
+  "started_at": "2026-11-12T16:46:50-08:00",
+  "completed_at": "2026-11-12T16:48:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T15:43:14.393-08:00",
+    "end": "2026-11-12T16:48:43-08:00",
+    "previous_run_completed_at": "2026-11-12T15:43:14.393-08:00",
+    "basis": "Prior ops/watch-ledger heartbeat retrieved and verified; screen only source-verifiable new developments since the previous completed watch or materially changed follow-ups, irrespective of later recirculation.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; not the authoritative daily collector or publisher.",
+    "prior_heartbeat_verified": true,
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-12/gaza-source-watch-20261112T154451-0800-r12-20261112T234314393Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest update listed Nov 11 winter supplies access appeal; no newly dated operational Gaza update on the OCHA page."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Emergency overview and latest-news listings accessible; no newly timed Gaza clinical or evacuation event on page."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Persistent existing restriction from prior watches; did not worsen in this execution."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "result": "Country overview accessible; no newly dated Gaza operational bulletin in page content."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"13/November/2026\" Gaza killed injured",
+      "site:english.wafa.ps \"12/November/2026\" Gaza late evening killed wounded",
+      "Gaza November 13 2026 early Friday morning Israeli strike civilians killed hospital",
+      "site:reuters.com/world/middle-east/ Gaza November 12 2026 latest strikes ceasefire aid hospital",
+      "site:apnews.com/article/ Gaza November 12 2026 civilians casualties hospital shelter aid",
+      "site:un.org OR site:palestine.un.org Gaza November 12 2026 humanitarian access medical evacuation crossings",
+      "site:msf.org Gaza November 12 2026 Nasser Hospital new healthcare 13 November",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"13 Nov 2026\" Gaza food shelter health",
+      "site:unicef.org Gaza \"12 November 2026\" flooding water displacement tents",
+      "site:wfp.org Gaza \"12 November 2026\" food aid crossings access",
+      "Gaza November 12 2026 22:00 GMT November 13 new casualties overnight Reuters AFP",
+      "Gaza ceasefire mediators negotiations Rafah crossing evacuation November 12 2026 23:00"
+    ],
+    "search_method": "Official OCHA OPT and WHO direct-source checks first; 12 additional targeted web searches (two groups of six); direct WAFA latest-news check and prior ledger comparison; no further searches.",
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "Latest visible item Nov 12 19:26 Gaza/West Bank OIC condemnation; last substantive Gaza strike report Nov 12 16:20 local, already recorded in earlier hourly watch; no new interval-specific Gaza casualty incident."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 on direct retrieval, consistent with prior heartbeat."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Nasser Medical Complex strike, MSF 52 wounded and service interruptions",
+        "reason": "Already logged, including revised wounded count and firsthand clinical follow-up; no newly verified capacity change."
+      },
+      {
+        "subject": "Nov 12 Al-Shifa, Deir al-Balah, Jabalia casualties and fishermen detention",
+        "reason": "Previously logged incidents; subsequent reports and retellings are duplicates."
+      },
+      {
+        "subject": "53-country Gaza aid access appeal, OCHA winter supplies appeal, and OIC condemnation",
+        "reason": "Earlier diplomatic statements or condemnation; no actual interval-specific aid delivery, crossing change, or medical evacuation documented."
+      },
+      {
+        "subject": "Nov 7–9 flooding, tent and sanitation impacts",
+        "reason": "Retrospective accounts, not newly verified interval events."
+      },
+      {
+        "subject": "WHO October HeRAMS report",
+        "reason": "Retrospective October data already noted in prior run; no newly verified functioning-capacity change."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED owing to persistent WHO EMRO 502. OCHA OPT, WHO Global, WHO Health Cluster, WAFA and indexed established reporting remained available. No additional meaningful coverage degradation or independently verifiable new Gaza event found.",
+    "limitations": "Bounded public search cannot prove that no event occurred; reporting and indexing delays apply. A WHO regional endpoint remains inaccessible; source-specific detail may be missed.",
+    "notification_warranted": false,
+    "changes_to_production": "None. No publishing, approval, task schedule, task enablement, or production actions taken."
+  }
+}

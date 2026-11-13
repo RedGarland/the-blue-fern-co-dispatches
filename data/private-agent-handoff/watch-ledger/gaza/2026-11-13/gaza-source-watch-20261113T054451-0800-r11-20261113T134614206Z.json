@@ -1,0 +1,377 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+  "scheduled_for": "2026-11-13T05:44:51-08:00",
+  "started_at": "2026-11-13T05:41:52-08:00",
+  "completed_at": "2026-11-13T05:46:14.206-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T04:50:44-08:00",
+    "end": "2026-11-13T05:46:14.206-08:00",
+    "previous_run_completed_at": "2026-11-13T04:50:44-08:00",
+    "basis": "Previous verified watch-ledger heartbeat; additional recalled older events are classified as follow-up.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261113-ocha-flood-impact-update",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "OCHA updates November floods to 226,000 people affected and over 40,000 shelters damaged",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-11-06",
+      "event_end_date": "2026-11-09",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Displaced households; family shelters; sanitation and health facilities",
+      "summary": "Preliminary alerts through Nov 9 indicate over 46,000 households affected, over 9,000 shelters irreparable and nine health facilities damaged.",
+      "exact_supporting_passage": "over 46,000 estimated households (226,000 people)",
+      "source_type": "UN humanitarian situation report",
+      "classification": "follow-up",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Impact of heavy rainfall and flooding, paras 53-54",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-aid-offloading-decline",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "OCHA reports 42% fall in aid-truck offloading and Egyptian corridor suspension",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-11-02",
+      "event_end_date": "2026-11-08",
+      "location": "Kerem Shalom crossing; Egypt-Gaza aid corridor",
+      "affected_population_or_system": "Humanitarian aid deliveries and partners",
+      "summary": "Only 228 partner trucks were offloaded Nov 2-8, down approximately 42%; no Egypt-corridor trucks were offloaded Nov 3-8.",
+      "exact_supporting_passage": null,
+      "source_type": "UN humanitarian situation report",
+      "classification": "new",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Gaza Strip, para 25-26",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-water-insecurity",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "OCHA reports 85% of assessed households moderately or severely water insecure",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-10-01",
+      "event_end_date": "2026-10-31",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Households; drinking water and sanitation",
+      "summary": "October monitoring: 85% of assessed households water insecure; 66% reported less than six litres drinking water per person daily.",
+      "exact_supporting_passage": null,
+      "source_type": "UN WASH Cluster monitoring summarized by OCHA",
+      "classification": "follow-up",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Water, health and health system conditions, para 36",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-meningitis-surveillance",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "OCHA reports 413 probable meningitis cases in epidemiological weeks 40-44",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-09-27",
+      "event_end_date": "2026-11-05",
+      "location": "Gaza Strip; especially Gaza governorate",
+      "affected_population_or_system": "Infants; communicable disease surveillance",
+      "summary": "Health surveillance recorded 294 probable viral and 119 probable bacterial meningitis cases; 77% of 202 individually documented cases were infants.",
+      "exact_supporting_passage": null,
+      "source_type": "UN Health Cluster surveillance summarized by OCHA",
+      "classification": "new",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Water, health and health system conditions, paras 38-39",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-medicine-stockout",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "OCHA details October zero-stock of essential drugs and specialist care supplies",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-10-01",
+      "event_end_date": "2026-10-31",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Patients needing medicines, chemotherapy, cardiac treatment, hemodialysis",
+      "summary": "October zero stocks affected 42% of medicines, 55% of chemotherapy medicines and 73% of cardiac surgery/catheterization supplies.",
+      "exact_supporting_passage": null,
+      "source_type": "UN Health Cluster/MoH reporting summarized by OCHA",
+      "classification": "new",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Water, health and health system conditions, paras 40-41",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-medevac-movement",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "OCHA confirms 119 patients medically evacuated Nov 3-9",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-11-03",
+      "event_end_date": "2026-11-09",
+      "location": "Rafah and Kerem Shalom crossings, Gaza Strip",
+      "affected_population_or_system": "Patients requiring treatment outside Gaza; accompanying families",
+      "summary": "Medical evacuation movement included 119 patients, 40 of them children, and 141 companions through two crossings.",
+      "exact_supporting_passage": null,
+      "source_type": "UN humanitarian situation report",
+      "classification": "new",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Water, health and health system conditions, para 42",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-pediatric-capacity-transport",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "Gaza's northern pediatric inpatient capacity approximately 90 beds; staff transport disrupted",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-11-03",
+      "event_end_date": "2026-11-09",
+      "location": "Gaza and North Gaza governorates",
+      "affected_population_or_system": "Children requiring hospitalization; health workers and facilities",
+      "summary": "Operational pediatric beds are about 90 versus roughly 350 previously; maintenance/fuel shortages halted some health-worker transport services.",
+      "exact_supporting_passage": null,
+      "source_type": "UN humanitarian situation report",
+      "classification": "follow-up",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Water, health and health system conditions; rain impacts, paras 43-44 and 58-59",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-new-unrwa-health-centre",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "UNRWA health centre opened in Gaza on November 7",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": "2026-11-07",
+      "event_start_date": "2026-11-07",
+      "event_end_date": "2026-11-07",
+      "location": "Gaza City, Gaza Strip",
+      "affected_population_or_system": "Maternal and child health; nutrition; psychosocial care",
+      "summary": "OCHA confirms UNRWA opened a centre Nov 7 serving a catchment of about 100,000 people.",
+      "exact_supporting_passage": null,
+      "source_type": "UN humanitarian situation report",
+      "classification": "new",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Humanitarian response activities, para 73",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-ocha-learning-spaces-rain-disruption",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+      "title": "Flood damage disrupts learning for at least 5,500 children",
+      "publisher": "OCHA OPT",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": null,
+      "event_date": null,
+      "event_start_date": "2026-11-06",
+      "event_end_date": "2026-11-10",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Children; temporary learning and protection spaces",
+      "summary": "Flooding affected 109 learning spaces, keeping at least 5,500 children from classes; 15 child/protection spaces sustained damage.",
+      "exact_supporting_passage": null,
+      "source_type": "UN humanitarian situation report",
+      "classification": "follow-up",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Rain impact, paras 60-64",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261113-who-acute-respiratory-rise",
+      "canonical_source_url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+      "title": "WHO reports rising acute respiratory illness and diagnostic laboratory equipment restrictions in Gaza",
+      "publisher": "Reuters",
+      "source_publication_date": "2026-11-13",
+      "source_published_at": "2026-11-13T04:21:00-08:00",
+      "event_date": "2026-11-13",
+      "event_start_date": "2026-11-13",
+      "event_end_date": "2026-11-13",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Displaced people, especially children; respiratory care and laboratory diagnostics",
+      "summary": "WHO representative reported 33,000 more acute respiratory infections than a year ago, 11% of consultations, and restricted diagnostic-laboratory supplies.",
+      "exact_supporting_passage": "Acute respiratory infections are 33,000 cases higher than at the same time last year",
+      "source_type": "Established reporting quoting WHO",
+      "classification": "follow-up",
+      "confidence": "HIGH",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261113T054451-0800-r11-20261113T134614206Z",
+        "source_section": "Reuters reporting direct statements from WHO representative at November 13 Geneva press briefing",
+        "previous_heartbeat_completed_at": "2026-11-13T04:50:44-08:00",
+        "discovered_in_supplementary_recall": true,
+        "publication_or_event_may_precede_observation_window": true,
+        "report_published_before_previous_watch_completed": true,
+        "recall_reason": "Newly identified WHO quantitative health finding, not an incident originating during this observation interval."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary production collector and publisher remain authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T044451-0800-r11-20261113T125044Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage checked first; follow-up updates directory showed a new Nov 13 situation report not listed in prior verified heartbeat."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO emergency situation page checked first; no new operational health release there."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Landing page data as of Sep 2026; no interval update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "detail": "Persistent regional endpoint restriction, previously observed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza 13/November/2026 Friday 13 November 2026 killed injured",
+      "Gaza November 13 2026 Reuters latest 13:00 14:00 GMT hospital aid casualties",
+      "site:unicef.org Gaza November 13 2026 children shelter flooding water supplies",
+      "site:wfp.org Gaza November 13 2026 food distribution trucks access",
+      "site:msf.org Gaza November 13 2026 clinic supplies patients hospital",
+      "site:icrc.org Gaza November 13 2026 hostages detainees ambulance access",
+      "WHO Reinhilde Van De Weerdt 33000 respiratory infections 11% consultations November 13 2026 Gaza media briefing",
+      "November 13 2026 Gaza mobile maternity units 8 held Cairo 6 maternity dialysis clinics Israeli border Guardian",
+      "Gaza 13 November 2026 afternoon 15:00 16:00 Gaza time killed wounded drone shelling crossing",
+      "site:unrwa.org Gaza November 13 2026 shelter aid displaced rain impact",
+      "Gaza Rafah Kerem Shalom Nov 13 2026 crossing fuel ambulance transport humanitarian movement",
+      "Gaza ceasefire November 13 2026 negotiations releases military operations civilian casualties newest"
+    ],
+    "newly_discovered_source_note": "OCHA published Nov 13 weekly report containing retrospective data mostly for Nov 3-9; findings represent newly captured evidence, not newly occurring incidents during the observation window.",
+    "direct_source_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "result": "New November 13 weekly situation report inspected in full, contrasted with November 9 weather update and previous watch receipt."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "result": "November 13 12:21 UTC direct WHO representative briefing quoted; discovered this run but published within prior watch window."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "result": "No newly confirmed interval incident."
+      }
+    ],
+    "excluded_or_deferred": [
+      {
+        "subject": "Previously reported Nasser hospital strike, Al-Tuffah and Al-Mawasi deaths",
+        "reason": "Older events already recorded."
+      },
+      {
+        "subject": "OCHA November 13 statement >150,000 tents awaiting entry",
+        "reason": "Duplicate of prior finding."
+      },
+      {
+        "subject": "MSF facial-burn mask material stockout",
+        "reason": "Already recorded in prior verified heartbeat."
+      },
+      {
+        "subject": "Mobile maternity/dialysis units reportedly held in Egypt",
+        "reason": "Secondary article inaccessible for direct verification and no independent primary confirmation within search budget."
+      },
+      {
+        "subject": "Gaza News Live crossings weekly bulletin and other auto-written local alerts",
+        "reason": "AI-assisted secondary aggregator; actual bulletin figures and primary sourcing not independently verified."
+      },
+      {
+        "subject": "Older OCHA November 9 weather damage estimates",
+        "reason": "Superseded by newer November 13 quantitative situation report."
+      }
+    ],
+    "access_restrictions": [
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "status": "HTTP_502",
+        "previously_observed": true,
+        "materially_worsened": false
+      }
+    ],
+    "status_rationale": "DEGRADED only due to recurring WHO Eastern Mediterranean HTTP 502; significant official-source coverage remained available.",
+    "limitations": "Retrospective reporting dates differ from source publication dates. Twelve searches are not an exhaustive source index; candidate articles may be indexed late.",
+    "notification_warranted": true,
+    "changes_to_production": "None; no approval, publication, schedule change, or disabling."
+  }
+}

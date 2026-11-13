@@ -1,0 +1,81 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T004743-0800-recall12-20261113T084845318Z",
+  "scheduled_for": "2026-11-13T00:45:22-08:00",
+  "started_at": "2026-11-13T00:47:43-08:00",
+  "completed_at": "2026-11-13T00:48:45-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-12T23:45:58-08:00",
+    "end": "2026-11-13T00:48:45-08:00",
+    "prior_check_basis": "Read preceding durable Care Line Watch heartbeat from 2026-11-12, completed 23:45:58 PST, on ops/watch-ledger; window begins at its completion.",
+    "event_time_basis": "Require a new confirmed announcement or concrete access effect within the observation window; indexing/publication date alone, especially same-day items lacking time, is insufficient."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois — limitation of CLIA certificate, 14D2049789",
+      "result": "No new Medicare termination, rescission, CLIA limitation/suspension, or equivalent CMS public notice since prior hourly check. CMS discovery/index results inspected before supplementary searches; official public notices page opened directly and current table verified."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspended November 13 2026 United States",
+      "hospital maternity obstetrics labor delivery unit closure November 12 13 2026",
+      "rural hospital emergency services closed temporarily November 12 13 2026",
+      "ambulance EMS base air medical service closure suspension November 12 13 2026",
+      "\"November 13, 2026\" hospital \"closed\" emergency department United States",
+      "\"November 12, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"ceasing\"",
+      "\"November 12, 2026\" \"dialysis\" \"closed\" OR \"suspended\" patients",
+      "\"November 12, 2026\" behavioral health OR psychiatric unit closure hospital",
+      "\"Nov 12, 2026\" \"clinic\" \"closing\" patients healthcare",
+      "\"Nov 12, 2026\" \"oncology\" unit \"closed\" OR \"suspended\" hospital",
+      "health center reopened emergency department restored service November 12 13 2026 USA Puerto Rico Guam",
+      "site:gov November 12 2026 medical center closure clinic services suspended hospital ambulance"
+    ],
+    "search_execution": "Official CMS Public Notices checked first; 12 additional focused web searches with two-day freshness constraint. No retrieval failures affecting qualifying candidate validation.",
+    "reviewed_exclusions": [
+      {
+        "event": "Sharon Regional Medical Center emergency closure in Sharon, Pennsylvania",
+        "reason": "Previous November 4-6 access loss and November 17 license-effective timeline; recent Nov 12/13 coverage reiterates known event, not new window-specific change.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "event": "Bradford Regional Medical Center ED closure, Bradford, Pennsylvania",
+        "reason": "November 12 follow-up reports May 17 closure already logged; no new access loss during this hour.",
+        "url": "https://www.newsfromthestates.com/article/bradford-community-reels-after-hospital-closes"
+      },
+      {
+        "event": "Saint Mary's Regional Medical Center oncology unit, Reno, Nevada",
+        "reason": "November 12 nursing-union report was previously logged as pending review; no distinct new verified change during this window.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      },
+      {
+        "event": "East Orange VA and other veteran-care staffing problems",
+        "reason": "November 12 ProPublica reporting describes extended staffing/access difficulties; no uniquely timed new facility or essential service loss established during this watch window.",
+        "url": "https://www.propublica.org/article/east-orange-va-hospital-veterans-decline-new-jersey"
+      },
+      {
+        "event": "Guam hospital clinic and dialysis weather closures",
+        "reason": "Search found April 2026 tropical-storm notices, outside observation window.",
+        "url": "https://www.grmc.gu/2026/04/10/grmc-announces-suspension-of-visitations-and-clinic-operations-rehabilitation-and-or-services-monday-to-wednesday-due-to-tropical-storm-sinlaku/"
+      }
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Newly released local reporting may not be indexed within minutes of publication, especially just after midnight PST.",
+      "A 12-query supplementary watch is not a complete 50-state and territory census.",
+      "Unverified same-date reports without publication time or new access consequence are not promoted to findings."
+    ],
+    "publication_or_approval_actions": "None. No approval, public publication, schedule modification, or disablement."
+  }
+}

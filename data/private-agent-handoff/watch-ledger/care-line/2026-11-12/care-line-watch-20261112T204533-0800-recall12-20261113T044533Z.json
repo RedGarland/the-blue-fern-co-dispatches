@@ -1,0 +1,98 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T204533-0800-recall12-20261113T044533Z",
+  "scheduled_for": "2026-11-12T20:45:22-08:00",
+  "started_at": "2026-11-12T20:45:33-08:00",
+  "completed_at": "2026-11-13T04:46:57.462+00:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T19:43:13.100-08:00",
+    "end": "2026-11-13T04:46:57.462+00:00",
+    "prior_check_basis": "Previous durable Care Line Watch heartbeat on ops/watch-ledger completed 2026-11-12 19:43:13.100 PST; previous finding on Saint Mary's Regional Medical Center Reno oncology service change already deduplicated.",
+    "event_time_basis": "New announcements or concrete effective changes first surfacing after prior check; date-only current reporting is not necessarily new within this hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois: limitation of CLIA certification, ID 14D2049789.",
+      "result": "No newer dated CMS legal notices on the official list as of this check; November 9 Compassionate Home Health Services termination is older."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended ambulance diversion November 12 2026 latest US",
+      "hospital maternity labor delivery obstetrics closing suspended services November 12 2026",
+      "rural hospital emergency room rural clinic lost services shutdown November 12 2026",
+      "mental health behavioral psychiatric inpatient unit services closing November 12 2026",
+      "dialysis center dialysis clinics closed suspended patients November 12 2026 US",
+      "oncology cancer infusion center services closed eliminated November 12 2026",
+      "November 12 2026 ambulance EMS service shutting down ending coverage county suspension 2026",
+      "November 12 2026 air ambulance helicopter medevac base shut down suspended station",
+      "November 12 2026 family practice primary care community health clinic closing permanently patients",
+      "November 12 2026 hospital emergency maternity services reopened resumed after closure",
+      "November 12 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana emergency hospital clinic closed healthcare",
+      "site:gov \"November 12, 2026\" \"termination\" \"hospital\" OR \"CLIA\" OR \"services suspended\""
+    ],
+    "search_execution": "All 12 targeted web search queries completed; no source access failure prevented coverage. Several searches returned historical/out-of-scope articles and limited same-hour local reporting.",
+    "reviewed_exclusions": [
+      {
+        "event": "Saint Mary's Regional Medical Center, Reno NV, inpatient oncology unit",
+        "reason": "Previously reported in 17:52 PST supplemental watch on November 12 and already deduplicated by 18:42 and 19:43 runs; no newly announced access effect verified."
+      },
+      {
+        "event": "Bradford Regional Medical Center, PA, emergency-service loss",
+        "reason": "November 12 Pennsylvania Capital-Star retrospective recaps previously reported closure; no newly effective change established.",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/"
+      },
+      {
+        "event": "Sharon Regional Medical Center, PA",
+        "reason": "November 4 regulatory action, November 6 ED suspension and future November 17 license revocation were previously reported; duplicate.",
+        "url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "event": "UNM Health Sciences Center NM ambulance diversions",
+        "reason": "October 28 cybersecurity disruption, not a new November 12 event.",
+        "url": "https://hscnews.unm.edu/news/ambulance-traffic-diverted-clinical-appointments-cancelled-and-classes-cancelled-due-to-cybersecurity-issue-at-unm-hsc"
+      },
+      {
+        "event": "AdventHealth Coalition for the Homeless planned primary/pediatric/behavioral-health clinic FL",
+        "reason": "November 12 announcement describes prospective addition of services; no concrete reopening of a previously lost essential service.",
+        "url": "https://www.adventhealth.com/news/new-coalition-homeless-center-will-bring-healthcare-directly-families-experiencing-homelessness"
+      },
+      {
+        "event": "WVU Cancer Institute Summersville Regional Medical Center WV",
+        "reason": "New facility expansion announced November 11, with November 10 ribbon cutting; not a restoration of a previously lost service.",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/"
+      },
+      {
+        "event": "St. Luke's Hospital and BJC Health MO letter of intent",
+        "reason": "Proposed business merger with no present service loss or restoration; excluded.",
+        "url": "https://www.stl.news/st-lukes-hospital-plans-to-join-bjc-health/"
+      },
+      {
+        "event": "U.S. territories veterans travel for care",
+        "reason": "November 11 background report without a new concrete loss or restoration of a local healthcare service.",
+        "url": "https://pasquines.us/2026/11/11/four-us-territories-top-military-enlistment-rankings-but-their-veterans-travel-far-for-care/"
+      }
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Search indexing delays may conceal very recent local notices, particularly in remote and territorial markets.",
+      "Bounded keyword searches are selective and are not exhaustive national collection.",
+      "Previous records and CMS notices are assessed by source event date, not merely index crawl date."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

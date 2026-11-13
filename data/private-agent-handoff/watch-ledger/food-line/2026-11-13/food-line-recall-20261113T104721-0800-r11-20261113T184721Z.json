@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T104721-0800-r11-20261113T184721Z",
+  "scheduled_for": "2026-11-13T10:45:54-08:00",
+  "started_at": "2026-11-13T10:47:21-08:00",
+  "completed_at": "2026-11-13T10:49:16.769-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T09:49:12.457-08:00",
+    "end_at": "2026-11-13T10:49:16.769-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "Since last read-back-verified GitHub Food Line Source Watch heartbeat; bounded search indexing lookback only for newly verified incidents. Production collector authoritative.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T094740-0800-r11-20261113T174740Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall; not exhaustive national collection. No results does not exclude unindexed local events.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery loss/closure/fire/disaster",
+      "Emergency distribution cancellation due to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food bank closure or major reduction",
+      "Official immediate SNAP/WIC/food assistance interruption"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "November 13 2026 only grocery store in town closed fire United States",
+      "November 13 2026 \"last grocery store\" closes rural",
+      "November 13 2026 \"only full service grocery\" closure fire",
+      "November 13 2026 grocery store fire food desert town sole",
+      "November 13 2026 food bank distribution canceled storm flooding",
+      "November 13 2026 food pantry distribution suspended power outage",
+      "November 13 2026 emergency food distribution cancelled facility damage",
+      "November 13 2026 food pantry abruptly closed indefinitely services",
+      "November 13 2026 food bank closes pantry shortage shut down clients",
+      "November 13 2026 SNAP benefits interruption outage EBT states notice",
+      "November 13 2026 WIC benefits office shutdown outage state notice",
+      "November 13 2026 official food assistance delays stop benefits SNAP state agency notice"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_limitations": "Searches completed but matching material was mostly stale, generic, non-US, prospective, or unrelated. One fresh local report about closure of Bashas' only brand location in Tempe did not establish loss of Tempe's sole/full-service grocery. Hyperlocal indexing delay remains possible.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 10,
+      "inaccessible": 3,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.nj.gov/humanservices/njsnap/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.sjcs.org/thepantry-vadc",
+        "https://www.buncombenc.gov/AlertCenter.aspx",
+        "https://dhs.vi.gov/news/",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap"
+      ],
+      "failures": [
+        {
+          "url": "https://www.fns.usda.gov/newsroom",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA FNS source block"
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA SNAP source block"
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam DPHSS access restriction"
+        }
+      ]
+    },
+    "additional_candidate_fetch_limitations": [
+      {
+        "url": "https://ktar.com/arizona-business/bashas-tempe-closing-grocer-supermarket",
+        "error": "Direct fetch disabled by web reader; search result available",
+        "impact": "Not qualifying on headline: only Bashas'-brand store in a large city, not only grocery store in community"
+      }
+    ],
+    "reviewed_exclusions": [
+      {
+        "url": "https://ktar.com/arizona-business/bashas-tempe-closing-grocer-supermarket",
+        "reason": "Nov 13 10:06 AM AZ report describes Bashas' only store in Tempe, not the city's only grocery store; no community-level sole-grocery loss established."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Dec 3 canceled mobile pantry in Ishpeming listed, but cancellation cause not given and outside active observation window."
+      },
+      {
+        "url": "https://www.sjcs.org/thepantry-vadc",
+        "reason": "Nov 11 Annandale pantry pop-up cancellation predates watch window and no storm/outage/facility-damage cause shown."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "November 13 lists no incidents; Connecticut Nov 15 future processor change was posted Aug 20, not a new current outage."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "November 21 future evidence requirement; not an immediate current SNAP interruption."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing general processing/call wait delays, no newly dated interruption in this window."
+      },
+      {
+        "url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "FoodShare notices existing; last revised Oct 16, 2026."
+      },
+      {
+        "url": "https://www.nj.gov/humanservices/njsnap/",
+        "reason": "Existing policy changes and guidance, no newly announced immediate disruption."
+      },
+      {
+        "url": "https://www.buncombenc.gov/AlertCenter.aspx",
+        "reason": "No new immediate food assistance alert; county operations notice not tied to food access."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "No Nov 13 immediate food benefit access notice verified."
+      },
+      {
+        "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap",
+        "reason": "No Nov 13 immediate benefit interruption verified."
+      }
+    ],
+    "material_new_degradation": false,
+    "interpretation": "DEGRADED owing to unchanged access restrictions (two USDA 403 and Guam DPHSS timeout). All 12 searches and ten official/provider source pages were accessible; no newly material failure established.",
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T224119-0800-recall12-20261113T064331432Z",
+  "scheduled_for": "2026-11-12T22:45:22-08:00",
+  "started_at": "2026-11-12T22:41:19-08:00",
+  "completed_at": "2026-11-13T06:43:31.432Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T21:52:27.544-08:00",
+    "end": "2026-11-12T22:43:31-08:00",
+    "prior_check_basis": "Previous durable Care Line Watch heartbeat completed 2026-11-12 21:52:27.544 PST (2026-11-13T05:52:27.544Z); previous review exclusions and findings checked for duplication.",
+    "event_time_basis": "Require verifiable new announcement or concrete service-access change in this observation window; date-only publication does not prove the item emerged during the hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall, not primary national collection; production remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, limitation of CLIA certification, 14D2049789",
+      "result": "No new CMS notice in or since the prior observation window."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended service November 12 2026 November 13 2026 United States",
+      "maternity labor delivery obstetrics unit closing November 12 2026 hospital",
+      "rural hospital emergency services closure suspended November 12 2026",
+      "dialysis clinic closure suspension patients November 12 2026",
+      "ambulance service air medical base closing service ending November 12 2026",
+      "behavioral health psychiatric inpatient hospital unit closing November 12 2026",
+      "hospital closure clinic shut down urgent care oncology unit November 12 2026 United States local news",
+      "November 12 2026 health clinic primary care \"closing\" patients",
+      "November 12 2026 \"emergency department\" \"reopening\" hospital",
+      "November 12 2026 \"air ambulance\" \"base\" \"closing\" OR \"suspended\"",
+      "November 12 2026 \"labor and delivery\" \"suspended\" OR \"closed\" hospital",
+      "November 12 2026 ambulance service shutdown rural EMS hospital access"
+    ],
+    "search_execution": "CMS official notices directly opened and inspected first; then 12 recency-weighted targeted searches (2 batches of 6) covering essential service losses, emergency/EMS/base closures, oncology, dialysis, primary care, maternity, behavioral health and reopening. No tool failures.",
+    "reviewed_exclusions": [
+      {
+        "event": "Saint Mary's Regional Medical Center, Reno, Nevada — dedicated oncology unit",
+        "reason": "November 12 nurses union release already entered as a pending-review finding in the 17:52 PST run; duplicate, without a new distinct access change in this window.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      },
+      {
+        "event": "Bradford Regional Medical Center, Pennsylvania",
+        "reason": "November 12 retrospective on prior closure; duplicate.",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/"
+      },
+      {
+        "event": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "Prior state closure order and emergency department suspension previously recorded; no new current-hour effect established.",
+        "url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "event": "ThedaCare Waupaca hospital emergency department, Wisconsin",
+        "reason": "November 12 investment/expansion report describes added future capacity, not reopening of a previously lost service.",
+        "url": "https://fox11online.com/news/local/thedacare-makes-16-million-investment-in-waupaca-hospital-emergency-room-expansion"
+      },
+      {
+        "event": "Waupaca hospital and regional hospital strain reports",
+        "reason": "Financial, capacity, and survey reports did not establish concrete new loss, suspension, or restoration of essential healthcare service during the window."
+      },
+      {
+        "event": "Roseland Community Hospital labor/delivery, Chicago, Illinois",
+        "reason": "October 28 report of earlier planned maternity-service closure; outside window and no new current-hour effect established.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/"
+      }
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Search indexing delays can obscure newly published local notices late in the Pacific evening.",
+      "Twelve targeted queries are selective, not an exhaustive all-state and all-territory collection.",
+      "Publication on November 12 without an exact timestamp is insufficient for claiming a finding new since 21:52 PST."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

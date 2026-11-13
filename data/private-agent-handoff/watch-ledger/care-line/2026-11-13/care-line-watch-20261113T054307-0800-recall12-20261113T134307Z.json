@@ -1,0 +1,95 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T054307-0800-recall12-20261113T134307Z",
+  "scheduled_for": "2026-11-13T05:45:22-08:00",
+  "started_at": "2026-11-13T05:43:07-08:00",
+  "completed_at": "2026-11-13T05:45:41.285-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T04:48:11-08:00",
+    "end": "2026-11-13T05:45:41.285-08:00",
+    "prior_check_basis": "Most recent verified heartbeat in ops/watch-ledger: care-line-watch-20261113T044713-0800-recall12-20261113T124811Z; completed at 04:48:11 PST.",
+    "newness_rule": "Include a new, verifiable, concrete healthcare access change, newly announced effective restoration, or newly posted CMS notice since the prior check; exclude proposals, ownership-only reports, old events and already-recorded findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary targeted recall for U.S. states, DC and territories; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "access": "SUCCESS at canonical endpoint; initial attempt at obsolete CMS path returned an access error.",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, limitation of CLIA certificate, 14D2049789.",
+      "new_notices_since_previous_hour": 0
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure November 13 2026 US today",
+      "hospital maternity labor delivery unit closure suspension November 13 2026",
+      "rural hospital emergency services shutdown November 12 13 2026",
+      "behavioral health psychiatric inpatient unit closure November 12 13 2026",
+      "dialysis clinic closure suspended November 12 13 2026",
+      "oncology cancer center treatment services closure November 12 13 2026",
+      "ambulance EMS service suspended shuts down base helicopter air medical November 13 2026 US",
+      "primary care clinic abrupt closing patients November 12 13 2026",
+      "hospital emergency room temporarily closed November 13 2026 reopening November 12 2026",
+      "Puerto Rico Guam US Virgin Islands hospital clinic ambulance dialysis closure November 2026",
+      "site:gov hospital emergency department closure ambulance services November 12 13 2026 official notice",
+      "hospital oncology maternity dialysis emergency department reopened service restored November 13 2026"
+    ],
+    "search_execution": "CMS Public Notices examined before 12 additional targeted one-day-recency searches. A noncanonical CMS URL returned an inaccessible error; the current canonical Public Notices page was successfully retrieved and reviewed. Other targeted searches returned results, including many stale, unrelated and future changes. No new nonduplicate qualifying access effect found.",
+    "source_retrieval_degradation": {
+      "url": "https://www.cms.gov/medicare/health-safety-standards/quality-safety-oversight-general-information/public-notices",
+      "failure": "Initial obsolete CMS Public Notices URL inaccessible via web retrieval.",
+      "recovery": "Current CMS page retrieved at /medicare/health-safety-standards/certification-compliance/public-notices; current notices verified.",
+      "material_effect": "No gap in CMS notice verification; retained DEGRADED under strict failed-source handling instruction."
+    },
+    "reviewed_exclusions": [
+      {
+        "event": "UMass Memorial Emergency Medical Center of Groton, Massachusetts",
+        "reason": "November 13 article describes future February 2027 start, not an effective restoration in this search window.",
+        "url": "https://harvardpress.com/2026/11/new-groton-emergency-medical-center-set-to-open-in-february/"
+      },
+      {
+        "event": "Jackson Hospital, Montgomery, Alabama",
+        "reason": "November 13 state funding report about bankruptcy recovery; no newly confirmed facility or service closure/restoration.",
+        "url": "https://www.alreporter.com/2026/11/13/alabama-sends-40-million-to-jackson-hospital-after-bankruptcy-exit"
+      },
+      {
+        "event": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "Existing closure/suspension previously accounted for, no distinct new access event in window.",
+        "url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "event": "Rural maternity access, Missouri",
+        "reason": "November 13 regional feature about long drives to deliver, not a newly effective service loss.",
+        "url": "https://www.kttn.com/rural-missouri-mothers-face-long-drives-to-reach-delivery-centers/"
+      },
+      {
+        "event": "Air Evac Lifeteam, Decatur, Illinois",
+        "reason": "September 16, 2026 helicopter base closure, outside current observation window.",
+        "url": "https://avi-go.com/news/articles/21a27fd2b3cb277b48a0a2c586783fb3"
+      },
+      {
+        "event": "Reno Saint Mary's oncology closure",
+        "reason": "Already recorded as pending review November 12; not a new event this hour.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      }
+    ],
+    "limitations": [
+      "Search indexing latency may delay same-hour local reporting.",
+      "Twelve-query budget is not exhaustive for each state and territory.",
+      "Initial obsolete CMS endpoint inaccessible; recovered via canonical CMS page."
+    ],
+    "review_status": "No new findings awaiting review.",
+    "publication_action": "NONE",
+    "review_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

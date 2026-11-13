@@ -1,0 +1,68 @@
+{
+  "edition_date": "2026-10-30",
+  "events": [
+    {
+      "event_id": "gaza-20261030-al-maslakh-drone-strike",
+      "source_record_id": "gaza-2026-10-30-wafa-176452-al-maslakh-strike",
+      "event_date": "2026-10-30",
+      "new_since_oct29": "New Friday drone strike in al-Maslakh, Khan Younis; not Oct29 Maghazi vehicle strike.",
+      "corroboration_ref_ids": [
+        "sawa-448862"
+      ]
+    },
+    {
+      "event_id": "gaza-20261030-yamen-saqr-death",
+      "source_record_id": "gaza-2026-10-30-wafa-176450-yamen-saqr-death",
+      "event_date": "2026-10-30",
+      "earlier_shooting_date": "2026-10-28",
+      "new_since_oct29": "New death from Wednesday wounds, not a new Friday shooting; distinct from Oct29 Jabalia fatal drone strike.",
+      "corroboration_ref_ids": [
+        "sawa-448862"
+      ]
+    },
+    {
+      "event_id": "gaza-20261030-sheikh-radwan-apartment-strike",
+      "source_record_id": "gaza-2026-10-30-anadolu-4105670-sheikh-radwan-strike",
+      "event_date": "2026-10-30",
+      "new_since_oct29": "Early Friday apartment strike in Sheikh Radwan, Gaza City; distinct from approved Oct29 events.",
+      "corroboration_ref_ids": [
+        "safa-8261"
+      ]
+    }
+  ],
+  "corroboration_references": [
+    {
+      "id": "sawa-448862",
+      "publisher": "Sawa",
+      "title": "محدث: شهيد وإصابات بنيران وقصف إسرائيلي على خان يونس وغزة",
+      "url": "https://palsawa.com/post/448862/محدث-شهيد-وإصابات-بنيران-وقصف-إسرائيلي-على-خان-يونس-وغزة",
+      "published_at": "2026-10-30",
+      "publication_time": null,
+      "publication_timezone": null,
+      "body_observed_at": "2026-10-30T17:04:01Z",
+      "evidence": "Attributes 12 wounded arrivals to Nasser Medical Complex, mainly women and children, following drone strike on displacement tents in al-Maslakh; separately attributes Yamen Saqr death from Wednesday wounds to medical sources.",
+      "independence": "Separate publisher; independence of underlying sources not established."
+    },
+    {
+      "id": "safa-8261",
+      "publisher": "SAFA",
+      "title": "Israel Intensifies Attacks on Gaza Despite Ceasefire, Injuring Civilians and Demolishing Homes",
+      "url": "https://en.safa.news/post/8261/Israel-Intensifies-Attacks-on-Gaza-Despite-Ceasefire-Injuring-Civilians-and-Demolishing-Homes",
+      "published_at": "2026-10-30",
+      "publication_time": null,
+      "publication_timezone": null,
+      "body_observed_at": "2026-10-30T17:03:57Z",
+      "evidence": "Reports early Friday airstrike on residential apartment in Sheikh Radwan; injury count unspecified. Do not inflate or combine counts.",
+      "independence": "Separate publisher; independent evidence chain not established."
+    }
+  ],
+  "limits": [
+    "Three input records, two primary publishers. Corroboration references do not increase input count or prove independence.",
+    "Retrieval/body observation timestamps are runtime-observed completed web-tool inspections, not publisher time or independently measured HTTP response times.",
+    "Fresh open of all three primary URLs at approximately 17:07:44 UTC returned not accessible via this tool. Earlier successful body reads remain evidence; no successful later refresh claimed.",
+    "article_fetch_attempted=false means pipeline collector was not run; manual web inspection did occur.",
+    "No retained full-text snapshot or body hash. No fabricated canonical redirect; canonical_url equals inspected publisher URL.",
+    "Default-branch normalizer does not preserve event_id or all supplemental body-inspection fields. Preserve this sidecar and traceability notes; do not assume metadata survives normalization.",
+    "In-memory structural checks only by research worker: JSON round-trip, required fields, three unique IDs, exact requested summaries, date-only publication precision. No pipeline validation or publication claimed by this sidecar."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": "gaza_approved_candidate_validation_v2",
+  "edition_date": "2026-10-30",
+  "source_sha": "5a6c591831654c9e9e307711b74a268ce00d8d0d",
+  "pages_sha": "a952b7669ea16504b953fbd933cb226b4c643101",
+  "editorial_approved_at": "2026-10-30T17:10:58Z",
+  "scope": "Private draft-only CI validation of the exact approved October30 copy. Site publication remains conditional on validation and is not performed by this job.",
+  "publication_authorized_in_this_job": false,
+  "merge_authorized": false,
+  "audio_authorized": false,
+  "social_authorized": false,
+  "runner_change_authorized": false,
+  "packet_provenance": "Newly serialized packet transferred from the source-research worker's observed article bodies and exact approved sentences. Observation times describe completed web-tool inspections, not publisher clocks or HTTP measurements. No retained full-text snapshot or page-body hash. Publisher dates remain date-only; timezone unverified. A later 17:07:44 UTC reopen attempt failed; it is not represented as a successful fresh retrieval.",
+  "approved_copy": [
+    {
+      "url": "https://english.wafa.ps/Pages/Details/176452",
+      "summary": "WAFA reported at least 12 Palestinians injured in an Israeli drone strike in al-Maslakh, Khan Younis, on Friday."
+    },
+    {
+      "url": "https://english.wafa.ps/Pages/Details/176450",
+      "summary": "Eight-year-old Yamen Hisham Yahya Saqr died Friday from injuries sustained when Israeli forces shot him Wednesday in Qizan Rashwan, south of Khan Younis, WAFA reported."
+    },
+    {
+      "url": "https://h.aa.com.tr/en/middle-east/2-palestinians-wounded-as-israeli-attacks-continue-in-gaza-despite-ceasefire/4105670",
+      "summary": "Two Palestinians suffered minor injuries when an Israeli helicopter struck an apartment in Sheikh Radwan early Friday, medical and local sources told Anadolu."
+    }
+  ],
+  "publishers": [
+    "Anadolu",
+    "WAFA"
+  ],
+  "source_observed_at": {
+    "https://english.wafa.ps/Pages/Details/176452": "2026-10-30T17:03:03Z",
+    "https://english.wafa.ps/Pages/Details/176450": "2026-10-30T17:03:03Z",
+    "https://h.aa.com.tr/en/middle-east/2-palestinians-wounded-as-israeli-attacks-continue-in-gaza-despite-ceasefire/4105670": "2026-10-30T17:03:57Z"
+  },
+  "label": "Limited-source edition",
+  "title": "October 30 limited-source edition: three reports from Gaza",
+  "summary": "Three reports from two publishers, WAFA and Anadolu. Partial coverage, not a full daily briefing.",
+  "disclosure": "This October 30 limited-source edition is based on three manually reviewed reports from WAFA and Anadolu. The reports describe separate developments; multiple publishers do not establish independent corroboration of each claim. Coverage is incomplete; this is not a full daily briefing or a completion of automatic provider coverage.",
+  "edition_type": "limited_source_edition",
+  "generation_route": "approved_manual_edition",
+  "required_visible_label": "limited-source",
+  "collection_scope": "Three reports from WAFA and Anadolu only; automatic provider coverage not completed by this manual review.",
+  "source_evidence_note": "Exact approved paraphrases of article bodies inspected with the web tool; not full-text snapshots. Observation times and known access limits are retained in the separate provenance sidecar. Publisher dates remain date-only; timezone unverified.",
+  "retrieval_batch_classification": "manual_edition_review",
+  "additional_ci_authorization": {
+    "approved_time_utc": "2026-10-30 17:44 UTC (minute precision)",
+    "approval_reference": "Sentinel_162d155632c08191bca4fc2ddb8aa9b8",
+    "request_reference": "Sentinel_9cbd4dccb7708191b1cfefddacb8d676",
+    "scope": "Up to three further private validation runs for October29 and October30, including necessary test-only corrections.",
+    "maximum_further_runs": 3,
+    "combined_job_budget_seconds": 3600,
+    "accounting": "New grant tracked independently of the original completed780seconds. Conservative actual started-to-completed job durations. Before each further trigger the configured sum must fit the remaining approved budget.",
+    "first_run_configured_job_minutes": 24,
+    "publication_in_job": false,
+    "merge_authorized": false,
+    "production_runner_changes_authorized": false,
+    "security_changes_authorized": false
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T114551-0800-recall12-20261113T194726Z",
+  "scheduled_for": "2026-11-13T11:45:22-08:00",
+  "started_at": "2026-11-13T11:45:51-08:00",
+  "completed_at": "2026-11-13T11:47:26-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T10:41:54.427-08:00",
+    "end": "2026-11-13T11:47:26-08:00",
+    "prior_check_basis": "Previous verified Care Line Watch heartbeat completed 2026-11-13 10:41:54.427 PST; source ops/watch-ledger data/private-agent-handoff/watch-ledger/care-line/2026-11-13/care-line-watch-20261113T104026-0800-recall12-20261113T184126Z.json.",
+    "newness_rule": "Only new, nonduplicated concrete service loss/restoration or official provider-access restriction notices observed after previous check; do not mistake announced future termination for a completed operational closure."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-cms-termination-20261113-ca-cypress-hospice-b31731",
+      "canonical_source_url": "https://www.cms.gov/files/document/california-cypress-hospice-11-13-2026-pdf.pdf",
+      "title": "Notice to the Public of Cypress Hospice Involuntary Termination",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "CMS will terminate the Medicare provider agreement between the Secretary of Health and Human Services and Cypress Hospice.",
+      "source_published_date": "2026-11-13",
+      "state": "CA",
+      "city": null,
+      "county": null,
+      "territory": null,
+      "event_type": "cms_provider_agreement_termination_notice",
+      "service_line": "hospice",
+      "access_consequences": "Official involuntary Medicare provider agreement termination scheduled for 2026-11-28 because CMS found substantial noncompliance with participation health and safety requirements; federal Medicaid financial participation unavailable for new admissions on or after that date, with possible limited transition coverage for existing residents. Actual care discontinuation, patient count, and relocation status not independently established.",
+      "affected_population": "Patients receiving or seeking Medicare/Medicaid-covered hospice services from Cypress Hospice; number unknown.",
+      "effective_date": "2026-11-28",
+      "announcement_date": "2026-11-13",
+      "confidence": "high",
+      "source_role": "official_federal_primary",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "provider_ccn": "B31731",
+      "supporting_page_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/cypress-hospice"
+    },
+    {
+      "finding_id": "care-line-cms-termination-20261113-ca-azure-home-health-757304",
+      "canonical_source_url": "https://www.cms.gov/files/document/california-azure-home-health-inc-11-13-2026-pdf.pdf",
+      "title": "Notice to the Public of AZURE HOME HEALTH, INC Involuntary Termination",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "CMS will terminate the Medicare provider agreement between the Secretary of Health and Human Services and AZURE HOME HEALTH, INC.",
+      "source_published_date": "2026-11-13",
+      "state": "CA",
+      "city": null,
+      "county": null,
+      "territory": null,
+      "event_type": "cms_provider_agreement_termination_notice",
+      "service_line": "home_health",
+      "access_consequences": "Official involuntary Medicare provider agreement termination scheduled for 2026-11-28 because CMS found substantial noncompliance with participation health and safety requirements; federal Medicaid financial participation unavailable for new admissions on or after that date, with possible limited transition coverage for existing residents. Actual care discontinuation, patient count, and relocation status not independently established.",
+      "affected_population": "Patients receiving or seeking Medicare/Medicaid-covered home health services from Azure Home Health, Inc.; number unknown.",
+      "effective_date": "2026-11-28",
+      "announcement_date": "2026-11-13",
+      "confidence": "high",
+      "source_role": "official_federal_primary",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "provider_ccn": "757304",
+      "supporting_page_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices/azure-home-health"
+    }
+  ],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary Care Line recall only; production national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "newly_observed_notice_count": 2,
+      "new_notice_names": [
+        "Cypress Hospice (CA, B31731)",
+        "AZURE HOME HEALTH (CA, 757304)"
+      ],
+      "access_status": "Successfully retrieved canonical CMS Public Notices and both individual official notice PDFs; examined each first-page PDF screenshot.",
+      "previous_latest_notice_date": "2026-11-10",
+      "effective_date_note": "Both notices announce November 28, 2026 Medicare agreement terminations; they do not prove facilities have already closed."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 13 2026 hospital emergency department temporarily closed ambulance diversion local news Friday US",
+      "November 13 2026 labor delivery maternity unit closed suspended services hospital",
+      "November 13 2026 ambulance EMS service air medical helicopter base suspension shutdown",
+      "November 13 2026 dialysis center clinic closed patients transfer",
+      "November 13 2026 behavioral health hospital psychiatric inpatient closed unit suspended admissions United States",
+      "November 13 2026 oncology chemotherapy infusion cancer center closure services suspended United States",
+      "November 13 2026 primary care clinic abruptly closed patients no appointment United States",
+      "November 13 2026 rural hospital emergency room reopened restored services United States",
+      "November 13 2026 Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana hospital clinic emergency services closed",
+      "November 13 2026 CMS Medicare provider termination CLIA certificate revoked California hospice home health",
+      "November 13 2026 U.S. hospital health system announces immediate inpatient unit suspended admissions closure",
+      "November 13 2026 air ambulance EMS station shut down rural county ambulance service temporarily unavailable"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East Waukegan inpatient fifth-floor closure",
+        "reason": "Previously recorded medium-confidence finding on 2026-11-13; duplicate, no newly verified change."
+      },
+      {
+        "title": "CMS nationwide enrollment moratoria extension for new hospices and home health agencies",
+        "source_url": "https://www.cms.gov/newsroom/press-releases/cms-extends-modifies-nationwide-freeze-new-medicare-hospice-home-health-enrollment-six-months-combat",
+        "reason": "Policy announced 2026-11-12, predating current hourly observation; explicitly leaves existing Medicare enrollments and service continuation intact; not a new provider-specific termination."
+      },
+      {
+        "title": "Guam tropical-storm-related clinic suspensions",
+        "source_url": "https://ghs.guam.gov/node/4352",
+        "reason": "Older 2026-10-16 temporary service interruption; not new."
+      },
+      {
+        "title": "Texas Planned Parenthood Medicaid litigation",
+        "source_url": "https://blavity.com/health/planned-parenthood-medicaid-lawsuit",
+        "reason": "Potential financial risk and threatened closures, not confirmed service effect."
+      },
+      {
+        "title": "Other historic maternity unit closures and proposed rural hospital reopening funding",
+        "reason": "Before observation window or future proposals without concrete effective new service change."
+      }
+    ],
+    "limitations": [
+      "Only 12 additional targeted web searches; not exhaustive geographic or all-provider coverage, particularly small local outlets and U.S. territories.",
+      "Same-hour source publication and web-indexing lag; formal CMS listing can update between hourly checks.",
+      "Provider location narrower than California not supplied in primary CMS notices; city/county retained as JSON null.",
+      "Official notices establish future Medicare agreement termination, not same-day patient service closure or provider cessation."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

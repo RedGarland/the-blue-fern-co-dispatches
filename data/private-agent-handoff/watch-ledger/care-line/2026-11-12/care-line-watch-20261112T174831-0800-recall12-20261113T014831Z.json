@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T174831-0800-recall12-20261113T014831Z",
+  "scheduled_for": "2026-11-12T17:45:22-08:00",
+  "started_at": "2026-11-12T17:48:31-08:00",
+  "completed_at": "2026-11-12T17:52:26-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T16:48:03.280-08:00",
+    "end": "2026-11-12T17:52:26-08:00",
+    "prior_check_basis": "Previous persisted Care Line Watch heartbeat read from ops/watch-ledger at 16:48:03.280 PST.",
+    "event_time_basis": "Newly surfaced/first-detected qualifying access developments during this watch; distinguish first reporting or indexing from earlier underlying effective dates. Supplementary recall only."
+  },
+  "findings": [
+    {
+      "finding_id": "care-line-us-nv-reno-saint-marys-oncology-unit-20261026",
+      "canonical_source_url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit",
+      "title": "Reno nurses to protest the abrupt closure of oncology unit",
+      "publisher": "National Nurses Organizing Committee / National Nurses United",
+      "exact_supporting_passage": "oncology charge nurses have been called off since October 26, and cancer patients are now on the medical-surgical floor.",
+      "source_published_date": "2026-11-12",
+      "state": "Nevada",
+      "city": "Reno",
+      "county": "Washoe",
+      "territory": null,
+      "event_type": "inpatient_oncology_unit_closure_reported",
+      "service_line": "inpatient oncology",
+      "access_consequences": "Union representing bedside nurses reports that Saint Mary's Regional Medical Center stopped staffing its dedicated oncology unit and moved patients to a medical-surgical floor. This is a loss of a specialized inpatient unit, not proof of hospital-wide oncology treatment cessation. Hospital management has not publicly confirmed the closure in the source.",
+      "affected_population": "Cancer inpatients at Saint Mary's Regional Medical Center; number affected not provided.",
+      "effective_date": "2026-10-26",
+      "announcement_date": "2026-11-12",
+      "confidence": "medium",
+      "source_role": "First-party report from nursing union representing hospital staff; facility confirmation not located in bounded check.",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall, not primary national collection; production collection is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "direct_access": "SUCCESS",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, IL; limitation of CLIA certification; 14D2049789.",
+      "result": "No CMS public notice dated Nov 11 or Nov 12 on directly retrieved official listing."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 12, 2026\" hospital emergency department closure diversion ambulance",
+      "\"November 12, 2026\" hospital maternity labor delivery obstetrics closure suspension",
+      "\"November 12, 2026\" rural hospital emergency services shut down suspended",
+      "\"November 12, 2026\" psychiatric behavioral health hospital mental health unit close services",
+      "\"November 12, 2026\" dialysis center closure suspend treatments patients",
+      "\"November 12, 2026\" oncology cancer infusion center closure stopped services",
+      "\"November 12, 2026\" ambulance service EMS closed operations service suspended",
+      "\"November 12, 2026\" air ambulance medevac base closing suspended",
+      "\"November 12, 2026\" primary care clinic health center permanently closing appointments",
+      "\"November 12, 2026\" hospital emergency department reopened resumed operations restored maternity services",
+      "site:gov \"Nov 12, 2026\" hospital clinic emergency services closure suspension notice",
+      "\"November 12, 2026\" Guam Puerto Rico Virgin Islands Mariana Samoa hospital ambulance clinic closed service"
+    ],
+    "positive_finding_notes": [
+      "Newly surfaced report not named in the preceding 16:48 PST heartbeat, concerning an oncology unit service loss effective Oct 26; this is a late-discovered substantive access change, not a closure that began this hour.",
+      "Union release dated Nov 12 and mirrored Nov 12 at approximately 16:57 PST in one distribution index, after the prior heartbeat. Source itself carries a date but no hour; original announcement time is uncertain.",
+      "Dedicated oncology unit closure attributed to NNOC/NNU nurses; hospital management confirmation unavailable. Kept pending review."
+    ],
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center, Pennsylvania",
+        "reason": "Emergency department loss May 17, 2026; Nov 12 reporting revisited historical closure."
+      },
+      {
+        "event": "Kalamazoo Behavioral Health Hospital, Michigan",
+        "reason": "Already listed in CMS on Oct 30; previous Care Line watches recorded it."
+      },
+      {
+        "event": "Prevea Washington Street Health Center, Green Bay, Wisconsin",
+        "reason": "Already found and confirmed in earlier watches; last patient-care day Nov 13."
+      },
+      {
+        "event": "Holyoke and Chicopee Health Centers, Massachusetts",
+        "reason": "Reopening of temporary closure was already announced Wednesday Nov 11 and reported early Nov 12, preceding observation window; no new change verified after 16:48."
+      },
+      {
+        "event": "USA Health Mitchell Cancer Institute, Mobile, Alabama",
+        "reason": "Temporary fire-alarm evacuation during morning Nov 12; news excerpt says normal operations restored, before observation window."
+      },
+      {
+        "event": "Stanford Medicine Sutter Health Oakland cancer center",
+        "reason": "New expansion scheduled to treat patients Dec 1, not restoration of lost essential service."
+      },
+      {
+        "event": "CMS nationwide hospice/home-health enrollment moratorium extension",
+        "reason": "Policy extension expressly excludes existing provider enrollments and does not demonstrate concrete existing service loss."
+      },
+      {
+        "event": "Sharon Regional Medical Center, Pennsylvania",
+        "reason": "Previously reported closure; no new current-window loss."
+      },
+      {
+        "event": "WMCHealth Reuner Cancer Support House, New York",
+        "reason": "Planned renovations and retention of existing oncology support program, not demonstrated reopening of lost service."
+      }
+    ],
+    "retrieval_failure_count": 1,
+    "source_access_notes": [
+      "CMS official page retrieved directly first.",
+      "All twelve targeted searches returned results.",
+      "A direct open of one AOL-syndicated story regarding the morning Mobile oncology-center evacuation returned DisabledError; snippet sufficient to exclude a transient, already-resolved event. Primary candidate union announcement was retrieved directly."
+    ],
+    "limitations": [
+      "One ancillary news page retrieval failed, so DEGRADED rather than SUCCESS.",
+      "Reno specialized-unit loss is sourced to a frontline nursing-union announcement, not independently verified by facility management.",
+      "Search indices lag; this bounded watch is not exhaustive for U.S. states and territories.",
+      "Finding was first surfaced in this hourly recall even though its effective date is October 26."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

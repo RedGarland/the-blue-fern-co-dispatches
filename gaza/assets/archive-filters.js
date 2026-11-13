@@ -7,6 +7,7 @@
   const filters = Array.from(archive.querySelectorAll("[data-filter]"));
   const monthSelect = archive.querySelector("#archive-month");
   const result = archive.querySelector("#archive-result");
+  if (!monthSelect || !result) return;
   const counts = records.reduce((map, record) => {
     const kind = record.dataset.recordType || "briefing";
     map[kind] = (map[kind] || 0) + 1;
@@ -24,14 +25,12 @@
     monthSelect.appendChild(option);
   });
 
-  const labelFor = (kind) => {
-    const labels = { briefing: "Briefings", correction: "Corrections", monitoring: "Monitoring", all: "All records" };
-    return `${labels[kind]} ${kind === "all" ? records.length : (counts[kind] || 0)}`;
-  };
+  const labels = { briefing: "Briefings", correction: "Corrections", monitoring: "Monitoring", all: "All records" };
   filters.forEach((button) => {
-    button.textContent = labelFor(button.dataset.filter);
+    const kind = button.dataset.filter || "briefing";
+    button.textContent = `${labels[kind]} ${kind === "all" ? records.length : (counts[kind] || 0)}`;
     button.addEventListener("click", () => {
-      activeType = button.dataset.filter;
+      activeType = kind;
       filters.forEach((candidate) => {
         const selected = candidate === button;
         candidate.classList.toggle("is-active", selected);
@@ -61,4 +60,3 @@
   }
   apply();
 })();
-

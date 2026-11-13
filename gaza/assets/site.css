@@ -1219,8 +1219,7 @@ h3 {
   }
 }
 
-
-/* Gaza layout concept: compact identity, record-first reading, and archive filters. */
+/* Gaza record-first layout: presentation only; generated records remain authoritative. */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -1264,7 +1263,6 @@ h3 {
   .archive-filter-group { margin-bottom: 1rem; }
   .archive-context p + p { margin-top: 1rem; }
 }
-
 
 /* Keep the Gaza archive's records in view; do not reuse landing-page hero spacing. */
 .archive--gaza { padding: 1rem 0 2rem; }

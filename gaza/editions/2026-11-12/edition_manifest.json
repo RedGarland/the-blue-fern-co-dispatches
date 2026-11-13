@@ -1,0 +1,72 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-12",
+  "generated_at": "2026-11-12T19:03:11.914255+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-12/",
+  "local_output_path": "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12",
+  "local_dispatch_output_path": "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/dispatches/gaza/editions/2026-11-12",
+  "local_backup_path": "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/tmp-backups-pages/gaza/2026-11-12",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 2,
+  "story_count": 2,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 2,
+  "publishers": [
+    "OCHA",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12/sources_manifest.json",
+  "curation_manifest_path": "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12/curation_manifest.json",
+  "free_public_artifacts": [
+    "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12/index.html",
+    "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12/edition_manifest.json",
+    "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12/sources_manifest.json",
+    "/workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/output/site/gaza/editions/2026-11-12/curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at /workspace/scratch/97d4999c7d89/gaza-nov12-guarded-source/data/dispatches/gaza/sources/2026-11-12/manual_sources.template.json"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-11-12T06:00:00-08:00",
+  "actual_run_local_time": "2026-11-12T11:03:11-08:00",
+  "source_window_start_utc": "2026-11-12T11:24:00Z",
+  "source_window_end_utc": "2026-11-12T11:24:00Z",
+  "first_source_retrieved_at": "2026-11-12T18:56:56.172901Z",
+  "last_source_retrieved_at": "2026-11-12T18:56:56.172901Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-12T18:56:56.172901Z",
+      "retrieved_at_local": "2026-11-12T10:56:56-08:00",
+      "retrieved_local_date": "2026-11-12",
+      "batch_classification": "after_scheduled_initial_batch",
+      "source_record_ids": [
+        "gaza-manual-2026-11-12-guardian-nasser",
+        "gaza-manual-2026-11-12-ocha-winter"
+      ],
+      "source_count": 2
+    }
+  ]
+}

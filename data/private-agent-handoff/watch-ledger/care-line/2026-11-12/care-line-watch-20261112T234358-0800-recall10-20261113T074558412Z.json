@@ -1,0 +1,82 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261112T234358-0800-recall10-20261113T074558412Z",
+  "scheduled_for": "2026-11-12T23:45:22-08:00",
+  "started_at": "2026-11-12T23:43:58-08:00",
+  "completed_at": "2026-11-12T23:45:58-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-12",
+    "start": "2026-11-12T22:43:31-08:00",
+    "end": "2026-11-12T23:45:58-08:00",
+    "prior_check_basis": "Independently read previous durable Care Line Watch heartbeat (22:43:31 PST completion) and its exclusions; cover changes newly established since that check.",
+    "event_time_basis": "An announcement or concrete access change must be newly substantiated in the observation window; same-date publication without confirmed time is insufficient."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; production national collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "direct_access": "SUCCESS",
+      "url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-10",
+      "latest_notice": "Advanced Urgent Care, Illinois, limitation of CLIA certificate, 14D2049789",
+      "result": "No new notice since prior check; official current page read directly."
+    },
+    "additional_targeted_search_count": 10,
+    "targeted_searches": [
+      "hospital emergency department closed temporarily November 12 2026 November 13 United States",
+      "maternity labor delivery unit suspended closed November 12 2026 hospital",
+      "rural hospital emergency services closure November 12 2026 access patients",
+      "ambulance EMS station base suspended service November 12 2026",
+      "dialysis center oncology clinic closure patient services November 12 2026",
+      "\"November 12, 2026\" \"clinic\" \"closing\" patients",
+      "\"November 12, 2026\" \"emergency department\" \"closed\" hospital",
+      "\"November 12, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closed\"",
+      "\"November 12, 2026\" behavioral health hospital closure psychiatric unit patients",
+      "\"November 12, 2026\" reopened \"emergency\" \"hospital\" services Puerto Rico Guam US Virgin Islands"
+    ],
+    "search_execution": "CMS Public Notices checked first (CMS discovery searches then direct page inspection); 10 additional recency-targeted web queries across hospital, emergency, maternity, behavioral, dialysis, oncology, primary care, EMS, and reopening/restoration. No search or source retrieval failures.",
+    "reviewed_exclusions": [
+      {
+        "event": "Bradford Regional Medical Center emergency/inpatient closure, Pennsylvania",
+        "reason": "November 12 Pennsylvania Capital-Star article describes May 17 closure and previous service losses; already covered, no new window-specific access change.",
+        "url": "https://penncapital-star.com/health-care/in-bradford-a-community-reels-after-hospital-closes/"
+      },
+      {
+        "event": "Rural Oklahoma hospitals at risk",
+        "reason": "November 12 Oklahoma Voice report is a risk forecast, not an actual closure or service suspension.",
+        "url": "https://oklahomavoice.com/2026/11/12/rural-oklahoma-hospitals-at-risk-of-closure-from-medicaid-cuts-lack-of-revenue/"
+      },
+      {
+        "event": "WVU Cancer Institute/Summersville Regional Medical Center oncology expansion, West Virginia",
+        "reason": "November 10 facility opening described in November 11 press release; new expansion not restoration of a previously lost essential service, and predates observation window.",
+        "url": "https://www.mybuckhannon.com/wvu-cancer-institute-opens-new-facility-at-summersville-regional-medical-center/"
+      },
+      {
+        "event": "Saint Mary's Regional Medical Center dedicated oncology unit, Reno, Nevada",
+        "reason": "November 12 nursing-union allegation already logged as pending review in an earlier Care Line Watch; no distinct new event in window.",
+        "url": "https://www.nationalnursesunited.org/press/reno-nurses-to-protest-the-abrupt-closure-of-oncology-unit"
+      },
+      {
+        "event": "Roseland Community Hospital maternity unit, Chicago, Illinois",
+        "reason": "October 28 article covers prior planned closure; no new concrete November 12 22:43-23:45 effect established.",
+        "url": "https://abc7chicago.com/post/roseland-community-hospital-close-rally-held-wednesday-effort-keep-maternity-unit-open/19989219/"
+      }
+    ],
+    "retrieval_failure_count": 0,
+    "limitations": [
+      "Late-Pacific-evening search indexing may lag announcements.",
+      "Ten selective queries do not constitute exhaustive surveillance across all states and territories.",
+      "Some retrieved November 12 articles lack publication times; no ungrounded inference of newness since prior hourly check."
+    ],
+    "approval_action": false,
+    "publication_action": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T194522-0800-recall12-20261114T034627Z",
+  "scheduled_for": "2026-11-13T19:45:22-08:00",
+  "started_at": "2026-11-13T19:43:55-08:00",
+  "completed_at": "2026-11-13T19:46:27.360-08:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T18:48:47.549-08:00",
+    "end": "2026-11-13T19:46:27.360-08:00",
+    "prior_check_basis": "Previous independently verified care-line watch heartbeat care-line-watch-20261113T184522-0800-recall12-r11, completed 2026-11-13T18:48:47.549-08:00.",
+    "newness_rule": "Newly documented or newly discovered unrecorded concrete U.S./territory care-access changes, including retrospective recall; the event itself may predate this observation window when missed earlier. Primary production collection remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "wi-green-bay-prevea-washington-street-2026-11-13-permanent-clinic-closure",
+      "canonical_source_url": "https://www.prevea.com/find-a-location/prevea-washington-street-health-center",
+      "title": "Prevea Washington Street Health Center — permanent closure after November 13 final patient-care day",
+      "publisher": "Prevea Health",
+      "exact_supporting_passage": "The Prevea Washington Street Health Center will be closing permanently. The last day for patient care will be November 13, 2026.",
+      "source_published_date": null,
+      "state": "WI",
+      "city": "Green Bay",
+      "county": null,
+      "territory": null,
+      "event_type": "permanent_clinic_closure",
+      "service_line": "primary_care_urgent_care_family_medicine_lab_radiology",
+      "access_consequences": "Provider confirms permanent closure of the 102 N. Washington St. health center after the November 13, 2026 last patient-care day. On-site family medicine, primary care, urgent care, lab/pathology, and radiology access at this location ends. No system-wide service cessation is established; patient reassignment and alternate clinic availability are unverified.",
+      "affected_population": "Existing and prospective patients using primary care, family medicine, urgent care, laboratory/pathology and radiology services at the Washington Street location; patient count unknown.",
+      "effective_date": "2026-11-13",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "official_provider_notice",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch, not national production collection, approval or publication.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice CA CCN B31731",
+        "AZURE HOME HEALTH CA CCN 757304",
+        "Titus Healthcare LLC OH CCN 369002",
+        "Compass Healthcare LLC OH CCN 369259"
+      ],
+      "retrieval_status": "Canonical CMS page opened successfully; current page table shows four previously recorded November 13 notices and no newer notice. An initial search snippet was stale, so the canonical page was explicitly opened and checked."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 13, 2026\" hospital emergency department closed suspended patients U.S.",
+      "\"November 13, 2026\" hospital maternity labor delivery unit closes service",
+      "\"November 13, 2026\" rural hospital closure emergency room service suspended",
+      "\"November 13, 2026\" mental health behavioral health facility closure patients",
+      "\"November 13, 2026\" dialysis center closes OR suspends service patients",
+      "\"November 13, 2026\" oncology cancer clinic closes OR treatment stopped",
+      "\"November 13, 2026\" urgent care primary care clinic closes permanently OR suspends services",
+      "\"November 13, 2026\" ambulance service shuts down OR suspends operations OR air medical base closes",
+      "\"November 13, 2026\" \"reopened\" \"emergency department\" hospital",
+      "\"November 13, 2026\" \"ambulance\" \"service\" \"suspended\" \"county\"",
+      "\"November 13, 2026\" hospital \"permanently close\" \"patients\" local news",
+      "\"13 de noviembre de 2026\" \"hospital\" \"cierra\" \"emergencias\" Puerto Rico;Guam American Samoa hospital clinic service closed November 13 2026"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 1,
+      "retrospective_recall": true,
+      "recall_explanation": "The permanent Green Bay clinic closure is newly identified by this watch, but the final care day was November 13 and the timing of the original announcement is not stated. It was not present in any of the earlier November 13 Care Line Watch heartbeat findings (18 earlier entries were inspected).",
+      "known_prior_exclusions": [
+        "Waukegan IL Vista Medical Center East inpatient floor closure (prior finding)",
+        "Atlanta GA Talbott Recovery cessation effective November 2 (prior finding)",
+        "Four CMS November 13 provider termination notices (prior findings)",
+        "Intermountain fixed-wing FAA interruption (prior finding)"
+      ],
+      "other_exclusions": [
+        "Newly reported historical rural maternity access deficits without a new loss",
+        "Jamaica emergency department reopening outside U.S. jurisdiction",
+        "Peterborough Ontario contingent paramedic strike notice outside U.S. jurisdiction and no actual service loss",
+        "Plans for service expansion not yet operating",
+        "Ownership and financial coverage without substantiated clinical change"
+      ]
+    },
+    "retrieval_issues": [],
+    "limitations": [
+      "Targeted 12-search recall sampling does not constitute exhaustive 50-state or territory coverage.",
+      "Publication date of the provider's official location closure notice is not disclosed, so timing of first announcement is unknown; the verified final patient-care date is 2026-11-13.",
+      "The source does not independently confirm final hour of patient service, destination of displaced patients, or availability of substitutes.",
+      "Fresh same-evening sources can lag search indexing."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

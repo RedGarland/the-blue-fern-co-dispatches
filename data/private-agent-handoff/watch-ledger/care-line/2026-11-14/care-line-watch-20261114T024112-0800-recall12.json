@@ -1,0 +1,71 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T024112-0800-recall12",
+  "scheduled_for": "2026-11-14T02:45:22-08:00",
+  "started_at": "2026-11-14T02:41:12-08:00",
+  "completed_at": "2026-11-14T10:43:39.071Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T01:47:24-08:00",
+    "end": "2026-11-14T10:43:39.071Z",
+    "prior_check_basis": "Prior verified ops/watch-ledger heartbeat care-line-watch-20261114T014522-0800-recall12 completed 2026-11-14T01:47:24-08:00.",
+    "newness_rule": "Newly reported or retrospectively newly discovered concrete U.S. or territory healthcare-access changes, excluding prior watch findings; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary Care Line recall, not primary national collector or publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"hospital\" \"emergency department\" closed suspended November 13 2026 OR November 14 2026",
+      "\"maternity\" \"labor and delivery\" closing suspended November 2026 hospital",
+      "\"behavioral health\" \"mental health\" \"addiction\" clinic closing November 13 2026",
+      "\"dialysis\" \"oncology\" clinic closed suspended November 2026",
+      "\"rural hospital\" \"emergency services\" suspended closure Nov 13 2026",
+      "\"air ambulance\" \"ambulance service\" shutdown base closed November 13 2026",
+      "\"November 13, 2026\" \"clinic\" \"closing\" \"patients\" healthcare United States",
+      "\"November 14, 2026\" hospital emergency department \"closed\" OR \"reopened\"",
+      "\"November 13, 2026\" ambulance \"service\" suspended OR closed OR restored",
+      "\"Nov. 13, 2026\" dialysis center OR cancer center OR primary care \"closing\" OR \"shut down\"",
+      "\"Nov. 13, 2026\" hospital \"reopened\" OR \"resumed\" emergency services",
+      "Puerto Rico Guam US Virgin Islands November 13 2026 hospital clinic closure suspension healthcare"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "CMS November 13 terminations (four) already captured in earlier watch heartbeats.",
+        "Talbott Recovery (Atlanta, GA) Nov 2 cessation identified by Nov 13 publication and previously recorded.",
+        "Prevea Washington Street Health Center (Green Bay, WI) Nov 13 last patient-care day previously recorded.",
+        "Intermountain Utah fixed-wing medical transport Nov 13 FAA interruption previously recorded; provider-specific restoration remains unverified."
+      ],
+      "exclusions": [
+        "Roseland Community Hospital labor-and-delivery closure already took effect Nov 1 and was reported Nov 2; not new to this run.",
+        "CMS Nov 12 enrollment moratorium extension affects new provider applications but is not a newly verified individual service loss within this observation window.",
+        "Stale international, older U.S. closure stories, speculative proposals, organizational/financial news without access change, and unrelated results excluded."
+      ]
+    },
+    "limitations": [
+      "Search engine retrieval was broad and often returned older, international or irrelevant results; twelve-targeted-query cap limits geographic comprehensiveness.",
+      "Very recent local closures may not yet be indexed; absence of findings is not evidence that no changes occurred nationally.",
+      "Prior completed heartbeat found and used for deduplication; production collection remains authoritative."
+    ],
+    "actions": "No approvals, publication, production data edits, schedule changes, or automation disabling."
+  }
+}

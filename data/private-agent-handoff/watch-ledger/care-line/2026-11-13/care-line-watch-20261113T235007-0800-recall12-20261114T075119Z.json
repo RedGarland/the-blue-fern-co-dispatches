@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T235007-0800-recall12-20261114T075119Z",
+  "scheduled_for": "2026-11-13T23:45:22-08:00",
+  "started_at": "2026-11-13T23:50:07-08:00",
+  "completed_at": "2026-11-13T23:51:19-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T22:51:38-08:00",
+    "end": "2026-11-13T23:51:19-08:00",
+    "prior_check_basis": "Prior verified Care Line Watch heartbeat care-line-watch-20261113T225022-0800-recall12-20261114T065138Z completed 2026-11-13T22:51:38-08:00.",
+    "newness_rule": "Only newly reported or newly discovered concrete US/territory access changes not already captured in prior watch heartbeats. Production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS: official listing retrieved; most recent notices dated November 13, 2026, same four entries as previous watch.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice, California, CCN B31731",
+        "AZURE HOME HEALTH, California, CCN 757304",
+        "Titus Healthcare LLC, Ohio, CCN 369002",
+        "Compass Healthcare LLC, Ohio, CCN 369259"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended service November 13 2026 rural USA",
+      "maternity labor delivery unit closure November 13 2026 hospital",
+      "health clinic urgent care primary care closed November 13 2026 patients",
+      "behavioral health addiction hospital facility closed November 13 2026 services",
+      "dialysis clinic cancer oncology service closure November 13 2026",
+      "air ambulance EMS ambulance station shut down service November 13 2026",
+      "hospital closed permanently November 13 2026 state order Sharon Regional emergency service",
+      "healthcare services reopening restored emergency maternity clinic November 13 2026",
+      "site:gov November 13 2026 hospital emergency department closure suspension notice",
+      "site:gov November 13 2026 ambulance service shutdown termination",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana healthcare clinic hospital closure November 2026",
+      "rural hospital ceased emergency services November 13 2026 local news"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "CMS four November 13 hospice/home-health Medicare termination notices already recorded.",
+        "Talbott Recovery Atlanta, Georgia outpatient behavioral-health/addiction cessation effective November 2 already recorded.",
+        "Intermountain Utah fixed-wing medical transport interruption during FAA ground stop already recorded; no independently corroborated service-specific restoration.",
+        "Prevea Washington Street Health Center, Green Bay, Wisconsin primary/urgent-care closure effective November 13 previously recorded.",
+        "Bradford Regional Medical Center Pennsylvania ER closure effective May 17 and consequent longer ambulance transfers predates this window; previously documented.",
+        "Sharon Regional Pennsylvania closure situation/other Pennsylvania care losses already reflected in prior watch coverage."
+      ],
+      "other_exclusions": [
+        "Rural Arizona/Missouri maternity-care stories discuss longstanding gaps, not newly effective service loss.",
+        "Washington rural hospital radiology service expansion is not reopening of a previously lost essential service.",
+        "The FAA lifting its general ground stop alone does not demonstrate a specific air-medical provider resumed operations.",
+        "Policy proposals, accreditation stories, general availability reporting and administrative/ownership news without concrete new access effect excluded."
+      ]
+    },
+    "degraded_reason": "Direct retrieval of Behavioral Health Business's November 13 Talbott Recovery report returned HTTP 403 Forbidden. Search result metadata/article text was discoverable and the service loss was already recorded, so the retrieval failure does not imply a newly missed event. CMS and other search coverage succeeded.",
+    "failed_source_url": "https://bhbusiness.com/2026/11/13/uhs-shutters-third-facility-of-2026/",
+    "limitations": [
+      "Bounded 12-query search and indexing latency cannot establish comprehensive coverage.",
+      "Talbott article access was blocked (403); information is duplicate and not asserted as a new finding.",
+      "No new uniquely qualifying closure, suspension, termination, rescission, CLIA action or verified essential-service restoration observed."
+    ],
+    "actions": "No review approvals, publication, schedule modifications, automation disabling, or production-collector changes."
+  }
+}

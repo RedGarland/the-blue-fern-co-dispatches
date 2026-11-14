@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T204812-0800-r11-20261114T044812Z",
+  "scheduled_for": "2026-11-13T20:45:54-08:00",
+  "started_at": "2026-11-13T20:48:12-08:00",
+  "completed_at": "2026-11-13T20:49:44.178-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T18:48:42.944-08:00",
+    "end_at": "2026-11-13T20:49:44.178-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "Last directly verified Food Line Source Watch heartbeat from 18:48:42.944 PST; a possible intermediate 19:xx completion was not independently resolved in this run. Conservative overlap guards against gaps; only events newly reported/effective in the current observation interval qualify. Searches used 3-day lookback for indexing lag. Supplementary, not production authoritative.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T184658-0800-r11-20261114T024842944Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded high-value miss-class recall; production nationwide collection authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire, disaster",
+      "Disaster/outage-driven canceled emergency food distribution",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "Official SNAP/WIC/food-assistance interruption with immediate consequence"
+    ],
+    "targeted_searches": 12,
+    "search_recency_days": 3,
+    "search_queries": [
+      "November 13 2026 \"only grocery store\" closed fire town",
+      "November 13 2026 \"last grocery store\" closing community",
+      "November 2026 \"sole full-service grocery\" fire outage shut",
+      "November 13 2026 town \"only supermarket\" closure fire",
+      "November 13 2026 \"food distribution\" canceled storm flooding power",
+      "November 13 2026 \"mobile food pantry\" cancelled weather",
+      "November 13 2026 \"food bank\" suspended distribution outage",
+      "November 13 2026 \"food pantry\" closed suddenly fire damaged",
+      "November 13 2026 pantry temporarily closed due to flooding storm",
+      "November 13 2026 SNAP EBT card outage official benefits interrupted",
+      "November 13 2026 WIC benefits suspended outage state notice",
+      "November 13 2026 food assistance emergency benefits interrupted territory state"
+    ],
+    "search_errors_observed": 0,
+    "search_limitations": "Search returned predominantly historical closures, 2025 SNAP shutdown stories, routine food-distribution calendars and unrelated closures; no verifiable new qualifying signal. This is non-exhaustive, and local postings may index late.",
+    "direct_source_checks": {
+      "distinct_urls": 13,
+      "accessible": 9,
+      "inaccessible": 4,
+      "accessible_urls": [
+        "https://dhs.vi.gov/news/",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.forgottenharvest.org/find-food/",
+        "https://status.joinforage.app/"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Repeated territorial primary-page limitation; search alternatives available."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Unavailable to web retrieval",
+          "impact": "Repeated USDA federal-source access restriction."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Repeated USDA directory access restriction."
+        },
+        {
+          "url": "https://www.maine.gov/dhhs/ofi/programs-services/food-supplement",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Additional optional Maine source unreachable; not a materially new overall coverage loss."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "A December 3 Marquette County mobile pantry cancellation lacks a specified weather/disaster/facility cause and a publication timestamp establishing novelty; already identified in prior check."
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "reason": "Home-delivery application closure is undated; page updated 2026-11-13 11:30 EDT, well before current window; no verified abrupt new access loss."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "All systems operational; Connecticut EBT processor transition planned for November 15 and announced August 20, not a newly effective current-hour service interruption."
+      },
+      {
+        "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "reason": "Two DHS offices temporarily remote for pest management, but appointments transferred and customer service options retained; notice undated, no proof it arose in window or affected SNAP benefits."
+      },
+      {
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC notice states service continues."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Housing/utilities verification starts November 21; not newly effective and no current benefit outage."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "Latest listed SNAP item November 9 describes replacement benefits for prior October power outage; no new benefits interruption."
+      }
+    ],
+    "material_new_degradation": false,
+    "interpretation": "DEGRADED due to 4/13 direct-source access failures (3 recurring, one optional new Maine 403), while 12 targeted searches and 9 direct-source checks remained useful. No new material coverage failure, qualifying event, or notification threshold.",
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

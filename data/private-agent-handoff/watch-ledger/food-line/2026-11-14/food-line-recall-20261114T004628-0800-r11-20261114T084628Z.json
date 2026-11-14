@@ -1,0 +1,150 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261114T004628-0800-r11-20261114T084628Z",
+  "scheduled_for": "2026-11-14T00:45:54-08:00",
+  "started_at": "2026-11-14T00:46:28-08:00",
+  "completed_at": "2026-11-14T00:48:14.299-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T23:47:28.857-08:00",
+    "end_at": "2026-11-14T00:48:14.299-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "basis": "Begin at verified prior heartbeat completion. Queries include November 13/14 to offset indexing lag; evaluate only newly published or newly effective events since prior completion. The bounded recall cannot rule out unindexed local events.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T234542-0800-r11-20261114T0746Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Food Line miss-class recall; production nationwide collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last/full-service community grocery loss, closure, fire or disaster",
+      "Disaster/outage/facility-damage cancellation of emergency food distributions",
+      "Abrupt food-bank/pantry service closure or major access reduction",
+      "New official SNAP/WIC/other food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" closed fire November 13 2026 November 14 rural",
+      "\"last grocery store\" shuts down fire November 2026",
+      "\"food distribution\" canceled storm November 13 2026 food bank",
+      "\"food pantry\" closed unexpectedly November 13 2026",
+      "November 13 2026 \"food bank\" \"cancelled\" distribution storm flood",
+      "November 13 2026 \"mobile pantry\" \"canceled\" weather",
+      "November 13 2026 \"food pantry\" \"suspended\" operations emergency",
+      "November 13 2026 \"food bank\" closure emergency facility damage",
+      "site:gov \"November 13, 2026\" SNAP EBT unavailable outage benefits delayed state",
+      "\"November 14, 2026\" \"WIC\" outage benefits suspended office emergency",
+      "\"November 13, 2026\" \"SNAP\" \"interruption\" benefits official",
+      "\"November 13, 2026\" grocery store fire \"only\" town community"
+    ],
+    "search_errors_observed": 0,
+    "search_limitations": "Targeted search returned largely pre-window incidents, nonqualifying business/holiday closures, routine assistance announcements, and historical 2025 SNAP funding issues. No post-window qualifying event could be directly established; national completeness is not asserted. Search queries were date-targeted rather than time-restricted by search API.",
+    "direct_source_checks": {
+      "distinct_urls": 15,
+      "accessible": 9,
+      "inaccessible": 6,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Previously observed official source timeout."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Retrieval unavailable",
+          "impact": "Previously observed USDA restriction."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403",
+          "impact": "Previously observed USDA restriction."
+        },
+        {
+          "url": "https://www.maine.gov/dhhs/ofi/programs-services/food-supplement",
+          "error": "HTTP 403",
+          "impact": "Previously observed Maine restriction."
+        },
+        {
+          "url": "https://www.forgottenharvest.org/find-food/",
+          "error": "HTTP 403",
+          "impact": "This direct distribution page was accessible in prior run; now refused. Provider homepage remains accessible and does not indicate a new closure, but this does not substitute for current distribution details."
+        },
+        {
+          "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+          "error": "HTTP 403 on current direct fetch",
+          "impact": "Previously accessible page intermittently blocked. Trailing-slash variant yielded cached content crawled four months ago, not reliable verification of current status."
+        }
+      ],
+      "alternatives_checked": [
+        {
+          "url": "https://www.forgottenharvest.org/",
+          "result": "accessible; no current closure noted on homepage"
+        },
+        {
+          "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates/",
+          "result": "older cached snapshot, not contemporaneous access"
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Arvada Safeway closure Nov 14; not sole full-service grocery in city, and publicly reported last month rather than new window."
+      },
+      {
+        "url": "https://www.sltrib.com/news/2026/11/01/provo-food-bank-announces/",
+        "reason": "Provo, Utah Community Action closure was Nov 1, outside observation window."
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "reason": "Direct page inaccessible; absence of new qualifying event cannot be verified there. Restriction recorded separately."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "No incidents reported Nov 13/14. Connecticut Nov 15 processor change was announced Aug 20; not a new current interruption."
+      },
+      {
+        "url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Georgia EBT phone-support line is reported restored, not a newly announced loss of benefit access; publication date not established."
+      },
+      {
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC confirms normal services and benefit use."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Verification documentation change takes effect Nov 21, not a current interruption."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Nov 14 provider schedule lists events; no disaster-related cancellation observed."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "Most recent listed SNAP replacement benefit action dated Nov 9; old incident."
+      }
+    ],
+    "source_access_change": "Two previously reachable primary direct pages (RI SNAP updates and Forgotten Harvest find-food) newly returned HTTP 403. RI cached fallback and Forgotten Harvest homepage provided incomplete alternatives. Search and nine other provider/agency direct pages continued to work.",
+    "material_new_degradation": false,
+    "materiality_reason": "Two new source-level access limitations reduce localized verification but did not prevent bounded search across all four miss classes; 12 searches and 9 other direct source pages remained available. No novel nationwide or central collection-system failure was established.",
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T144700-0800-recall12",
+  "scheduled_for": "2026-11-14T14:45:22-08:00",
+  "started_at": "2026-11-14T14:47:00-08:00",
+  "completed_at": "2026-11-14T14:48:20.783-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T13:49:48-08:00",
+    "end": "2026-11-14T14:48:20.783-08:00",
+    "prior_check_basis": "Verified preceding heartbeat care-line-watch-20261114T134851-0800-recall12.json on ops/watch-ledger completed 2026-11-14T13:49:48-08:00",
+    "newness_rule": "Only newly verifiable concrete essential healthcare access loss, CMS action, or effective restoration since prior check; exclude duplicates, plans and business-only stories."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall, not the primary collector; production remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Initial obsolete CMS path inaccessible; recovered canonical CMS Public Notices listing and verified current table.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "latest_notices_previously_recorded": [
+        "Cypress Hospice, CA, B31731, 2026-11-13 termination",
+        "AZURE HOME HEALTH, CA, 757304, 2026-11-13 termination",
+        "Titus Healthcare LLC, OH, 369002, 2026-11-13 termination",
+        "Compass Healthcare LLC, OH, 369259, 2026-11-13 termination"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_search_recency_days": 2,
+    "targeted_searches": [
+      "November 14 2026 hospital emergency department closure temporary ambulance diversion United States local news",
+      "November 14 2026 hospital labor delivery obstetrics maternity unit closure suspension service",
+      "November 14 2026 rural hospital emergency room loss shutdown outage hospital closure",
+      "November 14 2026 behavioral health psychiatric inpatient unit admissions suspended closed",
+      "November 14 2026 dialysis clinic closed suspended treatment access",
+      "November 14 2026 cancer infusion oncology clinic closed suspended treatments",
+      "November 14 2026 primary care clinic closure immediate patients rural county",
+      "November 14 2026 ambulance EMS service stops operating base closure suspended",
+      "November 14 2026 air ambulance helicopter medical base closure shutdown suspension",
+      "November 14 2026 hospital emergency department reopens services restored after closure",
+      "November 14 2026 site:gov health services hospital closure emergency warning notice",
+      "November 14 2026 Puerto Rico Guam USVI American Samoa Northern Mariana hospital clinic ambulance closed reopened"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded": [
+        "HCA Florida Pasadena Hospital future inpatient change announced November 11, derivative November 14 reporting did not establish new hourly event; ED remains operational.",
+        "Roseland Community Hospital Chicago maternity closure occurred November 1 and was reported November 2.",
+        "Prior-year Massachusetts maternity story and older rural and ambulance coverage excluded.",
+        "Remaining results were unrelated, historic or not concrete verified new service losses/restorations in this observation interval."
+      ]
+    },
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/hca-florida-pasadena-hospital-end-inpatient-care-2026-481248",
+      "https://news.wttw.com/2026/11/02/chicago-area-mothers-struggle-find-care-labor-and-delivery-units-end-services"
+    ],
+    "limitations": [
+      "A failed obsolete CMS URL necessitated fallback; canonical CMS listing was retrieved, so no material CMS coverage loss was identified. DEGRADED records the attempted-source failure.",
+      "Many queries returned stale or irrelevant results; a 12-search recall is not comprehensive across U.S. states or territories.",
+      "Search indexing delays remain possible; production collection remains authoritative."
+    ],
+    "actions": "One heartbeat created; no approval, publication, scheduling change or disabling."
+  }
+}

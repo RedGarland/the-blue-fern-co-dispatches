@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T224451-0800-r11-20261114T064813Z",
+  "scheduled_for": "2026-11-13T22:44:51-08:00",
+  "started_at": "2026-11-13T22:48:13-08:00",
+  "completed_at": "2026-11-14T06:50:35.115Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T21:44:47.701-08:00",
+    "end": "2026-11-14T06:50:35.115Z",
+    "previous_run_completed_at": "2026-11-13T21:44:47.701-08:00",
+    "basis": "Authenticated previous hourly watch heartbeat on ops/watch-ledger. Window denotes new traceable discoveries since previous completed check, not incident occurrence time.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall only; authoritative production daily collector and publisher untouched.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T214451-0800-r11-20261114T054447701Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest homepage items November 13 winter-supplies appeal and humanitarian report, both already recorded in previous ledgers."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Verified November 13 report primarily covers November 3–9; existing flood damage, medical evacuation, water, and aid access figures, no newly qualifying within-window item."
+      },
+      {
+        "publisher": "OCHA OPT Humanitarian Country Team",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Previously covered 150,000+ tents outside Gaza, flooding and impediments to winter supplies."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency page reviewed; no new dated health-system or medical evacuation situation update during window."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Country dashboard accessible; formal headline indicators as of September 2026 and no new dated Gaza operational alert."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "TIMEOUT",
+        "detail": "Direct regional endpoint timed out; same recurring limitation documented in previous watch. WHO Global and Health Cluster remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 14 2026 early morning November 13 late night killed wounded civilians ceasefire strikes",
+      "site:english.wafa.ps \"14 November 2026\" Gaza killed wounded displacement",
+      "site:aa.com.tr/en/middle-east Gaza November 14 2026 attacks humanitarian",
+      "site:aljazeera.com/news/2026/11/14/ Gaza ceasefire killed injured humanitarian",
+      "site:reuters.com/world/middle-east/ Gaza November 14 2026 aid crossing ceasefire",
+      "site:apnews.com/article/ Gaza November 14 2026 hospital flood displacement",
+      "site:unrwa.org Gaza \"14 November 2026\" medical fuel water shelter aid",
+      "site:unicef.org Gaza \"14 November 2026\" children shelter medical water",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"14 November 2026\" Gaza",
+      "site:msf.org Gaza \"14 November 2026\" hospitals healthcare",
+      "Gaza ceasefire hostage detainees negotiations November 14 2026 early morning developments",
+      "Gaza humanitarian aid crossings Rafah Kerem Shalom WHO ambulance November 14 2026 latest"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "detail": "Newest 14 November 08:11 Palestine-time listing concerned Tubas/West Bank; remaining newest listings and November 13 Gaza shelling/health headlines were previously logged, no new Gaza event."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "detail": "Direct Middle East page and targeted results inspected; no verified new Gaza development beyond November 11–13 hospital and humanitarian coverage."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "detail": "Homepage latest bulletin dated November 10, no fresh Gaza ambulance, healthcare or access incident."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "detail": "Most recent updates remained November 13 appeal and humanitarian report, previously covered."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-2-palestinians-injure-8-in-gaza-amid-ceasefire-violations/4124535",
+        "detail": "Search result/article rendering referred to November 13 six killed/~20 injured headline already covered; no independently verifiable additional November 14 civilian impact."
+      }
+    ],
+    "duplicate_exclusions": [
+      "November 13 Deir al-Balah shelling, Khan Younis drone casualties and injured girl at al-Mawasi were documented in prior watch.",
+      "November 11–13 Nasser Hospital strike, reported deaths, patient-care interruption and unexploded-ordnance danger were already documented.",
+      "November 13 OCHA winter appeal, flooding, shelter destruction, aid crossing restrictions, water insecurity and medicine shortages previously captured.",
+      "Blocked mobile medical units and hypothermia-related infant death previously logged.",
+      "Search returns describing 2023–2025 and earlier 2026 events excluded, including recirculated ceasefire reporting."
+    ],
+    "limitations": "WHO EMRO direct pages timed out as on previous runs; WHO Global/Health Cluster and OCHA OPT remained accessible. Search indexing yielded stale or date-mismatched results. Source publication may lag events; no findings means no new qualifying development verified in this bounded window, not that none occurred.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

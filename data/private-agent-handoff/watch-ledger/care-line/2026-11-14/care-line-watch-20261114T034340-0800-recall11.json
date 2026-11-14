@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T034340-0800-recall11",
+  "scheduled_for": "2026-11-14T03:45:22-08:00",
+  "started_at": "2026-11-14T03:43:40-08:00",
+  "completed_at": "2026-11-14T03:45:35-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T02:43:39-08:00",
+    "end": "2026-11-14T03:45:35-08:00",
+    "prior_check_basis": "Verified ops/watch-ledger care-line-watch-20261114T024112-0800-recall12.json; completed_at 2026-11-14T10:43:39.071Z.",
+    "newness_rule": "Newly reported or newly discovered concrete U.S. or territory healthcare-access changes since prior watch; deduplicate previous watch findings; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded Care Line recall; not primary production collection or publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS on current canonical CMS listing; obsolete legacy CMS administrative-actions URL failed.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 11,
+    "targeted_searches": [
+      "hospital emergency department closure suspended admissions November 13 2026 November 14 2026 United States",
+      "maternity obstetrics labor delivery unit closing ceased services November 13 2026 US",
+      "mental health behavioral health addiction treatment facility closed services November 13 2026 November 14 2026",
+      "dialysis center cancer oncology clinic closing patients November 2026 November 13 2026",
+      "rural hospital emergency department temporarily closed suspended services November 13 2026 14",
+      "ambulance EMS station base shutdown suspended operations November 13 2026 14",
+      "site:localnews8.com OR site:ktvb.com OR site:wvmetronews.com closed hospital November 13, 2026",
+      "air ambulance service suspended OR base closed November 13, 2026 OR November 14, 2026",
+      "health clinic last day OR permanently closing November 13, 2026",
+      "hospital emergency department reopening resumed services effective November 13 2026 November 14 2026",
+      "Puerto Rico Guam Virgin Islands American Samoa hospital emergency maternity clinic closed suspended November 13 2026"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "All four Nov 13 CMS termination notices already recorded in preceding watch heartbeats.",
+        "Prevea Washington Street Health Center (Green Bay, WI) Nov 13 final patient-care day already recorded.",
+        "Talbott Recovery (Atlanta, GA) Nov 2 behavioral-health service cessation already recorded.",
+        "Intermountain fixed-wing medical transport Nov 13 FAA interruption already recorded; independent operator-specific restoration confirmation not established."
+      ],
+      "excluded": [
+        "November 13 AZPM rural Arizona maternity-access report describes preexisting access issues, not a new discrete service suspension in this window.",
+        "Older studies, policy/proposal and opinion stories, unrelated results, international service changes, and non-restoration openings excluded.",
+        "No independently verified new concrete U.S. or territory closure, suspension, Medicare/CLIA action, or restoration."
+      ]
+    },
+    "limitations": [
+      "An obsolete CMS administrative-actions URL returned an access error; current CMS Public Notices page was successfully retrieved and reviewed, with no material CMS coverage gap.",
+      "Search results were often historical, international, or off-topic; no individual targeted search endpoint failure was observed.",
+      "Bounded query count and local-news indexing latency limit national recall sensitivity; no-results does not establish absence of service changes."
+    ],
+    "actions": "No approval, publication, schedule modification, or task disabling. Production collection remains authoritative."
+  }
+}

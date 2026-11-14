@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261114T105014-0800-r11-20261114T185014Z",
+  "scheduled_for": "2026-11-14T10:45:54-08:00",
+  "started_at": "2026-11-14T10:50:14-08:00",
+  "completed_at": "2026-11-14T18:52:39.639Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-14T09:49:47.478-08:00",
+    "end_at": "2026-11-14T10:52:39.639-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "basis": "From completion of last independently verified Food Line watch heartbeat to this bounded execution; older items screened for indexing lag but not treated as newly occurring disruptions.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-14/food-line-recall-20261114T094730-0800-r11-20261114T174730Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value missed-signal recall only. Primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Only/sole/last or only full-service community grocery store closed, lost to fire or disaster",
+      "Emergency food distribution canceled or suspended due to storm, flood, fire, outage or facility damage",
+      "Abrupt food pantry/food bank closure or major reduction in access",
+      "New official SNAP/WIC/food-assistance interruption with immediate access impact"
+    ],
+    "targeted_searches": 12,
+    "search_errors_observed": 0,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" \"November 14\" 2026 fire",
+      "\"last grocery store\" fire closure November 2026 rural",
+      "\"only full service grocery store\" closed fire November 2026",
+      "town \"sole grocery store\" closure November 14 2026",
+      "food pantry distribution cancelled storm November 14 2026",
+      "food bank distribution suspended flood fire weather November 14 2026",
+      "\"mobile pantry\" \"cancelled\" November 14 2026 weather",
+      "food distribution canceled power outage November 14 2026",
+      "\"food pantry\" \"closed\" \"November 14\" 2026 unexpected",
+      "\"food bank\" \"suspended services\" \"November 2026\" outage",
+      "SNAP EBT WIC benefits outage state agency \"November 14\" 2026",
+      "SNAP food assistance benefits suspended delay card system November 14 2026 official"
+    ],
+    "search_recency_context": "November 14, 2026, around 09:49-10:52 PST; twelve targeted fast-index queries using 2-3 day recency where supported; direct official/provider page checks supplement indexing.",
+    "direct_source_checks": {
+      "distinct_urls": 15,
+      "initial_accessible": 10,
+      "initial_inaccessible": 5,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates"
+      ],
+      "failures": [
+        {
+          "url": "https://www.forgottenharvest.org/find-food/",
+          "error": "HTTP 403",
+          "impact": "Intermittent provider directory access already observed on prior check; initially fetched in prior interval"
+        },
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam public health benefit notice gap"
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Retrieval unavailable",
+          "impact": "Recurring USDA disaster SNAP notice gap"
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA state SNAP directory gap"
+        },
+        {
+          "url": "https://www.maine.gov/dhhs/ofi/programs-services/food-supplement",
+          "error": "HTTP 403",
+          "impact": "Recurring Maine SNAP agency notice gap"
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://arkansasradio.com/2026/11/hope-lutheran-baby-pantry-special-distribution-batesville-arkansas-november-16-2026/",
+        "reason": "Newly published November 14 account of Batesville, Arkansas Hope Lutheran Baby/Family Life Pantry cancellation due to power outage LAST WEEK, with November 16 make-up distribution scheduled. Original disruption predates hourly window; publication has no time-of-day, and no new cancellation after prior check is established. Screened, not a current new qualifying disruption."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "A December 3, 2026 Marquette County mobile pantry listing is marked CANCELLED, but no storm/fire/outage/facility-damage cause is stated and the cancellation does not establish a new immediate impact during the present hour."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "All systems operational and no incident November 14; Connecticut November 15 planned EBT maintenance was posted August 20, 2026, and is not a newly announced interruption."
+      },
+      {
+        "url": "https://www.kcrg.com/2026/11/09/we-dont-take-it-lightly-owners-kalonas-only-full-service-grocery-store-search-buyer/",
+        "reason": "Kalona's only full-service grocery still seeking a buyer; potential future closure is not a newly confirmed lost grocery."
+      },
+      {
+        "url": "https://www.the-sun.com/money/17140327/safeway-closing-grocery-store-colorado/",
+        "reason": "Previously announced Arvada Safeway-chain store closure is not loss of the city's only grocery service."
+      },
+      {
+        "url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Agency FoodShare page last revised October 16, 2026; no new November 14 service interruption."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Documentation requirement starts November 21, 2026; not a present access outage."
+      },
+      {
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC reports offices open and benefits continuing."
+      },
+      {
+        "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "reason": "Undated Rhode Island DHS remote-service notice for pest management remains on page with alternative access; no new major SNAP interruption established."
+      },
+      {
+        "url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Georgia says previously unavailable EBT telephone help is back online; no new current outage shown."
+      }
+    ],
+    "baseline_comparison": "10/15 direct checks accessible versus 11/15 in prior verified run. Four persistent USDA/Guam/Maine limitations and one intermittent 403 at Forgotten Harvest, already observed in prior secondary fetch. No new material coverage deterioration established.",
+    "material_new_coverage_failure": false,
+    "search_limitations": "Targeted search index was noisy, with older grocery-loss and 2025 SNAP stories; publication-time granularity for local Arkansas baby-pantry notice insufficient to place report inside hour. Social-only notices, indexing delays and inaccessible government/provider pages limit recall. No findings is not proof of absence.",
+    "exclusion_policy": "Donation drives, guides, recipes, opinion, routine promotions, inflation, preannounced or older events, and duplicates excluded.",
+    "operations": "No approval, publishing, production modification, schedule adjustment, automation disabling, or unrelated repository mutation."
+  }
+}

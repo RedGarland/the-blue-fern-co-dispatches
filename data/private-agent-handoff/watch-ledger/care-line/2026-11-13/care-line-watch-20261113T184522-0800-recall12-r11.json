@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T184522-0800-recall12-r11",
+  "scheduled_for": "2026-11-13T18:45:22-08:00",
+  "started_at": "2026-11-13T18:47:19-08:00",
+  "completed_at": "2026-11-13T18:48:47.549-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T17:48:04-08:00",
+    "end": "2026-11-13T18:48:47.549-08:00",
+    "prior_check_basis": "Prior independently verified heartbeat care-line-watch-20261113T174710-0800-recall12-20261114T014804Z, completed 2026-11-13T17:48:04-08:00.",
+    "newness_rule": "Newly announced or newly effective concrete U.S. and territories health-service access changes/official regulatory notices since prior check; no duplicates. Primary production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; not the primary national collector or publication workflow.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "prior_known_notices": [
+        "Cypress Hospice CA CCN B31731",
+        "AZURE HOME HEALTH CA CCN 757304",
+        "Titus Healthcare LLC OH CCN 369002",
+        "Compass Healthcare LLC OH CCN 369259"
+      ],
+      "retrieval_status": "Canonical page successfully opened after an earlier search index snippet showed stale November 10 top item. Live canonical listing showed four previously recorded November 13 notices and no later entry.",
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 13 2026 hospital emergency department closed suspended services local news",
+      "November 13 2026 maternity labor delivery obstetrics unit closure suspension hospital",
+      "November 13 2026 rural hospital emergency care loss temporary shutdown",
+      "November 13 2026 behavioral health psychiatric facility clinic closed services",
+      "November 13 2026 dialysis center shutdown suspension patients",
+      "November 13 2026 oncology cancer clinic closes service suspension",
+      "November 13 2026 primary care clinic practice closed patients access",
+      "November 13 2026 EMS ambulance station closure suspension service base",
+      "November 13 2026 medical helicopter air ambulance base grounded operations suspended restored",
+      "November 13 2026 hospital emergency department reopens restoration services",
+      "November 13 2026 Puerto Rico Guam Virgin Islands hospital clinic healthcare service closes emergency",
+      "November 13 2026 state health department orders hospital clinic cease operations license suspension"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East inpatient floor closure, Waukegan IL",
+        "reason": "Already captured November 13; no new documented service change.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/"
+      },
+      {
+        "title": "Talbott Recovery outpatient behavioral health and addiction care cessation, Atlanta GA",
+        "reason": "Previously recorded retrospective recall; closure effective November 2.",
+        "source_url": "https://bhbusiness.com/2026/11/13/uhs-shutters-third-facility-of-2026/"
+      },
+      {
+        "title": "Sharon Regional Medical Center PA",
+        "reason": "Prior suspension of all hospital services November 4 and earlier closure order, not newly effective during this window. No verified fresh restoration.",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "title": "UPMC regional capacity expansion and Nov 11 public letter",
+        "reason": "Retrospective investment/expansion over recent years; no newly effective November 13 service restoration or increase.",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "title": "Reynolds County Missouri rural maternity access",
+        "reason": "November 13 article discusses longstanding maternity gaps, one ambulance, and proposed outreach funding; no new effective service loss or restoration.",
+        "source_url": "https://www.kttn.com/rural-missouri-mothers-face-long-drives-to-reach-delivery-centers/"
+      },
+      {
+        "title": "Intermountain fixed-wing medical requests during national FAA ground stop",
+        "reason": "Previously flagged; no verified independent medical air-transport restoration during current window.",
+        "source_url": null
+      }
+    ],
+    "retrieval_issues": [
+      {
+        "source_url": "https://bhbusiness.com/2026/11/13/uhs-shutters-third-facility-of-2026/",
+        "issue": "Direct open returned HTTP 403. Search result text was accessible and earlier watch had already recorded Talbott; unable to independently retrieve article body in this run."
+      }
+    ],
+    "limitations": [
+      "12 searches are targeted recall sampling rather than exhaustive state-by-state/territory production coverage.",
+      "Short search-index lag can affect same-hour discoverability.",
+      "One previously recorded news source returned HTTP 403; status DEGRADED despite successful CMS retrieval and broader search coverage.",
+      "No new qualifying nonduplicate change substantiated."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

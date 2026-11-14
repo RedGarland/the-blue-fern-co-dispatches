@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T234451-0800-r11-20261114T074435Z",
+  "scheduled_for": "2026-11-13T23:44:51-08:00",
+  "started_at": "2026-11-13T23:44:35-08:00",
+  "completed_at": "2026-11-14T07:46:56.564Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-14T06:50:35.115Z",
+    "end": "2026-11-14T07:46:56.564Z",
+    "previous_run_completed_at": "2026-11-14T06:50:35.115Z",
+    "basis": "Authenticated previous hourly watch heartbeat; interval tracks new verifiable discovery, not necessarily incident occurrence.",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative Gaza production pipeline remains unchanged.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T224451-0800-r11-20261114T064813Z.json",
+    "ledger_deduplication": "Reviewed 18 recent November 13 authenticated watch heartbeats and their positive findings / duplicate exclusions, including earlier WHO respiratory infection metrics, Nasser Hospital disruptions, shelling and flooding.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed entries still 13 November winter supply appeal and humanitarian situation report; previously recorded."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Published 13 November, primarily reflects 3–9 November reporting and previously captured flood, displacement, healthcare, aid access and water indicators."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No new dated Gaza health-system or medical evacuation announcement in latest listed items."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal Health Cluster metrics as of September 2026, not new within-window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Direct page returned 502 Bad Gateway, a repeat of prior runs' known restriction; WHO Global and Health Cluster alternate channels worked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"14/November/2026\" Gaza killed wounded hospital",
+      "site:aa.com.tr/en/middle-east Gaza \"November 14, 2026\" civilians ceasefire",
+      "site:reuters.com/world/middle-east Gaza November 14 2026 aid ceasefire hospital",
+      "site:apnews.com/article/ Gaza November 14 2026 airstrike displaced tents hospital",
+      "site:aljazeera.com/news/2026/11/14/ Gaza killed injured displacement",
+      "site:unrwa.org Gaza \"14 November 2026\" shelter food water humanitarian",
+      "site:unicef.org Gaza \"14 November 2026\" water children floods",
+      "site:palestinercs.org Gaza November 14 2026 ambulance rescue",
+      "site:msf.org Gaza \"14 November 2026\" hospital blocked supplies",
+      "Gaza November 14 2026 Kerem Shalom Rafah crossing aid trucks medical evacuation new",
+      "Gaza November 14 2026 ceasefire hostage detainees negotiations humanitarian impact",
+      "Gaza 14 November 2026 civilian killed wounded overnight November 13 rain flooding tents"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest 14 November 08:11 local news concerns West Bank (Tubas); most recent Gaza headlines dated 13 November 19:02/18:54 and earlier, already covered."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "WHO respiratory-illness report from 13 November 12:21 UTC inspected directly; confirmed duplicate of earlier 05:44 PST positive finding (33,000 excess acute respiratory infections, 11% of consultations, lab equipment restrictions)."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "status": "ACCESSIBLE",
+        "detail": "WHO representative statements verified but already recorded in previous watch."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest on site dated 10 November; no newer ambulance/healthcare incident."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "No newly verified distinct Gaza incident. 13 November infant hypothermia story duplicate."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/info/infographic/54909",
+        "status": "ACCESSIBLE_UNVERIFIED",
+        "detail": "14 November infographic asserts cumulative 793 healthcare attacks and 1,725 health workers killed since October 2023 but lacks traceable primary methodology/source and was not promoted as new finding."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "detail": "Homepage access denied; additional targeted query yielded no verifiable new item. No newly documented operational deterioration."
+      }
+    ],
+    "duplicate_exclusions": [
+      "13 November Reuters/WHO respiratory infections, 33,000 excess cases, 11% consultations and laboratory supply restrictions already logged in 05:44 PST watch.",
+      "13 November OCHA winter flooding, water contamination, aid corridor reduction, affected shelters and medical disruptions already logged.",
+      "13 November Deir al-Balah, Khan Younis and al-Mawasi casualties, Nasser Hospital strike and unexploded ordnance already logged.",
+      "Nine-month-old infant hypothermia and eight blocked mobile medical units already logged.",
+      "14 November Anadolu infographic cumulative health-worker loss figures not independently source-qualified; no dated new occurrence established.",
+      "Search results referring to 2023–2025 or earlier 2026 events excluded as recycled."
+    ],
+    "limitations": "WHO Eastern Mediterranean returned HTTP 502, UNRWA homepage HTTP 403, both non-new source-access restrictions. OCHA OPT, WHO Global, WHO Health Cluster, WAFA, Reuters and PRCS remained accessible. Indexing was dominated by recycled or date-mismatched material. No qualifying new development verified in bounded discovery window; absence of findings does not imply absence of events.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

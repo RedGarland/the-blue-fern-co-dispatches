@@ -1,0 +1,183 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T164913-0800-recall12-20261114T005211Z",
+  "scheduled_for": "2026-11-13T16:45:22-08:00",
+  "started_at": "2026-11-13T16:49:13-08:00",
+  "completed_at": "2026-11-13T16:52:11-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T15:45:40.191-08:00",
+    "end": "2026-11-13T16:52:11-08:00",
+    "prior_check_basis": "Previous verified Care Line Watch heartbeat care-line-watch-20261113T154405-0800-recall10-20261113T234540191Z, completed 2026-11-13T15:45:40.191-08:00.",
+    "newness_rule": "Newly surfaced, concrete, sourced U.S./territory healthcare-access changes or official notices not already present in the previous watch. Older effective dates permitted for newly discovered recall items, clearly labeled; production deduplication remains authoritative."
+  },
+  "findings": [
+    {
+      "source_published_date": "2026-11-13",
+      "announcement_date": "2026-11-13",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "territory": null,
+      "finding_id": "cms-oh-2026-11-13-369002-medicare-termination",
+      "canonical_source_url": "https://www.cms.gov/files/document/titus-healthcare-llc-11132026-pdf.pdf",
+      "title": "CMS Medicare participation termination notice: Titus Healthcare LLC (CCN 369002)",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "as a home health agency in the Medicare program, will be terminated.",
+      "state": "OH",
+      "city": "Bellaire",
+      "county": null,
+      "event_type": "cms_provider_termination_notice",
+      "service_line": "home_health",
+      "access_consequences": "CMS provider agreement terminates November 29, 2026. Medicare will not pay for services under care plans established on or after that date; it will pay up to 30 days of covered services for patients with preexisting plans. Physical closure is not established.",
+      "affected_population": "Medicare home-health patients and new Medicare referrals to Titus Healthcare LLC; count unknown.",
+      "effective_date": "2026-11-29",
+      "confidence": "high",
+      "source_role": "official_cms_notice"
+    },
+    {
+      "source_published_date": "2026-11-13",
+      "announcement_date": "2026-11-13",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "territory": null,
+      "finding_id": "cms-oh-2026-11-13-369259-medicare-termination",
+      "canonical_source_url": "https://www.cms.gov/files/document/compass-healthcare-llc-11132026-pdf.pdf",
+      "title": "CMS Medicare participation termination notice: Compass Healthcare LLC (CCN 369259)",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "exact_supporting_passage": "as a home health agency in the Medicare program, will be terminated.",
+      "state": "OH",
+      "city": "Reynoldsburg",
+      "county": null,
+      "event_type": "cms_provider_termination_notice",
+      "service_line": "home_health",
+      "access_consequences": "CMS provider agreement terminates November 29, 2026. Medicare will not pay for services under care plans established on or after that date; it will pay up to 30 days of covered services for patients with preexisting plans. Physical closure is not established.",
+      "affected_population": "Medicare home-health patients and new Medicare referrals to Compass Healthcare LLC; count unknown.",
+      "effective_date": "2026-11-29",
+      "confidence": "high",
+      "source_role": "official_cms_notice"
+    },
+    {
+      "source_published_date": "2026-11-13",
+      "announcement_date": "2026-11-13",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "territory": null,
+      "finding_id": "talbott-recovery-ga-2026-11-02-permanent-closure-reported-20261113",
+      "canonical_source_url": "https://bhbusiness.com/2026/11/13/uhs-shutters-third-facility-of-2026/",
+      "title": "UHS shutters Talbott Recovery outpatient behavioral-health and addiction treatment facility",
+      "publisher": "Behavioral Health Business",
+      "exact_supporting_passage": "formal cessation of all services as of Monday, Nov. 2.",
+      "state": "GA",
+      "city": "Atlanta",
+      "county": null,
+      "event_type": "behavioral_health_facility_closure",
+      "service_line": "outpatient_addiction_and_mental_health_treatment",
+      "access_consequences": "The Atlanta outpatient treatment site reportedly permanently stopped all services November 2; an owner notice reportedly directed patients to Anchor Hospital and Peachford Hospital. Newly surfaced in November 13 trade reporting; closure was effective before this observation window.",
+      "affected_population": "Existing and prospective patients of Talbott Recovery; count unknown.",
+      "effective_date": "2026-11-02",
+      "confidence": "medium",
+      "source_role": "specialist_industry_reporting"
+    },
+    {
+      "source_published_date": "2026-11-13",
+      "announcement_date": "2026-11-13",
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "territory": null,
+      "finding_id": "intermountain-ut-2026-11-13-fixed-wing-requests-paused",
+      "canonical_source_url": "https://kjzz.com/news/local/intermountain-suspends-fixed-wing-medical-requests-during-faa-ground-stop",
+      "title": "Intermountain suspends fixed-wing medical requests during FAA nationwide ground stop",
+      "publisher": "KJZZ",
+      "exact_supporting_passage": "Intermountain suspends fixed-wing medical requests during FAA ground stop",
+      "state": "UT",
+      "city": null,
+      "county": null,
+      "event_type": "temporary_air_medical_request_suspension",
+      "service_line": "fixed_wing_medical_transport",
+      "access_consequences": "A local news headline reports a pause of Intermountain fixed-wing medical requests during the November 13 nationwide FAA ground stop. The duration, geographic coverage, effect on individual transports, and restoration status were not verifiable because the story body could not be retrieved; this is not a confirmed base closure.",
+      "affected_population": "Patients who would have required fixed-wing transport through Intermountain during the interruption; count unknown.",
+      "effective_date": "2026-11-13",
+      "confidence": "medium",
+      "source_role": "local_reporting_headline_only"
+    }
+  ],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch; primary Care Line production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "newly_identified_notices": [
+        "Titus Healthcare LLC, Ohio, CCN 369002, November 13 notice, Medicare termination November 29.",
+        "Compass Healthcare LLC, Ohio, CCN 369259, November 13 notice, Medicare termination November 29."
+      ],
+      "previously_recorded_duplicates": [
+        "Cypress Hospice, California, CCN B31731",
+        "AZURE HOME HEALTH, California, CCN 757304"
+      ],
+      "retrieval_status": "SUCCESS. Canonical CMS listing and both individual notices and one-page PDF images inspected. An initial search-index result was stale, but canonical directly opened page contained four November 13 notices."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 13 2026 patients county",
+      "hospital maternity labor delivery obstetrics unit closure November 13 2026",
+      "mental health psychiatric behavioral health facility closed services suspended November 13 2026",
+      "dialysis center clinic closed suspended November 13 2026 United States",
+      "oncology cancer center closes suspends treatment November 13 2026",
+      "primary care clinic closure effective November 13 2026 community",
+      "rural hospital emergency department service suspension November 13 2026",
+      "ambulance EMS service base closure suspension November 13 2026",
+      "air medical helicopter base suspended closed November 13 2026",
+      "hospital emergency room reopens resumes services November 13 2026",
+      "healthcare hospital maternity clinic closure Puerto Rico Guam Virgin Islands November 2026",
+      "hospital stops admissions inpatient unit service suspended November 13 2026 local news"
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East, Waukegan inpatient floor closure",
+        "reason": "Previously recorded in Care Line watch on November 13, duplicate.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/"
+      },
+      {
+        "title": "Sharon Regional Medical Center closure uncertainty",
+        "reason": "Previously known prospective or ordered closure, no newly effective service change in the hour.",
+        "source_url": "https://www.beckershospitalreview.com/finance/we-will-continue-being-here-upmc-touts-expanded-capacity-amid-sharon-regional-uncertainty/"
+      },
+      {
+        "title": "Ascension Saint Thomas Fairview emergency department groundbreaking",
+        "reason": "Future project; no new effective care access.",
+        "source_url": "https://dicksoncountysource.com/ascension-saint-thomas-breaks-ground-on-20-6m-fairview-emergency-department/"
+      },
+      {
+        "title": "Rural Missouri maternity gap article",
+        "reason": "Existing access gap summary, not an identifiable new shutdown.",
+        "source_url": "https://www.kttn.com/rural-missouri-mothers-face-long-drives-to-reach-delivery-centers/"
+      }
+    ],
+    "retrieval_issues": [
+      {
+        "source_url": "https://bhbusiness.com/2026/11/13/uhs-shutters-third-facility-of-2026/",
+        "issue": "Direct article open returned HTTP 403; indexed web result contained substantive reporter text and named the November 2 effective cessation. Independent primary notice not inspected."
+      },
+      {
+        "source_url": "https://kjzz.com/news/local/intermountain-suspends-fixed-wing-medical-requests-during-faa-ground-stop",
+        "issue": "Article body open returned DisabledError; source headline was indexed, and Reuters/CBS confirmed November 13 nationwide FAA ground-stop context. Exact medical transport disruption details and resume time unknown."
+      }
+    ],
+    "limitations": [
+      "Supplementary 12-search sampling is not an exhaustive national or territory sweep.",
+      "Search-index latency and publication-time ambiguity may affect precise intra-hour newness.",
+      "The November 2 Talbott Recovery closure was first identified by this watch today, not an event newly effective today; production deduplication and review are needed.",
+      "KJZZ air-medical finding is provisional from headline-level local reporting due source fetch failure."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

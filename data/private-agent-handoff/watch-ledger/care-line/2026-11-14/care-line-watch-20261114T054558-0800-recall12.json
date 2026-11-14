@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T054558-0800-recall12",
+  "scheduled_for": "2026-11-14T05:45:22-08:00",
+  "started_at": "2026-11-14T05:45:58-08:00",
+  "completed_at": "2026-11-14T05:47:58-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T04:43:22-08:00",
+    "end": "2026-11-14T05:47:58-08:00",
+    "prior_check_basis": "Verified previous ops/watch-ledger heartbeat care-line-watch-20261114T044131-0800-recall12.json, completed_at 2026-11-14T04:43:22-08:00.",
+    "newness_rule": "Newly surfaced concrete U.S. and territory healthcare access changes since previous watch; retrospective recall only when independently verified and not previously recorded; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded Care Line recall; not the production collector or publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS via CMS-targeted fresh indexed result crawled 2026-11-14; initial direct open returned a six-day-old cached version, so verified against fresh indexed canonical listing.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department temporarily closing closed suspended admissions November 13 14 2026 US",
+      "hospital labor delivery maternity obstetrics closure suspension November 13 November 14 2026",
+      "psychiatric behavioral health hospital facility patients closes suspends November 13 2026",
+      "dialysis center oncology chemotherapy clinic closing Friday November 13 2026",
+      "ambulance EMS air medical helicopter base closing suspended November 13 2026",
+      "rural hospital emergency care shutdown reopening resumed November 14 2026",
+      "\"Nov. 13, 2026\" hospital clinic \"closed\" patients rural emergency services",
+      "\"Nov. 13, 2026\" healthcare clinic \"last day\" closing",
+      "\"November 14, 2026\" \"emergency department\" \"closed\" hospital",
+      "\"November 13, 2026\" \"ambulance\" \"suspended\" OR \"closed\" OR \"reopened\" US",
+      "\"November 13, 2026\" \"dialysis\" OR \"oncology\" \"closed\" OR \"suspended\" clinic",
+      "\"November 13, 2026\" hospital \"reopened\" \"patients\" service"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "Four November 13 CMS termination notices already present in preceding heartbeat.",
+        "Prior Prevea Washington Street Health Center Green Bay WI closure on November 13 already recorded."
+      ],
+      "exclusions": [
+        "New Advanced Prostate Cancer Clinic in Olean, NY first held November 6: expansion, not restoration of a previously lost service and no new access loss.",
+        "Ridgecrest Regional Hospital November 11 recovery of clinic and laboratory-draw services following November 9 cyber incident: outside current window, secondary account only; direct local newspaper article restricted, so not promoted as new verified finding.",
+        "Ridgecrest/Liberty Ambulance Mt. Mesa station reopening July 18, reported August 25: historical, outside observation window.",
+        "CMS nationwide hospice/home-health new enrollment moratorium extension announced November 12 and Medicaid work-requirements policy updates: policy changes, not a new concrete closure/restoration during the watch window.",
+        "Routine Veterans Day holiday clinic closures and historical US or non-US service events excluded.",
+        "No qualified new U.S. territory service changes confirmed."
+      ]
+    },
+    "limitations": [
+      "One source fetch failed: Ridgecrest Daily Independent recovery article (November 11) was restricted by web retriever; related secondary coverage and provider website were available but could not directly verify original announcement.",
+      "Fresh CMS search index showed November 13 notices as latest; first direct canonical fetch was stale (six-day cache).",
+      "Geographically bounded searches and news-indexing delays limit recall; this cannot prove no qualifying event occurred."
+    ],
+    "degradation_materiality": "Single inaccessible local historical source and stale direct CMS cache, but CMS fresh indexed canonical listing and twelve targeted searches succeeded; no identified material current-window coverage gap.",
+    "actions": "No approval, publication, schedule modification or task disabling. Production collection remains authoritative."
+  }
+}

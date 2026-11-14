@@ -1,0 +1,170 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-13-003",
+    "title": "Rain and flooding leave thousands of Gaza children without access to learning",
+    "summary": "OCHA's November 13 situation report says rainfall and flooding affected 109 learning spaces in Gaza. At least 5,500 children remained unable to access learning because their learning spaces were damaged or inaccessible, as of November 10. The report says rain also damaged 15 safe spaces, child-friendly spaces and psychosocial-support tents, forcing activities to be suspended.",
+    "category": "education_and_displacement",
+    "story_scope": "core_gaza",
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-13-ocha-learning-disruption"
+    ],
+    "source_ids": [
+      "gaza-2026-11-13-ocha-learning-disruption"
+    ],
+    "source_urls": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026"
+    ],
+    "publisher_names": [
+      "OCHA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-13-ocha-learning-disruption",
+        "source_id": "gaza-2026-11-13-ocha-learning-disruption",
+        "title": "Rain and flooding leave thousands of Gaza children without access to learning",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "canonical_url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "publisher": "OCHA",
+        "published_at": "2026-11-13",
+        "published_at_precision": "date_only",
+        "retrieved_at": "2026-11-14T02:04:04.7645108Z",
+        "retrieved_local_date": "2026-11-13",
+        "post_edition_date_source": false,
+        "summary_or_snippet": "OCHA's November 13 situation report says rainfall and flooding affected 109 learning spaces in Gaza. At least 5,500 children remained unable to access learning because their learning spaces were damaged or inaccessible, as of November 10. The report says rain also damaged 15 safe spaces, child-friendly spaces and psychosocial-support tents, forcing activities to be suspended.",
+        "source_type": "manual",
+        "region_scope": "Gaza Strip",
+        "category_hint": "education_and_displacement",
+        "attribution_mode": "official_humanitarian",
+        "dispatch_slug": "gaza",
+        "edition_date": "2026-11-13",
+        "used_in_story_ids": [
+          "gaza-story-2026-11-13-003"
+        ],
+        "reliability_tier": "official-humanitarian-source",
+        "dedupe_review_scope": "Candidate-internal and November 12 published sources only."
+      }
+    ],
+    "generated_at": "2026-11-14T02:47:39.087Z",
+    "include_decision": "include",
+    "public_rendered": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "Distinct dated report; reviewed against November 12 published sources."
+    ],
+    "dedupe_review_scope": "Candidate-internal and November 12 published sources only; no comprehensive historical scan claimed."
+  },
+  {
+    "story_id": "gaza-story-2026-11-13-001",
+    "title": "Palestinian killed by Israeli forces east of Gaza City",
+    "summary": "WAFA reports that one Palestinian was killed early Friday by gunfire in al-Tuffah east of Gaza City and another was killed late Thursday in a drone strike near a tent in al-Mawasi west of Khan Younis.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-13-wafa-tuffah-mawasi-two-reports"
+    ],
+    "source_ids": [
+      "gaza-2026-11-13-wafa-tuffah-mawasi-two-reports"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/176889"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-13-wafa-tuffah-mawasi-two-reports",
+        "source_id": "gaza-2026-11-13-wafa-tuffah-mawasi-two-reports",
+        "title": "Palestinian killed by Israeli forces east of Gaza City",
+        "url": "https://english.wafa.ps/Pages/Details/176889",
+        "canonical_url": "https://english.wafa.ps/Pages/Details/176889",
+        "publisher": "WAFA",
+        "published_at": "2026-11-13",
+        "published_at_precision": "date_only",
+        "retrieved_at": "2026-11-13T17:27:38.3527736Z",
+        "retrieved_local_date": "2026-11-13",
+        "post_edition_date_source": false,
+        "summary_or_snippet": "WAFA reports that one Palestinian was killed early Friday by gunfire in al-Tuffah east of Gaza City and another was killed late Thursday in a drone strike near a tent in al-Mawasi west of Khan Younis.",
+        "source_type": "manual",
+        "region_scope": "Gaza City and al-Mawasi, Gaza",
+        "category_hint": "civilian_harm",
+        "attribution_mode": "reported_public_source",
+        "dispatch_slug": "gaza",
+        "edition_date": "2026-11-13",
+        "used_in_story_ids": [
+          "gaza-story-2026-11-13-001"
+        ],
+        "reliability_tier": "reported-public-source",
+        "dedupe_review_scope": "Candidate-internal and November 12 published sources only."
+      }
+    ],
+    "generated_at": "2026-11-14T02:47:39.087Z",
+    "include_decision": "include",
+    "public_rendered": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "Distinct dated report; reviewed against November 12 published sources."
+    ],
+    "dedupe_review_scope": "Candidate-internal and November 12 published sources only; no comprehensive historical scan claimed."
+  },
+  {
+    "story_id": "gaza-story-2026-11-13-002",
+    "title": "Respiratory illnesses rise in Gaza as winter floods threaten displaced people, WHO says",
+    "summary": "Reuters reports that WHO warned of rising respiratory illnesses in Gaza after heavy rains flooded tens of thousands of tents. WHO said acute respiratory infections were 33,000 cases higher than the same period last year and made up 11% of consultations; WHO said nearly one million displaced people live in flood-exposed areas.",
+    "category": "health_and_shelter",
+    "story_scope": "core_gaza",
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-13-reuters-who-respiratory-flood-risk"
+    ],
+    "source_ids": [
+      "gaza-2026-11-13-reuters-who-respiratory-flood-risk"
+    ],
+    "source_urls": [
+      "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/"
+    ],
+    "publisher_names": [
+      "Reuters"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-13-reuters-who-respiratory-flood-risk",
+        "source_id": "gaza-2026-11-13-reuters-who-respiratory-flood-risk",
+        "title": "Respiratory illnesses rise in Gaza as winter floods threaten displaced people, WHO says",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "canonical_url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "publisher": "Reuters",
+        "published_at": "2026-11-13T12:21:00Z",
+        "published_at_precision": "minute",
+        "retrieved_at": "2026-11-13T17:27:38.3527736Z",
+        "retrieved_local_date": "2026-11-13",
+        "post_edition_date_source": false,
+        "summary_or_snippet": "Reuters reports that WHO warned of rising respiratory illnesses in Gaza after heavy rains flooded tens of thousands of tents. WHO said acute respiratory infections were 33,000 cases higher than the same period last year and made up 11% of consultations; WHO said nearly one million displaced people live in flood-exposed areas.",
+        "source_type": "manual",
+        "region_scope": "Gaza Strip",
+        "category_hint": "health_and_shelter",
+        "attribution_mode": "reported_public_source",
+        "dispatch_slug": "gaza",
+        "edition_date": "2026-11-13",
+        "used_in_story_ids": [
+          "gaza-story-2026-11-13-002"
+        ],
+        "reliability_tier": "wire_and_major_international",
+        "dedupe_review_scope": "Candidate-internal and November 12 published sources only."
+      }
+    ],
+    "generated_at": "2026-11-14T02:47:39.087Z",
+    "include_decision": "include",
+    "public_rendered": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "Distinct dated report; reviewed against November 12 published sources."
+    ],
+    "dedupe_review_scope": "Candidate-internal and November 12 published sources only; no comprehensive historical scan claimed."
+  }
+]

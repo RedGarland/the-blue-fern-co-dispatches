@@ -1,0 +1,38 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-13",
+  "candidates_seen": 3,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-11-13-003",
+      "title": "Rain and flooding leave thousands of Gaza children without access to learning",
+      "classification": "new",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-11-13-001",
+      "title": "Palestinian killed by Israeli forces east of Gaza City",
+      "classification": "new",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-11-13-002",
+      "title": "Respiratory illnesses rise in Gaza as winter floods threaten displaced people, WHO says",
+      "classification": "new",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "duplicate_groups": [],
+  "merged_sources": 0,
+  "prior_editions_checked": [
+    "2026-11-12"
+  ],
+  "review_scope": "Candidate-internal and comparison against November 12 published sources only; not a comprehensive historical duplicate scan.",
+  "reasons": [
+    "Three distinct source reports. Previously proposed AP account of the November 12 Nasser strike excluded because that incident appeared in the November 12 edition."
+  ]
+}

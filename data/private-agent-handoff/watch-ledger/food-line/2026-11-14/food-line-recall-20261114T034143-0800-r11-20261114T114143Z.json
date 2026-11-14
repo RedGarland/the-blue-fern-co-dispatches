@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261114T034143-0800-r11-20261114T114143Z",
+  "scheduled_for": "2026-11-14T03:45:54-08:00",
+  "started_at": "2026-11-14T03:41:43-08:00",
+  "completed_at": "2026-11-14T03:44:35.765-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-14T02:48:12.030-08:00",
+    "end_at": "2026-11-14T03:44:35.765-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "basis": "From last independently fetched completed hourly heartbeat through this execution. Search retrieval included November 13-14 reports for indexing delay; only newly qualifying impacts within the observation window are eligible.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-14/food-line-recall-20261114T024634-0800-r11-20261114T104634Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary high-value missed-event recall; the primary nationwide Food Line production collector remains authoritative.",
+    "target_classes": [
+      "Loss, closure, fire, or disaster affecting a community's only, sole, last, or full-service grocery",
+      "Emergency food distribution cancelled or suspended by storm, flood, fire, outage, or facility damage",
+      "Abrupt pantry or food-bank shutdown or major service/access reduction",
+      "New official SNAP/WIC or food-assistance interruption with immediate food-access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" \"closed\" fire November 2026 community",
+      "\"sole grocery store\" fire closure November 13 14 2026",
+      "\"last grocery store\" closes November 2026 small town",
+      "\"food distribution\" \"canceled\" storm flood November 13 14 2026",
+      "\"food pantry\" \"closed\" \"until further notice\" November 2026",
+      "\"food bank\" \"suspended\" distribution November 2026 storm",
+      "site:gov November 14 2026 SNAP EBT benefits service outage interruption",
+      "site:gov November 2026 WIC benefits temporarily unavailable system outage",
+      "\"Kalona\" \"grocery\" \"closed\" November 13 14 2026",
+      "\"mobile food pantry\" \"cancelled\" \"November 14\" 2026 weather",
+      "\"pantry\" \"temporarily closed\" \"Nov 13\" 2026 food",
+      "\"SNAP\" \"outage\" \"November 13\" \"2026\" benefits state"
+    ],
+    "search_errors_observed": 0,
+    "search_limitations": "Search results predominantly historical grocery fires, older benefit-shutdown stories, routine food-distribution listings, and not-current closures; indexing delays can hide local notices within one hour. The watch is not exhaustive nationwide.",
+    "direct_source_checks": {
+      "distinct_urls": 15,
+      "accessible": 11,
+      "inaccessible": 4,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "https://www.forgottenharvest.org/find-food/",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring access restriction to Guam agency direct notices; search results used as imperfect supplement."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Retrieval unavailable",
+          "impact": "Recurring restriction to national disaster-SNAP page; targeted searches remain available."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403",
+          "impact": "Recurring restriction to USDA SNAP state directory."
+        },
+        {
+          "url": "https://www.maine.gov/dhhs/ofi/programs-services/food-supplement",
+          "error": "HTTP 403",
+          "impact": "Recurring restriction to Maine food supplement page."
+        }
+      ]
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://www.kcrg.com/authors/jocelynpeshia/",
+        "reason": "November 8 report on Kalona, Iowa's sole full-service grocery owners seeking a buyer; no new verified closure or immediate loss of service."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Oregon proof-of-housing/utility-costs SNAP change begins November 21, 2026; no new immediate interruption in this observation window."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Connecticut state-processor conversion is scheduled for November 15 UTC; current status reports all systems operational, not an immediate outage."
+      },
+      {
+        "url": "https://oswegoalliance.org/events/week/2026-11-08/",
+        "reason": "November 13 mobile food pantry notice changes start time due to earlier darkness; does not document canceled or suspended distribution."
+      },
+      {
+        "url": "https://www.fingerlakesdailynews.com/local/cayuga/weedsport-grocery-store-closes/",
+        "reason": "Historical grocery-store closure, not new in this observation window."
+      },
+      {
+        "url": "https://www.fns.usda.gov/disaster/snap",
+        "reason": "Could not retrieve; recorded as coverage limitation, not as affirmative evidence of disruption."
+      }
+    ],
+    "material_new_coverage_failure": false,
+    "baseline_comparison": "11 of 15 recurrent direct sources accessible, same four restrictions as verified 02:48 PST prior heartbeat; no new material degradation.",
+    "scheduled_for_note": "Scheduled time derived from stored hourly recurrence; runtime observed this execution start at 03:41:43 PST, before the nominal 03:45:54 PST boundary.",
+    "exclusions_policy": "Excluded donation drives, resource guides, recipes, opinions, routine program promotion, generic inflation news, stale or duplicate events, and future policy changes without current interruption.",
+    "operations": "No approvals, publications, production modifications, task schedule changes, or task disablement."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-14",
+  "generated_at": "2026-11-14T18:10:26.308424+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-14/",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 3,
+  "story_count": 3,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Associated Press via WRAL",
+    "European External Action Service",
+    "OCHA / Humanitarian Country Team"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 3 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "free_public_artifacts": [],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 3 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "errors": [],
+  "collection_provenance": "Manual recovery collection; this metadata does not claim that the scheduled Gaza run succeeded.",
+  "first_source_retrieved_at": "2026-11-14T17:38:27.738586Z",
+  "last_source_retrieved_at": "2026-11-14T17:45:24Z",
+  "contains_later_same_day_update": true,
+  "later_same_day_update_count": 2,
+  "later_same_day_update_batch_count": 2,
+  "later_same_day_update_source_count": 2,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-14T17:38:27.738586Z",
+      "retrieved_at_local": "2026-11-14T09:38:27-08:00",
+      "retrieved_local_date": "2026-11-14",
+      "batch_classification": "manual_recovery_collection",
+      "source_record_ids": [
+        "gaza-2026-11-14-eeas-humanitarian-appeal"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-14T17:38:28.743181Z",
+      "retrieved_at_local": "2026-11-14T09:38:28-08:00",
+      "retrieved_local_date": "2026-11-14",
+      "batch_classification": "manual_recovery_collection",
+      "source_record_ids": [
+        "gaza-2026-11-14-ap-jabaliya"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-11-14T17:45:24Z",
+      "retrieved_at_local": "2026-11-14T09:45:24-08:00",
+      "retrieved_local_date": "2026-11-14",
+      "batch_classification": "manual_recovery_collection",
+      "source_record_ids": [
+        "gaza-2026-11-14-ocha-winter-supplies"
+      ],
+      "source_count": 1
+    }
+  ]
+}

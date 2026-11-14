@@ -1,0 +1,241 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-14-002",
+    "title": "ISRAEL/PALESTINE: Statement by the High Representative on behalf of the European Union on the humanitarian developments in Gaza",
+    "summary": "The European Union says flooding and winter conditions are worsening Gaza's humanitarian crisis, calls for protection of civilians and medical facilities, urges immediate unimpeded aid access and reopening of all crossings, and says the recent Nasser Hospital airstrike is deeply alarming.",
+    "category": "aid_access_and_diplomacy",
+    "story_scope": "core_gaza",
+    "score": 92,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-14-eeas-humanitarian-appeal"
+    ],
+    "source_ids": [
+      "gaza-2026-11-14-eeas-humanitarian-appeal"
+    ],
+    "source_urls": [
+      "https://www.eeas.europa.eu/eeas/israelpalestine-statement-high-representative-behalf-european-union-humanitarian-developments-gaza_en"
+    ],
+    "publisher_names": [
+      "European External Action Service"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-14-eeas-humanitarian-appeal",
+        "title": "ISRAEL/PALESTINE: Statement by the High Representative on behalf of the European Union on the humanitarian developments in Gaza",
+        "url": "https://www.eeas.europa.eu/eeas/israelpalestine-statement-high-representative-behalf-european-union-humanitarian-developments-gaza_en",
+        "publisher": "European External Action Service",
+        "summary_or_snippet": "The European Union says flooding and winter conditions are worsening Gaza's humanitarian crisis, calls for protection of civilians and medical facilities, urges immediate unimpeded aid access and reopening of all crossings, and says the recent Nasser Hospital airstrike is deeply alarming.",
+        "event_date": "2026-11-14",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "aid_access_and_diplomacy",
+        "attribution": "European External Action Service",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-14T18:10:26.308424+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 92,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "aid_access_and_diplomacy",
+    "location": "Gaza Strip",
+    "event_date": "2026-11-14",
+    "attribution": "European External Action Service",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-14-003",
+    "title": "Urgent appeal to expedite the entry of winter supplies into Gaza",
+    "summary": "In its November 13 appeal, OCHA's Humanitarian Country Team says more than 150,000 tents procured by humanitarian partners and Member States are outside Gaza, most in Al Arish, while approval, crossing capacity, delivery-window and funding barriers delay entry. It calls for expedited winter supplies, water and wastewater repairs, humanitarian access and funding. This is dated November 13 context, not a November 14 tally or confirmation that supplies arrived.",
+    "category": "aid_access_and_diplomacy",
+    "story_scope": "core_gaza",
+    "score": 82,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "ceasefire_diplomacy",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-14-ocha-winter-supplies"
+    ],
+    "source_ids": [
+      "gaza-2026-11-14-ocha-winter-supplies"
+    ],
+    "source_urls": [
+      "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza"
+    ],
+    "publisher_names": [
+      "OCHA / Humanitarian Country Team"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-14-ocha-winter-supplies",
+        "title": "Urgent appeal to expedite the entry of winter supplies into Gaza",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "publisher": "OCHA / Humanitarian Country Team",
+        "summary_or_snippet": "In its November 13 appeal, OCHA's Humanitarian Country Team says more than 150,000 tents procured by humanitarian partners and Member States are outside Gaza, most in Al Arish, while approval, crossing capacity, delivery-window and funding barriers delay entry. It calls for expedited winter supplies, water and wastewater repairs, humanitarian access and funding. This is dated November 13 context, not a November 14 tally or confirmation that supplies arrived.",
+        "event_date": "2026-11-13",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "aid_access_and_diplomacy",
+        "attribution": "OCHA / Humanitarian Country Team",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-14T18:10:26.308424+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 82,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": true,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "aid_access_and_diplomacy",
+    "location": "Gaza Strip",
+    "event_date": "2026-11-13",
+    "attribution": "OCHA / Humanitarian Country Team",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-14-001",
+    "title": "Israeli drone strike kills 2 Palestinians in Gaza, and other Mideast news",
+    "summary": "The Associated Press reports that a drone strike killed two Palestinians walking in Jabaliya, according to Shifa Hospital's director; a field hospital reported several other wounded people, and the Israeli military said it struck two Hamas militants. Victim status is not independently established.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 72,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-14-ap-jabaliya"
+    ],
+    "source_ids": [
+      "gaza-2026-11-14-ap-jabaliya"
+    ],
+    "source_urls": [
+      "https://www.wral.com/news/ap/ade76-israeli-drone-strike-kills-2-palestinians-in-gaza-and-other-mideast-news/"
+    ],
+    "publisher_names": [
+      "Associated Press via WRAL"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-14-ap-jabaliya",
+        "title": "Israeli drone strike kills 2 Palestinians in Gaza, and other Mideast news",
+        "url": "https://www.wral.com/news/ap/ade76-israeli-drone-strike-kills-2-palestinians-in-gaza-and-other-mideast-news/",
+        "publisher": "Associated Press via WRAL",
+        "summary_or_snippet": "The Associated Press reports that a drone strike killed two Palestinians walking in Jabaliya, according to Shifa Hospital's director; a field hospital reported several other wounded people, and the Israeli military said it struck two Hamas militants. Victim status is not independently established.",
+        "event_date": "2026-11-14T13:58:15Z",
+        "location": "Jabaliya, northern Gaza City",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "Associated Press via WRAL",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-14T18:10:26.308424+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 72,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Jabaliya, northern Gaza City",
+    "event_date": "2026-11-14T13:58:15Z",
+    "attribution": "Associated Press via WRAL",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

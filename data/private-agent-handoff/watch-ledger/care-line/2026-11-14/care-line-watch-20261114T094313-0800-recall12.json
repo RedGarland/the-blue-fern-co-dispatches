@@ -1,0 +1,78 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T094313-0800-recall12",
+  "scheduled_for": "2026-11-14T09:45:22-08:00",
+  "started_at": "2026-11-14T09:43:13-08:00",
+  "completed_at": "2026-11-14T09:46:27.915-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T08:50:14.662-08:00",
+    "end": "2026-11-14T09:46:27.915-08:00",
+    "prior_check_basis": "Verified latest care-line heartbeat in branch ops/watch-ledger: care-line-watch-20261114T084825-0800-recall12-20261114T165014662Z.json, completed at 2026-11-14T08:50:14.662-08:00.",
+    "newness_rule": "New or newly identified, independently verified concrete U.S. states/territories healthcare access loss/restoration, minus previously recorded events. Primary national collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; not the primary national collector or publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Initial obsolete CMS public-notices URL inaccessible; canonical CMS Public Notices index then retrieved, directly opened, and inspected. Successful canonical listing carried the four notices already recorded November 13.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — termination 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — termination 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — termination 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — termination 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"November 14, 2026\" hospital \"emergency department\" closed diverted patients United States",
+      "\"November 14, 2026\" hospital labor delivery maternity unit suspension closure",
+      "\"November 14, 2026\" behavioral health psychiatric unit admissions closure suspended",
+      "\"November 14, 2026\" dialysis center clinic suspended closed patients",
+      "November 14 2026 oncology cancer infusion treatment clinic closing suspended patients site:com",
+      "November 14 2026 primary care clinic immediate closure patients relocated local news",
+      "November 14 2026 rural hospital emergency department diversion service suspension local",
+      "November 14 2026 ambulance EMS base permanently close service suspended local",
+      "air ambulance medevac helicopter base grounding closure hospital emergency transport November 14 2026 US",
+      "hospital emergency department reopens services restored November 14 2026 after suspension",
+      "site:gov \"November 14, 2026\" \"hospital\" \"closure\" \"emergency\" \"services\"",
+      "Puerto Rico Guam U.S. Virgin Islands Northern Mariana Islands American Samoa healthcare clinic ambulance hospital closure November 14 2026"
+    ],
+    "targeted_search_lookback": "Search recency filter 2 days, with November 14 2026 prioritized and November 13 lookback; candidate must be newly reported and nonduplicate in current hourly window.",
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "exclusions": [
+        "Four November 13 CMS termination notices already captured in prior watches.",
+        "Sharon Regional Medical Center (PA) emergency closure November 4 and broader service suspension November 6: prior-week development, not new this window.",
+        "Mass General Brigham Downtown Crossing primary-care practice planned December 18 closure: announced November 4, not newly identified during this window.",
+        "MaineHealth Lincoln Hospital maternity unit planned December closure: established earlier, no new effective event this hour.",
+        "Kula Hospital (HI) restoration project announced September 22: no concrete reopening date or new service restoration.",
+        "Guam naval hospital typhoon restrictions from April 2026: historical; other U.S. territory sources out of window.",
+        "FAA November 13 nationwide ground stop: no verified distinct air-medical or EMS interruption established by searched sources.",
+        "Search results mentioning routine administration/holiday notices, generic policies, non-U.S. facilities, proposals, future facilities, business/ownership transactions, or no actual access change."
+      ]
+    },
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/sharon-regional-medical-center-er-closure-services-suspended-480866",
+      "https://www.bostonglobe.com/2026/11/04/business/mass-general-brigham-downtown/",
+      "https://www.hawaiinewsnow.com/2026/09/23/kula-hospital-be-restored-reopened-after-kona-low-damage/"
+    ],
+    "limitations": [
+      "An obsolete noncanonical CMS URL failed retrieval, but canonical CMS notice coverage was restored with no known material gap; classification DEGRADED follows the rule to retain partial source retrieval failures.",
+      "No material search source failure beyond obsolete URL; all 12 targeted queries completed.",
+      "Bounded source coverage and search index lag can miss geographically dispersed new changes, especially weekend reporting."
+    ],
+    "degradation_materiality": "Non-material retrieval error of obsolete CMS path only; authoritative CMS Public Notices index and all targeted searches successfully checked.",
+    "actions": "No review approval, publication, schedule alteration, task disabling, or production-state mutation."
+  }
+}

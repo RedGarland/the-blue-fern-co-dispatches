@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T174710-0800-recall12-20261114T014804Z",
+  "scheduled_for": "2026-11-13T17:45:22-08:00",
+  "started_at": "2026-11-13T17:47:10-08:00",
+  "completed_at": "2026-11-13T17:48:04-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T16:52:11-08:00",
+    "end": "2026-11-13T17:48:04-08:00",
+    "prior_check_basis": "Previous verified Care Line Watch heartbeat care-line-watch-20261113T164913-0800-recall12-20261114T005211Z, completed 2026-11-13T16:52:11-08:00.",
+    "newness_rule": "Concrete U.S./territory healthcare access changes or official notices newly surfaced since the prior check; exclude already recorded findings and proposals without effective service change. Production deduplication authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch; production Care Line collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "previous_known_notices": [
+        "Cypress Hospice, CA, CCN B31731, notice 2026-11-13",
+        "AZURE HOME HEALTH, CA, CCN 757304, notice 2026-11-13",
+        "Titus Healthcare LLC, OH, CCN 369002, notice 2026-11-13",
+        "Compass Healthcare LLC, OH, CCN 369259, notice 2026-11-13"
+      ],
+      "retrieval_status": "SUCCESS. Canonical CMS page directly opened and showed all four previously recorded November 13 notices; initial search excerpt was stale (showed November 10 latest)."
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closes suspends services November 13 2026 Friday local news",
+      "maternity labor delivery unit shutdown closes November 13 2026 hospital",
+      "mental health behavioral health clinic hospital closes suspends November 13 2026",
+      "dialysis center closes November 13 2026 patients local",
+      "ambulance emergency medical service agency closes suspended operations November 13 2026",
+      "air medical helicopter base closes suspends flights November 13 2026",
+      "\"November 13, 2026\" \"hospital\" \"closed\" \"patients\" emergency rural",
+      "\"November 13, 2026\" \"clinic\" \"closing\" primary care oncology",
+      "\"November 13, 2026\" \"reopened\" \"emergency department\" hospital",
+      "\"November 13, 2026\" \"ambulance\" \"suspended\" \"services\"",
+      "\"November 13, 2026\" \"hospital\" \"suspended services\" \"health department\"",
+      "\"November 13, 2026\" healthcare closure dialysis maternity \"Puerto Rico\" \"Guam\" \"Virgin Islands\""
+    ],
+    "reviewed_exclusions": [
+      {
+        "title": "Vista Medical Center East inpatient-floor closure, Waukegan, IL",
+        "reason": "Previously recorded November 13; duplicate.",
+        "source_url": "https://www.lakemchenryscanner.com/2026/11/13/vista-medical-center-east-down-to-21-patients-and-closes-a-floor-amid-reports-doctors-may-take-over-waukegan-hospital/"
+      },
+      {
+        "title": "Talbott Recovery cessation, Atlanta, GA",
+        "reason": "Previously recorded as retrospective recall finding in prior watch.",
+        "source_url": "https://bhbusiness.com/2026/11/13/uhs-shutters-third-facility-of-2026/"
+      },
+      {
+        "title": "Intermountain fixed-wing requests during nationwide FAA grounding, UT",
+        "reason": "Previously recorded temporary suspension. Reuters reported FAA nationwide ground stop lifted Nov 13, but no source confirmed that Intermountain's medical flight requests resumed; not independently qualifying restoration.",
+        "source_url": "https://www.reuters.com/world/us/faa-issues-national-ground-stop-due-extraordinary-circumstance-reasons-safety-2026-11-13/"
+      },
+      {
+        "title": "Cornwall Regional Hospital emergency department reopening, Jamaica",
+        "reason": "Outside United States and territories.",
+        "source_url": "https://iriefm.net/cornwall-regional-hospitals-accident-and-emergency-department-reopens-after-10-years-of-repairs/"
+      },
+      {
+        "title": "Peterborough paramedics strike notice, Ontario, Canada",
+        "reason": "Outside U.S. jurisdiction and prospective strike rather than effective loss.",
+        "source_url": "https://kawarthanow.com/2026/11/13/peterborough-paramedics-issue-strike-notice-for-monday-morning/"
+      },
+      {
+        "title": "Sharon Regional Medical Center, PA",
+        "reason": "Earlier ordered shutdown or suspended services; no newly corroborated change during observation window.",
+        "source_url": "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+      },
+      {
+        "title": "Far from delivery, rural Arizona",
+        "reason": "Report on existing maternity-care gap; no identifiable newly effective closure.",
+        "source_url": "https://www.azpm.org/health-medicine/2026-11-13/far-from-delivery-series"
+      }
+    ],
+    "retrieval_issues": [
+      {
+        "source_url": "https://kjzz.com/news/local/intermountain-suspends-fixed-wing-medical-requests-during-faa-ground-stop",
+        "issue": "Previously referenced KJZZ local report remains inaccessible by direct retrieval; no medical transport restoration verified. Marked DEGRADED because a source could not be independently checked; broader search and CMS coverage completed."
+      }
+    ],
+    "limitations": [
+      "Twelve targeted searches are bounded sampling, not an exhaustive U.S. and territories collection.",
+      "Search indexing and publication timestamps may lag, limiting precise intra-hour newness.",
+      "One previously flagged air-medical report remained inaccessible. No new qualifying developments were substantiated."
+    ],
+    "approval_action": "NONE",
+    "publication_action": "NONE",
+    "schedule_change": "NONE",
+    "task_disable_action": "NONE"
+  }
+}

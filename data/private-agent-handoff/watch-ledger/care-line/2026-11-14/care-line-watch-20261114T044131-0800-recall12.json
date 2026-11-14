@@ -1,0 +1,71 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T044131-0800-recall12",
+  "scheduled_for": "2026-11-14T04:45:22-08:00",
+  "started_at": "2026-11-14T04:41:31-08:00",
+  "completed_at": "2026-11-14T04:43:22-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T03:45:35-08:00",
+    "end": "2026-11-14T04:43:22-08:00",
+    "prior_check_basis": "Verified previous ops/watch-ledger heartbeat care-line-watch-20261114T034340-0800-recall11.json, completed_at 2026-11-14T03:45:35-08:00.",
+    "newness_rule": "Newly reported or newly discovered concrete U.S. or territory healthcare-access changes since prior watch; deduplicate earlier findings; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded recall only; not the production national collector or publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS: canonical CMS Public Notices directly retrieved after initial CMS-specific search.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department temporarily closed suspended admissions November 14 2026 United States",
+      "hospital maternity labor delivery closure suspended effective November 13 14 2026",
+      "behavioral health psychiatric facility shutdown suspended services November 13 14 2026",
+      "dialysis center oncology clinic abruptly closed patients November 13 14 2026",
+      "ambulance EMS service suspended county base closing November 2026 November 13",
+      "air ambulance helicopter medical transport base closed grounded resumed November 2026 United States",
+      "rural emergency room service shutdown reopening November 2026 hospital",
+      "primary care medical clinic urgent care last day closes November 13 2026",
+      "hospital emergency room maternity reopened resumed operations November 13 November 14 2026 USA",
+      "Puerto Rico Guam US Virgin Islands hospital clinic ambulance emergency suspended closed November 2026",
+      "site:gov \"November 13, 2026\" \"clinic\" \"closure\" OR \"emergency department\" OR \"ambulance\"",
+      "hospital dialysis clinic closure suspended patients November 13 2026 November 14 2026 local news"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "All four November 13 CMS termination notices remain unchanged and were already captured.",
+        "Prevea Washington Street Health Center (Green Bay, WI), last patient-care day November 13, was already captured.",
+        "Bradford Regional Medical Center (PA) emergency department closed May 17, 2026; November 12 retrospective report describes existing loss.",
+        "Previously noted Intermountain air-medical interruption linked to November 13 FAA ground stop lacks independently confirmed operator-specific restoration."
+      ],
+      "exclusions": [
+        "Metro Atlanta clinic bankruptcy report (November 13) does not establish a concrete service closure or suspension.",
+        "Historical maternity, emergency and ambulance closures and speculative threatened closures excluded.",
+        "Policy, opinion, international, unrelated and unconfirmed results excluded.",
+        "No newly documented operational restoration or territory service change established in the observation window."
+      ]
+    },
+    "limitations": [
+      "Targeted search engines returned mainly historical or unrelated material despite date filters; no retrieval failure identified.",
+      "Bounded search count and delayed local-news indexing constrain recall; zero findings does not prove no service changes occurred."
+    ],
+    "actions": "No approval, publication, scheduling changes, or task disabling. Production collection remains authoritative."
+  }
+}

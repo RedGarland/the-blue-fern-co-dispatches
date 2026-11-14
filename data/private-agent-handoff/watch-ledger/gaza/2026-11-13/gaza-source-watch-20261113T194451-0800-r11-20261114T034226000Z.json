@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261113T194451-0800-r11-20261114T034226000Z",
+  "scheduled_for": "2026-11-13T19:44:51-08:00",
+  "started_at": "2026-11-13T19:42:26-08:00",
+  "completed_at": "2026-11-13T19:44:50.052-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T18:43:25.962-08:00",
+    "end": "2026-11-13T19:44:50.052-08:00",
+    "previous_run_completed_at": "2026-11-13T18:43:25.962-08:00",
+    "basis": "Authenticated prior run on ops/watch-ledger; OCHA OPT and WHO examined first, then twelve bounded targeted searches and direct source checks. Duplicates, stale reports and unverified within-window claims excluded.",
+    "official_first_checks_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; production collector/publisher remains authoritative.",
+    "previous_heartbeat_verified": true,
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-13/gaza-source-watch-20261113T184451-0800-r11-20261114T024325962Z.json",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Nov 13 Gaza situation report; main reporting dates Nov 3–9; previously recorded flooding, shelters, water, aid throughput, medicines, meningitis, beds and evacuations."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No newly dated Gaza operational bulletin."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal country-level data still shown as September 2026; no new hourly operational alert."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Known regional endpoint failure persists from preceding runs; Global and Health Cluster alternatives available."
+      },
+      {
+        "publisher": "OCHA OPT Humanitarian Country Team",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 13 appeal re over 150,000 delayed tents, supply bottlenecks; previously recorded."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 14 2026 overnight November 13 new casualties aid ceasefire latest",
+      "site:english.wafa.ps/Pages/Details/ \"November 14, 2026\" Gaza killed injured",
+      "site:aa.com.tr/en/middle-east/ Gaza November 14 2026 killed injured Israeli strike",
+      "site:aljazeera.com/news/2026/11/14 Gaza Saturday morning casualties hospital",
+      "site:reuters.com November 13 2026 Gaza evening civilians ceasefire aid",
+      "site:apnews.com/article/ November 13 2026 Gaza Friday flooding hospital ceasefire",
+      "site:reuters.com/world/middle-east/ \"Respiratory illnesses rise in Gaza\" November 2026 WHO",
+      "site:unicef.org Gaza November 13 2026 November 14 children displaced flood deaths",
+      "site:unrwa.org November 13 2026 Gaza emergency aid crossing health",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"14 Nov 2026\" Gaza healthcare flooding",
+      "site:english.wafa.ps/Pages/LastNews Gaza 14 November 2026 latest news 05:00",
+      "site:icrc.org Gaza 13 November 2026 14 November medical evacuations hostages aid"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "detail": "Latest indexed at 22:11 on November 13 local Palestine time; later headlines concern West Bank. Gaza reports from 19:02 and 18:54 already recorded."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "detail": "WHO acute respiratory infection +33,000, 11% consultations and diagnostic equipment restrictions published 12:21 UTC Nov 13; previously recorded in 05:44 PST watch, not a fresh event."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "detail": "No new OCHA Gaza update dated after November 13."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/",
+        "detail": "Latest prominent Gaza rain child-death item Nov 9, previously covered."
+      }
+    ],
+    "duplicate_exclusions": [
+      "OCHA November 13 report and Humanitarian Country Team winter supplies appeal already recorded earlier.",
+      "WHO acute respiratory illness and laboratory supplies figures already recorded in 05:44 PST heartbeat.",
+      "Deir al-Balah, Khan Younis, al-Mawasi and Nasser Hospital casualty and clinical disruptions recorded in earlier watches.",
+      "Eight mobile medical units awaiting entry near Cairo, flooding/hypothermia impacts and November 12–13 incidents previously logged.",
+      "Newly indexed WAFA Nov 14 search hit presents a Nov 12 publication header and concerns already-known hospital attack; not a verified new incident.",
+      "Stale 2025 and early 2026 news search results excluded."
+    ],
+    "limitations": "WHO Eastern Mediterranean remains HTTP 502; standard WHO and OCHA pages accessible. Search indexing is stale/misleading for some local-day and publication-date metadata. No verified new within-window Gaza operational change identified.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true
+  }
+}

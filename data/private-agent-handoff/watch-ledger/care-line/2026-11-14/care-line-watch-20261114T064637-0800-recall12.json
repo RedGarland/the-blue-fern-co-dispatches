@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T064637-0800-recall12",
+  "scheduled_for": "2026-11-14T06:45:22-08:00",
+  "started_at": "2026-11-14T06:46:37-08:00",
+  "completed_at": "2026-11-14T06:48:28.196-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T05:47:58-08:00",
+    "end": "2026-11-14T06:48:28.196-08:00",
+    "prior_check_basis": "Verified prior ops/watch-ledger heartbeat care-line-watch-20261114T054558-0800-recall12.json, completed_at 2026-11-14T05:47:58-08:00.",
+    "newness_rule": "New or newly identified, independently verified concrete U.S. and territory healthcare-access changes, excluding previously recorded events; primary production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary bounded recall; not the primary national collector or a publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Canonical CMS page retrieved and inspected successfully (crawled November 14); an obsolete CMS public-notices URL attempted first was inaccessible.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "\"Nov 14, 2026\" hospital emergency room closed reopening clinic shutdown United States",
+      "\"Nov 13, 2026\" hospital emergency department temporary closure services suspended",
+      "\"Nov 14, 2026\" maternity labor delivery unit closes hospital patients",
+      "hospital behavioral health psychiatric unit closed admissions suspended \"November 13, 2026\" OR \"November 14, 2026\"",
+      "dialysis cancer oncology center clinic closed patients \"November 13\" \"2026\"",
+      "ambulance EMS air ambulance helicopter base services suspended closed November 13 14 2026",
+      "rural hospital emergency department \"closing\" \"November 2026\" Friday",
+      "health center primary care practice patients \"closing\" November 13 2026",
+      "hospital clinic urgent care dialysis \"reopened\" \"November 14, 2026\" service",
+      "\"November 14, 2026\" clinic hospital \"patients\" \"closed\" \"services\"",
+      "\"November 13, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closure\" OR \"resumed\"",
+      "November 2026 Puerto Rico Guam Virgin Islands hospital clinic emergency care shutdown reopening closure"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "Four CMS November 13 termination notices previously recorded in earlier watches.",
+        "Prevea Washington Street Health Center (Green Bay, WI) November 13 closure previously recorded."
+      ],
+      "exclusions": [
+        "Olean, NY Advanced Prostate Cancer Clinic first operated November 6: new specialty offering, not recovery of lost service.",
+        "Guam Regional Medical City outpatient suspensions in April and October 2026: historical outside the window.",
+        "Air Evac Decatur, IL base closure September 16: historical outside the window.",
+        "US/Guam historical disasters and hospital service issues predating the hourly window.",
+        "Cooper University Health Care tower expansion projected for 2028: no concrete present closure or restoration.",
+        "UTHealth Houston November 13 AI-platform outage: no established patient-facing clinical service loss.",
+        "Planned/operational policy changes, routine holiday closures, ownership stories and non-US events excluded."
+      ]
+    },
+    "limitations": [
+      "Initial obsolete CMS URL was inaccessible; successfully retrieved canonical CMS Public Notices page instead. Classified DEGRADED because an attempted source fetch failed, although current CMS coverage is intact.",
+      "Twelve geographically and topically bounded searches cannot ensure exhaustive national/territory coverage; search-index lag and missing local reports remain possible."
+    ],
+    "degradation_materiality": "Non-material URL retrieval failure only; canonical CMS listing and all 12 targeted searches were available; no new gap identified in current observation window.",
+    "actions": "No review approval, publication, schedule modification, or disabling. Production collection remains authoritative."
+  }
+}

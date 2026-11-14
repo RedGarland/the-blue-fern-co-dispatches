@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261114T054451-0800-20261114T135124Z",
+  "scheduled_for": "2026-11-14T05:44:51-08:00",
+  "started_at": "2026-11-14T05:48:46-08:00",
+  "completed_at": "2026-11-14T05:51:24-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T04:44:53.216-08:00",
+    "end": "2026-11-14T05:51:24-08:00",
+    "previous_run_completed_at": "2026-11-14T04:44:53.216-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T044451-0800-20261114T124453Z.json",
+    "basis": "Authenticated GitHub readback of immediately preceding hourly heartbeat. Window uses previous actual completion through this check's completion, not publication date alone."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only. Primary production collector and publication remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage latest Gaza reports dated 13 November 2026, including winter-supply appeal and situation report; both predate current window and were previously observed."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency situation page checked before targeted search; no new dated Gaza health, hospital, evacuation, supplies or capacity change visible for this window."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Country dashboard formal Health Cluster information as of September 2026, no newly dated service change identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "TIMEOUT",
+        "detail": "Endpoint timed out during direct check. Known repeated access failure from previous runs; partial coverage via WHO Global and WHO Health Cluster."
+      }
+    ],
+    "official_first_search_count": 2,
+    "official_first_search_queries": [
+      "site:ochaopt.org Gaza November 14 2026 humanitarian situation update casualties aid healthcare",
+      "site:who.int Gaza 14 November 2026 health hospital medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"14/November/2026\" Gaza killed injured hospital drone",
+      "site:ochaopt.org/content \"14 Nov 2026\" Gaza humanitarian flood hospital",
+      "site:who.int Gaza medical evacuation 14 November 2026",
+      "site:reuters.com/world/middle-east/ Gaza November 14 2026 civilian deaths aid ceasefire",
+      "site:apnews.com/article Gaza November 14 2026 Israeli strike storm health aid",
+      "site:aljazeera.com/news/2026/11/14/ Gaza ceasefire casualty strike evacuation flooding",
+      "site:aa.com.tr/en/middle-east/ \"14.11.2026\" Gaza killed aid restrictions humanitarian",
+      "site:unrwa.org/newsroom \"14 November 2026\" Gaza flood shelters services",
+      "site:unicef.org \"14 November 2026\" Gaza water healthcare flood supplies",
+      "site:msf.org \"14 November 2026\" Gaza Nasser ambulances",
+      "\"14 November 2026\" Gaza Rafah Kerem Shalom fuel aid evacuation crossing latest",
+      "\"14 November 2026\" Gaza killed injured shelling ceasefire 15:00 16:00 local"
+    ],
+    "additional_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "News list through 14 November 2:59 PM Palestine-local time; no new Gaza casualty/access incident since preceding check. Northern Jabalia 12:48 PM two-fatality item already recorded earlier."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176920",
+        "status": "ACCESSIBLE",
+        "detail": "New 14 November 2:53 PM Palestine-local diplomatic joint condemnation by 17 countries of earlier Nasser Hospital strike; no new casualty, ceasefire implementation, aid entry or negotiated agreement established. Not a qualifying operational development."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Latest report covers 3–9 November for most Gaza figures; pre-existing floods, aid trucks and health disruptions excluded."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/urgent-appeal-expedite-entry-winter-supplies-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "13 November HCT appeal predates window; no confirmed changed delivery or crossing outcome."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176914",
+        "status": "ACCESSIBLE",
+        "detail": "14 November 12:48 PM local drone strike two deaths and injuries west of Jabalia, already logged in 03:52 PST prior heartbeat and excluded as duplicate."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA two Palestinians killed and several injured near Abu Sharkh Junction on 14 November: exact incident already recorded as gaza-20261114-jabalia-abu-sharkh-drone-two-killed-wafa.",
+      "14 November WAFA statement from 17 foreign ministers condemning prior Nasser Medical Complex strike and requesting aid access: diplomatic response, no verified change to talks, agreements, casualty count or aid operations.",
+      "13 November OCHA flooding, winter shelter, health and aid restrictions: prior developments and source updates.",
+      "Sada News 14 November 07:13 report of early-day injuries, artillery and displacement: outside current hourly window, no newly verified incident timing or independent source in window.",
+      "14 November AI-assisted local aggregator reports (Deir al-Balah and broad shelling) without sufficiently sourced incident confirmation, or outside window.",
+      "14 November syndications of 13 November Deir al-Balah casualties, 13 November Nasser Hospital coverage and recycled older items.",
+      "West Bank events, speculative reports, opinion and unmatched search hits."
+    ],
+    "limitations": "WHO Eastern Mediterranean direct endpoint timeout, repeating already known source access problem; WHO Global/Health Cluster and OCHA available. Some relevant news has delayed indexing or unverified timing. Search returned many older or imprecisely matched items. No new verified development within observation window.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

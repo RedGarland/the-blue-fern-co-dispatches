@@ -1,0 +1,68 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T084825-0800-recall12-20261114T165014662Z",
+  "scheduled_for": "2026-11-14T08:45:22-08:00",
+  "started_at": "2026-11-14T08:48:25-08:00",
+  "completed_at": "2026-11-14T08:50:14.662-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T07:43:47.594-08:00",
+    "end": "2026-11-14T08:50:14.662-08:00",
+    "prior_check_basis": "Verified latest branch ops/watch-ledger care-line heartbeat care-line-watch-20261114T074218-0800-recall12-20261114T154347594Z.json, completed_at 2026-11-14T07:43:47.594-08:00.",
+    "newness_rule": "New or newly identified and independently verified concrete healthcare-access loss or restoration; exclude proposals without actual access effect, ownership-only news, retrospective/duplicate developments, and unsupported social reporting."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall across US states and territories. Not the primary national collector; production is authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Retrieved and inspected canonical CMS listing, crawled November 14, 2026; current top listings inspected.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — termination notice 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — termination notice 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — termination notice 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — termination notice 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspends services November 14 2026 local news",
+      "hospital emergency room service resumes reopens November 14 2026",
+      "maternity labor delivery hospital unit closes November 13 14 2026",
+      "behavioral psychiatric hospital unit stops admissions closes November 13 14 2026",
+      "dialysis center patients closure November 13 14 2026 US",
+      "cancer oncology center closes suspended treatment November 13 14 2026",
+      "primary care health center clinic suddenly closes patients November 14 2026",
+      "rural hospital emergency service loss ambulance diversion November 14 2026",
+      "ambulance EMS station base service closure suspended November 13 14 2026",
+      "air ambulance helicopter medical base grounded stopped service November 13 14 2026",
+      "site:gov health department clinic services reopen after closure November 14 2026 US",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital emergency clinic shutdown reopening November 14 2026"
+    ],
+    "targeted_search_lookback": "Searches prioritized November 13–14, 2026, with search recency filter 2 days and explicit local observation window for newness.",
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded": [
+        "HCA Florida Pasadena Hospital planned inpatient discontinuation by end of 2026: announced November 11, cited in prior 07:43 check; no new effective service loss this hour.",
+        "Sharon Regional Medical Center (PA) closure and license revocation: state order November 4, ED closure November 6, previously known historical development.",
+        "Kalamazoo Behavioral Health Hospital (MI) CMS termination notice dated October 30; November 11 local article is retrospective, not a new notice.",
+        "Watsonville Community Hospital maternity-closure discussions from October: proposals without confirmed present service loss.",
+        "FAA nationwide air-traffic ground stop November 13: no independently established EMS/air-medical service interruption from results.",
+        "Other out-of-window historical closures, non-U.S. hospital stories, general commentary and unrelated disruption reports."
+      ]
+    },
+    "limitations": [
+      "Search-indexing/publication lag and a bounded 12-search national/territorial sweep can miss fresh local notices.",
+      "CMS current notices reviewed; additional web search results are noisy and absence of surfaced reports is not proof no change occurred."
+    ],
+    "actions": "No approval, publication, schedule change, task disablement, or production-state mutation."
+  }
+}

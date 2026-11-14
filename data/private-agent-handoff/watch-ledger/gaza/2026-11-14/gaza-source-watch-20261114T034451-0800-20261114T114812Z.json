@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261114T034451-0800-20261114T114812Z",
+  "scheduled_for": "2026-11-14T03:44:51-08:00",
+  "started_at": "2026-11-14T03:48:12-08:00",
+  "completed_at": "2026-11-14T03:52:05.837-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T02:44:51-08:00",
+    "end": "2026-11-14T03:52:05.837-08:00",
+    "previous_run_completed_at": null,
+    "basis": "Conservative scheduled hourly lookback anchor (02:44:51 PST); immediate preceding heartbeat completion not independently retrievable via GitHub file-only connector. Last available authenticated prior heartbeat completed 00:43:18 PST on 14 November. Newly observed qualifying source publication was 12:48 PM Palestinian local time on 14 November, within the current hourly lookback.",
+    "last_verified_heartbeat": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T004451-0800-r11-20261114T084146Z.json",
+    "official_first_search_count": 2,
+    "additional_targeted_search_count": 12
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261114-jabalia-abu-sharkh-drone-two-killed-wafa",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176914",
+      "title": "UPDATE: Two Palestinians killed, several injured in Israeli strikes on northern Gaza",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-14",
+      "publication_date": "2026-11-14",
+      "publication_time_local_reported": "12:48 PM (WAFA webpage, time zone not explicitly stated)",
+      "event_date": "2026-11-14",
+      "location": "Near Abu Sharkh Junction, west of Jabalia refugee camp, northern Gaza Strip",
+      "affected_population_system": "Palestinians killed and injured; hospital emergency intake (two bodies and several injured admitted)",
+      "exact_supporting_passage": "two bodies and several injured people, some of them in critical condition, were brought to hospital following a drone strike near Abu Sharkh Junction",
+      "source_type": "Official Palestinian news agency, attributing incident to unnamed medical source",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "discovered_during": "2026-11-14T03:48–03:51-08:00",
+        "discovery_method": "Direct examination of WAFA latest-news feed after OCHA/WHO first checks and bounded source-specific targeted web searches",
+        "verification": "WAFA report dated 14 November 2026 12:48 PM; specific hospital/source unnamed; no independent confirmation found during 12-search budget",
+        "duplicates_checked": "Prior authenticated 00:43 PST heartbeat and earlier same-day source synopsis; previously covered 13 November strikes excluded; no matching prior source report identified in available ledger context",
+        "scope": "Two killed and several injured in reported 14 November northern Gaza drone strike; separately mentioned shelling in southern Khan Younis not treated as distinct finding without documented civilian harm",
+        "publication_event_distinction": "The report is newly published/observed in the hourly lookback. Exact incident time not supplied by source."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; not production publication or authoritative collection.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed items dated 13 Nov: humanitarian situation report and urgent winter supplies appeal, already recorded; no new 14 Nov OCHA OPT item in this check."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Situation page reviewed; no newly dated 14 Nov oPt health incident identified."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal cluster statistics through September 2026; no newly dated 14 Nov bulletin or evacuation/functional-capacity change identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "TIMEOUT/INACCESSIBLE",
+        "detail": "Known recurrent WHO EMRO access restriction, unchanged materially; alternative WHO Global and Health Cluster pages checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"14/November/2026\" Gaza killed injured hospital displaced",
+      "site:aa.com.tr/en/middle-east/ \"14.11.2026\" Gaza casualties raids",
+      "site:reuters.com/world/middle-east/ \"November 14, 2026\" Gaza aid civilians ceasefire",
+      "site:apnews.com/article/ Gaza November 14 2026 killings aid ceasefire",
+      "site:aljazeera.com/news/2026/11/14/ Gaza killed injured Israel",
+      "site:unrwa.org Gaza \"14 November 2026\" floods food children",
+      "site:unicef.org \"14 November 2026\" Gaza water hospital displaced",
+      "site:msf.org \"14 November 2026\" Gaza healthcare medical aid",
+      "site:palestinercs.org \"14 November 2026\" Gaza ambulance",
+      "\"14 November 2026\" Gaza aid crossing Rafah Kerem Shalom medical evacuation",
+      "\"14 November 2026\" \"Jabalia\" \"Abu Sharkh\" two killed drone",
+      "\"14 November 2026\" Gaza ceasefire negotiations hostages casualties aid strikes Saturday northern Gaza"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "New 14 Nov 12:48 PM report on northern Gaza fatalities found by direct browsing."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176914",
+        "status": "ACCESSIBLE",
+        "detail": "Direct-source verification of two dead and several hurt near Abu Sharkh Junction after drone strike; attributed to medical source."
+      }
+    ],
+    "duplicate_exclusions": [
+      "13 November OCHA situation report and appeal, including prior flooding, shelter and winter aid restrictions.",
+      "13 November Nasser Hospital strike, Deir al-Balah shelling and Khan Younis attacks already reported.",
+      "13 November cold-related infant fatality and mobile medical clinic access blockage already logged.",
+      "Previous week's WHO and health-cluster general service capacity indicators.",
+      "14 November non-Gaza West Bank incidents and recycled or speculative search items.",
+      "14 November Egypt–Türkiye–Qatar meeting cited in secondary reporting: Friday meeting outside hourly event window and no independently established changed ceasefire arrangement."
+    ],
+    "limitations": "One official regional WHO endpoint timed out; alternative WHO sources were accessible, so run is DEGRADED, not FAILED. WAFA is a single-source attributed casualty report, with critical injuries reported but no independent confirmation and no identities. Search indexing lag and unavailable immediately preceding GitHub directory listing mean prior hourly dedupe is bounded rather than exhaustive.",
+    "meaningful_new_findings": 1,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

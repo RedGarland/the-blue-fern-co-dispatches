@@ -1,0 +1,66 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T074218-0800-recall12-20261114T154347594Z",
+  "scheduled_for": "2026-11-14T07:45:22-08:00",
+  "started_at": "2026-11-14T07:42:18-08:00",
+  "completed_at": "2026-11-14T07:43:47.594-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T06:48:28.196-08:00",
+    "end": "2026-11-14T07:43:47.594-08:00",
+    "prior_check_basis": "Verified prior ops/watch-ledger heartbeat care-line-watch-20261114T064637-0800-recall12.json completed_at 2026-11-14T06:48:28.196-08:00.",
+    "newness_rule": "Concrete newly announced/effective essential healthcare access change, verified by official notice or strong local reporting; exclude previously recorded events and mere retrospective reporting. Production collector is authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only. Not the primary national collector and not authority to publish.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Successfully retrieved current canonical CMS listing (web source crawled November 14).",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closure suspended diversion reopened November 14 2026 US",
+      "maternity labor delivery hospital stops delivering babies closure November 13 14 2026",
+      "behavioral health psychiatric hospital unit closing patients suspended November 14 2026",
+      "dialysis clinic oncology cancer center closing shut patients November 13 14 2026",
+      "ambulance EMS air medical helicopter base shuts closes suspends November 13 14 2026",
+      "rural hospital emergency services closure temporarily closed November 13 14 2026",
+      "\"Nov 14, 2026\" \"clinic\" \"closed\" \"patients\" United States",
+      "\"Nov 13, 2026\" \"ambulance\" \"closure\" \"service\" county hospital",
+      "\"Nov 14, 2026\" \"emergency room\" \"reopened\" OR \"closed\" hospital",
+      "\"November 14, 2026\" \"dialysis\" OR \"cancer\" \"clinic\" closing patients",
+      "\"November 13, 2026\" \"health center\" \"closing\" \"patients\" primary care",
+      "Puerto Rico Guam US Virgin Islands American Samoa Northern Mariana Islands hospital health clinic emergency closure reopening November 2026"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded": [
+        "AZPM November 13 rural Arizona maternity-access feature: documents longstanding access distances, not a newly lost or restored service.",
+        "HCA Florida Pasadena Hospital November 11 announcement, republished November 14: inpatient-care transition planned for end of 2026, no new effective service change within hourly window.",
+        "Bradford Regional Medical Center emergency department closure May 17, 2026, revisited by November 13 reporting: historic event; related Pavilion closure already announced ahead of December 1.",
+        "Guam Regional Medical City October 17 typhoon-related outpatient suspension: historical; unrelated to current observation window.",
+        "Historical maternity, rural hospital, ambulance and clinic cases; general staffing shortages, research commentary, financing proposals, new specialty services and irrelevant traffic closure stories."
+      ]
+    },
+    "limitations": [
+      "Search-index and publication lag may hide newly announced local or territory events.",
+      "12 targeted searches are supplementary and not exhaustive; production collection remains authoritative."
+    ],
+    "actions": "No review approval, publication, schedule modification, task disabling, or production-state change."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T214103-0800-recall12-20261114T054224Z",
+  "scheduled_for": "2026-11-13T21:45:22-08:00",
+  "started_at": "2026-11-13T21:41:03-08:00",
+  "completed_at": "2026-11-13T21:42:24-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T20:50:11-08:00",
+    "end": "2026-11-13T21:42:24-08:00",
+    "prior_check_basis": "Prior verified Care Line Watch heartbeat care-line-watch-20261113T204522-0800-recall12-20261114T045011Z, completed 2026-11-13 at 20:50:11 PST.",
+    "newness_rule": "Newly reported or newly discovered unrecorded concrete U.S./territory healthcare-access changes since the previous hourly recall. Retrospective recall is eligible if not previously logged. Primary production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch; not the production national collector.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Canonical CMS Public Notices page opened and current table inspected; separate search result carried a stale earlier table but official opened page confirmed latest notices.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice, CA, CCN B31731",
+        "AZURE HOME HEALTH, CA, CCN 757304",
+        "Titus Healthcare LLC, OH, CCN 369002",
+        "Compass Healthcare LLC, OH, CCN 369259"
+      ],
+      "last_notice_table_source": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 13 2026 patients relocated",
+      "rural hospital emergency room closure suspension November 13 2026 access",
+      "maternity labor delivery unit closed paused November 13 2026 hospital",
+      "mental health behavioral health addiction treatment program closing November 13 2026",
+      "dialysis center clinic closing patients November 13 2026",
+      "oncology cancer center infusion services closure suspended November 13 2026",
+      "urgent care primary care clinic permanent closure effective November 13 2026",
+      "ambulance EMS station base closure reduced service November 13 2026",
+      "air ambulance medical helicopter service suspended base closed November 13 2026",
+      "hospital emergency department maternity reopened restored November 13 2026",
+      "site:gov November 13 2026 termination Medicare hospice home health CLIA",
+      "Puerto Rico Guam Virgin Islands American Samoa Northern Mariana Islands hospital emergency services closure November 13 2026"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded_duplicates": [
+        "Talbott Recovery, Atlanta GA: November 2 outpatient behavioral-health/addiction services termination already logged in earlier watch",
+        "Prevea Washington Street Health Center, Green Bay WI: November 13 final patient-care day already logged in earlier watch",
+        "Four CMS November 13 provider termination notices already logged in prior watches",
+        "Intermountain fixed-wing medical transport interruption previously logged; no independently verified distinct restoration or new suspension"
+      ],
+      "other_exclusions": [
+        "CMS nationwide home health and hospice new-enrollment moratoria extension announced November 12, effective November 13: existing-provider service loss not established; already noted/excluded in prior heartbeat.",
+        "Stale CMS search-index excerpt listing older notices; live official canonical table took precedence."
+      ]
+    },
+    "limitations": [
+      "Search recall was capped at 12 targeted queries; weak indexing and after-hours reporting may delay discovery.",
+      "Search results were sparse and included previously recorded material; no distinct substantiated new service closure, suspension, or restoration was found.",
+      "Not an exhaustive census of all US and territory healthcare providers or real-time service status."
+    ],
+    "actions": "No approval, publication, change to schedule, task disabling, or change to production collection.",
+    "schedule_note": "Nominal hourly schedule slot is 21:45:22 PST; this automation invocation began at 21:41:03 PST before that slot."
+  }
+}

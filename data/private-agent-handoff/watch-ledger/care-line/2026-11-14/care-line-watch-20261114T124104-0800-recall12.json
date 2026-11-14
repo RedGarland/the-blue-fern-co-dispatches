@@ -1,0 +1,70 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T124104-0800-recall12",
+  "scheduled_for": "2026-11-14T12:45:22-08:00",
+  "started_at": "2026-11-14T12:41:04-08:00",
+  "completed_at": "2026-11-14T12:42:45.407-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T11:49:06.948-08:00",
+    "end": "2026-11-14T12:42:45.407-08:00",
+    "prior_check_basis": "Verified previous care-line heartbeat care-line-watch-20261114T114735-0800-recall12.json, completed 2026-11-14T11:49:06.948-08:00, on ops/watch-ledger.",
+    "newness_rule": "New, verified concrete healthcare service loss, CMS access-risk action, or effective restoration since the prior check; exclude duplicates, proposals and no-service-change coverage. Primary national collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; primary national collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Successfully retrieved canonical CMS page and verified notice table directly before the twelve additional searches.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "latest_notices_previously_recorded": [
+        "Cypress Hospice (CA), CCN B31731; November 13 termination notice",
+        "AZURE HOME HEALTH (CA), CCN 757304; November 13 termination notice",
+        "Titus Healthcare LLC (OH), CCN 369002; November 13 termination notice",
+        "Compass Healthcare LLC (OH), CCN 369259; November 13 termination notice"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended diverted November 14 2026 United States local news",
+      "maternity labor delivery unit closure reopened November 14 2026 United States hospital",
+      "rural hospital emergency department shutdown November 13 14 2026 county",
+      "inpatient psychiatric behavioral health facility stopped admissions closure November 14 2026",
+      "dialysis kidney center closure patients November 14 2026 USA",
+      "oncology cancer chemotherapy infusion service closed suspended November 14 2026 local",
+      "primary care clinic suddenly closed patients November 14 2026 United States",
+      "ambulance emergency medical service stopped responding closed station November 14 2026",
+      "air ambulance helicopter medical base closed suspended November 14 2026 USA",
+      "site:gov emergency department hospital maternity closure November 14 2026 health department",
+      "site:gov CMS CLIA provider suspension termination rescission 2026-11-14",
+      "hospital ER emergency services reopened restored after temporary closure November 14 2026"
+    ],
+    "targeted_search_recency_days": 2,
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded": [
+        "Kalamazoo Behavioral Health Hospital (MI) CMS Medicare termination: November 14 MedicalDaily article repeats a previously posted October 30 CMS termination notice; not a new official action or newly verified service change.",
+        "November 13 Greenbrier Valley Medical Center maternity restoration proposal previously reviewed; actual effective reopening not confirmed.",
+        "Historic closures, dated service interruptions, international results, policy proposals, accreditation announcements, and unrelated emergency responses without concrete new healthcare access effect excluded."
+      ]
+    },
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/cms-medicare-termination-kalamazoo-psychiatric-hospital-481249"
+    ],
+    "limitations": [
+      "Two-day recency-filtered category searches may surface stale results and miss very recent unindexed local notices; not an exhaustive national or territory census.",
+      "Searches returned no qualifying new case in the observed interval; no query/source failure was observed.",
+      "Automation trigger began before the nominal :45:22 hourly schedule occurrence; scheduled_for records that nominal occurrence, while started_at and completed_at record the actual run."
+    ],
+    "actions": "One new private handoff heartbeat only. No approvals, publication, scheduling changes, or disabling."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261114T074451-0800-20261114T154218Z",
+  "scheduled_for": "2026-11-14T07:44:51-08:00",
+  "started_at": "2026-11-14T07:39:54-08:00",
+  "completed_at": "2026-11-14T07:42:18.616-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T06:47:19.748-08:00",
+    "end": "2026-11-14T07:42:18.616-08:00",
+    "previous_run_completed_at": "2026-11-14T06:47:19.748-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T064451-0800-20261114T144719748Z.json",
+    "basis": "Previous actual completed_at confirmed through authenticated GitHub readback. Search for newly reported/discovered developments since that timestamp; exclude previously recorded incidents. Run began before nominal hourly scheduled minute, using the actual observation interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261114-al-mawasi-rafah-crossings-authority-prior-strike-injury-death-wafa",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176924",
+      "title": "Palestinian dies of wounds sustained in Israeli airstrike on al-Mawasi west of Rafah",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-14",
+      "publication_date": "2026-11-14",
+      "publication_time_local_reported": "05:23 PM (WAFA webpage; time zone not explicitly stated)",
+      "event_date": "2026-11-14",
+      "original_attack_date": null,
+      "location": "Al-Mawasi, west of Rafah, southern Gaza Strip",
+      "affected_population_system": "One Palestinian reported to have died on 14 November from injuries sustained several weeks earlier in an Israeli strike on a Crossings Authority position; identity unknown",
+      "exact_supporting_passage": "A Palestinian was killed on Saturday evening after succumbing to wounds sustained in an Israeli airstrike on the al-Mawasi area",
+      "source_type": "Palestinian official news agency, citing unnamed medical sources",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "discovery_method": "Targeted 14 November casualty search revealed WAFA report; source article directly opened and publication timestamp checked",
+        "discovered_during": "2026-11-14T07:39–07:42-08:00",
+        "verification": "Direct WAFA report published 14 Nov at 17:23 as displayed, after the 06:47 PST previous watch completion (16:47 Palestine local time). Medical sources cited but no independent confirmation in search budget.",
+        "novelty": "Newly reported death on 14 November from an older strike, not a new airstrike today. Does not change previously reported same-day Jabalia two-killed tally.",
+        "source_event_date_precision": "Death reported Saturday evening 14 November; exact death time unknown; preceding airstrike occurred weeks earlier.",
+        "duplicates_checked": "Prior authenticated 06:47 PST heartbeat excluded earlier Jabalia incident and previous Nasser Hospital, flooding, cold and aid reports. WAFA story ID 176924 and 17:23 publication not in prior heartbeat."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Site homepage checked first: most recent items dated 13 November (winter supplies appeal, humanitarian situation report), predating window; both previously covered. Direct report and appeal checked."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Correct conflict-emergency page reviewed; no newly dated 14 November medical-evacuation, hospital/ambulance or capacity change visible. An alternate similarly named path initially timed out."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal country/cluster data shown as of September 2026; no interval-specific operational change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Regional site and its resource path both returned 502, recurring in prior watches; WHO Global and Health Cluster substitutes checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza 14 November 2026 November 14 16:00 17:00 Israeli strike deaths wounded civilians",
+      "site:english.wafa.ps/Pages/Details/ \"14/November/2026\" Gaza killed injured",
+      "site:reuters.com/world/middle-east/ Gaza November 14 2026 aid casualties ceasefire",
+      "site:apnews.com/article/ Gaza November 14 2026 hospitals people displaced",
+      "site:aljazeera.com/news/2026/11/14/ gaza killed hospitals flood aid",
+      "Gaza November 14 2026 medical evacuation WHO ambulances fuel Nasser hospital",
+      "site:english.wafa.ps/Pages/Details/17692 November 14 2026 Gaza 05:00 PM",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 14 2026 Saturday evening killed wounded Rafah",
+      "site:unrwa.org Gaza 14 November 2026 aid distribution displacement flooding shelters",
+      "site:unicef.org Gaza November 14 2026 drinking water malnutrition access 2026",
+      "Gaza Rafah Kerem Shalom crossing November 14 2026 fuel medical evacuation new",
+      "Gaza November 14 2026 ceasefire talks hostages release negotiations troops humanitarian corridor"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Source feed checked. Previously recorded Jabalia fatality at 12:48 Palestine local; later 17:23 Palestine-local report of death from prior al-Mawasi strike discovered and verified."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176924",
+        "status": "ACCESSIBLE",
+        "detail": "Direct article reports one person died on 14 Nov from earlier strike injuries. Source cites unnamed medical sources."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://www.washingtonpost.com/national/2026/11/14/mideast-news-israel-gaza-iran-november-14/da5d8e60-e032-11f1-912c-4fbb80d73f7f_story.html",
+        "status": "ACCESSIBLE",
+        "detail": "AP report at 08:54 EST re Jabalia two killed (05:54 PST), previously observed, not newly qualifying."
+      },
+      {
+        "publisher": "Times of Israel",
+        "url": "https://www.timesofisrael.com/liveblog_entry/2-palestinians-reportedly-killed-in-north-gaza-drone-strike-idf-says-it-targeted-2-terror-operatives/",
+        "status": "ACCESSIBLE",
+        "detail": "16:11 Israel-local IDF statement concerning already recorded Jabalia strike; not a new incident."
+      }
+    ],
+    "excluded_candidates": [
+      "Jabalia two killed and several wounded, WAFA 14 Nov 12:48 Palestine local: previously logged in 03:44 watch; later AP/Israeli military coverage same incident, no new documented civilian outcome.",
+      "13 Nov Deir al-Balah shelling and Nasser Hospital airstrike, healthcare disruption, respiratory illnesses, flooding and aid access: previously reported, predating interval.",
+      "UNICEF November 9 flooding statement, November 5 WASH background and earlier OCHA Nov 13 winter aid appeal: recycled.",
+      "WAFA 14 Nov 16:14 West Bank shooting and other Ramallah/West Bank developments: outside Gaza scope.",
+      "Search noise about 2023–25 Rafah strikes and ceasefire: outdated.",
+      "Unconfirmed ceasefire talks, crossings changes and unverified claims without window-specific operational change."
+    ],
+    "limitations": "WHO EMRO repeatedly returned HTTP 502 (known, not materially new). An incorrect WHO Global URL variant timed out, but the correct WHO page and Health Cluster remained accessible. Single-source WAFA death report attributes to unnamed medical sources; no independent confirmation found in bounded searches; search indexing may lag. Publication time shown on WAFA page without explicit zone; treated as local Palestine site time for relative ordering.",
+    "meaningful_new_findings": 1,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

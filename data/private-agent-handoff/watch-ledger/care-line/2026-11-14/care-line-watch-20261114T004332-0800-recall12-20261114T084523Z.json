@@ -1,0 +1,73 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T004332-0800-recall12-20261114T084523Z",
+  "scheduled_for": "2026-11-14T00:45:22-08:00",
+  "started_at": "2026-11-14T00:43:32-08:00",
+  "completed_at": "2026-11-14T00:45:23-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-13T23:51:19-08:00",
+    "end": "2026-11-14T00:45:23-08:00",
+    "prior_check_basis": "Prior verified Care Line Watch heartbeat care-line-watch-20261113T235007-0800-recall12-20261114T075119Z completed 2026-11-13T23:51:19-08:00.",
+    "newness_rule": "Newly reported or newly discovered concrete U.S./territory healthcare-access changes not previously recorded; production collector remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only; production collection remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS on canonical CMS listing; an initially attempted obsolete CMS administrative-sanctions URL could not be retrieved and was superseded by the canonical listing.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice (CA), CCN B31731",
+        "AZURE HOME HEALTH (CA), CCN 757304",
+        "Titus Healthcare LLC (OH), CCN 369002",
+        "Compass Healthcare LLC (OH), CCN 369259"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended November 13 2026 November 14 local news",
+      "maternity labor delivery unit closure effective November 13 2026 hospital",
+      "rural hospital emergency services suspended November 13 2026",
+      "behavioral health psychiatric inpatient addiction center closed November 13 2026",
+      "dialysis kidney clinic oncology infusion center closure November 13 2026",
+      "ambulance service air medical base closing suspended November 13 2026",
+      "primary care urgent care clinic closing final day November 13 2026",
+      "hospital emergency department maternity services reopened restored November 13 2026",
+      "November 13 2026 hospital closed patients health local",
+      "November 13 2026 clinic permanently closing primary care urgent care",
+      "November 13 2026 ambulance suspended service county",
+      "November 13 2026 Monadnock Community Hospital network outage November 14 restored"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "Four CMS Medicare termination notices dated November 13 were recorded by prior runs.",
+        "Talbott Recovery outpatient behavioral-health cessation (Atlanta, GA; effective Nov 2) already recorded.",
+        "Prevea Washington Street Health Center primary/urgent care closure (Green Bay, WI; last patient-care day Nov 13) already recorded.",
+        "Intermountain Utah fixed-wing medical interruption associated with Nov 13 FAA ground stop already recorded; provider-specific resumption unverified."
+      ],
+      "exclusions": [
+        "Monadnock Community Hospital (Peterborough, NH) 11/13 official update confirms continued ambulance diversion, elective-surgery cancellations, and outpatient radiology and lab suspension from a network outage first reported Nov 9-10; its 11/13 continuity update is not a newly initiated or restored service during this hourly window.",
+        "Minnesota Sanford Luverne labor/newborn relocation scheduled April 28, 2027 was publicly announced November 10; no new effect in this hourly window.",
+        "Older U.S. rural emergency-hospital conversions, air-medical base closures, international maternity closures, proposed changes, and general business stories excluded."
+      ],
+      "reviewed_primary_additional_url": "https://monadnockcommunityhospital.com/",
+      "reviewed_local_url": "https://5amkeenenh.com/nh/keene/news/2026-11-13/mch-outage"
+    },
+    "degraded_reason": "Initial direct URL attempt to obsolete CMS administrative-sanctions page was not accessible. Canonical CMS Public Notices page was successfully retrieved and independently parsed, so CMS content coverage was restored; the failed source attempt is recorded conservatively as DEGRADED.",
+    "limitations": [
+      "Bounded 12-query web recall is not exhaustive; indexing latency and geographic sampling may miss very recent local developments.",
+      "No new qualifying, nonduplicate access change observed in the hourly window; official Monadnock status shows continued, not newly effective, outage."
+    ],
+    "actions": "No approval, publication, schedule modification, automation disabling, or production collector changes."
+  }
+}

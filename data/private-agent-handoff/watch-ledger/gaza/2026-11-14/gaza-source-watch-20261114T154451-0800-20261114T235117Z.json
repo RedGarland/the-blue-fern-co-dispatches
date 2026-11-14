@@ -1,0 +1,158 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261114T154451-0800-20261114T235117Z",
+  "scheduled_for": "2026-11-14T15:44:51-08:00",
+  "started_at": "2026-11-14T15:48:42-08:00",
+  "completed_at": "2026-11-14T15:51:17.282-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T14:41:27.286-08:00",
+    "end": "2026-11-14T15:51:17.282-08:00",
+    "previous_run_completed_at": "2026-11-14T14:41:27.286-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T143958-0800-20261114T224127286Z.json",
+    "basis": "Authenticated prior Gaza heartbeat read from ops/watch-ledger. November 14 PST overlaps November 15 in Gaza (UTC+02:00). The newly published English WAFA report falls within the interval; the original Arabic WAFA story dates to before the preceding heartbeat, so the incident is recorded as late-recalled/newly surfaced, not falsely assigned a known event time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-al-mawasi-khan-younis-tent-strike-one-dead-two-injured",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176936",
+      "title": "One killed and others injured in occupation shelling of a displaced persons' tent in Al-Mawasi, Khan Younis",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15T01:31:00+02:00",
+      "event_date": "2026-11-15",
+      "event_time": null,
+      "location": "Al-Mawasi, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "People sheltering in a displaced-persons tent; one Palestinian reported killed and two injured",
+      "affected_population": "Displaced Palestinians",
+      "source_type": "Official Palestinian news agency; confirmed separately as a casualty report by Anadolu Agency quoting Nasser Medical Complex",
+      "classification": "new",
+      "confidence": "medium-high",
+      "exact_supporting_passage": "A Palestinian was killed and two others sustained injuries tonight following an Israeli airstrike that targeted a tent sheltering displaced civilians",
+      "supporting_passage_source_url": "https://english.wafa.ps/Pages/Details/176936",
+      "verification": {
+        "secondary_source_url": "https://aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-2-in-southern-gaza/4125458",
+        "secondary_publisher": "Anadolu Agency",
+        "secondary_publication_date": "2026-11-15",
+        "secondary_source_type": "Established reporting with a medical-source attribution to Nasser Medical Complex",
+        "secondary_exact_supporting_passage": "An Israeli drone strike killed a Palestinian and wounded two others in southern Gaza early Sunday",
+        "related_source_url": "https://www.reuters.com/world/middle-east/israeli-military-says-it-struck-senior-commander-hamas-military-wing-2026-11-14/",
+        "related_source_note": "Reuters published 2026-11-14 22:31 UTC about a strike in the Mawasi area killing a Hamas Rafah brigade commander and wounding others, described as a street strike; coincidence with the WAFA/Anadolu account cannot be established, so no separate or merged casualty tally is inferred."
+      },
+      "discovery_context": {
+        "previous_heartbeat_completed_at": "2026-11-14T14:41:27.286-08:00",
+        "english_wafa_publication_pst": "2026-11-14T15:31:00-08:00",
+        "original_arabic_wafa_url": "https://www.wafa.ps/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%AE%D9%8A%D9%85%D8%A9-%D9%86%D8%A7%D8%B2%D8%AD%D9%8A%D9%86-%D9%81%D9%8A",
+        "original_arabic_wafa_publication_pst": "2026-11-14T14:08:00-08:00",
+        "relation_to_previous_run": "No matching finding recorded in the authenticated 14:41 PST heartbeat. The original Arabic report predates it, while a fresh English report and follow-up coverage surfaced after it. Event time itself not independently verified.",
+        "dedupe_note": "Distinct from the 14 November Jabalia/Abu Sharkh strike and a death from prior al-Mawasi/Rafah wounds recorded earlier. Do not combine without event-level verification with Reuters' commander report."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary daily Gaza production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Opened before additional searching; newest listed official news and humanitarian situation report dated 13 Nov, outside interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Opened official situation portal; no new Nov 14/15 interval-specific health, hospital capacity, fuel or evacuation update."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Official OPT health country page accessible; formal figures still marked September 2026, no new interval-specific change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Regional WHO news endpoint still 502, previously documented restriction; WHO Global and Health Cluster available. A longer incorrect WHO URL returned 404; correct WHO situation URL accessed successfully."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 15 2026 00:00 01:00 Palestinian local fresh killed injured Rafah Jabalia airstrike overnight",
+      "site:english.wafa.ps/Pages/Details/ \"15/November/2026\" Gaza killed wounded",
+      "site:reuters.com/world/middle-east/ Gaza November 14 2026 late evening 15 November civilians ceasefire",
+      "site:apnews.com/article/ Gaza November 14 2026 Saturday evening Nov 15 2026 aid airstrikes",
+      "site:aljazeera.com/news/2026/11/15/ Gaza civilians wounded displaced",
+      "site:aa.com.tr/en/middle-east/ Gaza November 15 2026 new strikes shelling",
+      "site:unrwa.org Gaza November 15 2026 new flood shelter displacement access winter",
+      "site:wfp.org Gaza November 14 15 2026 food crossing supply convoy",
+      "site:unicef.org Gaza 14 15 November 2026 children clean water health latest",
+      "Gaza November 15 2026 medical evacuation hospital ambulance fuel Nasser WHO crossing Rafah new",
+      "\"Samir Abu Younis\" \"tent\" Mawasi November 15 2026 killed injured",
+      "Gaza Al Mawasi Khan Younis November 15 2026 1 killed 2 wounded tent strike medical source 01:31"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English live feed",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "15 November 01:31 local post about one fatality and two wounded in al-Mawasi newly listed above prior 14 November 22:44 West Bank item."
+      },
+      {
+        "publisher": "WAFA English article",
+        "url": "https://english.wafa.ps/Pages/Details/176936",
+        "status": "ACCESSIBLE",
+        "detail": "15 November 01:31 local report of displaced-persons tent strike, one killed and two wounded."
+      },
+      {
+        "publisher": "WAFA Arabic original",
+        "url": "https://www.wafa.ps/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%AE%D9%8A%D9%85%D8%A9-%D9%86%D8%A7%D8%B2%D8%AD%D9%8A%D9%86-%D9%81%D9%8A",
+        "status": "ACCESSIBLE",
+        "detail": "Original Arabic post 15 Nov 00:08 local (14 Nov 14:08 PST) shows earliest public account predates prior heartbeat. English version is newly surfaced in watch interval."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-2-in-southern-gaza/4125458",
+        "status": "ACCESSIBLE",
+        "detail": "15 Nov report citing medical sources and Nasser Medical Complex for 1 killed and 2 wounded in al-Mawasi; also describes northern Gaza explosive drops without independently verified casualty outcome."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-says-it-struck-senior-commander-hamas-military-wing-2026-11-14/",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 14 22:31 UTC article about senior Hamas commander killed in Mawasi with others wounded; potential overlap but different scene description (street vs tent), so no event merge or duplicate count."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "detail": "No interval-specific confirmed new aid delivery, food-access or crossing event."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "detail": "Known recurring direct homepage access restriction; other official and agency reporting accessible."
+      }
+    ],
+    "excluded_candidates": [
+      "14 Nov Jabalia/Abu Sharkh drone strike deaths recorded in earlier watch.",
+      "14 Nov reported death from older Rafah/al-Mawasi strike recorded in earlier watch.",
+      "Prior Nasser Hospital strike, winter flooding, aid restrictions and diplomatic reactions previously covered; no new interval-specific operational change.",
+      "Anadolu reports explosives dropped on homes and displacement tents in al-Salatin, Beit Lahia, but no verified injuries, displacement or quantified damage established; retained as coverage-only candidate pending stronger impact evidence.",
+      "Reuters strike in Mawasi against named Hamas commander was published around 14:31 PST, preceding the 14:41 heartbeat; not counted as a distinct current-hour civilian finding without evidence of a separate event.",
+      "No new verified crossings, medical evacuations, transport or hospital function changes, fuel supplies, detention/hostages or ceasefire implementation changes in bounded search."
+    ],
+    "limitations": "WHO EMRO returned 502 and UNRWA homepage 403, both pre-existing restrictions; one incorrect WHO URL 404 was replaced by the working official URL. News reporting and search indexing can lag. No exhaustive coverage claim.",
+    "meaningful_new_findings": 1,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

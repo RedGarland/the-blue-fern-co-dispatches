@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T134851-0800-recall12",
+  "scheduled_for": "2026-11-14T13:45:22-08:00",
+  "started_at": "2026-11-14T13:48:51-08:00",
+  "completed_at": "2026-11-14T13:49:48-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T12:42:45.407-08:00",
+    "end": "2026-11-14T13:49:48-08:00",
+    "prior_check_basis": "Verified previous Care Line Watch heartbeat care-line-watch-20261114T124104-0800-recall12.json on ops/watch-ledger; completion 2026-11-14T12:42:45.407-08:00.",
+    "newness_rule": "New verifiable concrete healthcare access loss, CMS access-risk action or effective restoration in U.S. states/territories since preceding check; duplicate, historic and proposal-only stories excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall only. Primary national production collector remains authoritative.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Canonical CMS Public Notices table successfully retrieved directly before 12 category searches.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_check": 0,
+      "latest_notices_previously_recorded": [
+        "Cypress Hospice, CA, CCN B31731; Nov 13 termination notice",
+        "AZURE HOME HEALTH, CA, CCN 757304; Nov 13 termination notice",
+        "Titus Healthcare LLC, OH, CCN 369002; Nov 13 termination notice",
+        "Compass Healthcare LLC, OH, CCN 369259; Nov 13 termination notice"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "November 14 2026 hospital emergency department temporarily closed diverting ambulances US local news",
+      "November 14 2026 hospital labor delivery maternity unit closure service suspended local news",
+      "November 14 2026 rural hospital emergency room closed temporarily reopened United States",
+      "November 14 2026 psychiatric behavioral health hospital inpatient admissions suspended closure",
+      "November 14 2026 dialysis center kidney treatment closing emergency patients relocated",
+      "November 14 2026 oncology cancer infusion treatment center closed suspended patients",
+      "November 14 2026 urgent primary care clinic sudden closure no appointments rural counties",
+      "November 14 2026 ambulance service EMS base stopped service closure emergency responders local",
+      "November 14 2026 air medical helicopter base closure suspension United States",
+      "November 14 2026 hospital emergency department reopened restored service after closure",
+      "November 14 2026 site:gov hospital closure emergency health care services public alert",
+      "November 14 2026 Puerto Rico Guam US Virgin Islands health clinic hospital ambulance services closed reopened"
+    ],
+    "targeted_search_recency_days": 2,
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded": [
+        "HCA Florida Pasadena Hospital inpatient admissions planned to end by Dec 2026: announcement originally Nov 11, prior to check; Nov 14 MedicalDaily report is derivative and no new hourly effective loss documented.",
+        "Greenbrier Valley Medical Center maternity services: Nov 13 planning story is not an actual service restoration.",
+        "Sharon Regional Medical Center ER suspension and license order: Nov 4-9 existing actions, not new in interval.",
+        "Kalamazoo Behavioral Health Hospital Medicare notice dated October 30, previously logged; no new CMS action.",
+        "Air ambulance Decatur IL base closure dated September 16 and Pennsylvania ambulance closure announced July 14; old stories.",
+        "FAA nationwide ground stop: no independently confirmed change in an air-medical base or emergency medical service.",
+        "Unrelated or historic stories, overseas hospital events and undated search results excluded."
+      ]
+    },
+    "source_links": [
+      "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "https://www.medicaldaily.com/hca-florida-pasadena-hospital-end-inpatient-care-2026-481248",
+      "https://mountainmessenger.com/plans-for-maternity-ward-to-return-to-greenbrier-valley-medical-center-2026-11-14/",
+      "https://www.medicaldaily.com/pennsylvania-revokes-sharon-regional-hospital-license-481006"
+    ],
+    "limitations": [
+      "Two-day bounded recency searches are not a comprehensive 50-state or territory census, especially for nonindexed local official notices.",
+      "Several search results were irrelevant or old, but all 12 targeted searches and the CMS primary listing returned results; no retrieval failure materially reduced coverage.",
+      "Observation window uses prior confirmed completion, not nominal clock boundary."
+    ],
+    "actions": "Exactly one new heartbeat file created on ops/watch-ledger. No approval, publication, schedule modification or task disabling."
+  }
+}

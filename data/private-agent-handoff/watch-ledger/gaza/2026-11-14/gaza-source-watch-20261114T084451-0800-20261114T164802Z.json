@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261114T084451-0800-20261114T164802Z",
+  "scheduled_for": "2026-11-14T08:44:51-08:00",
+  "started_at": "2026-11-14T08:48:02-08:00",
+  "completed_at": "2026-11-14T08:49:40.875-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T07:42:18.616-08:00",
+    "end": "2026-11-14T08:49:40.875-08:00",
+    "previous_run_completed_at": "2026-11-14T07:42:18.616-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T074451-0800-20261114T154218Z.json",
+    "basis": "Previous completed_at and previous findings confirmed by authenticated GitHub fetch. Recall examines new reporting since that point, not earlier events or duplicate follow-ups."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch; production daily Gaza collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage directly opened. Latest listed Gaza report and winter-entry appeal dated 13 November, predating window; no new 14 November update in current listing."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency overview directly opened; no window-specific new medical evacuation, hospital functioning, ambulance, fuel, disease or transport update."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Country page directly opened; formal cluster aggregate shown as of September 2026, not new to this observation interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Repeated known regional-page access failure; WHO Global and WHO Health Cluster provide partial alternative official coverage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"14/November/2026\" Gaza 18:00 Saturday",
+      "site:english.wafa.ps/Pages/LastNews 14 November 2026 Gaza killed injured evening",
+      "Gaza November 14 2026 18:00 19:00 local Saturday new casualties Rafah Jabalia strikes",
+      "site:reuters.com/world/middle-east/ Gaza November 14 2026 Saturday deaths aid ceasefire",
+      "site:apnews.com/article/ Gaza 14 November 2026 attack displaced hospital aid",
+      "site:aljazeera.com/news/2026/11/14/ Gaza strike flood aid military operations",
+      "site:aa.com.tr/en/middle-east/ Gaza 14 November 2026 18:00 ceasefire civilian strikes hospital",
+      "site:unrwa.org Gaza November 14 2026 relief flood health clinic fuel",
+      "site:wfp.org/news Gaza 14 November 2026 food distribution restrictions new",
+      "site:unicef.org 14 November 2026 Gaza water disease shelter flood",
+      "Gaza Rafah Kerem Shalom crossing November 14 2026 Saturday evening trucks patients evacuation fuel",
+      "Gaza 14 November 2026 ceasefire negotiations hostages detainees Israeli military new developments Saturday evening"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Live feed directly reviewed through 18:16 local as displayed on 14 Nov. Entries after prior completion at 17:42 Palestine time concerned Silwad, Bethlehem and other West Bank locations; no new Gaza-specific casualty or access report. Al-Mawasi death 17:23 local already logged in prior run."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/ade76bebaf22135168aac6eb3016bc19",
+        "status": "SEARCHED",
+        "detail": "14 Nov Jabaliya drone deaths, hospital reports and IDF response refer to previously captured two-fatality incident; no new distinct Gaza civilian-impact event."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/funding-cuts-force-wfp-drastically-reduce-lifesaving-assistance-gaza",
+        "status": "SEARCHED",
+        "detail": "19 October ration cuts predate observation interval."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/es/comunicados-prensa/dos-ninas-y-un-nino-mueren-por-lluvias-en-Gaza",
+        "status": "SEARCHED",
+        "detail": "9 November flood casualty report predates observation interval."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously logged 14 November al-Mawasi death from old airstrike (WAFA article 176924, 17:23 Palestine-local publication, prior heartbeat finding_id gaza-20261114-al-mawasi-rafah-crossings-authority-prior-strike-injury-death-wafa).",
+      "Previously logged 14 November Jabalia strike killing two Palestinians and injuring several others; AP corroboration is duplicate, not a distinct new casualty.",
+      "13 November OCHA winter shelter, infrastructure and healthcare-disruption reports, Nasser Hospital attack and older flood conditions; outside interval or previously recorded.",
+      "14 November WAFA 17:45, 17:58, 18:16 stories concern West Bank attacks/detentions, outside Gaza scope.",
+      "Search hits for 2023-2025 or earlier-2026 Gaza shortages, food ration cuts, displacement and ceasefire negotiations; no window-specific change established.",
+      "Unsourced or speculative claims and political statements lacking new operational civilian consequence."
+    ],
+    "limitations": "WHO Eastern Mediterranean returned recurring HTTP 502; a source failure, but no materially novel deterioration relative to earlier watches. Search indexing and reporting latency may hide very recent events. Direct official alternatives and 12 targeted searches completed; no claim that production has ingested the same sources.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

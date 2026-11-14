@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T204522-0800-recall12-20261114T045011Z",
+  "scheduled_for": "2026-11-13T20:45:22-08:00",
+  "started_at": "2026-11-13T20:49:09-08:00",
+  "completed_at": "2026-11-13T20:50:11-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T19:46:27.360-08:00",
+    "end": "2026-11-13T20:50:11-08:00",
+    "prior_check_basis": "Previous verified Care Line Watch heartbeat care-line-watch-20261113T194522-0800-recall12-20261114T034627Z; completed November 13, 2026 at 19:46:27.360 PST.",
+    "newness_rule": "Newly reported or newly discovered unrecorded concrete U.S./territory healthcare-access changes since prior hourly check; older effective dates may qualify as retrospective recall when not previously logged. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall watch. Not primary national production collection; no approval or publication.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Canonical CMS Public Notices page opened and table inspected; initial search snippet was stale, but canonical opened page was current.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice — California — CCN B31731 — termination notice November 13",
+        "AZURE HOME HEALTH — California — CCN 757304 — termination notice November 13",
+        "Titus Healthcare LLC — Ohio — CCN 369002 — termination notice November 13",
+        "Compass Healthcare LLC — Ohio — CCN 369259 — termination notice November 13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closed suspended Friday November 13 2026 United States",
+      "maternity labor delivery ward closes November 13 2026 hospital",
+      "rural hospital emergency services shut down November 2026 Friday 13",
+      "behavioral mental health addiction treatment center outpatient closed November 13 2026",
+      "dialysis clinic treatment center closure November 13 2026",
+      "oncology cancer center services closure November 13 2026",
+      "primary care urgent care health clinic closed November 13 2026",
+      "ambulance service EMS service suspended closing November 13 2026",
+      "medical helicopter air ambulance base suspends operations November 13 2026",
+      "hospital emergency department reopened restored service November 13 2026",
+      "hospital clinic closure November 13 2026 Puerto Rico Guam Virgin Islands American Samoa Northern Mariana",
+      "November 13 2026 hospital clinic services suddenly suspended patients staffing"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded_duplicates": [
+        "Prevea Washington Street Health Center, Green Bay Wisconsin: November 13 final-care-day closure logged in prior watch",
+        "Cypress Hospice, Azure Home Health, Titus Healthcare LLC, Compass Healthcare LLC: previously logged CMS November 13 terminations",
+        "Vista Medical Center East, Waukegan IL: previously logged November 12 inpatient-floor closure",
+        "Talbott Recovery, Atlanta GA: previously logged November 2 service cessation",
+        "Intermountain fixed-wing medical transport interruption: previously logged FAA ground-stop disruption; no independently confirmed new restoration or extended interruption"
+      ],
+      "other_exclusions": [
+        "Nationwide FAA communications-related ground stop reporting without separately verified new clinical or air-medical operational access change",
+        "CMS November 12 nationwide HHA/hospice enrollment moratoria extension, effective November 13: prior general enrollment policy, not newly verified loss of an existing healthcare service",
+        "Search matches consisting of proposals, historical closures, unrelated airline or non-U.S. matters"
+      ]
+    },
+    "limitations": [
+      "Search results were dominated by reports of the November 13 nationwide FAA ground stop; no additional specifically documented qualifying healthcare service disruption or restoration was identified.",
+      "Fresh local reports may not yet be indexed; this is a capped 12-search recall, not exhaustive national or territorial coverage.",
+      "Search success does not independently verify continued operations at every facility; production collector remains authoritative."
+    ],
+    "actions": "No approval, publication, change to schedule, disabling of task, or production-state mutation."
+  }
+}

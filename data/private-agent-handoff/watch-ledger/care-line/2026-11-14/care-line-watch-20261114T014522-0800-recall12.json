@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261114T014522-0800-recall12",
+  "scheduled_for": "2026-11-14T01:45:22-08:00",
+  "started_at": "2026-11-14T01:46:24-08:00",
+  "completed_at": "2026-11-14T01:47:24-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T00:45:23-08:00",
+    "end": "2026-11-14T01:47:24-08:00",
+    "prior_check_basis": "Prior verified heartbeat care-line-watch-20261114T004332-0800-recall12-20261114T084523Z completed at 2026-11-14T00:45:23-08:00.",
+    "newness_rule": "Newly reported or newly discovered concrete U.S./territory healthcare-access changes not previously recorded; production collector authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Supplementary, bounded recall; not production collector or publication authority.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "SUCCESS",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice (CA), CCN B31731 — 2026-11-13",
+        "AZURE HOME HEALTH (CA), CCN 757304 — 2026-11-13",
+        "Titus Healthcare LLC (OH), CCN 369002 — 2026-11-13",
+        "Compass Healthcare LLC (OH), CCN 369259 — 2026-11-13"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency department closes suspends services November 13 2026 November 14 2026 United States",
+      "maternity labor delivery unit closed suspended services November 13 2026 November 14 2026 rural hospital",
+      "ambulance service air medical helicopter base closing suspended November 13 2026 November 14 2026",
+      "behavioral health psychiatric detox treatment center abruptly closes November 13 2026 November 14 2026",
+      "\"Nov 13, 2026\" hospital \"closed\" clinic OR emergency OR services",
+      "\"November 13, 2026\" \"dialysis\" closure OR shutdown OR reopen",
+      "\"November 13, 2026\" \"oncology\" \"clinic\" close OR suspend OR reopen",
+      "\"Nov. 13, 2026\" \"urgent care\" closes OR reopening OR suspends",
+      "\"Nov 13, 2026\" \"ambulance\" \"service\" \"suspended\" OR \"closed\" OR \"restored\" United States",
+      "\"November 13, 2026\" hospital emergency department \"reopened\" OR \"resumed\" OR \"restored\"",
+      "\"Nov 13, 2026\" \"primary care\" OR \"family medicine\" \"closing\" OR \"last day\"",
+      "\"November 13, 2026\" \"health department\" hospital clinic closure notice OR suspension Puerto Rico Guam Virgin Islands"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "duplicates": [
+        "All four CMS notices dated November 13 were recorded by prior watches.",
+        "Previously recorded Talbott Recovery behavioral-health loss, Prevea Washington Street Health Center closure, and Intermountain air-medical interruption excluded."
+      ],
+      "exclusions": [
+        "Bradford, Pennsylvania emergency/obstetric loss: continuing previously known disruption, no new effect or confirmed restoration; reporting also refers to a future Dec 1 milestone.",
+        "Yale New Haven Health Stamford urgent-care opening: new location, not abrupt restoration of previously lost essential service.",
+        "CMS home-health/hospice enrollment moratoria extension: broad enrollment policy, not a newly demonstrated provider-specific closure, suspension, or essential-service restoration.",
+        "Guam DPHSS Nov 13 email disruption: administrative communications outage without independently confirmed concrete healthcare-service closure or suspension.",
+        "Long-standing and international closures, future proposals, animal hospitals, business-only news, and unverified reports excluded."
+      ],
+      "checked_additional_urls": [
+        "https://www.cms.gov/medicare/enrollment-renewal/providers-suppliers/chain-ownership-system-pecos/provider-enrollment-moratoria",
+        "https://notices.guam.gov/",
+        "https://patch.com/connecticut/stamford/amp/35202080/yale-new-haven-health-celebrates-opening-of-new-urgent-care-facility-in-stamford",
+        "https://www.medicaldaily.com/bradford-pa-er-closure-six-months-ambulance-births-481235"
+      ]
+    },
+    "limitations": [
+      "Twelve targeted web searches are not exhaustive across all U.S. states and territories.",
+      "Local reporting and official notices can be indexed after the observation window; no service-specific restoration of Intermountain air medical was verified."
+    ],
+    "actions": "No approvals, publication, schedule changes, automation disabling, or production collector changes."
+  }
+}

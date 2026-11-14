@@ -1,0 +1,72 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261113T225022-0800-recall12-20261114T065138Z",
+  "scheduled_for": "2026-11-13T22:45:22-08:00",
+  "started_at": "2026-11-13T22:50:22-08:00",
+  "completed_at": "2026-11-13T22:51:38-08:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "start": "2026-11-13T21:42:24-08:00",
+    "end": "2026-11-13T22:51:38-08:00",
+    "prior_check_basis": "Prior verified Care Line Watch heartbeat care-line-watch-20261113T214103-0800-recall12-20261114T054224Z completed at 2026-11-13T21:42:24-08:00.",
+    "newness_rule": "Newly reported or newly discovered, previously unrecorded concrete U.S./territory healthcare-access change. Retrospective recall eligible only when not previously logged. Production collection remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "watch_type": "Bounded supplementary recall; not the primary national collector.",
+    "cms_public_notices": {
+      "checked_first": true,
+      "canonical_source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "retrieval_status": "Official canonical CMS listing retrieved and opened; latest notice date 2026-11-13, with four entries already captured in prior watch runs; no newer public notices as of this check.",
+      "latest_notice_date": "2026-11-13",
+      "new_notices_since_prior_watch": 0,
+      "already_recorded": [
+        "Cypress Hospice, CA, CCN B31731",
+        "AZURE HOME HEALTH, CA, CCN 757304",
+        "Titus Healthcare LLC, OH, CCN 369002",
+        "Compass Healthcare LLC, OH, CCN 369259"
+      ]
+    },
+    "additional_targeted_search_count": 12,
+    "targeted_searches": [
+      "hospital emergency room department closing temporarily suspended November 13 2026 late Friday USA",
+      "rural hospital emergency service shutdown November 13 2026 local news",
+      "maternity labor delivery unit closed halted November 13 2026",
+      "mental behavioral health addiction clinic closed services November 13 2026",
+      "dialysis center closure displaced patients Friday November 13 2026",
+      "cancer oncology infusion clinic suspended patients November 13 2026",
+      "primary care urgent care health center closing Friday November 13 2026 services patients",
+      "ambulance EMS provider company station base closure suspension November 13 2026",
+      "air ambulance helicopter medical transport base operations suspended reopened November 13 2026",
+      "hospital emergency department maternity reopening reinstated services November 13 2026",
+      "site:gov November 13 2026 suspension CLIA certificate revoked Medicare termination provider patients",
+      "Puerto Rico Guam USVI CNMI American Samoa health clinic hospital ambulance service closure November 2026"
+    ],
+    "source_review": {
+      "new_qualifying_unique_findings": 0,
+      "excluded_duplicates": [
+        "Talbott Recovery Atlanta, GA outpatient behavioral health/addiction closure, effective November 2, recorded earlier.",
+        "Prevea Washington Street Health Center Green Bay, WI final patient-care day November 13, recorded earlier.",
+        "Four November 13 CMS provider Medicare termination notices already logged.",
+        "Intermountain fixed-wing medical transport interruption associated with FAA nationwide ground stop already logged; no independently confirmed specific transport service restoration found."
+      ],
+      "other_exclusions": [
+        "Rural Arizona and Missouri reporting described longstanding maternity service gaps rather than a newly effective access loss.",
+        "UHS/Talbott article published November 13 is duplicate of prior finding.",
+        "FAA nationwide ground-stop resolution is not independent proof of any named air-medical service restoration.",
+        "Facility accreditation and new care pavilion news do not evidence targeted loss/restoration."
+      ]
+    },
+    "limitations": [
+      "12 targeted searches cap; sparse indexing and after-hours reporting may delay detection.",
+      "Bounded recall is not a full geographic census nor a substitute for production collection.",
+      "No newly verified service closure, suspension, CMS notice, or concrete restoration observed in current window."
+    ],
+    "actions": "No approvals, publication, schedule changes, task disabling, or changes to production collection."
+  }
+}

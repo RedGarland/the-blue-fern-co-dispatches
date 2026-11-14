@@ -1,0 +1,132 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261113T195047-0800-r11-20261114T035047Z",
+  "scheduled_for": "2026-11-13T19:45:54-08:00",
+  "started_at": "2026-11-13T19:50:47-08:00",
+  "completed_at": "2026-11-13T19:51:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-13T18:48:42.944-08:00",
+    "end_at": "2026-11-13T19:51:56-08:00",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-13",
+    "basis": "Since last verified Food Line Source Watch completion (18:48:42.944 PST). Searches looked back 2–3 days for indexing lag; only new or newly-effective events in this observation window eligible; production collector authoritative.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-13/food-line-recall-20261113T184658-0800-r11-20261114T024842944Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall for high-value miss classes, not production collection.",
+    "target_classes": [
+      "Only/sole/last/full-service grocery closure, fire, disaster or loss",
+      "Emergency food distribution canceled or suspended owing to storm/flood/fire/outage/facility damage",
+      "Abrupt pantry/food-bank closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate consequences"
+    ],
+    "targeted_searches": 12,
+    "search_recency_days": "2–3",
+    "search_queries": [
+      "\"only grocery store\" closed fire November 13 2026 community",
+      "\"sole grocery store\" closes storm November 2026",
+      "\"last grocery store\" fire closed November 2026",
+      "\"food pantry\" \"closed\" \"November 13, 2026\" emergency",
+      "\"food distribution\" canceled storm flood November 13 2026",
+      "food bank distribution suspended power outage November 2026 local",
+      "SNAP EBT outage benefits interruption state November 13 2026 official",
+      "WIC benefits suspended outage November 13 2026 state agency",
+      "\"November 13, 2026\" \"food pantry\" closed flood fire storm",
+      "\"November 13, 2026\" \"grocery store\" \"only\" closes community",
+      "\"November 13, 2026\" \"food distribution\" canceled suspended",
+      "\"November 13, 2026\" SNAP WIC \"system outage\" \"benefits\" agency"
+    ],
+    "search_errors_observed": 0,
+    "search_limitations": "Indexing and search precision limits: results skewed toward historical grocery losses, 2025 SNAP shutdown coverage, routine distributions and closures not newly effective. This is a bounded supplementary sample, not exhaustive nationwide collection.",
+    "direct_source_checks": {
+      "distinct_urls": 14,
+      "accessible": 11,
+      "inaccessible": 3,
+      "accessible_urls": [
+        "https://dhs.vi.gov/news/",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://www.forgottenharvest.org/find-food/",
+        "https://status.joinforage.app/",
+        "https://pasquines.us/2026/11/13/automatic-snap-replacement-st-thomas-st-john-outages/",
+        "https://massmarketretailers.com/trump-delays-snap-enforcement-for-90-days-after-mamdanis-push/"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Previously observed Guam territorial access limitation."
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Source inaccessible via web retrieval",
+          "impact": "Previously observed federal USDA source access limitation."
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403 Forbidden",
+          "impact": "Previously observed federal USDA directory limitation."
+        }
+      ],
+      "intermittent_error": "RI DHS SNAP updates returned content on initial open but HTTP 403 on subsequent within-page find, consistent with intermittent prior access issues."
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://pasquines.us/2026/11/13/automatic-snap-replacement-st-thomas-st-john-outages/",
+        "reason": "Reports November 7 automatic replacement of food benefits lost during October 21 outages; benefit restoration, not a newly interrupting event in current watch window."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "December 3 cancellation in Ishpeming, Michigan was already identified previously, lacks stated storm/disaster/facility cause and lacks new publication timing."
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "reason": "Undated home-delivery application closure persisted in prior check, without newly verified significant service reduction during this hour."
+      },
+      {
+        "url": "https://massmarketretailers.com/trump-delays-snap-enforcement-for-90-days-after-mamdanis-push/",
+        "reason": "90-day delay of food-retailer stocking enforcement; no new consumer benefit interruption."
+      },
+      {
+        "url": "https://wgme.com/news/local/eastports-only-grocery-store-to-close-rm-iga-maine-food",
+        "reason": "Eastport, Maine only-grocery closure reported September 3, 2026, outside hourly window; historical duplicate."
+      },
+      {
+        "url": "https://www.aol.com/articles/final-day-mobile-food-pantry-002023000.html",
+        "reason": "2026 final scheduled mobile food event in Bluefield, West Virginia is routine seasonal calendar completion, not abrupt loss due to disruption."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "Housing-cost documentation change takes effect November 21, 2026; no current-hour SNAP suspension."
+      },
+      {
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC official notice says services and appointments continue."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "Provider status page reports all systems operational; future scheduled Connecticut maintenance is not an observed interruption."
+      },
+      {
+        "url": "https://www.trcnyc.org/events/week/2026-11-08/",
+        "reason": "125-guest daily cap announced effective February 1, 2026, not new in this window."
+      }
+    ],
+    "material_new_degradation": false,
+    "interpretation": "DEGRADED due to three recurring direct-source failures (two USDA and Guam). Twelve web searches completed and eleven direct-source pages were reachable; no newly material reduction in watch coverage and no newly verified qualifying signal.",
+    "production_collection_modified": false,
+    "publication_or_approval_changes": false,
+    "schedule_or_task_changes": false
+  }
+}

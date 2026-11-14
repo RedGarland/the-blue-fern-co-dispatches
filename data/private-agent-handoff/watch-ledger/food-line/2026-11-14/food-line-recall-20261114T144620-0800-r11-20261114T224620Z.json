@@ -1,0 +1,154 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-recall-20261114T144620-0800-r11-20261114T224620Z",
+  "scheduled_for": "2026-11-14T14:45:54-08:00",
+  "started_at": "2026-11-14T14:46:20-08:00",
+  "completed_at": "2026-11-14T22:47:22.145Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-11-14T21:51:45.356Z",
+    "end_at": "2026-11-14T22:47:22.145Z",
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "basis": "From independently read-back verified prior Food Line recall heartbeat completed_at, inclusive of newly indexed reports screened by underlying event and source dates; primary nationwide collector is authoritative.",
+    "prior_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/food-line/2026-11-14/food-line-recall-20261114T135014-0800-r11-20261114T215014Z.json",
+    "prior_verified_run_status": "DEGRADED",
+    "prior_verified_run_outcome": "no_findings"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall of high-value missed food-access disruption signals, not a primary collector or publication approval.",
+    "target_classes": [
+      "Closure, fire, or disaster affecting a community's only/sole/last/only full-service grocer",
+      "Weather/disaster/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "Abrupt pantry/food-bank service closure or major access reduction",
+      "New official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "targeted_searches": 12,
+    "search_queries": [
+      "\"only grocery store\" fire closed town November 14 2026",
+      "\"sole grocery store\" closure November 14 2026 community",
+      "\"only full-service grocery\" closing fire November 2026",
+      "\"last grocery store\" shuttered town November 2026",
+      "\"food distribution\" \"canceled\" storm November 14 2026",
+      "\"mobile food pantry\" \"cancelled\" weather November 14 2026",
+      "\"food bank\" \"closed\" \"flood\" November 14 2026",
+      "\"food pantry\" \"temporarily closed\" November 14 2026",
+      "SNAP EBT system outage benefits not working November 14 2026 states official",
+      "WIC benefits interrupted services suspended November 14 2026 health department",
+      "food pantry food bank distribution canceled power outage Saturday November 14 2026",
+      "SNAP food assistance delayed suspended emergency November 14 2026 state agency"
+    ],
+    "search_recency_days": 2,
+    "search_errors_observed": 0,
+    "search_result_assessment": "No verified NEW qualifying U.S. disruption originating or first substantiated in this hourly window. Retrieved items were historical, non-US, future planning/previously announced maintenance, service guides, restoration announcements, or unrelated. Search-index recency did not reliably restrict article publication date; incident and publication dates were manually checked.",
+    "direct_source_checks": {
+      "distinct_urls": 16,
+      "initial_accessible_count": 12,
+      "initial_inaccessible_count": 4,
+      "accessible_urls": [
+        "https://status.joinforage.app/",
+        "https://www.feedwm.org/mobile-pantry-schedule/",
+        "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "https://humanservices.hawaii.gov/bessd/updates/",
+        "https://dhs.vi.gov/news/",
+        "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "https://www.forgottenharvest.org/find-food/",
+        "https://portal.ct.gov/SNAP"
+      ],
+      "failures": [
+        {
+          "url": "https://dphss.guam.gov/",
+          "error": "Timeout",
+          "impact": "Recurring Guam official-source access gap"
+        },
+        {
+          "url": "https://www.fns.usda.gov/disaster/snap",
+          "error": "Retrieval unavailable",
+          "impact": "Recurring USDA Disaster SNAP access gap"
+        },
+        {
+          "url": "https://www.fns.usda.gov/snap/state-directory",
+          "error": "HTTP 403",
+          "impact": "Recurring USDA state-directory access gap"
+        },
+        {
+          "url": "https://www.maine.gov/dhhs/ofi/programs-services/food-supplement",
+          "error": "HTTP 403",
+          "impact": "Recurring Maine official-source access gap"
+        }
+      ],
+      "secondary_retrieval_instability": "RI DHS and Forgotten Harvest pages were accessible on initial opens but subsequently returned HTTP 403 to follow-up in-page searches. No new material deterioration was established."
+    },
+    "reviewed_exclusions": [
+      {
+        "url": "https://portal.ct.gov/SNAP",
+        "reason": "Connecticut EBT transaction outage planned for November 15, 2026, midnight–1 p.m. Eastern; the processor transition was previously announced, not a new interruption since 13:51 PST."
+      },
+      {
+        "url": "https://status.joinforage.app/",
+        "reason": "All systems operational; Connecticut November 15 processor change posted August 20, 2026, not new. No November 14 incidents reported."
+      },
+      {
+        "url": "https://arkansasradio.com/event/hope-lutheran-baby-pantry-special-distribution-batesville-arkansas-november-16-2026/",
+        "reason": "Power-outage cancellation happened the previous week; November 16 make-up distribution restores rather than newly removes access. Already examined on prior watch."
+      },
+      {
+        "url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Spencer, NY only grocery store fire reported September 14, 2026, long before observation window."
+      },
+      {
+        "url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+        "reason": "Featured EBT card/PIN fraud remediation appears on page last revised October 16, 2026, no newly dated event."
+      },
+      {
+        "url": "https://www.forgottenharvest.org/find-food/",
+        "reason": "Pantry locations and schedule still offered; no newly verified disaster-related closure or reduction."
+      },
+      {
+        "url": "https://www.feedwm.org/mobile-pantry-schedule/",
+        "reason": "Accessible mobile distribution schedule; no newly dated storm/disaster cancellation established."
+      },
+      {
+        "url": "https://myfamily.wic.ca.gov/Home/FederalBudget",
+        "reason": "California WIC states that offices remain open and benefits and enrollment continue."
+      },
+      {
+        "url": "https://www.oregon.gov/odhs/food/pages/snap.aspx",
+        "reason": "SNAP housing/utility documentation change starts November 21, is not an immediate interruption in the hourly window."
+      },
+      {
+        "url": "https://humanservices.hawaii.gov/bessd/updates/",
+        "reason": "Existing interview/call center delays; no new hourly interruption date verified."
+      },
+      {
+        "url": "https://dhs.vi.gov/news/",
+        "reason": "No newly dated, qualifying direct-source update found."
+      },
+      {
+        "url": "https://dfcs.georgia.gov/ebt-ivr-call-center-back-online",
+        "reason": "Previously restored call center; no new disruption."
+      },
+      {
+        "url": "https://dhs.ri.gov/programs-and-services/supplemental-nutrition-assistance-program-snap/snap-updates",
+        "reason": "No newly confirmed official food benefit interruption in the hourly window."
+      },
+      {
+        "url": "https://pittsburghfoodbank.org/what-we-do/individuals-families/distributions/",
+        "reason": "No newly confirmed storm/disaster-related distribution cancellation."
+      }
+    ],
+    "baseline_comparison": "Twelve of sixteen direct pages initially accessible versus twelve of sixteen prior run; same four persistent USDA, Guam and Maine restrictions. Intermittent follow-up 403 on RI and Forgotten Harvest; neither was a new material initial coverage gap.",
+    "material_new_coverage_failure": false,
+    "search_limitations": "Two-day search recency is imprecise; unindexed and social-only local notices may be missed. Four recurring official-source restrictions prevent complete direct confirmation. DEGRADED retained and work persisted rather than aborted.",
+    "exclusion_policy": "Exclude historic incidents, repeats, unsubstantiated closures, planned prior-notified outages, donation drives, generic resource guides, routine promotion, opinion, recipes and generic inflation.",
+    "operations": "Read-only research plus exactly one GitHub heartbeat on ops/watch-ledger. No approval, publication, production change, schedule change or disabling."
+  }
+}

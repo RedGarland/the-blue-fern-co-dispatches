@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261114T164451-0800-20261115T004543198Z",
+  "scheduled_for": "2026-11-14T16:44:51-08:00",
+  "started_at": "2026-11-14T16:43:59-08:00",
+  "completed_at": "2026-11-14T16:45:43.198-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-14",
+    "start": "2026-11-14T15:51:17.282-08:00",
+    "end": "2026-11-14T16:45:43.198-08:00",
+    "previous_run_completed_at": "2026-11-14T15:51:17.282-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T154451-0800-20261114T235117Z.json",
+    "basis": "Read previous heartbeat from ops/watch-ledger with authenticated GitHub connector. Bounded supplementary search since prior completed run, with local observation date in Pacific time; Gaza local calendar date is 15 November 2026."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Primary daily Gaza collector/publisher remains authoritative; no approval, publication, schedule, or other production changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Directly opened before additional targeted searches. Newest listed Gaza update and humanitarian situation report dated 13 November 2026; no new publication in bounded interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Directly opened before additional targeted searches. No interval-specific new hospital, ambulance, fuel, medical-evacuation or capacity change."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Directly opened; formal listed data through September 2026, not a new hourly event."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Direct request failed with 502 Bad Gateway; same known limitation from previous hour. WHO Global and Health Cluster were available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ November 15 2026 Gaza \"02:\" strike killed injured",
+      "site:english.wafa.ps \"15/November/2026\" Gaza casualties shelters medical newest",
+      "site:aa.com.tr/en/middle-east/ Gaza November 15 2026 02:00 03:00 strike drone",
+      "site:reuters.com/world/middle-east/ 2026-11-15 Gaza ceasefire Palestinians killed crossing",
+      "site:apnews.com/article/ Gaza November 14 2026 night November 15 strike civilians aid",
+      "site:aljazeera.com/news/2026/11/15/ Gaza overnight strike hospital ceasefire",
+      "site:unrwa.org Gaza November 14 15 2026 flood displaced shelters new incident",
+      "site:unicef.org Gaza 14 November 15 November 2026 children water health supplies",
+      "site:wfp.org Gaza November 14 15 2026 aid food trucks crossing update",
+      "site:palestine.un.org Gaza November 14 15 2026 humanitarian flood access casualties",
+      "Gaza November 15 2026 02:00 local time new deaths wounded Khan Younis Rafah Jabalia Nasser hospital",
+      "Gaza November 15 2026 medical evacuations ambulances hospital functionality fuel crossing changes overnight"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Newest listed Gaza report remains 15 November 01:31 Palestinian time: Khan Younis al-Mawasi tent strike, already recorded in authenticated previous heartbeat. No later new Gaza casualty item on accessed feed."
+      },
+      {
+        "publisher": "WAFA Arabic homepage",
+        "url": "https://www.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "Top Gaza article remains 15 November 00:08 local, same al-Mawasi Khan Younis shelter strike. Gaza cumulative casualty report of 14 November 13:59 local predates interval and is excluded."
+      },
+      {
+        "publisher": "WFP Palestine emergency page",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "detail": "No newly verified hourly operational change."
+      },
+      {
+        "publisher": "UNRWA homepage",
+        "url": "https://www.unrwa.org/",
+        "status": "HTTP_403",
+        "detail": "Continued pre-existing homepage access restriction; agency-specific targeted search and other UN sources consulted."
+      }
+    ],
+    "excluded_candidates": [
+      "15 November al-Mawasi Khan Younis tent strike with one death and two injuries already recorded in prior heartbeat and independently cross-checked by WAFA/Anadolu; duplicate.",
+      "14 November Jabalia/Abu Sharkh deaths and later reported death from earlier al-Mawasi/Rafah wounds already recorded in earlier watches; duplicates.",
+      "14 November Palestinian Ministry of Health cumulative Gaza casualty figures reported by WAFA at 13:59 Palestine time, well before the observation interval.",
+      "Earlier Nasser Medical Complex attack, storm damage, aid entry restrictions, ceasefire statements and diplomatic reactions; no new independently verified interval-specific changes.",
+      "Search-index results without an identifiable new source and event time or verifiable civilian impact were not elevated."
+    ],
+    "coverage_gaps": [
+      "WHO Eastern Mediterranean regional endpoint HTTP 502",
+      "UNRWA direct homepage HTTP 403",
+      "Potential indexing delay for articles within the last hour"
+    ],
+    "limitations": "Searches are bounded, not exhaustive. A newly published account may appear after indexing. Official WHO and OCHA alternatives remained accessible. Recurring endpoint failures are pre-existing, not material new deterioration.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

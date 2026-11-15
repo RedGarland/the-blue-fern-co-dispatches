@@ -1,0 +1,188 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T144451-0800-20261115T224852Z",
+  "scheduled_for": "2026-11-15T14:44:51-08:00",
+  "started_at": "2026-11-15T14:48:52-08:00",
+  "completed_at": "2026-11-15T14:53:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T13:43:56-08:00",
+    "end": "2026-11-15T14:53:01-08:00",
+    "previous_run_completed_at": "2026-11-15T13:43:56-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T134149-0800-20261115T214356762Z.json",
+    "basis": "Published since prior check or bounded late-recalled material operational developments verified not previously recorded; earlier-day discoveries are not presented as new incidents during this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-alshifa-service-capacity-60pct-late-recall",
+      "canonical_source_url": "https://alquds.com/ar/posts/273950-al-shifa-hospital-gaza-partial-recovery-services",
+      "title": "مجمع الشفاء الطبي في غزة يستعيد 60% من خدماته رغم دمار الاحتلال",
+      "publisher": "Al-Quds (جريدة القدس)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15",
+      "publication_time_local": "2026-11-15T18:28:00+02:00",
+      "event_date": null,
+      "location": "Al-Shifa Medical Complex, Gaza City, Gaza Strip",
+      "affected_population_system": "Hospital functioning capacity, emergency services, interventional radiology, renal dialysis, and patients requiring tertiary care",
+      "exact_supporting_passage": "المستشفى نجح في استعادة نحو 60% من قدراته التشغيلية السابقة",
+      "source_type": "Established Palestinian newspaper; reporting attributed to hospital director Mohammad Abu Salmiya and medical/official sources",
+      "classification": "follow-up",
+      "new_follow_up_classification": "follow-up",
+      "confidence": "medium",
+      "summary": "Al-Quds reported on 15 November that Al-Shifa had recovered roughly 60% of its former operating capacity amid ongoing repairs. It describes an adapted emergency receiving area, revived interventional radiology, and dialysis services. Exact dates of the individual restarts are not established.",
+      "discovery_context": {
+        "discovery_class": "late_recall",
+        "first_observed_in_watch": "2026-11-15T14:50:00-08:00",
+        "source_published_before_previous_cutoff": true,
+        "reason_qualifies": "Newly traceable, specific operational-capacity update absent from prior watch findings; material healthcare functioning-capacity class.",
+        "limitations": "Single outlet; 60% is a reported approximation not independently measured, and no new service launch during this hour is claimed."
+      }
+    },
+    {
+      "finding_id": "gaza-20261115-egypt-rafah-101st-patient-batch",
+      "canonical_source_url": "https://alquds.com/ar/posts/273954-egypt-receives-101st-batch-palestinian-patients-rafah",
+      "title": "مصر تستقبل الدفعة 101 من الجرحى الفلسطينيين عبر معبر رفح وسط تحذيرات صحية دولية",
+      "publisher": "Al-Quds (جريدة القدس)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15",
+      "publication_time_local": "2026-11-15T18:28:00+02:00",
+      "event_date": "2026-11-15",
+      "location": "Rafah land crossing, Gaza Strip–Egypt",
+      "affected_population_system": "Wounded and ill Palestinians transferred for medical care in Egyptian hospitals; Egyptian Red Crescent assistance",
+      "exact_supporting_passage": "الدفعة الأولى بعد المئة من الجرحى والمرضى الفلسطينيين القادمين من قطاع غزة",
+      "source_type": "Established Palestinian newspaper reporting attributed to Egyptian medical/relief teams and local sources",
+      "classification": "new",
+      "new_follow_up_classification": "new",
+      "confidence": "medium",
+      "summary": "Al-Quds reported that Egyptian medical and relief teams received the 101st batch of wounded and ill Palestinians from Gaza via Rafah on Sunday 15 November. Patient headcount, names, and WHO verification were unavailable. '101st batch' is an ordinal, not 101 patients.",
+      "discovery_context": {
+        "discovery_class": "late_recall",
+        "first_observed_in_watch": "2026-11-15T14:50:00-08:00",
+        "source_published_before_previous_cutoff": true,
+        "reason_qualifies": "Newly surfaced specific reported medical transfer event not present in prior hourly heartbeat; material medical evacuation/transport class.",
+        "limitations": "Single outlet; no verified headcount, no primary Egyptian Red Crescent/WHO independent readback; the transfer is reported as an arrival on 15 November, not as a verified crossing change."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary source recall only; primary production publisher/collector and records authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Explicitly checked first. Latest listed Gaza bulletins 13 November 2026; no new post in hourly window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Verified live WHO situation overview; no new operational announcement in hourly window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/",
+        "status": "HTTP_502",
+        "detail": "Regional source remains inaccessible; pre-existing recurring restriction."
+      },
+      {
+        "publisher": "WHO Health Cluster oPt",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "No newly dated health cluster operational change, formal figures Sept 2026."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps 15 November 2026 Gaza 23:00 16 November killed injured humanitarian",
+      "site:wafa.ps 16/11/2026 غزة قصف إصابات شهداء مساء",
+      "site:aa.com.tr/en/middle-east 15 November 2026 Gaza Sunday evening killed aid trucks crossing",
+      "site:reuters.com/world/middle-east Gaza November 15 2026 late ceasefire strikes casualties humanitarian",
+      "site:apnews.com Gaza November 15 2026 evening airstrike aid ceasefire",
+      "site:palestine.un.org November 15 2026 Gaza medical evacuation shelter access",
+      "site:unicef.org/press-releases Gaza November 15 2026 children injured killed shelter",
+      "site:wfp.org/news Gaza 15 November 2026 food aid crossing trucks",
+      "site:unrwa.org/newsroom Gaza 15 November 2026 shelters services operations",
+      "site:aljazeera.com/news/2026/11/15 gaza latest deaths strikes ceasefire humanitarian",
+      "غزة مساء الأحد 15 نوفمبر 2026 قتيل جريح قصف مساعدات معبر",
+      "Gaza November 15 2026 23:00 local time ceasefire wounded aid medical evacuation tents"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA English latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No new Gaza event beyond already known Rafah casualties, UNICEF/UNRWA and four-foreign-ministers statement."
+      },
+      {
+        "publisher": "WAFA Arabic latest",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "23:54 local daily Gaza roundup repeated previously logged casualties; no distinct new casualty event."
+      },
+      {
+        "publisher": "Anadolu English",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-2-in-southern-gaza/4125458",
+        "status": "ACCESSIBLE",
+        "detail": "15 Nov Rafah strike already recorded; separate report of explosives near civilian tents in Beit Lahia lacks independently verifiable civilian harm details."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/15/israeli-air-strike-kills-senior-hamas-commander-in-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "15 Nov confirmation concerns Saturday senior Hamas commander strike and older medical toll, not new civilian-impact incident."
+      },
+      {
+        "publisher": "Al-Quds Al-Shifa",
+        "url": "https://alquds.com/ar/posts/273950-al-shifa-hospital-gaza-partial-recovery-services",
+        "status": "ACCESSIBLE",
+        "detail": "Newly recalled material hospital capacity report; exact reopening dates unknown."
+      },
+      {
+        "publisher": "Al-Quds Rafah medical arrivals",
+        "url": "https://alquds.com/ar/posts/273954-egypt-receives-101st-batch-palestinian-patients-rafah",
+        "status": "ACCESSIBLE",
+        "detail": "Newly recalled patient-transfer batch reported by established local outlet; count not supplied."
+      },
+      {
+        "publisher": "WFP Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "detail": "No newly dated food distribution or crossing change observed."
+      },
+      {
+        "publisher": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "status": "HTTP_403",
+        "detail": "Established source-specific access restriction."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 23:54 Palestine-time roundup aggregates the Abdullah Hassouna death, Rafah al-Mawasi strike, Khan Younis injury already in earlier watches; no additional people counted.",
+      "Rafah fatality count discrepancy (English WAFA one, Arabic summary two) was already noted in earlier watch; not counted as distinct new casualty event.",
+      "14 Nov Israeli attack on Rafah brigade commander, older Al-Saftawi fatalities: prior events.",
+      "UK/Australia/Canada/Italy aid-access joint statement, UNICEF child casualty totals, UNRWA contracts, ministry tolls and 70 recovered remains: already recorded.",
+      "Al-Quds diabetes outreach campaign for approximately 1,000 people is a prospective announced programme; no treatment delivery yet verified.",
+      "Al-Quds October crossing/truck aid statistics are historical aggregates, not new changed deliveries during this window.",
+      "Beit Lahia drone devices reported by Anadolu without distinct corroborated injury/damage consequences; held out of positive findings.",
+      "Uncorroborated commentary/predictions about stalled Gaza negotiations not promoted."
+    ],
+    "caveats": [
+      "WHO regional HTTP 502 and UNRWA HTTP 403 are previously documented, not material new degradation; accessible WHO/OCHA/WFP and established reporting preserved coverage.",
+      "Both qualifying findings were published before previous hourly cutoff and are classified as bounded late recalls, not events occurring during this hourly interval.",
+      "No independent primary WHO, Egyptian Red Crescent or hospital operating statistics for two Al-Quds reports were obtained; maintain medium confidence.",
+      "Search publication/indexing lag means the watch is not exhaustive; 12 targeted searches maximum respected."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T034451-0800-20261115T114516Z",
+  "scheduled_for": "2026-11-15T03:44:51-08:00",
+  "started_at": "2026-11-15T03:45:16-08:00",
+  "completed_at": "2026-11-15T03:46:46-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T02:45:25-08:00",
+    "end": "2026-11-15T03:46:46-08:00",
+    "previous_run_completed_at": "2026-11-15T02:45:25-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T024451-0800-20261115T104242Z.json",
+    "basis": "Prior heartbeat verified on ops/watch-ledger; checked publications first surfaced since the last hourly observation cutoff; Palestine local time on 15 Nov is 10 hours ahead of PST."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-al-saftware-70-remains-60-identified-burial-followup",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176947",
+      "secondary_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%AA%D8%B4%D9%8A%D9%8A%D8%B9-%D8%B1%D9%81%D8%A7%D8%AA-70-%D8%B4%D9%87%D9%8A%D8%AF%D8%A7-%D8%A7%D9%86%D8%AA%D8%B4%D9%84%D9%88%D8%A7-%D9%85%D9%86-%D8%AA%D8%AD%D8%AA-%D8%A7%D9%84%D8%A3%D9%86%D9%82%D8%A7%D8%B6",
+      "title": "Palestinians bury remains of 70 people recovered from rubble in northern Gaza",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15",
+      "publication_time_local": "2026-11-15T12:59:00+02:00",
+      "first_arabic_publication_time_local": "2026-11-15T12:50:00+02:00",
+      "event_date": "2026-11-15",
+      "event_time": null,
+      "original_death_dates": null,
+      "location": "Al-Saftawi area, north of Gaza City, Gaza Strip",
+      "affected_population_or_system": "Remains of about 70 Palestinians recovered from bombed buildings, of whom 60 reportedly identified; bereaved families and local recovery teams",
+      "incident_type": "Recovery, identification and funeral of pre-existing conflict fatalities; NOT 70 newly killed",
+      "fatalities_newly_reported": 0,
+      "remains_reported_recovered": 70,
+      "remains_reported_identified": 60,
+      "exact_supporting_passage": "residents and local teams had recovered around 70 bodies, including 60 whose identities had been established",
+      "source_type": "Palestinian news agency firsthand correspondent report; Associated Press independently described a vigil for remains of 70 on Saturday",
+      "classification": "follow_up",
+      "new_or_follow_up": "follow_up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "first_arabic_publication": "2026-11-15T12:50:00+02:00",
+        "equivalent_pacific_time": "2026-11-15T02:50:00-08:00",
+        "previous_run_cutoff": "2026-11-15T02:45:25-08:00",
+        "observed_in_window": true,
+        "discovery_method": "Direct read of WAFA English/Arabic latest-news listings, following OCHA OPT/WHO official checks and twelve bounded targeted searches",
+        "independent_context_url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-15-2026-3b4adde832dadd333451fd2f7a51908c",
+        "corroboration": "AP already described a vigil for the remains of 70 Palestinians on Saturday, Nov 14; WAFA's Sunday item adds that 60 had been identified and says the funeral was Sunday. Time/day distinction is not independently resolved.",
+        "importance": "Humanitarian recovery and identification milestone. The 70 must not be added to newly occurring death totals, nor described as casualties from a new strike.",
+        "limitations": "Exact recovery dates and original deaths are not established; whether AP Saturday vigil and WAFA Sunday funeral are distinct events is unclear; identification figure currently one-source."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; not primary publisher/collector. No publication, approvals or schedule changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest updates dated Nov 13; no interval-specific release."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Older reporting through Nov 9, not new."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No fresh Gaza healthcare operational update during interval."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Headline data dated September 2026, no interval-specific new update."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Persistent previously known upstream 502; alternative official WHO sources available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 15 2026 killed injured 13:00 14:00",
+      "site:wafa.ps/news/2026/11/15 غزة 15 نوفمبر 2026 استشهاد إصابة قصف الساعة الواحدة",
+      "site:aa.com.tr/en/middle-east/ Gaza November 15 2026 Palestinian killed wounded Israeli strike Sunday afternoon",
+      "site:reuters.com/world/middle-east/ November 15 2026 Gaza aid crossing hostage ceasefire fighting",
+      "site:apnews.com/article/ Gaza November 15 2026 Sunday airstrikes tents ceasefire",
+      "site:aljazeera.com/news/2026/11/15/ Gaza November 15 ceasefire aid civilian casualties",
+      "site:unicef.org OR site:unrwa.org Gaza November 15 2026 health water shelter aid new update",
+      "site:wfp.org OR site:palestine.un.org OR site:un.org Gaza November 15 2026 food shipments cross border",
+      "site:msf.org OR site:icrc.org Gaza November 15 2026 hospital ambulance medical evacuation fuel",
+      "site:ochaopt.org OR site:reliefweb.int Gaza 15 November 2026 shelter weather humanitarian crossing",
+      "Gaza November 15 2026 Palestinian news Sunday 13:00 14:00 Israel drone civilian killed injured",
+      "Gaza November 15 2026 Rafah Kerem Shalom crossing detainees ceasefire hostages humanitarian access latest"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 15 12:59 local report on burial/recovery and identification; article 176947."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Original Arabic report posted Nov 15 at 12:50 Gaza-local; same organization, not independent corroboration."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-15-2026-3b4adde832dadd333451fd2f7a51908c",
+        "status": "ACCESSIBLE",
+        "detail": "Image caption describes Saturday Nov 14 vigil for remains of 70; prevents falsely treating 70 as new fatalities."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/15/israeli-air-strike-kills-senior-hamas-commander-in-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Samir Abu Younis strike and other casualty data from earlier date; duplicates, not new operational changes."
+      }
+    ],
+    "excluded_candidates": [
+      "Prior run's Nov 15 11:48 Gaza-local death of Abdullah Mazen Hassouna in Sheikh Radwan already logged.",
+      "Al-Mawasi/Khan Younis tent strike (1 killed, 2 injured), Samir Abu Younis killing, earlier Jabalia and Rafah strikes: prior events or already logged.",
+      "The 70 recovered remains are historical fatalities; AP reported a Saturday vigil. WAFA's new identification detail and funeral account are treated as a follow-up, not 70 new deaths.",
+      "OCHA Nov 13 floods and humanitarian shortages; earlier hospital/Nasser disruption; older UNICEF and food-access reports.",
+      "West Bank events, celebratory/diplomatic statements and claims without implemented Gaza operational changes."
+    ],
+    "scope_categories_checked": [
+      "civilian casualties and recovered remains",
+      "displacement",
+      "aid and food/water access",
+      "healthcare disruption and functioning capacity",
+      "hospital/ambulance/transport/fuel/medical evacuation",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire and negotiations",
+      "military activity with documented civilian impact"
+    ],
+    "coverage_gaps": [
+      "WHO EMRO 502 persisted; WHO Global and WHO Health Cluster accessible.",
+      "Search engine results are incomplete, especially for minute-level changes; direct agency latest-news checks supplemented search.",
+      "WAFA English and Arabic are same publisher; AP independent vigil date differs from WAFA funeral date."
+    ],
+    "original_source_overlap_checked": true,
+    "published_to_production": false,
+    "schedule_modified": false
+  }
+}

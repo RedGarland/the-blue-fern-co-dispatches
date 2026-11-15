@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T054158-0800-20261115T134333Z",
+  "scheduled_for": "2026-11-15T05:44:51-08:00",
+  "started_at": "2026-11-15T05:41:58-08:00",
+  "completed_at": "2026-11-15T05:43:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T04:50:05-08:00",
+    "end": "2026-11-15T05:43:33-08:00",
+    "previous_run_completed_at": "2026-11-15T04:50:05-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T044451-0800-20261115T124836Z.json",
+    "basis": "Incremental recall by first verifiable publication since prior heartbeat; reporting time is Palestine local (UTC+02:00), ten hours ahead of PST. Nominal hourly schedule time is later than early runtime invocation."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-wafa-20261115-1519-medical-intake-4-6-21",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%81%D9%8A-%D9%82%D8%B7%D8%A7%D8%B9-%D8%BA%D8%B2%D8%A9-%D8%A5%D9%84%D9%89-74699",
+      "title": "Gaza medical sources report four deaths and six injuries received by hospitals in the previous 24 hours; 21 prior deaths added after record validation",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15T15:19:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Palestinians killed or injured; Gaza hospital casualty admissions; retrospective death-certificate verification; ambulance and rescue access",
+      "exact_supporting_passage": "مستشفيات قطاع غزة استقبلت، خلال 24الـ ساعة الماضية، 4 شهداء، و6 مصابين. ... تم إضافة 21 شهيدًا إلى الإحصائية التراكمية",
+      "source_type": "Palestinian public news agency citing Gaza medical sources",
+      "classification": "follow-up",
+      "new_or_follow_up_classification": "follow-up",
+      "confidence": "medium",
+      "summary": "WAFA posted updated cumulative fatalities of 74,699 and injuries of 176,098. It said Gaza hospitals received four dead and six wounded over the previous 24 hours, and 21 earlier deaths were added after records were verified. The 21 additions are historical data adjustments, not 21 new deaths. Incident-level dates, identities and independent confirmation not supplied.",
+      "bounded_discovery_context": {
+        "first_verified_publication_in_window": "2026-11-15T05:19:00-08:00",
+        "discovered_via": "WAFA Arabic latest-news direct index, then original article, following OCHA OPT and WHO official-first checks",
+        "prior_cutoff": "2026-11-15T04:50:05-08:00",
+        "search_query_used": false,
+        "caveats": "The article shows publication 15 November 2026 at 15:19 Palestine time but its body begins 'غزة 14-11-2026', an inconsistent dateline. Treat incidence date as unknown and the fresh publication as a newly available medical statistical update. A potentially overlapping November 14 medical report was not authoritatively verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only; production remains authoritative. No publishing, approvals, merges, or schedule changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed Gaza humanitarian releases dated November 13; no newer releases in interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No new interval-specific Gaza health operational announcement."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal data as of September 2026; no interval-specific update."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Recurring previously documented 502 restriction; alternatives above remained available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/15 غزة 74,699 176,098 4 شهداء 6 مصابين 21 إضافة إحصائية",
+      "site:english.wafa.ps/Pages/Details/ November 15 2026 Gaza medical sources hospitals received 4 bodies 6 injured",
+      "Gaza November 15 2026 74,699 deaths 176,098 injuries 24 hours medical authorities",
+      "site:reuters.com/world/middle-east/ November 15 2026 Gaza civilian hospital ceasefire latest",
+      "site:wafa.ps/news/2026/11/14 \"74,699\" \"176,098\" \"21\"",
+      "site:wafa.ps/news/2026/11/14 \"74,67\" \"176,0\" \"مستشفيات\"",
+      "site:aa.com.tr/en/middle-east/ \"November 15, 2026\" Gaza aid casualties children shelter",
+      "site:apnews.com/article/ Gaza November 15 2026 hospitals flood aid deaths ceasefire",
+      "Gaza 14 November 2026 Ministry of Health 74699 74678 176098 176092 medical",
+      "site:unrwa.org OR site:wfp.org OR site:unicef.org Gaza November 15 2026 food water displacement aid",
+      "site:icrc.org OR site:msf.org November 15 2026 Gaza hospital medical evacuation ambulance",
+      "Gaza November 15 2026 Rafah crossing hostages ceasefire civilian impact Nov 15 aid"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "15:19 Palestine local medical update newly published since previous ledger cutoff."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No comparably new Gaza item; recent Gaza recovery/funeral story is a duplicate."
+      },
+      {
+        "publisher": "Gaza ministry report portal",
+        "url": "https://gazatlm.gov.ps",
+        "status": "TIMEOUT",
+        "detail": "Independent ministry portal not directly accessible; WAFA cited anonymous medical sources."
+      }
+    ],
+    "excluded_candidates": [
+      "Al-Saftawi 70 recovered remains funeral and identification: prior captured follow-up, not 70 newly killed.",
+      "Sheikh Radwan delayed death, al-Mawasi fatal strike, Jabalia victims, Nasser Hospital damage: already recorded in previous heartbeats.",
+      "November 14 WHO winter respiratory diseases, flood, and water/fuel problems: older reports not novel within cutoff.",
+      "Political condemnations and prior strike on Samir Abu Younis: no new independently verified Gaza civilian operational impact in window."
+    ],
+    "caveats": [
+      "WHO EMRO 502 and Gaza ministry reporting portal timeout degrade coverage; other WHO official pages accessible.",
+      "WAFA's article body dateline conflicts with its timestamp; publication is interval-new but event date unknown.",
+      "Cumulative death count and validated additions must not be treated as fresh same-day fatalities; earlier events could overlap reported daily hospital intake."
+    ],
+    "scope_categories_checked": [
+      "civilian casualties",
+      "displacement and shelters",
+      "aid access and food/water",
+      "healthcare facilities and operating capacity",
+      "ambulance/transport/fuel/medical evacuation",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false
+  }
+}

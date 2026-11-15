@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T064451-0800-20261115T144733Z",
+  "scheduled_for": "2026-11-15T06:44:51-08:00",
+  "started_at": "2026-11-15T06:46:07-08:00",
+  "completed_at": "2026-11-15T06:47:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T05:43:33-08:00",
+    "end": "2026-11-15T06:47:33-08:00",
+    "previous_run_completed_at": "2026-11-15T05:43:33-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T054158-0800-20261115T134333Z.json",
+    "basis": "Incremental recall by newly verified source/publication in prior-ledger-to-current Pacific window; Palestine-local reporting UTC+02:00 is ten hours ahead of PST."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only; production remains authoritative. No approvals, publishing, merges, schedule changes or task disabling.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza-related posts dated 13 November 2026; no newer Gaza update in observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No new Gaza-specific operational health bulletin in interval; publicly listed regional items older."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal Health Cluster data marked September 2026; no interval-specific operational update."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "TIMEOUT",
+        "detail": "Recurring previously observed access timeout, no new deterioration; WHO Global and Health Cluster accessed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"November 15, 2026\" Gaza Palestinians killed injured shelter",
+      "site:wafa.ps/news/2026/11/15 غزة استشهاد قصف خيام النازحين 15-11-2026",
+      "Gaza November 15 2026 latest civilians killed injured airstrike ceasefire Reuters AP",
+      "site:aa.com.tr/en/middle-east Gaza \"15.11.2026\" killed injured hospital",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 aid crossing medical civilians ceasefire",
+      "site:apnews.com/article/ Gaza November 15 2026 Israeli airstrikes aid flood",
+      "site:unrwa.org OR site:wfp.org OR site:unicef.org Gaza November 15 2026 water food shelter health aid",
+      "site:icrc.org OR site:msf.org Gaza November 15 2026 hospital ambulance medical evacuation",
+      "Gaza November 15 2026 4 deaths 6 wounded 21 records new incident Sunday afternoon",
+      "Gaza November 15 2026 Rafah crossing medical evacuations aid truck access hostages ceasefire Sunday",
+      "Gaza November 15 2026 Palestinian Red Crescent ambulance civil defense strike rescue Nasser hospital",
+      "Gaza November 15 2026 displacement flooding water sewage food humanitarian new development Sunday"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed stories through 16:29 Palestine time, November 15; Gaza figures at 15:45 identical to prior watch's Arabic 15:19 publication; others within interval mostly West Bank or diplomatic items."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Arabic list through 16:20 Palestine time, November 15; no additional qualifying Gaza report newer than prior watch's 15:19 medical update."
+      },
+      {
+        "publisher": "Médecins Sans Frontières",
+        "url": "https://www.msf.org/latest",
+        "status": "ACCESSIBLE",
+        "detail": "Newest Gaza item is November 12 Nasser Hospital attack statement, already known."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports",
+        "status": "HTTP_403",
+        "detail": "Direct listing blocked; targeted search surfaced only older UNRWA reports."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA English November 15 15:45 Palestine-local death toll 74,699/injuries 176,098 is a translation of the November 15 15:19 Arabic casualty update captured in prior heartbeat; avoid recounting four hospital admissions, six wounded, or 21 retrospective added deaths.",
+      "Al-Saftawi recovery/funeral of ~70 remains and Sheikh Radwan delayed death were recorded in preceding watch heartbeats; not newly occurring deaths.",
+      "November 12 MSF Nasser Hospital attack and November 13 OCHA flooding, temporary clinic disruption, food/water access and shelter statistics predate cutoff.",
+      "Newer WAFA entries about the West Bank, Palestinian Independence Day and political statements not qualifying Gaza-specific changed operations or civilian impacts."
+    ],
+    "caveats": [
+      "WHO EMRO timed out again and UNRWA directory returned HTTP 403, reducing direct access; OCHA, WHO Global/Health Cluster, WAFA and MSF remained accessible.",
+      "No new qualifying development established within interval; absence of results does not establish that no incident occurred.",
+      "Search retrieval includes older dated sources; these were excluded rather than treated as new."
+    ],
+    "scope_categories_checked": [
+      "civilian casualties",
+      "displacement/shelter",
+      "aid access",
+      "food/water",
+      "healthcare capacity and interruption",
+      "ambulance/transport/fuel/medical evacuation",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiation changes",
+      "military operations with documented civilian impact"
+    ],
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "materially_new_degradation": false
+  }
+}

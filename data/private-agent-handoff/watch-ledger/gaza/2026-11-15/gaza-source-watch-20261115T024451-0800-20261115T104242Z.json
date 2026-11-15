@@ -1,0 +1,161 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T024451-0800-20261115T104242Z",
+  "scheduled_for": "2026-11-15T02:44:51-08:00",
+  "started_at": "2026-11-15T02:42:42-08:00",
+  "completed_at": "2026-11-15T02:45:25-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T01:47:07.208-08:00",
+    "end": "2026-11-15T02:45:25-08:00",
+    "previous_run_completed_at": "2026-11-15T01:47:07.208-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T014451-0800-r11.json",
+    "basis": "Verified latest prior ledger heartbeat on branch ops/watch-ledger; new report first published 2026-11-15 11:48 Gaza local (01:48 PST), after previous close."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-sheikh-radwan-abdullah-mazen-hassouna-died-wounds",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176944",
+      "secondary_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%85%D8%AA%D8%A3%D8%AB%D8%B1%D8%A7%D9%8B-%D8%A8%D8%A5%D8%B5%D8%A7%D8%A8%D8%AA%D9%87-%D8%A8%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B4%D9%85%D8%A7%D9%84",
+      "title": "Palestinian man succumbs to wounds sustained in Israeli strike on displacement tent in Gaza",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15",
+      "publication_time_local": "2026-11-15T11:50:00+02:00",
+      "first_arabic_publication_time_local": "2026-11-15T11:48:00+02:00",
+      "event_date": "2026-11-15",
+      "event_time": null,
+      "original_strike_date": null,
+      "location": "Sheikh Radwan neighborhood, northern Gaza City, Gaza Strip",
+      "affected_population_or_system": "28-year-old Palestinian Abdullah Mazen Hassouna; displaced civilians sheltered in a tent",
+      "incident_type": "new fatality from injuries sustained in a tent strike several days earlier",
+      "fatalities_newly_reported": 1,
+      "injuries_newly_reported": null,
+      "exact_supporting_passage": "A Palestinian man died on Sunday from wounds sustained in an Israeli airstrike on northern Gaza City.",
+      "source_type": "established Palestinian news agency citing unnamed medical sources; English and Arabic versions are same source, not independent corroboration",
+      "classification": "follow_up",
+      "new_or_follow_up": "follow_up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_in_window": true,
+        "discovery_method": "WAFA English and Arabic latest-news direct read after OCHA OPT and WHO checks and twelve targeted searches",
+        "first_publication": "2026-11-15T11:48:00+02:00",
+        "equivalent_pacific_time": "2026-11-15T01:48:00-08:00",
+        "prior_run_cutoff": "2026-11-15T01:47:07.208-08:00",
+        "distinction": "Newly reported death, not a newly occurring airstrike. Sheikh Radwan/Gaza City and named decedent are distinct from previously recorded al-Mawasi/Khan Younis, al-Saftawi/Jabalia and Rafah events.",
+        "corroboration": "WAFA English and original Arabic versions agree; medical source unnamed; independent external corroboration not established.",
+        "limitations": "Exact time of death and date of original strike not specified in the report."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall watch only; primary daily Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage current Gaza updates dated 13 Nov; no newly dated in-window entry."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Report mostly covers 3–9 Nov; older flooding, shelter, health, aid and casualty signals not re-counted."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official overview checked. No fresh interval-specific hospital, ambulance, capacity, medical-evacuation or health update."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Static headline Health Cluster figures as of September 2026; no new confirmed operational change."
+      },
+      {
+        "publisher": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Persisting, previously recorded HTTP 502; alternative WHO Global and Health Cluster sources checked. Initial noncanonical WHO conflict URL returned 404 and canonical URL was used."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"15/November/2026\" \"Gaza\" killed injured 12:00 13:00",
+      "site:wafa.ps/news/2026/11/15 غزة اليوم 15 نوفمبر 2026 12:00 استشهاد إصابة قصف",
+      "site:aa.com.tr/en/middle-east/ Gaza November 15 2026 noon deaths injured Israeli strike civilians",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 Sunday civilians ceasefire aid crossing",
+      "site:apnews.com/article/ Gaza November 15 2026 Sunday strike displaced killed wounded ceasefire",
+      "site:aljazeera.com/news/2026/11/15/ Gaza Sunday Israeli strike casualties ceasefire humanitarian",
+      "site:unicef.org OR site:unrwa.org Gaza November 15 2026 displaced shelters flood aid Sunday new",
+      "site:wfp.org OR site:palestine.un.org Gaza November 15 2026 food water fuel supplies crossing",
+      "site:who.int OR site:emro.who.int Gaza November 15 2026 hospital evacuation ambulance fuel health",
+      "site:ochaopt.org OR site:reliefweb.int Gaza 15 November 2026 new access displacement infrastructure",
+      "Gaza November 15 2026 11:30 12:30 Palestine local killed injured civilian Beit Lahia Khan Younis Jabalia",
+      "Gaza ceasefire Rafah crossing Israeli hostages Palestinian detainees new change November 15 2026 Sunday noon"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "11:50 AM Gaza-local 15 Nov death from wounds; source article https://english.wafa.ps/Pages/Details/176944"
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Original report at 11:48 AM Palestine local corroborates WAFA's English publication but is not independent."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-2-in-southern-gaza/4125458",
+        "status": "ACCESSIBLE",
+        "detail": "Al-Mawasi 1 killed, 2 wounded is already recorded. Additional reported explosives on homes/tents near Beit Lahia lacked independently verified casualties, damage, precise time or separate confirmation."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-15-2026-3b4adde832dadd333451fd2f7a51908c",
+        "status": "ACCESSIBLE",
+        "detail": "Samir Abu Younis commander killing linked to Nov 14 incident, already considered; no new documented civilian impact verified."
+      }
+    ],
+    "excluded_candidates": [
+      "Al-Mawasi Khan Younis displaced-tent strike killing one and injuring two: prior positive ledger heartbeat Nov 14 afternoon; later Nov 15 coverage repeats incident.",
+      "Samir Abu Younis death in Nov 14 Israeli strike: considered by previous watch; no distinct new civilian casualty confirmed.",
+      "Anadolu account of Beit Lahia drone explosives targeting homes and displaced tents and northern shelling: timing, injuries and physical impact unverified, local sources unnamed; retained as non-qualifying lead.",
+      "Older Jabalia/Al-Saftawi fatalities, Rafah delayed death, Nasser Medical Complex strike, Nov 6–9 flooding, aid and food/water shortages: previously known or outside interval.",
+      "West Bank and diplomatic statements without implemented Gaza crossing, aid or ceasefire changes."
+    ],
+    "scope_categories_checked": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food/water access",
+      "healthcare disruption",
+      "hospital/ambulance/transport/fuel/medical evacuation/functioning capacity",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "coverage_gaps": [
+      "WHO EMRO OPT returned an established HTTP 502; alternative WHO official sources accessible.",
+      "Some articles provide only publication date, not time, and publication indexing lags real events; the negative checks do not establish that no other events occurred."
+    ],
+    "materially_new_degradation": false,
+    "limitation": "A newly recorded death from earlier injury is distinct from its older strike. Attribution and death relied on WAFA quoting unnamed medical sources without independent confirmation.",
+    "meaningful_new_findings": 1,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

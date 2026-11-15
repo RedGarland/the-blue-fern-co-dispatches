@@ -1,0 +1,158 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T084224-0800-20261115T164548Z",
+  "scheduled_for": "2026-11-15T08:44:51-08:00",
+  "started_at": "2026-11-15T08:42:24-08:00",
+  "completed_at": "2026-11-15T08:45:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T07:45:16-08:00",
+    "end": "2026-11-15T08:45:48-08:00",
+    "previous_run_completed_at": "2026-11-15T07:45:16-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T074329-0800-20261115T154516Z.json",
+    "basis": "Newly surfaced, traceable high-value developments after the prior heartbeat, with late-recall classification when earlier original publication predates the cutoff. All times interpreted in America/Los_Angeles."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-unicef-ceasefire-children-360-dead-1700-injured-20261115",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%A7%D9%84%D9%8A%D9%88%D9%86%D9%8A%D8%B3%D9%81-%D8%AA%D8%AF%D8%B9%D9%88-%D8%A7%D9%84%D9%85%D8%AC%D8%AA%D9%85%D8%B9-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A-%D9%84%D9%84%D8%B6%D8%BA%D8%B7-%D8%B9%D9%84%D9%89",
+      "title": "UNICEF regional office reports 360 children killed and more than 1,700 injured in Gaza since October 2025 ceasefire",
+      "publisher": "WAFA, attributing figures to UNICEF regional office; independent contemporary secondary account in See News quoting UNICEF regional spokesperson Salim Oweis",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15T18:22:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Palestinian children in Gaza; cumulative casualties since the October 2025 ceasefire; humanitarian water, shelter and sanitation needs",
+      "exact_supporting_passage": "استشهد 360 طفلا منذ إعلان وقف إطلاق النار وأصيب أكثر من 1700 آخرين بإصابات بالغة",
+      "source_type": "Palestinian public news agency citing UNICEF regional office; separately reported UNICEF spokesperson remarks; direct Nov 15 UNICEF primary bulletin not located",
+      "classification": "follow-up",
+      "new_or_follow_up_classification": "follow-up",
+      "confidence": "medium",
+      "summary": "WAFA reports a UNICEF regional office statement giving cumulative figures of 360 children killed and over 1,700 injured since the ceasefire, and stating that access restrictions on shelter materials and water/wastewater spare parts persist. See News independently reports the same two cumulative figures, attributing them to UNICEF regional spokesperson Salim Oweis in remarks to Al-Qahera News. This is a newly surfaced cumulative statistical update, NOT 360 or 1,700 new casualties in the past hour, and not a demonstrated new service closure. UNICEF's October 7 and 16 publications described over 340 killed; case dates and precise census cutoff for the new figures are unverified.",
+      "bounded_discovery_context": {
+        "prior_watch_cutoff": "2026-11-15T07:45:16-08:00",
+        "wafa_first_verified_publication_in_window": "2026-11-15T08:22:00-08:00",
+        "see_news_source_url": "https://see.news/humanitarian-crisis-worsens-for-gaza-children-as-winter-rains-hit-un-says",
+        "see_news_displayed_time": "2026-11-15 13:40 (website time zone not explicitly confirmed; likely earlier than prior cutoff)",
+        "previous_official_unicef_sources": [
+          "https://www.unicef.org/sop/stories/hope-amid-pain-palestinian-children-gaza-strip-one-year-after-ceasefire",
+          "https://www.unicef.org/press-releases/childhood-defined-struggle-survival-gaza-strip"
+        ],
+        "late_recall": true,
+        "discovered_via": "WAFA Arabic latest-news index after OCHA OPT/WHO official-first checks; corroborative targeted search and UNICEF historical cross-check",
+        "verification_limit": "New Nov 15 UNICEF primary press release not located; secondary account direct fetch disabled; quoted statements attributed to identifiable UNICEF regional office/spokesperson but not independently verified in a new official document. Casualty dates and exact tally cutoff unknown."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; daily production remains authoritative and unchanged.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Newest listed updates dated November 13; no newly published Gaza update within this observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No newly dated interval-specific health capacity or medical evacuation notice."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal Health Cluster data marked September 2026; no fresh interval bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Recurring HTTP 502 already documented in previous heartbeat; WHO Global and Health Cluster remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "UNICEF 15 November 2026 Gaza 360 children killed 1700 wounded since ceasefire regional office",
+      "site:unicef.org \"15 November 2026\" \"Gaza\" children aid water",
+      "site:wafa.ps/news/2026/11/15 غزة 18:00 19:00 قصف شهداء إسعاف",
+      "site:english.wafa.ps/Pages/Details/ \"15 November 2026\" Gaza aid airstrike hospital",
+      "site:aa.com.tr/en/middle-east/ 15 November 2026 Gaza Sunday killed aid children",
+      "site:reuters.com/world/middle-east/ \"November 15, 2026\" Gaza Israeli ceasefire civilian",
+      "\"360\" \"1,700\" UNICEF Gaza 15 November 2026",
+      "\"360 children\" \"ceasefire\" Gaza November 2026 UNICEF",
+      "site:apnews.com/article/ \"Nov 15, 2026\" Gaza children humanitarian ceasefire",
+      "site:wfp.org OR site:unrwa.org OR site:ochaopt.org \"15 November 2026\" Gaza supplies crossing food",
+      "Gaza 15 November 2026 late afternoon Rafah crossing evacuation hospital fuel ambulance",
+      "15 November 2026 Gaza Sunday evening ceasefire negotiations hostages civilians attack storm shelters water"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 15 18:22 Palestine time post attributed updated cumulative child casualty figures to UNICEF regional office; direct article read."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza-related English post was previously captured UNRWA-contract item, 17:35 Palestine time."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/stories/hope-amid-pain-palestinian-children-gaza-strip-one-year-after-ceasefire",
+        "status": "ACCESSIBLE",
+        "detail": "October 7 baseline: more than 340 children reported killed and over 600 injured; older than this search window."
+      },
+      {
+        "publisher": "UNICEF Global",
+        "url": "https://www.unicef.org/press-releases/childhood-defined-struggle-survival-gaza-strip",
+        "status": "ACCESSIBLE",
+        "detail": "October 16 UNICEF remarks: more than 340 children killed; no current Nov 15 primary bulletin confirmed."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/latest",
+        "status": "ACCESSIBLE",
+        "detail": "No interval-specific verified hospital or operational capacity change found."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports",
+        "status": "HTTP_403",
+        "detail": "Recurring access restriction as in prior heartbeat."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-15-2026-3b4adde832dadd333451fd2f7a51908c",
+        "status": "ACCESSIBLE",
+        "detail": "Reported Hamas commander killed in overnight al-Mawasi airstrike; possible overlap with earlier al-Mawasi incident; no newly established separate civilian casualty count."
+      }
+    ],
+    "excluded_candidates": [
+      "Earlier WAFA reports on four hospital-admitted deaths, six injured and 21 retrospectively validated deaths were already recorded in prior hourly heartbeat, not re-counted.",
+      "UNRWA contract notices for more than 3,000 employees already recorded in prior heartbeat.",
+      "Nov 14 al-Mawasi tent strike, al-Saftawi recovered remains, Sheikh Radwan delayed death, Nasser hospital disruption, and flooding are previously documented.",
+      "AP Nov 15 reports Israeli/Hamas confirmation of senior commander Samir Abu Younis killed in Nov 14 al-Mawasi strike; likely overlaps previously recorded al-Mawasi strike. Identity and link to civilian casualty account are not independently reconciled; do not double-count as another death or label the deceased civilian without review.",
+      "Multinational foreign-minister condemnation of previously reported Nasser Hospital strike contained no confirmed new facility operating-capacity or crossing change.",
+      "No independently verified new crossing status, fuel delivery, medical evacuation, hostage/detention operation, displacement event, water service cutoff, or new ceasefire action for the window."
+    ],
+    "caveats": [
+      "WHO EMRO 502 and UNRWA 403 are known recurring access issues, not materially new failures. The run is DEGRADED as requested when any source check fails.",
+      "WAFA/See News figures are cumulative since the October 2025 ceasefire, not new interval casualties; do not calculate a 20-child increment from earlier rounded 'more than 340' without comparable cutoff and counting methods.",
+      "No production collector/publisher action, editorial approval, schedule change, or task disablement."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false
+  }
+}

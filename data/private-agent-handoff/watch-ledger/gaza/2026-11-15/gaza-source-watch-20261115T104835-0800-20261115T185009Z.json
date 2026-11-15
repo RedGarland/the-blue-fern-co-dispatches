@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T104835-0800-20261115T185009Z",
+  "scheduled_for": "2026-11-15T10:44:51-08:00",
+  "started_at": "2026-11-15T10:48:35-08:00",
+  "completed_at": "2026-11-15T10:50:09-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T09:53:36-08:00",
+    "end": "2026-11-15T10:50:09-08:00",
+    "previous_run_completed_at": "2026-11-15T09:53:36-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T094948-0800-20261115T175336610Z.json",
+    "basis": "Newly published or newly surfaced verifiable Gaza developments since the preceding verified heartbeat, with late recall permitted only for uncaptured materially new facts. Palestine is UTC+02 and Los Angeles is PST UTC-08 on 2026-11-15."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production collector and publisher remain authoritative; no approval, publication, schedule or task changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage checked first; most recent situation report dated 13 November 2026, with a 13 November winter supplies appeal; no new 15 November update by cutoff."
+      },
+      {
+        "publisher": "OCHA OPT situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Report covers 3–9 November for most indicators, so not newly arising in this observation interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Canonical emergency page reached; no window-specific new operational update."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal Health Cluster summary still references September 2026; no verified new hourly health capacity development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously documented access failure persists; WHO Global and Health Cluster alternatives accessible."
+      },
+      {
+        "publisher": "WHO Global noncanonical URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "status": "HTTP_404",
+        "detail": "Older/guessed path not accessible; canonical path above succeeds, so this is not evidence of a WHO system outage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 15 2026 latest 20:00 Palestinian time casualties drone al Mawasi Rafah Khan Younis",
+      "site:reuters.com/world/middle-east/ \"November 15, 2026\" Gaza hospital civilians ceasefire",
+      "site:apnews.com/article/ Gaza \"Nov 15, 2026\" strikes aid crossing hospital",
+      "site:ochaopt.org Gaza \"15 Nov 2026\" humanitarian situation",
+      "site:who.int Gaza \"15 November 2026\" health medical evacuation hospital",
+      "site:unrwa.org OR site:wfp.org Gaza \"15 November 2026\" aid food shelter access",
+      "site:aa.com.tr/en/middle-east/ \"15.11.2026\" Gaza casualties crossing",
+      "غزة 15 نوفمبر 2026 الساعة الثامنة مساء شهداء قصف رفح خان يونس مستشفى مساعدات",
+      "15 November 2026 Gaza \"20:30\" \"Rafah\" hospital injured humanitarian",
+      "15 نوفمبر 2026 20:30 غزة قصف شهيد مصابون المساعدات معبر رفح",
+      "Gaza Sunday November 15 2026 evening ceasefire hostage negotiations new aid access displacement hospitals latest",
+      "site:un.org OR site:reliefweb.int OR site:unicef.org \"15 November 2026\" Gaza displaced hospital fuel water"
+    ],
+    "additional_direct_checks": [
+      {
+        "publisher": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza item displayed 19:14 Palestine time (09:14 PST), already captured as prior Rafah al-Mawasi drone incident."
+      },
+      {
+        "publisher": "WAFA Arabic latest news",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No traceable new Gaza incident clearly established after prior cutoff."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-2-in-southern-gaza/4125458",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "Sunday early-morning al-Mawasi Khan Younis strike and al-Salatin drone/shelling reports; earlier than window, and al-Mawasi Khan Younis casualty already documented."
+      }
+    ],
+    "excluded_candidates": [
+      "Rafah al-Mawasi/Muawiya Mosque strike, Khan Younis al-Satr al-Gharbi shooting and Egyptian Red Crescent 2,759-tonne Gaza-bound aid dispatch already recorded in preceding verified heartbeat.",
+      "UNICEF cumulative 360 children killed and over 1,700 injured, Gaza Ministry of Health cumulative 74,699 deaths and 176,098 injuries, delayed Sheikh Radwan casualty death, UNRWA 3,000 employment-contract report and roughly 70 recovered remains already captured in preceding watches.",
+      "November 14 strike killing senior Hamas commander Samir Abu Younis is a separate earlier event, not a new November 15 Rafah casualty update.",
+      "13 November OCHA report and existing Nasser Hospital strike/suspensions report predate this interval.",
+      "Reports repeating 69–70 remains recovered in northern Gaza concern previously recorded recovery/funeral; do not recast them as new deaths.",
+      "Foreign-minister condemnation of Nasser Hospital strike documents diplomacy but no new verified hospital-function or access change within this window.",
+      "Search results contained older 2023 OCHA flash updates using the November 15 day/month; rejected because year is wrong.",
+      "No confirmed new Gaza crossing entry, medical evacuation, hospital operational change, hostage exchange, negotiated ceasefire change, civilian displacement or newly attributable civilian casualty within the observation window."
+    ],
+    "caveats": [
+      "A 502 failure for WHO EMRO persists from prior runs; usable OCHA, WHO Global, WHO Health Cluster, WAFA and established news sources remained available. Classify DEGRADED rather than abort.",
+      "Result absence is not evidence of event absence; this is a bounded supplementary scan of published traceable developments, not exhaustive surveillance.",
+      "Timestamps of undated reporting cannot establish whether an event occurred in this one-hour interval."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

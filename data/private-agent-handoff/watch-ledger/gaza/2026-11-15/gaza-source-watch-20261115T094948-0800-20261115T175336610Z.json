@@ -1,0 +1,230 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T094948-0800-20261115T175336610Z",
+  "scheduled_for": "2026-11-15T09:44:51-08:00",
+  "started_at": "2026-11-15T09:49:48-08:00",
+  "completed_at": "2026-11-15T09:53:36-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T08:45:48-08:00",
+    "end": "2026-11-15T09:53:36-08:00",
+    "previous_run_completed_at": "2026-11-15T08:45:48-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T084224-0800-20261115T164548Z.json",
+    "basis": "Newly published or newly surfaced traceable developments after the prior recorded heartbeat. Late recall allowed when contemporaneous material was not captured by previous check. Palestine publication times converted from UTC+02:00 to PST UTC-08:00."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-rafah-mawasi-muawiya-mosque-drone-20261115",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176963",
+      "title": "Palestinian killed and others injured in Israeli drone strike near Muawiya Mosque in al-Mawasi, Rafah",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15T19:14:00+02:00",
+      "event_date": "2026-11-15",
+      "location": "Near Muawiya Mosque, al-Mawasi, west of Rafah, southern Gaza Strip",
+      "affected_population_system": "Palestinian people near the reported drone strike; one death and multiple injuries reported by WAFA; individual civilian/combatant classifications not independently established",
+      "exact_supporting_passage": "WAFA correspondent reported that an Israeli drone struck an area near Muawiya Mosque in al-Mawasi, west of Rafah, killing a Palestinian and injuring several others.",
+      "source_type": "On-scene/local correspondent reporting by Palestinian public news agency; additional Palestinian local media reporting with conflicting toll",
+      "classification": "new",
+      "new_or_follow_up_classification": "new",
+      "confidence": "medium-high for occurrence/location and at least one death; medium for precise casualty count",
+      "summary": "WAFA English and Arabic on 15 November report at least one person killed and several injured by a drone near Muawiya Mosque in al-Mawasi, Rafah. Khabar Press and SadaNews separately report two killed, while PalSawa and WAFA report one, so exact death count is unresolved. Do not add the differing source tallies or merge this Sunday evening Rafah incident with the Saturday al-Mawasi Khan Younis strike that killed Hamas Rafah brigade commander Samir Abu Younis.",
+      "bounded_discovery_context": {
+        "first_verified_arabic_publication": "2026-11-15T19:03:00+02:00",
+        "first_verified_english_publication": "2026-11-15T19:14:00+02:00",
+        "first_verified_english_pst": "2026-11-15T09:14:00-08:00",
+        "prior_heartbeat_cutoff": "2026-11-15T08:45:48-08:00",
+        "supporting_arabic_original_url": "https://www.wafa.ps/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D9%84%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B9%D9%84%D9%89-%D9%85%D9%88%D8%A7%D8%B5%D9%8A-%D8%B1%D9%81%D8%AD",
+        "corroborating_or_discrepant_reports": [
+          {
+            "publisher": "Khabar Press",
+            "url": "https://khbrpress.ps/post/437994",
+            "count": "two killed, additional injured",
+            "publication_time": "2026-11-15 18:22 local (displayed)"
+          },
+          {
+            "publisher": "SadaNews",
+            "url": "https://www.sadanews.ps/en/news/353447.html",
+            "count": "two killed, other injured",
+            "publication_time": "2026-11-15 19:11 (site time zone unspecified)"
+          },
+          {
+            "publisher": "PalSawa",
+            "url": "https://palsawa.com/local/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D9%85%D8%B3%D9%8A%D8%B1%D8%A9-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A9-2",
+            "count": "one killed, additional injured",
+            "publication_time": "2026-11-15 18:09 local (displayed)"
+          }
+        ],
+        "caution": "No independent verified casualty list, named civilian identification or precise strike time available. Sources may rely on shared informants; avoid asserting independent confirmations or two confirmed deaths."
+      }
+    },
+    {
+      "finding_id": "gaza-khan-younis-al-satr-al-gharbi-shooting-injury-20261115",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D9%84%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B9%D9%84%D9%89-%D9%85%D9%88%D8%A7%D8%B5%D9%8A-%D8%B1%D9%81%D8%AD",
+      "title": "WAFA reports Palestinian wounded by Israeli fire in al-Satr al-Gharbi northwest of Khan Younis",
+      "publisher": "WAFA (Arabic)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15T19:03:00+02:00",
+      "event_date": "2026-11-15",
+      "location": "Al-Satr al-Gharbi, northwest of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian reported wounded by Israeli army gunfire; civilian status and injury severity not verified",
+      "exact_supporting_passage": "وفي السياق ذاته، أصيب مواطن برصاص جيش الاحتلال في منطقة السطر الغربي شمال غرب مدينة خان يونس، جنوب القطاع.",
+      "source_type": "Palestinian public news agency report in Arabic; separate incident mentioned in concurrent Rafah strike dispatch",
+      "classification": "new",
+      "new_or_follow_up_classification": "new",
+      "confidence": "medium",
+      "summary": "WAFA Arabic reports a separate gunshot injury in al-Satr al-Gharbi northwest of Khan Younis on Sunday. This item is absent from the English-language version of the accompanying Rafah article, and no further details or independent source confirmation were found. Do not attribute this injury to the Rafah drone strike.",
+      "bounded_discovery_context": {
+        "first_verified_publication": "2026-11-15T19:03:00+02:00",
+        "prior_heartbeat_cutoff": "2026-11-15T08:45:48-08:00",
+        "direct_arabic_only": true,
+        "injury_severity": null,
+        "number_injured": 1,
+        "verification_limit": "Corroborative details, victim identity, precise incident time and civilian status were not established."
+      }
+    },
+    {
+      "finding_id": "gaza-egypt-red-crescent-convoy-312-2759-tonnes-20261115",
+      "canonical_source_url": "https://english.ahram.org.eg/NewsContentP/58/582536/War-on-Gaza/Egypt-dispatches-,-tonnes-of-Gaza-aid-as-Israeli-s.aspx",
+      "title": "Egyptian Red Crescent says 312th Gaza aid convoy dispatched with 2,759 tonnes including 602 tonnes of fuel",
+      "publisher": "Ahram Online, citing Egyptian Red Crescent statement",
+      "source_date": "2026-11-15",
+      "publication_date": null,
+      "event_date": "2026-11-15",
+      "location": "Egypt; convoy dispatched for Gaza (crossing/arrival into Gaza unverified)",
+      "affected_population_system": "Humanitarian relief and food supply for displaced Palestinians; hospitals, bakeries and other essential services targeted by fuel assistance",
+      "exact_supporting_passage": "The Egyptian Red Crescent (ERC) dispatched its 312th Gaza aid convoy on Sunday, carrying 2,759 tonnes of food, relief, medical and winter supplies",
+      "source_type": "Established Egyptian news publication quoting Egyptian Red Crescent statement; original ERC statement not independently retrieved",
+      "classification": "new",
+      "new_or_follow_up_classification": "new",
+      "confidence": "medium",
+      "summary": "Ahram Online reports that Egypt's Red Crescent dispatched a Gaza-bound convoy with more than 2,020 tonnes of flour and food baskets, 137 tonnes of relief supplies and medicines and 602 tonnes of fuel, plus tents and warm clothing. Dispatch is NOT proof that goods or fuel crossed into or were distributed inside Gaza. Original publication clock time and delivery/entry status are unverified.",
+      "bounded_discovery_context": {
+        "prior_heartbeat_cutoff": "2026-11-15T08:45:48-08:00",
+        "discovered_in_this_watch": true,
+        "precise_publication_time": null,
+        "late_recall_possible": true,
+        "original_red_crescent_statement_url": null,
+        "predecessor_convoy": "Previous 2,378-tonne dispatch reported Thursday 2026-11-12",
+        "caution": "Reported Egyptian dispatch, not verified Gaza entry, humanitarian transfer or actual functioning-capacity restoration. May predate prior cutoff; previous heartbeat did not mention convoy."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall, not primary production collection. Production remains authoritative; no publishing, approval, scheduling, or task disablement.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest updates dated November 13; no new Nov 15 official bulletin in observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Situation overview reachable, no new window-specific update."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal data as of September 2026; no new interval-specific health capacity bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "detail": "Persisting documented WHO EMRO access failure; alternative WHO sources accessible."
+      },
+      {
+        "publisher": "WHO Global alternate URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "status": "HTTP_404",
+        "detail": "Noncanonical guessed path; canonical WHO conflict page verified accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "\"15 November 2026\" \"Muawiya Mosque\" \"Rafah\" drone killed injured",
+      "15 November 2026 Gaza Rafah Mawasi mosque Israeli drone killed Palestinian injured",
+      "site:aa.com.tr/en/middle-east/ \"November 15, 2026\" Gaza Rafah strike casualties",
+      "site:reuters.com/world/middle-east/ \"November 15, 2026\" Gaza airstrike Rafah Khan Younis",
+      "\"مواصي رفح\" \"مسجد معاوية\" \"15\" \"نوفمبر\" 2026 شهداء",
+      "site:aljazeera.net 15 نوفمبر 2026 مواصي رفح مسجد معاوية شهيد",
+      "site:un.org OR site:ochaopt.org OR site:unicef.org Gaza \"15 November 2026\" humanitarian aid water medical evacuation",
+      "site:who.int OR site:healthcluster.who.int Gaza \"15 November 2026\" hospital evacuation fuel capacity",
+      "site:unrwa.org OR site:wfp.org Gaza 15 November 2026 new crossing aid supplies 15 November",
+      "site:apnews.com/article/ Gaza Sunday Nov 15 2026 ceasefire aid medical hospital civilians",
+      "15 November 2026 Gaza medical evacuation Rafah crossing WHO Egyptian Red Crescent updated",
+      "15 November 2026 Gaza Sunday evening humanitarian flooding displacement food water shelter fuel strikes"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "19:03 Palestine-time Rafah article also contains separate Khan Younis shooting injury."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "19:14 Palestine-time Rafah incident; UNICEF English 19:07 repeats 360/1700 cumulative figures already in prior heartbeat."
+      },
+      {
+        "publisher": "Ahram Online",
+        "url": "https://english.ahram.org.eg/NewsContentP/58/582536/War-on-Gaza/Egypt-dispatches-,-tonnes-of-Gaza-aid-as-Israeli-s.aspx",
+        "status": "ACCESSIBLE",
+        "detail": "Detailed 312th ERC aid convoy; no confirmed shipment entry to Gaza."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D9%82%D8%B5%D9%81-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A-%D8%B9%D9%84%D9%89-5",
+        "status": "ACCESSIBLE",
+        "detail": "Sunday article about earlier Sheikh Radwan injury death and Saturday Khan Younis senior commander strike; not duplicate-confirmation of Sunday evening Rafah strike."
+      },
+      {
+        "publisher": "PalSawa",
+        "url": "https://palsawa.com/local/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D9%85%D8%B3%D9%8A%D8%B1%D8%A9-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A9-2",
+        "status": "SEARCH_INDEX_ACCESSIBLE_DIRECT_HTTP_403",
+        "detail": "Search excerpt identified same Rafah mosque strike but exact count remains disputed."
+      },
+      {
+        "publisher": "SadaNews",
+        "url": "https://www.sadanews.ps/en/news/353447.html",
+        "status": "SEARCH_INDEX_ACCESSIBLE_DIRECT_DISABLED",
+        "detail": "Search excerpt reported two deceased, inconsistent with WAFA one."
+      },
+      {
+        "publisher": "Sanad",
+        "url": "https://snd.ps/post/171047/",
+        "status": "SEARCH_INDEX_ACCESSIBLE_DIRECT_DISABLED",
+        "detail": "Live updates mention one death and five injuries near Rafah mosque; no additional authenticated read."
+      }
+    ],
+    "excluded_candidates": [
+      "UNICEF 360 children killed and over 1,700 injured since ceasefire is duplicated from immediately preceding heartbeat; WAFA English translation is not a new UNICEF update.",
+      "Saturday Nov 14 al-Mawasi Khan Younis airstrike involving Samir Abu Younis and two wounded is distinct from Sunday evening near Muawiya Mosque in Rafah; no double count.",
+      "Previously recorded daily Gaza hospital casualty totals 74,699 killed and 176,098 injured, Sheikh Radwan delayed death, UNRWA 3,000 contract change, al-Saftawi recovered remains and Nasser Hospital strike excluded as duplicates.",
+      "Public criticism by foreign ministers of Nasser Hospital strike contains no independently verified new facility-operating change.",
+      "No confirmed new Rafah crossing opening/closure, actual Gaza receipt of Sunday ERC supplies, health-service suspension, new evacuation movement, hostage exchange or binding ceasefire agreement during this window."
+    ],
+    "caveats": [
+      "Current strike toll reports disagree: WAFA and PalSawa one deceased; Khabar and SadaNews two. Record minimum confirmed and dispute rather than summing counts.",
+      "WHO EMRO HTTP 502, SadaNews/Sanad disabled and PalSawa 403 are source access limitations, but usable official/established coverage remains; classify DEGRADED.",
+      "The WHO Global 404 was a guessed noncanonical path, successfully corrected; not a material failure.",
+      "No production publisher/collector action, editorial approval, schedule change, or task disablement."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false
+  }
+}

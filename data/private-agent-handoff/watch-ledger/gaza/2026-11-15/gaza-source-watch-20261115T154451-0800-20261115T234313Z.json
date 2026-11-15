@@ -1,0 +1,124 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T154451-0800-20261115T234313Z",
+  "scheduled_for": "2026-11-15T15:44:51-08:00",
+  "started_at": "2026-11-15T15:43:13-08:00",
+  "completed_at": "2026-11-15T15:44:54.158-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T14:53:01-08:00",
+    "end": "2026-11-15T15:44:54.158-08:00",
+    "previous_run_completed_at": "2026-11-15T14:53:01-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T144451-0800-20261115T224852Z.json",
+    "basis": "New reports since previous completed heartbeat, plus bounded late-recall verification without counting prior incidents as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "detail": "Explicitly checked first; latest indexed humanitarian situation report 13 November 2026. No newly dated change in this window."
+      },
+      {
+        "publisher": "WHO global oPt emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Explicitly checked first with OCHA; no updated Gaza healthcare announcement relevant to interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/",
+        "status": "HTTP_502",
+        "detail": "Recurring previously documented restriction; WHO global and Health Cluster accessible."
+      },
+      {
+        "publisher": "WHO oPt Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal overview data noted through September 2026; no newly dated relevant notice."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps 16 November 2026 Gaza early Monday killed injured airstrike humanitarian",
+      "site:wafa.ps 16/11/2026 غزة فجر الاثنين شهيد إصابة قصف شرق خان يونس",
+      "site:aa.com.tr/en/middle-east 16 November 2026 Gaza overnight strike killed wounded ceasefire",
+      "site:reuters.com/world/middle-east November 15 2026 Gaza Sunday night November 16 civilians strike ceasefire",
+      "site:apnews.com November 15 2026 Gaza November 16 2026 aid hospital airstrike",
+      "site:palestine.un.org November 15 2026 Gaza humanitarian access storm displacement medical evacuation",
+      "site:unicef.org Gaza 15 November 2026 16 November children humanitarian medical shelter",
+      "site:wfp.org Gaza 15 November 2026 16 November crossing food deliveries bread",
+      "site:unrwa.org Gaza November 15 2026 November 16 2026 services displacement shelter health",
+      "site:aljazeera.com/news/2026/11/15 Gaza 15 November 2026 airstrike tents talks",
+      "site:alquds.com/ar/posts/ 16 نوفمبر 2026 غزة مستشفيات إجلاء جرحى معبر رفح",
+      "Gaza November 15 2026 late Sunday November 16 early hospitals casualties crossings aid fuel evacuations"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA English latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed Gaza-related items were previously recorded Rafah strike, UNICEF/UNRWA statements and four-minister joint statement; newest listing concerned West Bank."
+      },
+      {
+        "publisher": "WAFA Arabic latest",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Most recent Gaza roundup timestamped 15 November 23:54 Palestine time, prior to this interval; no distinct new Gaza civilian impact corroborated."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "15 November Rafah drone strike repeats prior logged event; other new listing items not in scope."
+      },
+      {
+        "publisher": "Al-Quds latest",
+        "url": "https://alquds.com/ar/posts",
+        "status": "ACCESSIBLE",
+        "detail": "No new verifiable operational change beyond prior Al-Shifa recovery and Rafah medical transfer findings; latest list and calls largely historical or commentary."
+      },
+      {
+        "publisher": "World Food Programme Palestine",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "detail": "Page reports funding-related food assistance reductions without a verified newly dated interval change; excluded as background."
+      },
+      {
+        "publisher": "UNRWA newsroom",
+        "url": "https://www.unrwa.org/newsroom",
+        "status": "HTTP_403",
+        "detail": "Previously documented source-specific access restriction; other UNRWA report indexes and humanitarian sources surfaced in search."
+      }
+    ],
+    "excluded_candidates": [
+      "OCHA 13 November shelter/flooding and WHO background healthcare capacities predate the window.",
+      "WAFA 15 November 23:54 Palestine-time roundup repeats Rafah fatality, Khan Younis injury and earlier casualties; no fresh individuals counted.",
+      "Prior Al-Shifa 60% functioning and Rafah 101st patient transfer batch already logged in preceding watch.",
+      "Previous UK/Australia/Canada/Italy joint aid-access statement, UNICEF cumulative child toll, UNRWA staff contract concern and Gaza ministry casualty tally excluded as duplicates.",
+      "Reuters 11 November Nasser Hospital attack was a past event, not new.",
+      "Al Jazeera 15 November senior Hamas commander death referred to Saturday strike with no new verified civilian impact.",
+      "WFP food assistance reductions lack verifiable new publication/event time; not classified as a new interval development.",
+      "Searches yielded several 2023–2025 historical articles or undated results; not advanced as positives."
+    ],
+    "caveats": [
+      "WHO EMRO HTTP 502 and UNRWA HTTP 403 are established, not materially new degradation; alternative sources were accessible.",
+      "Some search engines surface stale and irrelevant hits, and real-time indexing may lag.",
+      "12 additional targeted search queries were used, with official OCHA/WHO checks first."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

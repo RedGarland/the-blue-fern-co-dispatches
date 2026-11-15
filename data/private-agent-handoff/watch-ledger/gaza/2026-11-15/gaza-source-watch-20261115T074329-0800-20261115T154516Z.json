@@ -1,0 +1,149 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T074329-0800-20261115T154516Z",
+  "scheduled_for": "2026-11-15T07:44:51-08:00",
+  "started_at": "2026-11-15T07:43:29-08:00",
+  "completed_at": "2026-11-15T07:45:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T06:47:33-08:00",
+    "end": "2026-11-15T07:45:16-08:00",
+    "previous_run_completed_at": "2026-11-15T06:47:33-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T064451-0800-20261115T144733Z.json",
+    "basis": "First verified publication and previously uncaptured high-value developments, using America/Los_Angeles. A late-recalled Arabic original predates the current cutoff; the later English publication falls within it."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-plo-unrwa-contract-notices-3000-20261115",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176960",
+      "title": "PLO refugee affairs official says more than 3,000 UNRWA Gaza staff received notices to switch from permanent to three-month contracts",
+      "publisher": "Palestine News and Information Agency (WAFA), reporting a Palestine Liberation Organization Department of Refugee Affairs statement",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15T17:35:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "More than 3,000 reported UNRWA Gaza employees, their households and potential future continuity of refugee health, education and relief services",
+      "exact_supporting_passage": "The Palestine Liberation Organization's (PLO) Department of Refugee Affairs on Sunday warned of the implications of UNRWA management's move to notify more than 3,000 employees in the Gaza Strip, each with less than 13 years of service, that they are required to sign temporary three-month contracts.",
+      "source_type": "Palestinian public news agency relaying an on-record PLO department statement; no direct UNRWA confirmation",
+      "classification": "follow-up",
+      "new_or_follow_up_classification": "follow-up",
+      "confidence": "medium",
+      "summary": "The PLO Department of Refugee Affairs says UNRWA notified over 3,000 Gaza employees with under 13 years of service to change permanent contracts into three-month contracts. Its official Ahmad Abu Holi warns of potential nonrenewal and harm to health, education and relief capacity. This is a reported employment-contract change with possible future humanitarian-service consequences, NOT verified layoffs, service closures, or demonstrated healthcare disruption. Independent UNRWA confirmation was unavailable.",
+      "bounded_discovery_context": {
+        "first_verified_publication_in_window": "2026-11-15T07:35:00-08:00",
+        "first_original_arabic_publication": "2026-11-15T05:21:00-08:00",
+        "prior_cutoff": "2026-11-15T06:47:33-08:00",
+        "late_recall": true,
+        "original_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%A3%D8%A8%D9%88-%D9%87%D9%88%D9%84%D9%8A-%D9%8A%D8%AD%D8%B0%D9%91%D8%B1-%D9%85%D9%86-%D9%85%D8%AE%D8%B7%D8%B7-%D8%AA%D8%AF%D8%B1%D9%8A%D8%AC%D9%8A-%D9%84%D8%AA%D8%B3%D8%B1%D9%8A%D8%AD-%D8%A2%D9%84%D8%A7%D9%81",
+        "discovered_via": "Direct WAFA English latest-news index after official OCHA OPT and WHO checks; Arabic original compared to previous GitHub heartbeat to avoid duplicate claims.",
+        "search_query_used": false,
+        "verification_limit": "Only PLO statement reported by WAFA, not a UNRWA personnel record. No dates of contract notices supplied and no observed service interruption. Original Arabic version predates the last watch; English version appeared during this interval."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch; daily production remains authoritative. No approving, publishing, merging, schedule changes or task disablement.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Newest listed items are November 13; no interval-specific new Gaza update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "No new interval-specific health operating-capacity or evacuation announcement."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Formal data marked September 2026; no new interval bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "TIMEOUT",
+        "detail": "Established recurring timeout; WHO Global and Health Cluster still accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 15 2026 after 16:45 Palestine time airstrike killed injured civilians 17:00",
+      "site:wafa.ps/news/2026/11/15 غزة استشهاد إصابة مساء الأحد الساعة الخامسة تشرين الثاني 2026",
+      "site:english.wafa.ps/Pages/Details/ \"November 15, 2026\" Gaza shelter hospital killed injured latest",
+      "site:aa.com.tr/en/middle-east/ 15 November 2026 Gaza Palestinians killed injured aid ceasefire",
+      "site:reuters.com/world/middle-east/ November 15 2026 Gaza new developments civilian ceasefire",
+      "site:apnews.com/article/ \"November 15, 2026\" Gaza civilians flood humanitarian",
+      "site:unrwa.org OR site:wfp.org OR site:unicef.org \"15 November 2026\" Gaza new aid food water shelter displacement",
+      "site:icrc.org OR site:msf.org \"15 November 2026\" Gaza hospital ambulance health fuel",
+      "Gaza 15 November 2026 Rafah crossing reopening medical evacuation aid convoy Sunday update",
+      "Gaza November 15 2026 ceasefire negotiations hostages prisoner release operations latest Sunday afternoon",
+      "Gaza 15 November 2026 storm flooding collapsed infrastructure shelters water sewage fresh incident",
+      "Gaza 15 November 2026 Palestinian Red Crescent rescue ambulance Israeli military operations civilian impact"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "English UNRWA staffing-contract story published at 17:35 Palestine time; the Arabic original at 15:21 was not recorded in the previous watch."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Arabic source shows the same PLO claims at 15:21 Palestine time (before previous cutoff), not a separate event."
+      },
+      {
+        "publisher": "MSF",
+        "url": "https://www.msf.org/latest",
+        "status": "ACCESSIBLE",
+        "detail": "No newly confirmed service-operation changes in the interval."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports",
+        "status": "HTTP_403",
+        "detail": "Direct UNRWA verification unavailable, an established earlier limitation."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 15 November 15:45 English medical admission figures (four deceased, six injured, 21 retrospectively validated deaths) repeat the prior captured 15:19 Arabic report.",
+      "Al-Saftawi recovered remains, Sheikh Radwan delayed death, al-Mawasi tent strike and Nasser Hospital damage are previously captured or old events, not new fatalities here.",
+      "November 13 OCHA flood, water, shelter and aid restrictions are outside this interval.",
+      "EU call to open crossings was a November 14 statement, not a newly confirmed crossing-status change.",
+      "No distinct new verified ceasefire, hostage, detention, medical evacuation, ambulances or military-operation civilian impact in this interval."
+    ],
+    "caveats": [
+      "WHO Eastern Mediterranean timeout and UNRWA HTTP 403 left direct-source gaps, but other OCHA/WHO/WAFA sources were accessible. These failures were previously documented, not materially new deterioration.",
+      "PLO report describes notices to change contracts and warns of possible layoffs; actual layoffs and clinical/aid service disruptions are unverified. Do not recast warning as a confirmed service closure.",
+      "Arabic original precedes the previous heartbeat; English translation is newly posted in window and the item was not found in the previous heartbeat, so this is explicitly classified as a late-recalled follow-up rather than newly enacted action.",
+      "No production publication, approvals, branch changes other than this single watch heartbeat, or schedule modifications."
+    ],
+    "scope_categories_checked": [
+      "civilian casualties",
+      "displacement/shelter",
+      "aid access and food/water",
+      "healthcare staffing and operating capacity",
+      "hospital/ambulance/transport/fuel/medical evacuation",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiations",
+      "military operations with verified civilian impact"
+    ],
+    "previous_heartbeat_verified": true,
+    "materially_new_degradation": false,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false
+  }
+}

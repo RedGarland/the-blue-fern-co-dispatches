@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T124018-0800-20261115T204245477Z",
+  "scheduled_for": "2026-11-15T12:44:51-08:00",
+  "started_at": "2026-11-15T12:40:18-08:00",
+  "completed_at": "2026-11-15T12:42:45-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T11:52:11-08:00",
+    "end": "2026-11-15T12:42:45-08:00",
+    "previous_run_completed_at": "2026-11-15T11:52:11-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T114930-0800-20261115T195211372Z.json",
+    "basis": "New traceable official publication or material late recall since previous verified watch. WAFA published this item at 21:52 Palestine time (11:52 Pacific), at the previous cutoff minute; exact seconds unknown; primary governmental statement dated 15 Nov without hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-four-foreign-ministers-winter-tents-aid-access-statement",
+      "canonical_source_url": "https://www.gov.uk/government/news/joint-foreign-ministers-statement-on-gaza--2",
+      "title": "Joint Foreign Ministers Statement on Gaza",
+      "publisher": "UK Foreign, Commonwealth & Development Office (joint statement: Australia, Canada, Italy and United Kingdom foreign ministers)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15",
+      "publication_time": null,
+      "event_date": "2026-11-15",
+      "event_time": null,
+      "location": "Gaza Strip; Gaza border crossings",
+      "affected_population_system": "Displaced Gaza residents without adequate winter shelter; humanitarian shelter and aid access",
+      "exact_supporting_passage": "Yet 150,000 tents and other vital supplies are being held at the border and prevented from entering Gaza.",
+      "source_type": "primary_government_joint_statement",
+      "classification": "new",
+      "new_or_follow_up": "new",
+      "confidence": "HIGH",
+      "discovery_context": {
+        "kind": "boundary_late_recall",
+        "discovered_via": "WAFA Arabic latest item, followed by direct verification of official GOV.UK statement via UK government news index",
+        "corroborating_secondary_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%A8%D9%8A%D8%A7%D9%86-%D8%A8%D8%B1%D9%8A%D8%B7%D8%A7%D9%86%D9%8A-%D8%A7%D8%B3%D8%AA%D8%B1%D8%A7%D9%84%D9%8A-%D9%83%D9%86%D8%AF%D9%8A-%D8%A5%D9%8A%D8%B7%D8%A7%D9%84%D9%8A-%D9%8A%D8%B5%D9%81-%D8%A7%D9%84%D9%88%D8%B6%D8%B9",
+        "secondary_publication_local": "2026-11-15 21:52 Asia/Gaza (11:52 America/Los_Angeles)",
+        "material_delta": "New coordinated public diplomatic demand by four foreign ministers to end delays, open crossings and allow stranded tents and dual-use humanitarian recovery supplies into Gaza",
+        "already_known_context": "The winter shelter shortage and broad 150,000-tent quantity were previously reported by OCHA; those are not claimed as new operational measurements",
+        "scope_guard": "Diplomatic appeal only; no confirmed new shipments, opening of crossings, actual entry of tents, or ceasefire implementation change",
+        "preceding_watch_excluded": false
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage and updates checked first; most recent OCHA releases dated 13 November, no 15 November bulletin."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Canonical WHO overview accessible; no new operational change this window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Previously documented access failure; alternative WHO and Health Cluster sites accessible."
+      },
+      {
+        "publisher": "WHO Health Cluster OPT",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Health Cluster formal system data as of September 2026; no hourly update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 15 2026 latest humanitarian update",
+      "site:who.int Gaza health hospitals evacuation November 15 2026",
+      "site:unicef.org Gaza children killed water November 15 2026 update",
+      "site:unrwa.org Gaza 15 November 2026 shelter aid staffing",
+      "site:wfp.org Gaza food supply border deliveries November 15 2026",
+      "site:palestine.un.org Gaza 15 November 2026 casualties humanitarian",
+      "site:english.wafa.ps Gaza November 15 2026 latest 2026",
+      "site:aa.com.tr/en/middle-east Gaza November 15 2026 Palestinians killed strike",
+      "site:reuters.com world middle east Gaza November 15 2026 ceasefire strike civilian",
+      "site:apnews.com Gaza November 15 2026 ceasefire strikes aid civilians",
+      "Gaza medical evacuation hospital ambulance fuel crossing November 15 2026",
+      "Gaza November 15 2026 noon PST displaced rain tents Red Crescent aid access"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic Latest",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 15 21:52 Palestine time item alerted four-government statement; later posts not Gaza operational events."
+      },
+      {
+        "publisher": "WAFA English Latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Last Gaza item 19:14 Palestine time Rafah strike, already logged."
+      },
+      {
+        "publisher": "UK Government",
+        "url": "https://www.gov.uk/government/news/joint-foreign-ministers-statement-on-gaza--2",
+        "status": "ACCESSIBLE",
+        "detail": "15 November primary joint statement directly read, checked against WAFA."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "TIMEOUT",
+        "detail": "Supplementary direct page timed out; official sources and other reporting remained accessible."
+      }
+    ],
+    "excluded_candidates": [
+      "Rafah al-Mawasi drone strike, Khan Younis shooting and Egyptian Red Crescent 2,759-tonne dispatch recorded in 09:53 PST watch.",
+      "Previously recorded UNICEF child cumulative casualties, Gaza hospital mortality statistics, UNRWA contracts, recovered remains and Sheikh Radwan casualty.",
+      "Previously reported Gaza winter shelter shortage and 150,000-tent volume are background, not a fresh shipment or crossing change.",
+      "No separately confirmed new medical evacuation, health-facility capacity shift, border-entry event, ceasefire agreement or hostage development identified during observation interval."
+    ],
+    "caveats": [
+      "The official joint statement is dated November 15 but has no published clock time; WAFA's 11:52 PST reporting falls in the preceding watch's cutoff minute, so this is a boundary late recall rather than proven publication after the exact prior end timestamp.",
+      "Statements from four foreign ministers are verified as a new coordinated request, not as proof that aid was admitted or crossings reopened.",
+      "WHO EMRO returned 502 and Anadolu direct listing timed out, but alternate source coverage remained useful; degraded rather than failed.",
+      "Search indexing and reporting lag mean a bounded watch does not rule out uncaptured incidents."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

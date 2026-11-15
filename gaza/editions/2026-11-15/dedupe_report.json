@@ -1,0 +1,43 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-15",
+  "candidates_seen": 3,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-11-15-001",
+      "title": "Israel says it killed a top Hamas commander in southern Gaza",
+      "classification": "new",
+      "include_decision": "include",
+      "public_rendered": true,
+      "source_count": 3
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "source_record_id": "gaza-2026-11-15-reuters-abu-younis",
+      "reason": "same Samir Abu Younis event merged into the three-source story"
+    },
+    {
+      "source_record_id": "gaza-2026-11-15-aljazeera-abu-younis",
+      "reason": "same Samir Abu Younis event merged into the three-source story"
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "event": "Samir Abu Younis reported death in Mawasi/Khan Younis",
+      "source_record_ids": [
+        "gaza-2026-11-15-ap-abu-younis",
+        "gaza-2026-11-15-reuters-abu-younis",
+        "gaza-2026-11-15-aljazeera-abu-younis"
+      ]
+    }
+  ],
+  "merged_sources": 2,
+  "prior_editions_checked": [
+    "2026-11-14"
+  ],
+  "review_scope": "Candidate-internal merge and comparison against the November 14 published edition; no comprehensive historical duplicate scan claimed.",
+  "reasons": [
+    "Three publishers corroborate one reported November 14 event; the AP bundle headline's unrelated Jordan item is excluded from the Gaza projection."
+  ]
+}

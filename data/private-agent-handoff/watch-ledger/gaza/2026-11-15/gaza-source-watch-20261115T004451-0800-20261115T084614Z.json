@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T004451-0800-20261115T084614Z",
+  "scheduled_for": "2026-11-15T00:44:51-08:00",
+  "started_at": "2026-11-15T00:46:14-08:00",
+  "completed_at": "2026-11-15T00:47:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-14T23:43:30-08:00",
+    "end": "2026-11-15T00:47:38-08:00",
+    "previous_run_completed_at": "2026-11-14T23:43:30-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-14/gaza-source-watch-20261114T234451-0800-20261115T074330Z.json",
+    "basis": "Latest verified prior heartbeat fetched from ops/watch-ledger. Window is Pacific time and overlaps Gaza local morning of 15 November. Newly published late-recall developments considered, but pre-existing incidents deduplicated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary daily Gaza collector/publisher remains production authority.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "News homepage and updates index checked first. Latest dated posts remain 13 November 2026; no interval-specific new Gaza operational update."
+      },
+      {
+        "publisher": "OCHA OPT 13 November Humanitarian Situation Report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Earlier-period flooding, shelter damage, evacuation, medicine and fuel figures; no newly dated event within observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Correct official conflict portal accessible, no newly dated in-window health or evacuation update. Two noncanonical WHO URLs returned 404 before canonical source was opened."
+      },
+      {
+        "publisher": "WHO Health Cluster",
+        "url": "https://healthcluster.who.int/countries-and-regions/occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Official country portal available, latest formal static figures listed as September 2026; no verified interval change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "detail": "Persisting 502 also affected EMRO OPT situation-reports URL. Previous heartbeat documents same limitation; official WHO alternatives were checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza \"15/November/2026\" killed injured Sunday 10:00 11:00",
+      "site:wafa.ps/news/2026/11/15 غزة الأحد 15 نوفمبر 2026 10:00 11:00 استشهاد إصابة قصف",
+      "site:aa.com.tr/en/middle-east/ Gaza November 15 2026 Sunday morning killed injured drone civilians",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 Sunday crossing aid ceasefire hostages strike",
+      "site:apnews.com/article/ Gaza November 15 2026 Sunday humanitarian hospital casualties",
+      "site:aljazeera.com/news/2026/11/15/ Gaza latest Sunday November 15 2026 Palestinians strike ceasefire",
+      "site:unicef.org OR site:unrwa.org Gaza 15 November 2026 displacement flood shelter access humanitarian update",
+      "site:wfp.org OR site:palestine.un.org Gaza November 15 2026 food water fuel crossing aid",
+      "site:who.int OR site:emro.who.int Gaza 15 November 2026 health hospital evacuation medical ambulances fuel",
+      "site:ochaopt.org OR site:reliefweb.int Gaza 15 November 2026 morning access displacement humanitarian coordination",
+      "Gaza ceasefire negotiation hostage detainee release border Rafah reopening November 15 2026 Sunday morning",
+      "Gaza November 15 2026 09:30 10:30 local time civilians killed injured Beit Lahia Khan Younis operations impact"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA English Latest News",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest items as of 15 Nov 10:15 Palestine local were non-Gaza (diplomacy and West Bank). Latest Gaza 01:31 is prior-captured al-Mawasi displaced-tent strike."
+      },
+      {
+        "publisher": "WAFA Arabic Latest News",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest 10:32 local news concerns West Bank; Gaza displaced-tent strike item dated 00:08 local is a duplicate captured in Nov 14 15:51 PST heartbeat."
+      },
+      {
+        "publisher": "UN in Palestine",
+        "url": "https://palestine.un.org/en",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "Newest Gaza relief articles dated 12 November (winter aid), 10 November (flooding) and 9 November (Rafah displacement-site gunfire); no interval update."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-palestinian-wounds-2-in-southern-gaza/4125458",
+        "status": "DIRECT_FETCH_FAILED_SEARCH_COVERED",
+        "detail": "Direct URL not accessible; previously verified article describes the already recorded al-Mawasi tent casualty, with no distinctly verifiable new event this interval."
+      }
+    ],
+    "excluded_candidates": [
+      "One killed and two injured in al-Mawasi displaced persons tent strike: previously recorded Nov 14 15:51 PST; Nov 15 WAFA and Anadolu coverage is duplicate.",
+      "November 14 Jabalia two killed, Rafah later death from earlier injuries, Nasser Medical Complex strike and related condemnations previously recorded or not new.",
+      "OCHA November 13 report covering Nov 3-9 Gaza flooding, water insecurity, shelter losses, transport, medical evacuation and medicine stockouts predates this recall interval.",
+      "November 12 UN appeal for winter supplies, November 10 flood-impact report and November 9 Rafah displacement-site gunfire are previously reported, not new.",
+      "West Bank incidents, commemorations, political remarks and unverified rumors omitted."
+    ],
+    "scope_categories_checked": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food/water access",
+      "healthcare disruption",
+      "hospital/ambulance/transport/fuel/medical-evacuation/functioning-capacity changes",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "coverage_gaps": [
+      "WHO EMRO OPT returns HTTP 502, persistent prior limitation; noncanonical WHO links return 404; official WHO Global and WHO Health Cluster accessible.",
+      "Direct Anadolu article fetch failed; established source search and previous confirmed coverage used only for duplicate exclusion.",
+      "Late indexing and publication lag may conceal new developments, especially in early Gaza local morning."
+    ],
+    "limitations": "OCHA OPT and WHO were checked first, then exactly twelve additional targeted searches and direct source reads. No new qualifying, traceable development verified in this interval. Negative findings do not prove no incident occurred.",
+    "meaningful_new_findings": 0,
+    "materially_new_degradation": false,
+    "production_publication_approval_schedule_unchanged": true,
+    "no_publication_or_approval_actions_taken": true
+  }
+}

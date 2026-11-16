@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T194451-0800-20261116T034804Z",
+  "scheduled_for": "2026-11-15T19:44:51-08:00",
+  "started_at": "2026-11-15T19:45:35-08:00",
+  "completed_at": "2026-11-15T19:48:04-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T18:49:16.020-08:00",
+    "end": "2026-11-15T19:48:04-08:00",
+    "previous_run_completed_at": "2026-11-15T18:49:16.020-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T184451-0800-20261116T024916020Z.json",
+    "basis": "Supplementary hourly recall; checked current-hour reporting and date-bounded late-indexed prior-day source statements. Older distinct late-recalled item explicitly labeled; no inference that patient event occurred inside the hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-unrwa-clinic-infant-nebulizer-delayed-power",
+      "canonical_source_url": "https://www.alaraby.com/news/معاناة-الرضيع-كريم-توقف-المولدات-يهدد-الرعاية-الصحية-في-غزة",
+      "title": "UNRWA reports that a Gaza clinic could not operate an infant's nebulizer during power outage",
+      "publisher": "Al Araby (reporting an attributed 15 November UNRWA statement)",
+      "source_date": "2026-11-15",
+      "publication_date": "2026-11-15",
+      "publication_datetime": null,
+      "event_date": null,
+      "event_datetime": null,
+      "location": "An unspecified UNRWA clinic, Gaza Strip",
+      "affected_population_or_system": "One-year-old Karim, whose nebulizer therapy was delayed; patients relying on electrically powered treatment at UNRWA clinics",
+      "exact_supporting_passage": "لكن الطواقم الطبية أبلغتها بأن الجهاز لا يمكن تشغيله بسبب انقطاع الكهرباء",
+      "source_type": "established_reporting_attributing_primary_UNRWA_statement",
+      "classification": "late-recalled_follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct linked article during verification of a November 16 Gaza recap surfaced in targeted searches; published November 15, prior to the preceding hourly cutoff",
+        "official_primary_reference": "https://x.com/UNRWAarabic/status/2121845657745199147",
+        "primary_reference_access": "HTTP 403 on direct check; report attributes the claim to UNRWA's November 15 post",
+        "new_detail": "Specific patient-level interruption of a nebulizer at a UNRWA clinic, not captured in earlier November 15 watch-ledger findings.",
+        "known_background": "WHO/OCHA previously documented shortages and power/generator disruption; the report does not establish a new territory-wide generator outage or a new onset date.",
+        "duplicate_check": "Read the November 15 ops/watch-ledger heartbeat files through the immediately preceding completed watch; no earlier findings recorded Karim or this reported care interruption.",
+        "caveats": "Original UNRWA social post could not be accessed independently; no clinic location, onset date or clinical outcome beyond treatment delay is independently verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Latest dated situation report located was November 13, chiefly reporting November 3–9. No newly issued interval-specific OCHA development found."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official situation page accessible; no November 15–16 new health-capacity update identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Persisting previously known access failure; WHO global remains accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 16, 2026\" Gaza civilians killed injured",
+      "site:wafa.ps/news/2026/11/16 غزة اليوم فجر الاثنين شهيد جريح قصف مستشفى",
+      "site:alquds.com/ar/posts/ غزة 16 نوفمبر 2026 3 صباحا 4 صباحا شهداء إصابات",
+      "site:aljazeera.com/news/2026/11/16 Gaza Israeli strikes casualties Rafah crossings update",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 late Sunday November 16 civilians aid",
+      "site:apnews.com/article/ Gaza November 15 2026 evening November 16 ceasefire attack hospitals",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 16 2026 strike civilians humanitarian",
+      "site:palestine.un.org/en/ \"16 November 2026\" Gaza displaced aid health",
+      "site:unicef.org \"16 November 2026\" \"Gaza\" water children",
+      "site:palestinercs.org غزة 16 نوفمبر 2026 إسعاف مستشفى نقل مرضى",
+      "site:wfp.org/news Gaza November 15 2026 November 16 2026 food delivery crossings",
+      "غزة 16 نوفمبر 2026 فجر اليوم قصف شهداء إصابات معبر رفح مساعدات قوات الاحتلال"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Newly indexed latest items mostly repeat previously covered November 15 casualty/aid developments."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No unlogged distinct Gaza item within hourly observation window."
+      },
+      {
+        "publisher": "Al Araby",
+        "url": "https://www.alaraby.com/news/معاناة-الرضيع-كريم-توقف-المولدات-يهدد-الرعاية-الصحية-في-غزة",
+        "status": "ACCESSIBLE",
+        "detail": "November 15 report attributing the specific nebulizer delay to a UNRWA social statement."
+      },
+      {
+        "publisher": "UNRWA post via X",
+        "url": "https://x.com/UNRWAarabic/status/2121845657745199147",
+        "status": "HTTP_403",
+        "detail": "Direct primary post not retrievable; established report quotes it."
+      },
+      {
+        "publisher": "Sanad",
+        "url": "https://snd.ps/post/171076/ارتفاع-مقلق-بإصابات-الحمى-الشوكية-والأمراض-التنفسية-بين-أطفال-غزة",
+        "status": "ACCESSIBLE",
+        "detail": "Named pediatric-hospital director describes rising respiratory illness/meningitis; generic trend already noted by OCHA and no new quantified case count."
+      }
+    ],
+    "excluded_candidates": [
+      "November 16 Al Araby recap of Sunday November 15 Rafah al-Mawasi death, Khan Younis injury and four-minister aid statement restated earlier watch findings.",
+      "Abdullah Hassouna's later death from earlier Gaza strike already captured in 02:44 local heartbeat.",
+      "Recovered remains of 70 previously deceased Palestinians and the Al-Mawasi truck incident both previously recorded.",
+      "Sanad November 15 pediatric director warning about rising meningitis/respiratory illness resembles already published OCHA November 13 health trends, without a new verified quantified change.",
+      "Al Araby November 13 WHO respiratory infection figure and earlier WFP food reductions are older context, not new developments.",
+      "Reuters/AP coverage of Nasser Hospital and other previously recorded attacks excluded as duplicates."
+    ],
+    "caveats": [
+      "At least one verified, source-attributed case of care disruption surfaced as late recall; no independently timed new incident was verified during the narrow hour.",
+      "WHO Eastern Mediterranean HTTP 502 and UNRWA social access HTTP 403 restrict primary-source completeness. These are not newly material failures; alternative official WHO and independent reporting stayed accessible.",
+      "Late indexing and Jerusalem/Pacific date differences may surface additional verifiable events in later watch cycles."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "previous_same_day_ledgers_checked": 19,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

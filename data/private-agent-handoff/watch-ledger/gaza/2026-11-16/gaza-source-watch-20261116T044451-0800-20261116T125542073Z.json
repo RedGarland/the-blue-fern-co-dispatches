@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T044451-0800-20261116T125542073Z",
+  "scheduled_for": "2026-11-16T04:44:51-08:00",
+  "started_at": "2026-11-16T04:53:33-08:00",
+  "completed_at": "2026-11-16T04:55:42.073-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T04:01:18-08:00",
+    "end": "2026-11-16T04:55:42.073-08:00",
+    "previous_run_completed_at": "2026-11-16T04:01:18-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T034451-0800-20261116T120118080Z.json",
+    "basis": "Authenticated listing of ops/watch-ledger verified the latest prior Gaza heartbeat, with the 03:44 scheduled run completed at 04:01:18 PST. New source material was checked against its finding and exclusion records. Recall covers newly published or previously missed reports traceable during this watch, while preserving source event/publication chronology."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261116-beit-lahia-two-gunshot-injuries-wafa-20261116-1131",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/16/مصابان-برصاص-الاحتلال-في-بلدة-بيت-لاهيا",
+      "title": "Two Palestinians wounded by Israeli gunfire in Beit Lahia, northern Gaza",
+      "source_title": "مصابان برصاص الاحتلال في بلدة بيت لاهيا",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-16",
+      "publication_date": "2026-11-16T11:31:00+02:00",
+      "event_date": "2026-11-16",
+      "location": "Beit Lahia, North Gaza governorate, Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Two Palestinian civilians reported wounded by gunfire and transported to a medical facility; condition described as varying severity",
+      "finding_summary": "WAFA reports, citing a medical source, that two people with gunshot injuries of differing severity arrived at a medical facility following Israeli military gunfire in Beit Lahia on 16 November. English WAFA version posted at 12:16 Jerusalem time; Al Jazeera's 16 November report independently mentions the episode but cites an ambulance/emergency source and agencies. This is distinct from the already ledgered Jabalia fatal shooting and Khan Younis school injuries. The original Arabic report predates the prior 04:01 PST cutoff and therefore is a late-recalled, newly identified incident, not an event newly occurring during this hour.",
+      "exact_supporting_passage": "وأفاد مصدر طبي، بوصول إصابتين بجروح متفاوتة برصاص قوات الاحتلال في بلدة بيت لاهيا شمال القطاع.",
+      "source_type": "established_palestinian_news_agency_reporting_named_location_and_attributed_medical_source",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "classification_detail": "late-recalled distinct incident, not a newly timed attack",
+        "original_report_published_pst": "2026-11-16T01:31:00-08:00",
+        "discovery_method": "Direct read of WAFA Arabic/English live indexes and article links following 12 bounded searches",
+        "high_value_miss_classes": [
+          "civilian_casualties",
+          "military_operations_with_documented_civilian_impact"
+        ],
+        "supporting_urls": [
+          "https://english.wafa.ps/Pages/Details/176978",
+          "https://www.aljazeera.net/news/2026/11/16/شهيد-وجرحى-في-غزة-وتنديد-باستهداف"
+        ],
+        "independently_confirmed_by_hospital": false,
+        "previous_ledger_duplicate_check": "No Beit Lahia injury incident in latest verified heartbeat; Jabalia fatality and Khan Younis school injuries separately recorded in prior heartbeats.",
+        "uncertainty": "Exact time of shooting, identities and clinical severity unavailable; Al Jazeera report does not establish a fully independent hospital confirmation."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; Gaza primary production collection/publishing remains authoritative and untouched.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage latest reports dated 13 November; no newly issued November 16 update visible."
+      },
+      {
+        "publisher": "OCHA OPT Humanitarian Situation Updates",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed humanitarian situation report dated 13 November."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official health overview accessible; no November 16 Gaza-specific publication on page."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Pre-existing access failure persists; alternate WHO global page accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps OR site:english.wafa.ps غزة الاثنين 16 نوفمبر 2026 بعد الظهر جرحى قصف شهداء جباليا خان يونس",
+      "site:english.wafa.ps/Pages/Details/ November 16 2026 Gaza casualties displaced civilians hospital",
+      "site:alquds.com/ar/posts/ 16 نوفمبر 2026 غزة اليوم 오후 الصحة مدني نازحين اعتداءات",
+      "site:aljazeera.net/news/2026/11/16 غزة 16 نوفمبر مساعدات شهداء إصابات خيام معابر",
+      "site:reuters.com/world/middle-east/ November 16 2026 Gaza wounded civilians ceasefire aid crossing",
+      "site:apnews.com/article/ November 16 2026 Gaza civilians humanitarian hospital aid",
+      "site:aa.com.tr/en/middle-east/ Gaza November 16 2026 killed injured attacks food",
+      "site:unrwa.org OR site:unicef.org Gaza 16 November 2026 displacement water health",
+      "site:msf.org OR site:icrc.org Gaza November 16 2026 ambulance hospital fuel patients",
+      "site:wfp.org OR site:reliefweb.int Gaza 16 November 2026 food aid truck crossings",
+      "site:who.int OR site:emro.who.int Gaza November 16 2026 medical evacuation healthcare hospital",
+      "site:un.org OR site:palestine.un.org November 16 2026 Gaza ceasefire crossing shelter humanitarian"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic latest news",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed 16 Nov items through 14:47 Jerusalem time; Beit Lahia report located and read directly."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/Details/176978",
+        "status": "ACCESSIBLE",
+        "detail": "12:16 Jerusalem-time report identifies two wounded in Beit Lahia and attributes information to medical source."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/news/2026/11/16/مصابان-برصاص-الاحتلال-في-بلدة-بيت-لاهيا",
+        "status": "ACCESSIBLE",
+        "detail": "Published 11:31 Jerusalem time; original incident report, wording preserved."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/16/شهيد-وجرحى-في-غزة-وتنديد-باستهداف",
+        "status": "ACCESSIBLE",
+        "detail": "Mentions two wounded in Beit Lahia; also merges already ledgered Jabalia and Khan Younis incidents."
+      },
+      {
+        "publisher": "Al-Quds latest",
+        "url": "https://alquds.com/ar/",
+        "status": "ACCESSIBLE",
+        "detail": "Recent Gaza links primarily reference previously ledgered neurorehabilitation estimates and prior civilian casualties."
+      },
+      {
+        "publisher": "WAFA Khan Younis report",
+        "url": "https://english.wafa.ps/Pages/Details/176970",
+        "status": "ACCESSIBLE",
+        "detail": "Earlier 08:15 Jerusalem-time report of three school injuries already ledgered."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously captured November 16 Jabalia gunshot fatality and Khan Younis school injuries; Al Jazeera's alternative four-person count at Khan Younis was not promoted as an additional injury without independent resolution of conflicting totals.",
+      "Reported artillery shelling of a room in Rafah's al-Mawasi district was not promoted because no verified structural damage or casualty outcome was given.",
+      "Previously captured cumulative neurorehabilitation figures; no new functional-capacity change verified.",
+      "Older November 15 aid restriction appeals and 70 recovered remains were duplicate or pre-cutoff reporting; historical headlines not treated as hourly new incidents.",
+      "West Bank prisoner-health report and UN torture statement lacked a distinct verified new Gaza-specific change within this bounded watch."
+    ],
+    "limitations": [
+      "WHO EMRO remained HTTP 502, an established restriction rather than new deterioration; WHO global and OCHA remained accessible.",
+      "The WAFA Beit Lahia report was published before the previous watch cutoff and identified only on this run (late recall).",
+      "Twelve targeted searches plus accessible direct links do not constitute exhaustive source surveillance.",
+      "Published source attribution to a medical source does not independently verify exact injuries or clinical details."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "approvals_changed": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

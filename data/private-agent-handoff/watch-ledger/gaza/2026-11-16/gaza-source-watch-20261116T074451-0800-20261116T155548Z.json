@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T074451-0800-20261116T155548Z",
+  "scheduled_for": "2026-11-16T07:44:51-08:00",
+  "started_at": "2026-11-16T07:54:15-08:00",
+  "completed_at": "2026-11-16T07:55:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T06:57:42-08:00",
+    "end": "2026-11-16T07:55:48-08:00",
+    "previous_run_completed_at": "2026-11-16T06:57:42-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T064451-0800-20261116T145742344Z.json",
+    "basis": "Previous hourly cutoff verified by authenticated GitHub fetch of the prior heartbeat; bounded supplementary recall, with late items considered only if traceable and not duplicative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary source recall only; primary production remains authoritative. No approval, publication, schedule, or production changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Official homepage checked first; latest 16 Nov Gaza Strip access and movement document identified."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "LANDING_ACCESSIBLE_PDF_TOO_LARGE",
+        "detail": "16 Nov access-and-movement map landing page accessible; linked PDF (16,050,841 bytes) exceeded retrieval limit, so no claims were drawn from its contents."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "SEARCH_ACCESSIBLE",
+        "detail": "Latest readable situation report published 13 Nov, covering 3–9 Nov; its 46,000 affected households, service flooding and aid restrictions predate this watch window."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Previously known WHO Eastern Mediterranean source access restriction persists; alternative EMRO news URL returned HTTP 502."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official WHO global conflict and healthcare overview accessible; no novel dated healthcare release observed in this watch interval."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 16 2026 shooting killed injured hospital after 5pm",
+      "site:wafa.ps/news/2026/11/16 غزة الساعة السادسة مساء الاثنين شهيد مصابين إطلاق نار",
+      "site:aljazeera.net/news/2026/11/16 غزة مساء اليوم الاثنين قصف شهداء جرحى",
+      "site:ochaopt.org/content/ 16 November 2026 Gaza access movement humanitarian update",
+      "site:unrwa.org Gaza November 16 2026 new aid shelter medicine",
+      "site:unicef.org Gaza November 16 2026 water children storm shelter",
+      "site:msf.org Gaza November 16 2026 medical hospitals fuel evacuation",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 ceasefire aid crossing injured",
+      "site:alquds.com/ar/posts/ 16 نوفمبر 2026 غزة 18:00 مرضى مستشفيات معابر مساعدات قتلى",
+      "site:apnews.com/article/ Gaza November 16 2026 civilians crossing hospital aid ceasefire",
+      "site:palestinercs.org Gaza 16 November 2026 ambulance health emergency",
+      "Gaza Strip Monday November 16 2026 17:00 Jerusalem latest displaced tents Rafah water crossings Reuters WAFA"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274213-gaza-occupation-violations-martyrs-displaced-targeted",
+        "status": "ACCESSIBLE",
+        "detail": "Published 16 Nov 10:29 Jerusalem (00:29 PST); recaps previously known casualties and incidents from 15–16 Nov, rather than new activity since cutoff."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274073-two-palestinians-martyred-israeli-occupation-strikes-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Published 16 Nov 00:13 Jerusalem (15 Nov 14:13 PST); preexisting Mawasi/Rafah deaths and injuries, no novel in-window development."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/273836-martyr-injured-truck-accident-khanyounis-tents",
+        "status": "ACCESSIBLE",
+        "detail": "Displaced tents struck by reversing truck on 15 Nov at 13:44 Jerusalem; outside window. Traffic accident, not evidence of a fresh military attack."
+      },
+      {
+        "publisher": "Financial Times",
+        "url": "https://www.ft.com/content/463238ee-2d5f-4ae8-b48b-8a39444c08bd",
+        "status": "PAYWALLED",
+        "detail": "16 Nov report discusses winter flooding, tent access and WHO respiratory infections; direct article text unavailable. No verified distinct event/publication timestamp or underlying WHO release establishing novel in-window change."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "PRCS index shows latest Gaza winter-conditions appeal dated 10 Nov; no new 16 Nov item located."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 16 Nov 24-hour hospital intake update (3 deaths and 7 injuries), previously captured in immediate prior heartbeat; avoid double counting aggregate and incident-level reporting.",
+      "Earlier Jabalia, Beit Lahia, Khan Younis and Mawasi/Rafah attacks and injuries, already reported before this cutoff.",
+      "Al-Quds 16 Nov 10:29 Jerusalem story appears current in search but was published about six hours before this observation window, recounting prior incidents.",
+      "OCHA 16 Nov access-and-movement PDF not read; publication alone is not a verified humanitarian access change.",
+      "FT winter hardship article paywalled; content summary largely repeats 13–15 Nov OCHA/UN and Western-government statements, WHO respiratory figure source date not independently confirmed.",
+      "Older UNRWA, UNICEF, MSF and PRCS background pages; no new dated event verified.",
+      "Unrelated West Bank developments and older AP 2025/2026 articles excluded."
+    ],
+    "limitations": [
+      "WHO EMRO persistent timeout/502 remains a known source restriction; WHO global alternative was accessible.",
+      "OCHA November 16 access-and-movement PDF exceeded browser retrieval size limit; OCHA main site and report index remained accessible.",
+      "12 targeted searches were bounded and not exhaustive; no retrieved, directly verifiable development meeting recency, source and deduplication requirements was identified.",
+      "No claims were drawn from inaccessible PDF or paywalled FT article body; zero findings are not proof of zero incidents."
+    ],
+    "production_changed": false,
+    "approvals_changed": false,
+    "schedule_changed": false
+  }
+}

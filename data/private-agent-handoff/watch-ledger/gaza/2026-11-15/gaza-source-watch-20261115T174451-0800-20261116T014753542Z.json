@@ -1,0 +1,158 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T174451-0800-20261116T014753542Z",
+  "scheduled_for": "2026-11-15T17:44:51-08:00",
+  "started_at": "2026-11-15T17:44:28-08:00",
+  "completed_at": "2026-11-15T17:47:53.542-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T16:43:24.614-08:00",
+    "end": "2026-11-15T17:47:53.542-08:00",
+    "previous_run_completed_at": "2026-11-15T16:43:24.614-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T164451-0800-20261116T004324614Z.json",
+    "basis": "New reports after previous completed heartbeat, plus bounded late-recall of previously uncaptured, traceable 15 November developments. Earlier-event discoveries are explicitly flagged and not counted as events during this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261115-north-gaza-70-remains-recovered-funeral",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/15/%D8%AA%D8%B4%D9%8A%D9%8A%D8%B9-%D8%B1%D9%81%D8%A7%D8%AA-70-%D8%B4%D9%87%D9%8A%D8%AF%D8%A7-%D8%A7%D9%86%D8%AA%D8%B4%D9%84%D9%88%D8%A7-%D9%85%D9%86-%D8%AA%D8%AD%D8%AA-%D8%A7%D9%84%D8%A3%D9%86%D9%82%D8%A7%D8%B6",
+      "title": "Funeral held for remains of 70 Palestinians recovered from rubble in northern Gaza",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_publication_date": "2026-11-15",
+      "source_publication_time": "12:50",
+      "source_publication_timezone": "Asia/Hebron",
+      "event_date": "2026-11-15",
+      "event_time": null,
+      "location": "Al-Saftawi / northern Gaza City, Gaza Strip",
+      "affected_population_or_system": "Families of the deceased; recovery of remains and rubble-clearance operations in northern Gaza",
+      "supporting_passage_exact": "شيّعت جماهير غفيرة من أبناء شعبنا، اليوم الأحد، رفات وجثامين 70 شهيدا انتشلوا من تحت أنقاض المباني والمنازل المدمرة",
+      "supporting_passage_language": "ar",
+      "source_type": "Palestinian public news agency; reporter account",
+      "classification": "follow-up",
+      "confidence": "high",
+      "discovery_context": {
+        "late_recall": true,
+        "source_first_published_before_window": true,
+        "first_observed_in_this_run": true,
+        "secondary_corrob_url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/15/gaza-faz-funeral-para-70-palestinos-retirados-de-escombros.ghtm",
+        "bounded_recall_scope": "15 November reporting of remains retrieval/funerals; checked against preceding two heartbeat findings/exclusions",
+        "caveat": "These are remains of people previously killed, not 70 newly occurring deaths. WAFA reports about 60 identified remains; overall recovered figure approximate. Source accounts vary on specific northern Gaza neighborhoods."
+      }
+    },
+    {
+      "finding_id": "gaza-20261115-bir19-mawasi-truck-tents-one-killed",
+      "canonical_source_url": "https://alquds.com/ar/posts/273836-martyr-injured-truck-accident-khanyounis-tents",
+      "title": "Reversing truck strikes displaced families' tents in Al-Mawasi, killing one and injuring others",
+      "publisher": "Al-Quds",
+      "source_publication_date": "2026-11-15",
+      "source_publication_time": "13:44",
+      "source_publication_timezone": "Asia/Hebron",
+      "event_date": "2026-11-15",
+      "event_time": null,
+      "location": "Bir 19, Al-Mawasi, Khan Younis, Gaza Strip",
+      "affected_population_or_system": "Displaced Palestinians living in tents; one reported death and an unspecified number of injured",
+      "supporting_passage_exact": "استشهد مواطن فلسطيني وأصيب عدد آخر بجروح متفاوتة، اليوم، إثر حادث دهس أليم وقع في منطقة «بئر 19» بمواصي مدينة خانيونس",
+      "supporting_passage_language": "ar",
+      "source_type": "Established Palestinian newspaper, attributing rescue details to Civil Defense",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "late_recall": true,
+        "source_first_published_before_window": true,
+        "first_observed_in_this_run": true,
+        "bounded_recall_scope": "15 November displacement-site civilian casualties missed by previous hourly watches",
+        "caveat": "Reported accidental truck movement, not an Israeli military strike. Injured count unspecified; no separate accessible Civil Defense primary statement verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall; daily production collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage latest updates 13 November; latest full situation report covers 3–9 November, before window."
+      },
+      {
+        "publisher": "WHO global oPt",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Overview and news links checked; no newly dated Gaza hospital/medical evacuation bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Established source restriction persists, with alternative WHO global site accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 16, 2026\" Gaza killed wounded airstrike Rafah Khan Younis",
+      "site:wafa.ps \"16/11/2026\" غزة شهيد إصابات قصف نزوح معبر",
+      "site:aa.com.tr/en/middle-east Gaza November 16 2026 civilian hospital aid killed",
+      "site:alquds.com/ar/posts \"16 نوفمبر 2026\" غزة مستشفى شهداء قصف معبر",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 Sunday night November 16 ceasefire civilians negotiations aid",
+      "site:apnews.com/article/ Gaza November 15 2026 Israeli strike aid medical evacuation ceasefire",
+      "site:palestine.un.org/en/ November 15 2026 Gaza health shelter displaced crossings casualties",
+      "site:unicef.org/press-releases Gaza 15 November 2026 OR 16 November 2026 children hospitals water",
+      "site:icrc.org/en/news-release/ Gaza November 15 2026 OR November 16 2026 hostages ambulances patient hospital",
+      "site:wfp.org/news Gaza November 15 2026 OR November 16 2026 food access crossings trucks",
+      "site:unrwa.org Gaza 15 November 2026 OR 16 November 2026 relief clinics shelter staff",
+      "غزة آخر الأخبار مساء 15 نوفمبر 2026 فجر 16 نوفمبر ضحايا معبر مستشفى مياه إمدادات مفاوضات"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "15 November funeral of 70 previously deceased identified in direct article; other Gaza reports mostly repeats."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza reports repeat previously logged Rafah strike, child casualty appeal and four-minister statement."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts",
+        "status": "ACCESSIBLE",
+        "detail": "Directly checked 15 November displaced-camp truck casualty and operational articles."
+      },
+      {
+        "publisher": "UOL reporting",
+        "url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/15/gaza-faz-funeral-para-70-palestinos-retirados-de-escombros.ghtm",
+        "status": "ACCESSIBLE",
+        "detail": "Independent reporting of northern Gaza mass funeral and Civil Defense account."
+      }
+    ],
+    "excluded_candidates": [
+      "Already logged: 15 November Rafah strike and Khan Younis gunshot injury, Al-Shifa approximately 60% functioning, Rafah 101st patient batch, four-state aid statement, UNRWA contracts, UNICEF cumulative child casualties.",
+      "Al-Quds 15 November proposed diabetes clinic campaign targeting 1,000 residents begins next Thursday; planned care, not confirmed delivered services.",
+      "Al-Quds Gaza ceasefire-stalled story cites unnamed faction sources and little verifiable newly changed negotiation status; not a discrete new agreement or breakdown.",
+      "Al-Quds October transport and aid numbers describe historical reporting months, not new crossing changes during this window.",
+      "Jordanian winter blanket distribution described as continuing without a new quantified delivery or verifiable distinct entry event.",
+      "AP 15 November Hamas commander report describes prior strike and does not establish additional civilian casualties.",
+      "Historical UN/WHO/WFP/UNICEF and older Reuters/AP items excluded."
+    ],
+    "caveats": [
+      "Both positive findings are explicitly late recalls published before the last heartbeat cutoff. No independently verified fresh event during the narrow hourly observation interval was located.",
+      "WHO EMRO 502 and historically reported UNRWA access limitations remain established; this is DEGRADED coverage, not a newly material degradation.",
+      "Search count bounded at 12 after official OCHA and WHO first checks; direct article verifications were not additional search queries.",
+      "Recent indexing and local source access can miss newly published reports."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

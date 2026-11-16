@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T094451-0800-20261116T175004325Z",
+  "scheduled_for": "2026-11-16T09:44:51-08:00",
+  "started_at": "2026-11-16T09:47:30-08:00",
+  "completed_at": "2026-11-16T17:50:04.325Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T08:45:40.648-08:00",
+    "end": "2026-11-16T17:50:04.325Z",
+    "previous_run_completed_at": "2026-11-16T08:45:40.648-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T084451-0800-20261116T164540648Z.json",
+    "basis": "Previous completed heartbeat read from the ops/watch-ledger branch. Bounded publication/discovery recall after that cutoff; older stories evaluated for uncaptured distinct high-value changes, not recounted as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. Primary daily collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "SEARCH_ACCESSIBLE",
+        "detail": "Most recent substantiated OCHA humanitarian situation report dated 13 November, generally reporting 3–9 November; known flooding, shelter, water and health disruptions predate this window."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "DIRECT_OPEN_FAILED",
+        "detail": "Previously listed 16 November access-and-movement map failed direct retrieval; neither map contents nor an access change were inferred."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO Gaza crisis overview directly accessible. No newly dated 16 November medical-evacuation/hospital operational change visible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Known source-specific HTTP 502 issue reproduced; WHO global substitute remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 16 2026 Monday evening 19:00 killed injured hospital",
+      "site:wafa.ps/news/2026/11/16 غزة مساء اليوم الاثنين الساعة السابعة شهداء جرحى 16 نوفمبر",
+      "site:aljazeera.net/news/2026/11/16 غزة الساعة السابعة مساء الاثنين شهيد إصابة قصف",
+      "site:alquds.com/ar/posts/ غزة الإثنين 16 نوفمبر 2026 19:00 شهداء مصابين مساعدات",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 afternoon aid hospital ceasefire crossing shootings",
+      "site:apnews.com/article/ Gaza November 16 2026 Monday evening aid casualty ceasefire",
+      "site:un.org/unispal/ November 16 2026 Gaza humanitarian crossings displaced medical",
+      "site:ochaopt.org/content/ Gaza 16 November 2026 latest access shelters medical evacuation",
+      "غزة اليوم الاثنين 16 نوفمبر 2026 الساعة السابعة مساء إطلاق نار مصابون شهداء خان يونس جباليا",
+      "Gaza Nov 16 2026 17:00 GMT 16 November ceasefire aid trucks Rafah crossing humanitarian killed",
+      "site:palestinercs.org/en Gaza 16 November 2026 ambulance emergency hospital",
+      "site:unicef.org OR site:unrwa.org OR site:msf.org Gaza 16 November 2026 floods clinics aid water"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274213-gaza-occupation-violations-martyrs-displaced-targeted",
+        "status": "ACCESSIBLE",
+        "detail": "16 November 10:29 Jerusalem (00:29 PST) recap covers known Khan Younis school injuries and earlier deaths. Earlier than prior cutoff."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274438-israel-detains-gaza-prisoners-after-sentence-ends",
+        "status": "ACCESSIBLE_UNCORROBORATED",
+        "detail": "Article dated 16 November 18:45 Jerusalem (=08:45 PST), just before previous completion, claims 48 Gaza prisoners remain detained beyond sentenced terms; sources are described generically without named organization, records, or corroboration. Not promoted as verified finding."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274346-gaza-humanitarian-crisis-winter-shelter-blockade",
+        "status": "ACCESSIBLE_OLDER",
+        "detail": "16 November 15:10 Jerusalem (=05:10 PST) summary of Palestinian Centre for Human Rights assessment of winter shelter/material shortages; no independently verified new in-window change."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274441-martyr-walid-khaled-body-released-hunger-torture-revealed",
+        "status": "ACCESSIBLE_OUT_OF_SCOPE",
+        "detail": "16 November 19:08 Jerusalem prisoner body-return story concerns a teenager from Silwad near Ramallah, not a Gaza resident; historical March 2025 death, excluded."
+      },
+      {
+        "publisher": "Middle East Monitor",
+        "url": "https://www.middleeastmonitor.com/20261116-unicef-warns-of-worsening-suffering-among-gazas-children-calls-for-aid-to-enter/",
+        "status": "ACCESSIBLE_OLDER",
+        "detail": "Cites UNICEF MENA statement from Sunday 15 November, not a new November 16 access change; cumulative child casualty figures, not an hourly incident."
+      },
+      {
+        "publisher": "Daily Sabah",
+        "url": "https://www.dailysabah.com/world/mid-east/israeli-strike-kills-2-as-4-countries-push-for-gaza-aid-access",
+        "status": "ACCESSIBLE_OLDER",
+        "detail": "16 November story explicitly describes Sunday 15 November Rafah/al-Mawasi strike and four-country appeal; preexisting events."
+      },
+      {
+        "publisher": "The Jewish Chronicle",
+        "url": "https://www.thejc.com/news/israel/hamas-rafah-brigade-commander-killed-in-israeli-airstrike-xv2x35cx",
+        "status": "ACCESSIBLE_OLDER",
+        "detail": "16 November publication on Saturday night Rafah Hamas commander strike and claimed military activities over preceding week; no separately documented new civilian effect."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest directly visible Gaza-specific winter appeal dated 10 November; no new November 16 ambulance/capacity update."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously logged 16 November Gaza hospital aggregate (3 dead, 7 injured), Jabalia fatality, Beit Lahia wounds, Khan Younis school wounds, aid-truck fleet warnings, prior floods and shelter damage.",
+      "Al-Quds 48 Gaza prisoners held after sentence completion, published just before prior cutoff: lacked traceable named rights-organization attribution, underlying records, or independent verification, so not promoted.",
+      "Al-Quds article about recovered remains of teenager from Silwad/Ramallah pertains to West Bank, not Gaza and death was historical.",
+      "UNICEF statement attributed to 15 November; fresh 16 November republication does not establish an in-window incident.",
+      "Rafah/al-Mawasi Sunday fatalities, earlier aid restrictions and four-country statement republished Monday.",
+      "Hamas military-commander death allegedly Saturday night; military target claim without documented new civilian consequence does not meet watch classes.",
+      "Older Reuters/AP/UN statements and future-dated 17 November pages excluded."
+    ],
+    "limitations": [
+      "Persistent WHO EMRO HTTP 502 means source-specific coverage is degraded, though WHO global and OCHA search coverage remained available; no material new degradation was observed.",
+      "Direct OCHA 16 November map retrieval failed; no claims about the underlying map were inferred.",
+      "Search indexing disproportionately returned old stories; bounded 12 targeted searches cannot prove no incidents happened.",
+      "Potential Gaza detainee claim lacks sufficiently attributable supporting evidence for positive finding."
+    ],
+    "production_changed": false,
+    "approvals_changed": false,
+    "schedule_changed": false
+  }
+}

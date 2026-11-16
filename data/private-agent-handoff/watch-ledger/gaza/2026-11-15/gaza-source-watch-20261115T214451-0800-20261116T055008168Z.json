@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T214451-0800-20261116T055008168Z",
+  "scheduled_for": "2026-11-15T21:44:51-08:00",
+  "started_at": "2026-11-15T21:46:30-08:00",
+  "completed_at": "2026-11-15T21:50:08.168-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T19:48:04-08:00",
+    "end": "2026-11-15T21:50:08.168-08:00",
+    "previous_run_completed_at": "2026-11-15T19:48:04-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T194451-0800-20261116T034804Z.json",
+    "basis": "Extended bounded recall from last independently readable watch ledger; an intervening 20:44 scheduled heartbeat could not be enumerated through available GitHub read actions. Searches focused primarily on the latest approximately one hour, with previously recorded 15 November events excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Latest directly verified OCHA situation report dated 13 November, mainly covers 3–9 November and contains no new 15 November late-evening operational updates."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current situation page checked; no fresh 15–16 November Gaza health bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Previously known access error persisted; accessible WHO global and OCHA sources provide alternative official coverage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 16, 2026\" Gaza killed injured aid",
+      "site:wafa.ps/Pages/Details/ 16 نوفمبر 2026 غزة شهداء إصابات قصف الاثنين",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة شهداء إصابات مستشفى",
+      "site:aljazeera.com/news/2026/11/16/ Gaza Palestinians killed injured ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 evening November 16 strikes aid",
+      "site:apnews.com/article/ Gaza November 15 2026 November 16 humanitarian health ceasefire",
+      "site:aa.com.tr/en/middle-east/ \"Nov 16, 2026\" Gaza civilians",
+      "site:palestine.un.org/en/ \"16 November 2026\" Gaza health food shelter aid",
+      "site:unicef.org \"16 November 2026\" Gaza children casualties water",
+      "site:wfp.org/news \"16 November 2026\" Gaza food convoy crossings",
+      "site:icrc.org \"16-11-2026\" Gaza hospital ambulance displacement",
+      "غزة الاثنين 16 نوفمبر 2026 عاجل فجر شهداء إصابات قصف مستشفى معبر مساعدات"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Recent Gaza recap summarizes already captured 15 November Rafah strike, Abdullah Hassouna death, Khan Younis gunshot; no distinct new casualty event verified."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza items recap previously logged Rafah strike, UNICEF appeal and four-country shelter statement."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274135-israeli-artillery-strikes-gaza-khan-younis-casualties",
+        "status": "ACCESSIBLE",
+        "detail": "Published 16 Nov 07:44 Jerusalem (15 Nov 21:44 PST). Reports artillery fire in Khan Younis, Deir al-Balah and Gaza City; no independently verified new civilian casualties, damage or service disruptions."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274073-two-palestinians-martyred-israeli-occupation-strikes-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Summarizes previously logged Sunday incidents and the earlier recovery of 70 remains."
+      }
+    ],
+    "excluded_candidates": [
+      "Al-Quds 16 Nov 07:44 Jerusalem artillery update: not elevated without documented new physical civilian harm, displacement, service interruption or damage; no new casualties verified.",
+      "Al-Quds 16 Nov 00:13 Jerusalem and WAFA 15 Nov 23:54 Jerusalem summaries repeat previously recorded Rafah strike, Khan Younis shooting, and the death of Abdullah Hassouna.",
+      "Al-Quds additional estimates of 160 bodies beneath rubble and 231 hours of recovery work describe the already recorded 70-remains recovery operation, not a newly occurring fatality.",
+      "Al-Quds 15 Nov reporting of aid truck reductions is a retrospective September–early November dataset without a new hourly crossing change; source provenance of competing counts not independently validated.",
+      "15 Nov four-state aid/crossing statement, UNRWA care interruption, UNICEF child casualty estimate, Al-Shifa capacity, Rafah 101st medical evacuation batch and Jordanian blanket distribution are known reports or unquantified continuing activity.",
+      "Anonymous-source assessment of stalled ceasefire negotiations did not independently establish a new agreement, resumption, breakdown, or verifiable operational change.",
+      "Older Reuters/AP/UN reports in search results excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persists from prior watches; WHO global is accessible. Not a newly material degradation.",
+      "Available GitHub connector supports authenticated file read but no directory enumeration for this branch; last prior known heartbeat at 19:48 PST was verified, while any 20:44 ledger could not be independently enumerated.",
+      "Search-engine indexing and report publication times may lag; no claim of exhaustive negative coverage.",
+      "No new qualifying development confirmed during this bounded run."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

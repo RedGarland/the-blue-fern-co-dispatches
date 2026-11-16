@@ -1,0 +1,135 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T234451-0800-20261116T075508Z",
+  "scheduled_for": "2026-11-15T23:44:51-08:00",
+  "started_at": "2026-11-15T23:53:05-08:00",
+  "completed_at": "2026-11-15T23:55:08-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T22:42:00-08:00",
+    "end": "2026-11-15T23:55:08-08:00",
+    "previous_run_completed_at": "2026-11-15T22:42:00-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T224001-0800-20261116T064200Z.json",
+    "basis": "Directly read preceding ops/watch-ledger heartbeat; local November 15 nighttime corresponds to November 16 morning in Gaza. A reported publication after cutoff qualifies if distinct; exact event time is not inferred."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-16-jabalia-qassasib-gunfire-fatality-wafa",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/16/%D8%B4%D9%87%D9%8A%D8%AF-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%81%D9%8A-%D8%A8%D9%84%D8%AF%D8%A9-%D8%AC%D8%A8%D8%A7%D9%84%D9%8A%D8%A7",
+      "title": "شهيد برصاص الاحتلال في بلدة جباليا",
+      "title_translation": "Palestinian killed by Israeli gunfire in Jabalia town",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-16",
+      "publication_date": "2026-11-16T09:06:00+02:00",
+      "event_date": "2026-11-16",
+      "event_time": null,
+      "location": "Al-Qassasib neighborhood, Jabalia town, northern Gaza Strip",
+      "affected_population_system": "One Palestinian man reported killed by Israeli gunfire; body received at Al-Shifa Medical Complex",
+      "exact_supporting_passage": "وأفاد مصدر طبي في مجمع الشفاء، بوصول شهيد بعد إصابته برصاص قوات الاحتلال بحي القصاصيب في بلدة جباليا شمال قطاع غزة.",
+      "source_type": "Established Palestinian news agency citing an unnamed medical source at Al-Shifa Medical Complex; independently corroborating hospital bulletin not verified",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_at_pst": "2026-11-15T23:54:00-08:00",
+        "reported_at_pst": "2026-11-15T23:06:00-08:00",
+        "prior_watch_cutoff_pst": "2026-11-15T22:42:00-08:00",
+        "method": "Direct verification via WAFA Arabic latest-news index and full original article, after bounded 12 targeted searches",
+        "distinction": "Separate fatal shooting in Jabalia/al-Qassasib from the preceding watch's three gunshot injuries at a school south of Khan Younis, reported at 07:52 Jerusalem time",
+        "limitations": "Exact shooting time, man's identity and age, and independent hospital confirmation unavailable; no new mass-casualty count asserted."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed report November 13, 2026; no new bulletin for this observation interval."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Situation overview accessible; no November 15–16 operational update apparent."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Known regional-source access failure persists unchanged; alternate WHO global source accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"16/November/2026\" Gaza killed injured aid",
+      "site:wafa.ps/news/2026/11/16 غزة شهيد إصابة مستشفى معبر صباح",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة قصف إصابات مستشفى",
+      "site:aljazeera.com/news/2026/11/16 Gaza casualties strikes aid ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 deaths aid ceasefire",
+      "site:apnews.com/article/ Gaza Nov 16 2026 crossing hospital civilian injuries",
+      "site:unicef.org \"16 November 2026\" Gaza children shelter water",
+      "site:palestine.un.org/en/ \"16 November 2026\" Gaza shelter hospital displacement",
+      "site:aa.com.tr/en/middle-east/ \"16.11.2026\" Gaza aid crossing civilian casualties",
+      "site:wfp.org OR site:unrwa.org Gaza \"16 November 2026\" food fuel shelter",
+      "site:icrc.org OR site:msf.org Gaza \"16 November 2026\" ambulance evacuations hospital",
+      "غزة 16 نوفمبر 2026 09:00 10:00 صباحا شهداء مصابين قصف معبر مستشفى إجلاء"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic latest index",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 16 09:06 Jerusalem bulletin about one fatal shooting in Jabalia, later confirmed from the full original article."
+      },
+      {
+        "publisher": "WAFA Arabic original",
+        "url": "https://www.wafa.ps/news/2026/11/16/%D8%B4%D9%87%D9%8A%D8%AF-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%81%D9%8A-%D8%A8%D9%84%D8%AF%D8%A9-%D8%AC%D8%A8%D8%A7%D9%84%D9%8A%D8%A7",
+        "status": "ACCESSIBLE",
+        "detail": "Medical source at Al-Shifa reports receipt of one killed man injured by gunfire in al-Qassasib, Jabalia."
+      },
+      {
+        "publisher": "WAFA English front page",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "Newest displayed English Gaza casualty article is prior-window three injured south of Khan Younis; no new English item for Jabalia yet."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274135",
+        "status": "ACCESSIBLE",
+        "detail": "07:44 Jerusalem artillery report describes shelling and public fear but no verified distinct civilian casualties or specific infrastructure loss; excluded."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-israel-gaza-iran-november-15-2026-3b4adde832dadd333451fd2f7a51908c",
+        "status": "ACCESSIBLE",
+        "detail": "November 15 Hamas commander killing not treated as a new civilian-impact finding; recovered remains from prior watch also excluded."
+      }
+    ],
+    "excluded_candidates": [
+      "Prior-watch three injured at Khan Younis school (WAFA November 16 07:52 Jerusalem), duplicate.",
+      "Previously logged recovery of remains in Jabalia and aid-access joint diplomatic statement, duplicates.",
+      "November 15 Hamas commander airstrike: no newly verified civilian impact in AP article.",
+      "Al-Quds November 16 07:44 artillery/shelling report: no separately documented casualties, displacement, or infrastructure damage.",
+      "Prior dates' Nasser Hospital strike, flood impacts, and other earlier attacks; recycled or out of the hourly window."
+    ],
+    "limitations": [
+      "WHO EMRO endpoint persists at HTTP 502; this is an established restriction, not newly worsened.",
+      "Search engine results skewed older and may lag primary-source index listings.",
+      "No independent verification of the Jabalia victim's identity or exact death time; article published after preceding cutoff."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T124451-0800-20261116T204222121Z",
+  "scheduled_for": "2026-11-16T12:44:51-08:00",
+  "started_at": "2026-11-16T12:40:03-08:00",
+  "completed_at": "2026-11-16T12:42:22.121-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T11:42:14.928-08:00",
+    "end": "2026-11-16T12:42:22.121-08:00",
+    "previous_run_completed_at": "2026-11-16T11:42:14.928-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T114451-0800-20261116T194214928Z.json",
+    "basis": "Prior authenticated GitHub heartbeat read from ops/watch-ledger; bounded recall of newly published or distinctly new in-window developments, plus late-reporting verification against previously recorded findings."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; primary Gaza publisher and collector remain authoritative. No approval, publication, schedule or unrelated repository changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "13 Nov report accessible, covering mainly 3–9 Nov, no newly published event within this run's observation window."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "RETRIEVAL_FAILED",
+        "detail": "16 Nov access/movement map URL failed direct retrieval in this run; landing listed in prior watch and cartographic contents not independently verified. No crossing change inferred."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Global occupied Palestinian territory emergency overview and WHO regional listings accessible; no new 16 Nov operational update located."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Regional endpoint returned 502 Bad Gateway again. Previously documented source restriction persists, with global WHO substitute accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"16/November/2026\" \"Gaza\" \"PM\" killed injured",
+      "site:wafa.ps/news/2026/11/16 غزة الساعة العاشرة مساء شهيد إصابات الجيش",
+      "Gaza November 16 2026 22:00 Palestine time Israeli fire civilians killed wounded tonight",
+      "site:aljazeera.com/news/2026/11/16 Gaza November 16 evening aid supplies displaced hospitals ceasefire",
+      "site:reuters.com/world/middle-east/ 2026-11-16 Gaza late Monday ceasefire aid crossing injured",
+      "site:apnews.com/article/ November 16 2026 Gaza aid evacuation hospitals ceasefire strikes",
+      "site:un.org OR site:unrwa.org OR site:unicef.org \"16 November 2026\" Gaza food shelter flood water healthcare",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة مساء اليوم إصابات نزوح مستشفيات",
+      "site:palestinercs.org OR site:msf.org OR site:who.int \"16 November 2026\" Gaza hospital ambulance medical evacuation 2026",
+      "site:ochaopt.org OR site:reliefweb.int \"16 Nov 2026\" Gaza access movement fuel food displaced",
+      "site:anadoluagency.com \"16.11.2026\" Gaza Monday afternoon ceasefire civilians trucks",
+      "غزة 16 نوفمبر 2026 11 مساء قصف شهداء جرحى مستشفى معبر مساعدات أخبار عاجلة"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest visible English Gaza incident at 18:01 Palestine local was the north Khan Younis strike with three injuries, previously recorded; later English entries through 20:34 Palestine local were not Gaza incident reports."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/16/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D9%81%D9%8A-%D8%BA%D8%B2%D8%A9-%D9%88%D8%AA%D9%86%D8%AF%D9%8A%D8%AF-%D8%A8%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81",
+        "status": "ACCESSIBLE",
+        "detail": "Recaps Jabalia fatality, Beit Lahia two injuries, Khan Younis school injuries, and 15 Nov commercial trucking support post attack. Date-only article; no verified novel event in observation window."
+      },
+      {
+        "publisher": "Al Araby TV",
+        "url": "https://www.alaraby.com/news/%D8%BA%D8%B2%D8%A9-%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D8%A8%D9%82%D8%B5%D9%81-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A-%D9%88%D9%85%D8%B7%D8%A7%D9%84%D8%A8%D8%A7%D8%AA-%D8%AF%D9%88%D9%84%D9%8A%D8%A9-%D8%A8%D9%81%D8%AA%D8%AD-%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%A8%D8%B1",
+        "status": "ACCESSIBLE",
+        "detail": "Documented 15 Nov deaths and 15 Nov four-country aid crossing statement, not in-window developments."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously recorded 16 Nov Beit Lahia, Jabalia and Khan Younis civilian-casualty incidents, Gaza hospital aggregate, medical rehabilitation decline, and aid truck fleet warning.",
+      "15 Nov strike on a commercial truck clearance/security point near Rafah and statements repeated on 16 Nov without a verifiable new operational change.",
+      "15 Nov joint foreign ministers' appeal about 150,000 blocked tents and crossing access; no in-window crossing opening or closure verified.",
+      "13 Nov OCHA reporting and previously documented flooding, water insecurity, medical-supply limitations, medical evacuations, and service disruptions.",
+      "Unattributed, historical, West Bank-only, opinion and unverified results."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean returned HTTP 502, previously documented; WHO global and OCHA report accessible. DEGRADED persists for known access gap rather than new material failure.",
+      "OCHA 16 Nov movement map link not retrievable in this run; no speculative map contents or crossing metrics were recorded.",
+      "Indexed news and English-language WAFA latest feeds may lag late-night local reporting; zero findings is not evidence that no incident occurred.",
+      "Publication-time precision was not available for some date-only Arabic stories, and these were excluded rather than assigned invented publication times."
+    ],
+    "overall": "No new qualifying, independently traceable, nonduplicate Gaza development verified after prior completed heartbeat cutoff. A previously known WHO source failure and partial OCHA map retrieval gap remain; alternative high-value official coverage succeeded."
+  }
+}

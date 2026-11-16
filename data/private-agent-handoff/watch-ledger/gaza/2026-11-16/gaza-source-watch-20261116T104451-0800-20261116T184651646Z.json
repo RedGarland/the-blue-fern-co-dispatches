@@ -1,0 +1,148 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T104451-0800-20261116T184651646Z",
+  "scheduled_for": "2026-11-16T10:44:51-08:00",
+  "started_at": "2026-11-16T10:43:35-08:00",
+  "completed_at": "2026-11-16T10:46:51.646-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T09:50:04.325-08:00",
+    "end": "2026-11-16T10:46:51.646-08:00",
+    "previous_run_completed_at": "2026-11-16T09:50:04.325-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T094451-0800-20261116T175004325Z.json",
+    "basis": "Branch ledger readback confirms preceding completed heartbeat. Primary cutoff is 09:50 PST. Late-recalled pre-cutoff reports only qualify if the incident was distinct and unrecorded."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261116-khan-younis-hamad-city-schoolyard-airstrike-3-injured",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176996",
+      "title": "Israeli strike leaves three people injured north of Khan Younis",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_publication_date": "2026-11-16",
+      "source_publication_at": "2026-11-16T18:01:00+02:00",
+      "event_date": "2026-11-16",
+      "event_time": null,
+      "location": "North of Khan Younis, near Hamad City, Gaza Strip",
+      "affected_population_or_system": "Three Palestinians injured, one seriously; school courtyard reportedly hit",
+      "exact_supporting_passage": "Three Palestinians were injured on Monday when an Israeli airstrike hit an area to the north of Khan Younis",
+      "source_type": "Palestinian official news agency; attributed to local correspondent",
+      "classification": "new",
+      "confidence": "medium",
+      "corroborating_sources": [
+        {
+          "url": "https://snd.ps/post/171107/%D9%85%D9%8F%D8%A8%D9%80%D8%A7%D8%B4%D9%80%D8%B1-%D8%B4%D9%87%D9%80%D9%8A%D9%80%D8%AF-%D9%88-%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D9%81%D9%8A-16-%D8%AE%D8%B1%D9%82%D8%A7-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A7-%D9%84-%D9%87%D8%AF%D9%86%D8%A9-%D8%BA%D8%B2%D8%A9",
+          "publisher": "Sanad News Agency",
+          "supporting_passage": "وأُصيب ثلاثة مواطنين بينهم إصابة خطيرة إثر غارة جوية إسرائيلية استهدفت فناء مدرسة قرب مدينة حمد شمالي خان يونس"
+        }
+      ],
+      "bounded_discovery_context": {
+        "first_seen_in_this_run": true,
+        "timing": "Late-recalled: WAFA publication 08:01 PST, before previous 09:50 PST completed watch. No evidence it was previously captured in the hourly watch ledger.",
+        "distinction": "Different location and mechanism from the three gunshot wounds reported at a school south of Khan Younis (Bir 19); do not combine the two incidents or add these injuries to 24-hour aggregate totals.",
+        "unverified": "Exact strike time, injured persons' identities, precise hospital treatment, independent medical-facility confirmation."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; primary Gaza collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage lists 16 Nov Gaza Strip access and movement map; earlier 13 Nov situation report; map landing page directly loaded."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "LANDING_ACCESSIBLE_PDF_TOO_LARGE",
+        "detail": "16 Nov PDF file (approximately 16 MB) refused by web retrieval size limit. Map contents were not interpreted and no access change inferred."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Global Gaza overview with no clearly newly dated 16 Nov operational bulletin."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously documented HTTP 502 restriction persisted. WHO global substitute available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 16 2026 20:00 19:00 18:00 Palestinian killed injured today",
+      "site:wafa.ps/news/2026/11/16 غزة الاثنين الساعة الثامنة مساء شهيد اصابة قصف خان يونس جباليا",
+      "site:aljazeera.com/news/2026/11/16 Gaza Monday November 16 2026 evening ceasefire killed wounded aid",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 Monday 18:00 GMT civilians hospital ceasefire",
+      "site:apnews.com/article/ gaza November 16 2026 Monday crossings aid healthcare casualties",
+      "site:ochaopt.org \"16 November 2026\" Gaza crossing access movement changed humanitarian trucks",
+      "غزة 16 نوفمبر 2026 20:30 21:00 إصابات شهداء قصف الاحتلال الإثنين مساء",
+      "site:alquds.com/ar/posts/ غزة 16 نوفمبر 2026 20:00 21:00 الاثنين عدوان",
+      "site:english.wafa.ps \"November 16, 2026\" Gaza Monday evening casualties aid crossing",
+      "site:unicef.org OR site:unrwa.org OR site:msf.org Gaza \"16 November 2026\" water clinic aid displaced",
+      "site:palestinercs.org/en OR site:who.int Gaza \"16 November 2026\" ambulance health evacuation",
+      "Gaza November 16 2026 18:00 GMT ceasefire negotiations hostages detainees crossing civilian aid latest"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176996",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov 18:01 Palestine publication. Three injuries after strike north Khan Younis, one serious. Distinct from earlier three shot at school south Khan Younis."
+      },
+      {
+        "publisher": "Sanad News Agency",
+        "url": "https://snd.ps/post/171107/%D9%85%D9%8F%D8%A8%D9%80%D8%A7%D8%B4%D9%80%D8%B1-%D8%B4%D9%87%D9%80%D9%8A%D9%80%D8%AF-%D9%88-%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D9%81%D9%8A-16-%D8%AE%D8%B1%D9%82%D8%A7-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A%D8%A7-%D9%84-%D9%87%D8%AF%D9%86%D8%A9-%D8%BA%D8%B2%D8%A9",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov field recap identifies strike on school courtyard near Hamad City north of Khan Younis and three injured, one seriously."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE"
+      },
+      {
+        "publisher": "Financial Times",
+        "url": "https://www.ft.com/content/463238ee-2d5f-4ae8-b48b-8a39444c08bd",
+        "status": "PAYWALLED",
+        "detail": "Published 16 Nov with WHO respiratory-illness comparisons; primary WHO update date not established, not treated as newly changed capacity."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/176999",
+        "status": "ACCESSIBLE_UNCORROBORATED_SERVICE_IMPACT",
+        "detail": "Trade union alleges UNRWA converted around 3,000 workers' employment terms, but no direct verified effect on Gaza services established."
+      },
+      {
+        "publisher": "Sanad News Agency",
+        "url": "https://snd.ps/post/171076/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D9%85%D9%82%D9%84%D9%82-%D8%A8%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AD%D9%85%D9%89-%D8%A7%D9%84%D8%B4%D9%88%D9%83%D9%8A%D8%A9-%D9%88%D8%A7%D9%84%D8%A3%D9%85%D8%B1%D8%A7%D8%B6-%D8%A7%D9%84%D8%AA%D9%86%D9%81%D8%B3%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D8%A3%D8%B7%D9%81%D8%A7%D9%84-%D8%BA%D8%B2%D8%A9",
+        "status": "OLDER",
+        "detail": "Hospital director statement dated 15 Nov on rising pediatric meningitis and respiratory disease; outside this window."
+      }
+    ],
+    "excluded_candidates": [
+      "Earlier recorded Beit Lahia gunshot injuries, Jabalia fatality, school gunshot injuries south Khan Younis, and 24-hour Gaza hospital aggregate, which may overlap individual incidents.",
+      "16 Nov WAFA report of roughly 3,000 UNRWA employees' contract conversion, attributed to trade-union chief: not enough evidence of a current humanitarian service/capacity change.",
+      "15 Nov pediatric respiratory and meningitis warning republished or surfaced in search; older than cutoff.",
+      "16 Nov Financial Times WHO comparative respiratory case figures: original WHO reporting date not verified, no demonstrated new in-window medical-service impact.",
+      "West Bank events, unrelated military claims lacking documented civilian impact, and stale/recycled reporting."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persists but WHO global and OCHA homepage accessible.",
+      "OCHA 16 Nov access/movement PDF exceeded web retrieval size limits; map content not verified.",
+      "Search indexing uneven and sometimes stale; a bounded 12-search watch cannot prove no additional events.",
+      "North Khan Younis injury report first published before prior watch cutoff; included as a distinct late-recalled unrecorded incident, not claimed as a post-cutoff strike."
+    ],
+    "production_changed": false,
+    "approvals_changed": false,
+    "schedule_changed": false
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T224001-0800-20261116T064200Z",
+  "scheduled_for": "2026-11-15T22:40:01-08:00",
+  "started_at": "2026-11-15T22:40:14-08:00",
+  "completed_at": "2026-11-15T22:42:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T21:50:08.168-08:00",
+    "end": "2026-11-15T22:42:00-08:00",
+    "previous_run_completed_at": "2026-11-15T21:50:08.168-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T214451-0800-20261116T055008168Z.json",
+    "basis": "Directly read prior committed heartbeat, then checked material first observed/reported after its 21:50:08 PST cutoff; local November 15 maps to morning November 16 in Gaza. Event time not asserted."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-2026-11-16-khan-younis-school-three-injured-wafa",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/176970",
+      "corroborating_source_urls": [
+        "https://www.wafa.ps/news/2026/11/16/%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D9%8A%D9%87%D9%85-%D8%B7%D9%81%D9%84-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%AC%D9%86%D9%88%D8%A8-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3",
+        "https://almamlakatv.com/ar/news/%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A8%D9%8A%D9%86%D9%87%D8%A7-%D8%B7%D9%81%D9%84-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%A7%D9%84%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A-%D8%AC%D9%86%D9%88%D8%A8-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3"
+      ],
+      "title": "Injured, including a child, by Israeli bullets south of Khan Yunis",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-16",
+      "publication_date": "2026-11-16T08:15:00+02:00",
+      "earliest_verified_publication_date": "2026-11-16T07:52:00+02:00",
+      "event_date": "2026-11-16",
+      "event_time": null,
+      "location": "Inside a school south of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Three reported wounded Palestinians, including one child; no evidence supplied that they were students",
+      "exact_supporting_passage": "Medical sources at Nasser Medical Complex reported that 3 injuries, including a child, were inside a school by occupation bullets",
+      "source_type": "Established Palestinian news agency reporting information attributed to Nasser Medical Complex medical sources; Arabic and English WAFA editions, with derivative Jordanian coverage",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observation_date_pst": "2026-11-15",
+        "discovery_method": "Direct inspection of WAFA latest-news listing followed by reading original Arabic and English articles; Al Mamlaka follow-up repeats WAFA",
+        "reported_at_pst": "2026-11-15T21:52:00-08:00",
+        "previous_watch_cutoff_pst": "2026-11-15T21:50:08.168-08:00",
+        "distinction": "New event involving three reported gunshot injuries near a school; not the November 15 Khan Younis isolated gunshot or Rafah strike previously logged",
+        "limitations": "Precise time of shooting, identities, severity, whether the school was used as shelter, and independent hospital bulletin not verified; derivative reporting is not counted as independent confirmation."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed report 13 November 2026; reports primarily on 3–9 November and adds no verified information for current watch window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO's situation page reviewed first; no new 15–16 November operational bulletin visible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Previously established regional-source access failure persists; global WHO accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"November 16, 2026\" Gaza killed wounded displacement",
+      "site:wafa.ps/Pages/Details/ \"16 نوفمبر 2026\" غزة استشهد أصيب قصف فجر",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة مستشفى إصابات قصف",
+      "site:aljazeera.com/news/2026/11/16 Gaza killed injured aid ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 ceasefire strikes aid",
+      "site:apnews.com/article/ Gaza November 16 2026 civilians hunger hospital",
+      "site:aa.com.tr/en/middle-east/ \"Nov 16, 2026\" Gaza injuries hospital children",
+      "site:palestine.un.org/en/ \"16 November 2026\" Gaza hospital food water displacement",
+      "site:unicef.org \"16 November 2026\" Gaza children shelter water supplies",
+      "site:wfp.org \"16 November 2026\" Gaza crossing food delivery fuel",
+      "site:icrc.org \"16 November 2026\" Gaza medical evacuation hospital",
+      "غزة الاثنين 16 نوفمبر 2026 صباحا إصابة طفل مدرسة جنوب خان يونس مساعدات معبر مستشفيات"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 16 07:52 Jerusalem listing led to source article attributing three injuries including child to Nasser Medical Complex."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/Details/176970",
+        "status": "ACCESSIBLE",
+        "detail": "Published November 16 08:15 Jerusalem; confirms report of three injuries at school south of Khan Younis."
+      },
+      {
+        "publisher": "Al Mamlaka",
+        "url": "https://almamlakatv.com/ar/news/%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A8%D9%8A%D9%86%D9%87%D8%A7-%D8%B7%D9%81%D9%84-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%A7%D9%84%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A-%D8%AC%D9%86%D9%88%D8%A8-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3",
+        "status": "ACCESSIBLE",
+        "detail": "Published November 16 09:04 Jerusalem, explicitly cites WAFA; not independent confirmation."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously logged November 15 Rafah airstrike, Khan Younis shooting, recovered 70 remains, four-country aid-access statement, UNRWA care interruption, Al-Shifa partial restoration and Rafah medical transfer.",
+      "Al-Quds early November 16 artillery reports without confirmed new civilian consequences.",
+      "Older Reuters/AP hospital strike reports and November 13 OCHA situation report, outside observation window.",
+      "Reported firing near tents without separately documented new civilian casualty or displacement; not promoted as additional finding."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean returns HTTP 502, unchanged from earlier checks; WHO global and OCHA are accessible.",
+      "Publication times were verified; exact injury event time was not.",
+      "Search indexing lags and only bounded sources searched; negative conclusions outside observed sources not implied."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

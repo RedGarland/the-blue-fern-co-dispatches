@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T064451-0800-20261116T145742344Z",
+  "scheduled_for": "2026-11-16T06:44:51-08:00",
+  "started_at": "2026-11-16T06:55:02-08:00",
+  "completed_at": "2026-11-16T06:57:42-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T06:14:34.582-08:00",
+    "end": "2026-11-16T06:57:42-08:00",
+    "previous_run_completed_at": "2026-11-16T06:14:34.582-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T054451-0800-20261116T141434582Z.json",
+    "basis": "Authenticated readback of prior 05:44-scheduled watch heartbeat; expanded beyond nominal hour only to capture latest publications, with Arabic first-edition timestamp before prior cutoff and English edition after it."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261116-medical-sources-24h-3-deaths-7-injuries-ceasefire-1650",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/16/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%81%D9%8A-%D9%82%D8%B7%D8%A7%D8%B9-%D8%BA%D8%B2%D8%A9-%D8%A5%D9%84%D9%89-74702",
+      "title": "Gaza hospitals receive three fatalities and seven injured people over 24 hours; updated cumulative death/injury totals",
+      "publisher": "WAFA Palestinian News and Information Agency citing medical sources in Gaza",
+      "source_date": "2026-11-16",
+      "publication_date": "2026-11-16T16:06:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Palestinian civilian casualties, Gaza hospitals, and ambulance/rescue access; three bodies, including one person who died of prior wounds, and seven injured people received over the preceding 24 hours. Cumulative reported conflict toll 74,702 killed and 176,105 injured since October 2023; since October 2025 ceasefire 1,650 fatalities and 5,975 injuries.",
+      "finding_summary": "WAFA posted a new 16 November health-source casualty update: three fatalities (one died of earlier injuries) and seven injured patients received by Gaza hospitals in the prior 24 hours; updated ceasefire cumulative totals are 1,650 fatalities and 5,975 injuries. Arabic report at 16:06 Jerusalem (06:06 PST), slightly before preceding heartbeat cutoff, but unrecorded there; English edition posted 16:24 Jerusalem (06:24 PST), after the cutoff. This is a late-recalled daily casualty update, not evidence of three distinct newly occurring attacks, and not to be added on top of previously recorded individual Jabalia, Beit Lahia and Khan Younis cases.",
+      "exact_supporting_passage": "وقالت مصادر طبية، إن مستشفيات قطاع غزة استقبلت، خلال الساعات الأربع والعشرين الماضية، 3 شهداء بينهم شهيد متأثرا بجروحه، و7 إصابات.",
+      "source_type": "palestinian_public_news_agency_medical_sources_secondary_attribution",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "high_value_miss_classes": [
+          "civilian_casualties",
+          "ambulance_rescue_access"
+        ],
+        "new_information": "New 24-hour reported hospital intake of three dead and seven injured, with updated Gaza cumulative conflict and post-ceasefire totals; not necessarily distinct from existing incident-level records.",
+        "prior_heartbeat_cutoff_pst": "2026-11-16T06:14:34.582-08:00",
+        "first_edition_published_pst": "2026-11-16T06:06:00-08:00",
+        "english_edition_published_pst": "2026-11-16T06:24:00-08:00",
+        "supporting_urls": [
+          "https://english.wafa.ps/Pages/Details/176994",
+          "https://www.aljazeera.net/news/2026/11/16/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D9%81%D9%8A-%D8%BA%D8%B2%D8%A9-%D9%88%D8%AA%D9%86%D8%AF%D9%8A%D8%AF-%D8%A8%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81"
+        ],
+        "original_ministry_release_directly_verified": false,
+        "event_incident_breakdown_verified": false,
+        "dating_caveat": "The body dateline in WAFA Arabic/English says 15 October 2026, inconsistent with 16 November article URL, website index, 16 Nov publication timestamp and contemporary figures. Publication date uses site's actual 16 November listing; exact 24h reporting-window cutoff not stated.",
+        "verification": "Arabic and English WAFA pages give matching body/intake and cumulative figures. Al Jazeera's Nov 16 reporting shows 1,647 deaths/5,969 injuries as of prior day, without validating specific intake figures independently.",
+        "double_counting_warning": "Do not add these aggregate hospital arrivals to incident-level deaths/injuries or assume all happened after prior hourly cutoff."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only, not a primary production daily collector or publisher.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "INDEX_SEARCH_ACCESSIBLE_DIRECT_FETCH_TIMEOUT",
+        "detail": "Search-indexed latest 13 November Humanitarian Situation Report read; repeated direct fetch timed out. Reporting period 3-9 November; no new 16 Nov OCHA release verified."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Global WHO Gaza overview accessible; latest linked regional Gaza health item predates Nov 16, with no qualifying novel update in watch window."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously known recurring 502; global WHO alternatives accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 16 2026 killed injured shooting child 2026",
+      "site:wafa.ps/news/2026/11/16 غزة صباح الاثنين الساعة شهداء مصابون قصف",
+      "site:alquds.com/ar/posts/ 16 نوفمبر 2026 غزة 16:00 17:00 قصف شهداء جرحى",
+      "site:aljazeera.net/news/2026/11/16 غزة الاثنين قتل إصابة غارات قوات",
+      "site:unrwa.org Gaza November 16 2026 medical fuel water displacement flood",
+      "site:unicef.org Gaza 16 November 2026 children water shelter 2026",
+      "site:msf.org Gaza November 16 2026 health hospital medical patients",
+      "site:icrc.org Gaza November 16 2026 civilian detainees evacuations aid",
+      "site:reuters.com Gaza November 16 2026 aid border casualties ceasefire civilians",
+      "site:apnews.com/article Gaza November 16 2026 aid ceasefire hospital",
+      "site:reliefweb.int Gaza November 16 2026 logistics food water health humanitarian 16 Nov",
+      "site:palestinercs.org Gaza November 16 2026 ambulance emergency Palestinian Red Crescent"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/news/2026/11/16/%D8%A7%D8%B1%D8%AA%D9%81%D8%A7%D8%B9-%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%81%D9%8A-%D9%82%D8%B7%D8%A7%D8%B9-%D8%BA%D8%B2%D8%A9-%D8%A5%D9%84%D9%89-74702",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov at 16:06 Jerusalem time, hospitals received 3 bodies and 7 injuries over past 24h; updated cumulative totals; article body contains stale October dateline."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/Details/176994",
+        "status": "ACCESSIBLE",
+        "detail": "English match published 16:24 Jerusalem; contains same stale October dateline, and same reported casualty numbers."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/16/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D9%81%D9%8A-%D8%BA%D8%B2%D8%A9-%D9%88%D8%AA%D9%86%D8%AF%D9%8A%D8%AF-%D8%A8%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81",
+        "status": "ACCESSIBLE",
+        "detail": "Jabalia death, Beit Lahia injuries, Khan Younis school injuries; incidents already recorded. Cites prior day cumulative figures."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/16/150-%D8%A3%D9%84%D9%81-%D8%AE%D9%8A%D9%85%D8%A9-%D8%B9%D8%A7%D9%84%D9%82%D8%A9-%D8%B9%D9%84%D9%89-%D8%A7%D9%84%D8%AD%D8%AF%D9%88%D8%AF-%D9%86%D8%AF%D8%A7%D8%A1-%D8%BA%D8%B1%D8%A8%D9%8A",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov story reiterates Nov15 four-government appeal, existing 150,000 tents awaiting access and prior strike on goods security point; not a separate new entry."
+      }
+    ],
+    "excluded_candidates": [
+      "Previous Jabalia fatality, two Beit Lahia gunshot injuries and Khan Younis school injuries already captured; no additional casualty tally from those independent incidents claimed.",
+      "Nasser Hospital strike and surgery disruption from 12 November already outside prior-watch interval.",
+      "Joint Britain/Italy/Australia/Canada appeal and 150,000 tents at border concerned Nov15 prior public statement; no new access change verified.",
+      "Gaza goods security-point attack already recognized by prior heartbeat as 15 November event; no independently verified new attack after cutoff.",
+      "Earlier rehabilitation-capacity and aid-truck fleet warnings previously recorded.",
+      "WHO/OCHA older situation reports, general rainy-season impacts and other recirculated reports."
+    ],
+    "limitations": [
+      "WHO EMRO HTTP 502 persists as previously documented, not material newly worsening failure.",
+      "Direct OCHA report fetch timed out; search indexing returned report excerpts, and WHO global remained accessible.",
+      "Medical source quoted through WAFA, not independently confirmed by a directly retrievable Ministry of Health release.",
+      "WAFA article body has anomalous 15 October dateline despite 16 November listing; publication timing anchored to 16 November indexes.",
+      "12 targeted searches and linked direct verification are not exhaustive; aggregate casualty numbers overlap incident-level reports."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "approvals_changed": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

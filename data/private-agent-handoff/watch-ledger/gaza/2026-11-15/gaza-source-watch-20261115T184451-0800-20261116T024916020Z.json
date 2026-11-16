@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261115T184451-0800-20261116T024916020Z",
+  "scheduled_for": "2026-11-15T18:44:51-08:00",
+  "started_at": "2026-11-15T18:47:10-08:00",
+  "completed_at": "2026-11-15T18:49:16.020-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-15",
+    "start": "2026-11-15T17:47:53.542-08:00",
+    "end": "2026-11-15T18:49:16.020-08:00",
+    "previous_run_completed_at": "2026-11-15T17:47:53.542-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T174451-0800-20261116T014753542Z.json",
+    "basis": "Supplementary recall since immediately preceding completed heartbeat, including bounded checking of late-indexed November 15 Gaza developments; previous items excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Latest identifiable full OCHA situation report dated 13 November, reporting mainly 3-9 November; no newly dated material for observation interval."
+      },
+      {
+        "publisher": "WHO global oPt",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO overview and indexed health resources checked; no fresh qualified hospital, evacuation, ambulance or service-capacity change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Persisting known access failure. WHO global site remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 16, 2026\" Gaza injured killed civilian displacement",
+      "site:wafa.ps/news/2026/11/16 غزة فجر 16 نوفمبر 2026 شهيد جريح قصف مدفعية مستشفى",
+      "site:alquds.com/ar/posts \"16 نوفمبر 2026\" غزة شهداء إصابات معبر مساعدات",
+      "site:aa.com.tr/en/middle-east/ \"Nov 16, 2026\" Gaza aid casualties ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 15 2026 evening November 16 strike ceasefire civilians",
+      "site:apnews.com/article/ Gaza November 15 2026 latest aid crossings hospitals Sunday",
+      "site:palestine.un.org/en/ \"15 November 2026\" OR \"16 November 2026\" Gaza protection humanitarian",
+      "site:unicef.org Gaza November 15 2026 November 16 2026 children displacement water",
+      "site:icrc.org/en/news-release/ Gaza November 15 2026 OR November 16 2026 hospital ambulance detainee",
+      "site:wfp.org/news Gaza \"15 November 2026\" OR \"16 November 2026\" food convoy",
+      "site:palestinercs.org 16 نوفمبر 2026 إسعاف غزة الهلال الأحمر مستشفى",
+      "غزة أخبار فجر الإثنين 16 نوفمبر 2026 سقوط شهداء إصابات معبر رفح إغاثة ماء عمليات عسكرية"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic latest-news",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No unrecorded report clearly in local interval; listed relevant Gaza reports were previous records."
+      },
+      {
+        "publisher": "WAFA English latest-news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Gaza lead items already logged: al-Mawasi casualties, UNICEF and four-minister aid statement."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274073-two-palestinians-martyred-israeli-occupation-strikes-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Article published 16 November at 00:13 Jerusalem time (15 November 14:13 PST), summarizes Sunday's attacks; earlier than prior heartbeat and overlapping recorded Rafah casualty reports. No distinct new event proven."
+      },
+      {
+        "publisher": "Reuters, AP, UNICEF, ICRC and WFP targeted coverage",
+        "url": null,
+        "status": "PARTIAL",
+        "detail": "Search discovery surfaced previously published developments, repeats, or no dated qualifying update; no candidate meeting novelty and verification threshold."
+      }
+    ],
+    "excluded_candidates": [
+      "Al-Quds 16 November 00:13 Jerusalem headline describing two Sunday deaths and injuries overlaps earlier Rafah al-Mawasi airstrike reports and does not establish a new independent incident.",
+      "November 15 four-minister urgent aid-access statement and 150,000 tents already logged in earlier watch.",
+      "November 15 funeral for 70 previously deceased recovered from rubble and Al-Mawasi tent truck accident already recorded in preceding heartbeat.",
+      "Earlier UNICEF rainfall fatalities, Nasser Hospital surgery-wing strike, Al-Shifa partial functioning, Rafah medical transfers and UNRWA contract report already covered in earlier watches.",
+      "AP/Reuters reporting about Hamas commander without newly documented civilian effects excluded.",
+      "Historical October and early-November OCHA/WHO humanitarian context excluded as recycled."
+    ],
+    "caveats": [
+      "No new, sufficiently verified, independently distinct Gaza development identified within 17:47-18:48 PST or bounded late-recall checks.",
+      "Persisting WHO EMRO HTTP 502 is known and not a newly material deterioration; alternatives were checked.",
+      "Source indexing delays and time-zone conversion may conceal developments reported later."
+    ],
+    "materially_new_degradation": false,
+    "previous_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

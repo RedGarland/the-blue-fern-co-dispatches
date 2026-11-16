@@ -1,0 +1,148 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T054451-0800-20261116T141434582Z",
+  "scheduled_for": "2026-11-16T05:44:51-08:00",
+  "started_at": "2026-11-16T06:11:25-08:00",
+  "completed_at": "2026-11-16T06:14:34.582-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T04:55:42.073-08:00",
+    "end": "2026-11-16T06:14:34.582-08:00",
+    "previous_run_completed_at": "2026-11-16T04:55:42.073-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T044451-0800-20261116T125542073Z.json",
+    "basis": "Authenticated GitHub directory listing and read of latest prior Gaza watch ledger. The 05:44 scheduled heartbeat was not present when checked. Recall starts at last verified completed_at and includes late-discovered evidence with original event/publication dates distinguished from discovery."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261116-aid-truck-fleet-spares-250-operational-capacity",
+      "canonical_source_url": "https://alquds.com/ar/posts/274359-gaza-aid-trucks-collapse-spare-parts-ban",
+      "title": "Gaza aid delivery fleet reportedly near collapse amid spare-parts, tyre and engine-oil restrictions",
+      "publisher": "Al-Quds, reporting from Haaretz interviews and Gaza transport association statements",
+      "source_date": "2026-11-16",
+      "publication_date": "2026-11-16T15:26:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "Aid logistics, truck drivers, humanitarian cargo distribution, and linked health-worker transport. Transport association representative says about 250 old trucks available versus 600–700 needed, with existing vehicles regularly breaking down and missing oil, tyres and spare parts.",
+      "finding_summary": "Al-Quds published a report at 15:26 Jerusalem time on 16 November, describing warnings that aging Gaza aid trucks may cease operating as replacement tyres, engine oil and parts are unavailable. Nahid Shuheibar, identified as head of Gaza's private transport association, says 250 trucks remain against an estimated 600–700 needed. UltraSawt separately cites first-hand Haaretz reporting and the same interview, including a response from Israeli coordination authorities characterizing the restricted items as dual-use. This is a newly reported, attributable operational-capacity estimate and risk, NOT confirmation that all truck deliveries have stopped or that a new closure occurred during the observation window.",
+      "exact_supporting_passage": "أوضح ناهض شحيبر، رئيس جمعية النقل الخاص في غزة أن زيادة كميات المساعدات عند المعابر لن تحل الأزمة ما لم يتم إصلاح الشاحنات المتهالكة.",
+      "source_type": "established_news_reporting_attributed_first_hand_transport_association_interview_secondary_to_haaretz",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "high_value_miss_classes": [
+          "aid_access",
+          "food_access",
+          "humanitarian_transport_functioning_capacity",
+          "medical_staff_transport"
+        ],
+        "new_information": "Current estimated usable truck fleet approximately 250 versus estimated 600–700 needed, with shortages of imported replacement parts, tyres and engine oil.",
+        "first_seen_source_published_pst": "2026-11-16T05:26:00-08:00",
+        "supporting_urls": [
+          "https://www.ultrasawt.com/مسؤولون-لـهآرتس-شاحنات-المساعدات-في-غزة-على-وشك-الانهيار-بسبب-منع-إسرائيل-دخول-قطع-الغيار/الترا-صوت",
+          "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026"
+        ],
+        "original_haaretz_url": null,
+        "direct_haaretz_verification": false,
+        "interview_date": null,
+        "exact_operational_fleet_count_independently_audited": false,
+        "assessment": "Not a confirmed completed collapse; an attributed logistics-capacity warning in new reporting. Previous heartbeat did not contain this dated transport-capacity estimate.",
+        "source_caveat": "Al-Quds and UltraSawt summarize the same original Haaretz interviews and should not be counted as independent primary corroboration."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; authoritative daily production collector and publisher not accessed or changed.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Most recent indexed OCHA situation report available dated 13 Nov (reporting 3–9 Nov), including longstanding spare-parts and flooding problems; OCHA homepage direct open timed out."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current WHO Gaza overview and WHO source search; no newly issued Nov 16 health-specific announcement verified."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously known recurring HTTP 502 restriction, WHO global alternatives available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 16, 2026\" Gaza killed wounded displaced hospital",
+      "site:wafa.ps/news/2026/11/16 غزة الساعة 15 16 17 شهداء جرحى مستشفى شمال القطاع",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة إصابات شهداء غارات خيام",
+      "site:aljazeera.net/news/2026/11/16 غزة آخر تطورات الاثنين ضحايا قصف مساعدات 2026",
+      "site:unrwa.org Gaza 16 November 2026 winter shelters health medical aid displacement",
+      "site:unicef.org Gaza November 16 2026 children water health rain new",
+      "site:msf.org Gaza November 16 2026 clinic hospital patient fuel ambulance",
+      "site:icrc.org Gaza 16 November 2026 hospital medical evacuation detainees",
+      "site:ultrasawt.com \"ناهض شحيبر\" \"250\" \"600\" غزة 2026 شاحنات",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 aid trucks hospitals casualties",
+      "site:apnews.com/article/ Gaza November 16 2026 weather aid civilian ceasefire",
+      "site:wfp.org OR site:logcluster.org OR site:reliefweb.int Gaza 16 November 2026 trucks distribution fuel access"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA English and Arabic indexes",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Nov 16 Gaza injury/death items previously recorded; no separate later confirmed incident."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274359-gaza-aid-trucks-collapse-spare-parts-ban",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov 15:26 Jerusalem-time attributable truck-fleet report with named transport-association representative."
+      },
+      {
+        "publisher": "UltraSawt",
+        "url": "https://www.ultrasawt.com/",
+        "status": "SEARCH_INDEXED_BUT_DIRECT_OPEN_FAILED",
+        "detail": "Same original Haaretz interview summarized with 250 available, 600–700 needed, COGAT reported dual-use response; not independent corroboration."
+      },
+      {
+        "publisher": "WAFA Gaza meningitis video",
+        "url": "https://www.wafa.ps/video/2026/11/16/ارتفاع-عدد-مصابي-الحمى-الشوكية-من-الأطفال-13020",
+        "status": "ACCESSIBLE",
+        "detail": "Video caption notes rising pediatric meningitis cases; no new case numbers or dated health-system change; OCHA 13 Nov already described probable meningitis increase."
+      },
+      {
+        "publisher": "PCHR via Al-Quds",
+        "url": "https://alquds.com/ar/posts/274346-gaza-humanitarian-crisis-winter-shelter-blockade",
+        "status": "ACCESSIBLE",
+        "detail": "Newly republished testimony and familiar storm damage/shelter needs; no separately verified new incident after cutoff."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA-reported Beit Lahia gunshot injuries already in last verified heartbeat.",
+      "Previously recorded Jabalia fatality and Khan Younis school injuries; conflicting injury totals not independently resolved.",
+      "WAFA pediatric meningitis video gives no new count and OCHA 13 Nov already cited increasing probable meningitis.",
+      "November 15 Gaza government security point strike, earlier cumulative casualty estimates, floods, recovered remains, and four-country aid appeal are prior/recirculated stories.",
+      "Al-Quds 16 Nov shelter report reiterates ongoing winter damage and restrictions and lacks a distinct independently verifiable new change."
+    ],
+    "limitations": [
+      "WHO EMRO still HTTP 502; OCHA homepage direct fetch timed out, but OCHA situation report and WHO global sources accessible.",
+      "Original Haaretz report not directly accessed, and association figures not independently audited; secondary coverage refers to one underlying interview.",
+      "No confirmed new cessation of truck operations; finding covers newly published capacity estimate and specific near-term logistics failure risk.",
+      "No exhaustive coverage implied by 12 targeted searches and direct linked reads."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "approvals_changed": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

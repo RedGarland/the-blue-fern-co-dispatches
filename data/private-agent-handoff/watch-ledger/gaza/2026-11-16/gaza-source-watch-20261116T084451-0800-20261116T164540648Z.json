@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T084451-0800-20261116T164540648Z",
+  "scheduled_for": "2026-11-16T08:44:51-08:00",
+  "started_at": "2026-11-16T08:42:50-08:00",
+  "completed_at": "2026-11-16T08:45:40.648-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T07:55:48-08:00",
+    "end": "2026-11-16T08:45:40.648-08:00",
+    "previous_run_completed_at": "2026-11-16T07:55:48-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T074451-0800-20261116T155548Z.json",
+    "basis": "Verified previous heartbeat via authenticated GitHub branch read; bounded recall for developments disclosed after prior completion, with retrospective items checked only for high-value uncaptured changes."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage dated 16 Nov: most recent listed Gaza update is the 16 Nov access-and-movement map. Latest textual situation report dated 13 Nov (reporting 3-9 Nov), already known."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "LANDING_ACCESSIBLE_PDF_NOT_VERIFIED",
+        "detail": "Dated 16 Nov map landing page accessed by direct official-site link. The PDF's contents were not analyzed; publication alone does not establish a fresh access change."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official conflict/health overview and linked emergency reports accessed; no Nov 16 dated new medical capacity or medical-evacuation change visible."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Known persistent WHO EMRO access failure reproduced; WHO global alternative remained usable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza Monday November 16 2026 Palestinian killed injured hospitals after 15:00",
+      "site:wafa.ps/news/2026/11/16 غزة مساء الاثنين الساعة السادسة والسابعة شهداء مصابون إطلاق نار",
+      "site:alquds.com/ar/posts/ غزة 16 نوفمبر 2026 18:00 مساء استشهاد إصابة",
+      "site:aljazeera.net/news/2026/11/16 غزة مساء الاثنين قصف جرحى شهداء",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 hospital ceasefire crossing shootings aid",
+      "site:apnews.com/article/ Gaza November 16 2026 humanitarian ceasefire shelling crossing hospital",
+      "site:ochaopt.org/content/ Gaza 16 November 2026 humanitarian access crossings shelter patients",
+      "site:unrwa.org/newsroom/ Gaza 16 November 2026 food medical water displaced",
+      "site:unicef.org Gaza November 16 2026 floods water children school displaced",
+      "site:msf.org Gaza 16 November 2026 hospital ambulance equipment evacuation patient",
+      "site:palestinercs.org/en Gaza 16 November 2026 ambulance emergency services",
+      "Gaza November 16 2026 18:30 19:00 local time food aid hospital bombing killed injured crossed"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.net/news/2026/11/16/150-%D8%A3%D9%84%D9%81-%D8%AE%D9%8A%D9%85%D8%A9-%D8%B9%D8%A7%D9%84%D9%82%D8%A9-%D8%B9%D9%84%D9%89-%D8%A7%D9%84%D8%AD%D8%AF%D9%88%D8%AF-%D9%86%D8%AF%D8%A7%D8%A1-%D8%BA%D8%B1%D8%A8%D9%8A",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov recap attributes joint Britain/Italy/Australia/Canada appeal and 150,000 tents at border to Sunday 15 Nov. Also repeats 15 Nov aid-truck security-point attack and prior floods; no in-window operation or access change verified."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.net/news/2026/11/16/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D8%AC%D8%B1%D8%AD%D9%89-%D9%81%D9%8A-%D8%BA%D8%B2%D8%A9-%D9%88%D8%AA%D9%86%D8%AF%D9%8A%D8%AF-%D8%A8%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81",
+        "status": "ACCESSIBLE",
+        "detail": "Recaps known Jabalia fatality, two Beit Lahia injuries, Khan Younis school shooting, and aid security-point incident. Four school casualties versus earlier three remains unresolvable conflicting tally, explicitly excluded in earlier heartbeat."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.net/video/2026/11/16/%D8%AA%D8%B4%D9%8A%D9%8A%D8%B9-%D8%B1%D9%81%D8%A7%D8%AA-70-%D8%B4%D9%87%D9%8A%D8%AF%D8%A7-%D8%A7%D9%86%D8%AA%D8%B4%D9%84%D8%AA-%D8%AC%D8%AB%D8%A7%D9%85%D9%8A%D9%86%D9%87%D9%85-%D9%85%D9%86",
+        "status": "ACCESSIBLE",
+        "detail": "Video dated 16 Nov 13:27 Mecca time (02:27 PST) refers to funeral of 70 recovered remains from historical deaths, already explicitly treated as prior/duplicate in 04:55 heartbeat."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-13-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "3-9 Nov reporting period; floods, water insecurity, logistics and health conditions already public and not a fresh event."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest directly visible Gaza-relevant winter appeal 10 Nov; no verified fresh 16 Nov incident."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/sop/press-centre",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed Gaza press release 9 Nov; no new 16 Nov qualified update."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously recorded WAFA 16 Nov 24-hour hospital intake (3 deaths, 7 injuries), Jabalia death, Beit Lahia injuries, Khan Younis school injuries, and Gaza aid-truck fleet constraints.",
+      "Al Jazeera reported 4 Nasser school-shooting injuries including woman and child compared with earlier 3; tally is inconsistent and event already known, so no additive finding.",
+      "November 15 attack on goods-truck security point and joint 4-country humanitarian appeal merely republished on November 16; no verified new consequences during the watch window.",
+      "November 16 video about funeral of 70 recovered remains published 02:27 PST, prior to cutoff and already excluded by earlier watch.",
+      "OCHA 16 Nov access-and-movement map landed but embedded PDF not inspected; no new map-specific access change asserted.",
+      "Old Reuters and AP stories, UNICEF/MSF/UNRWA background updates, and West Bank-only developments."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean official source returned HTTP 502; source-specific known degradation persists, but alternative WHO global page and OCHA reporting remained accessible.",
+      "16 Nov OCHA access-and-movement map PDF content not directly verified; no claims inferred from landing-page title.",
+      "Search results for Reuters/AP and some official sites were dominated by older indexed materials; 12 searches are bounded, not exhaustive.",
+      "No positive qualifying developments were supported by date, nonduplication and source checks; this does not establish that no incidents occurred."
+    ],
+    "production_changed": false,
+    "approvals_changed": false,
+    "schedule_changed": false
+  }
+}

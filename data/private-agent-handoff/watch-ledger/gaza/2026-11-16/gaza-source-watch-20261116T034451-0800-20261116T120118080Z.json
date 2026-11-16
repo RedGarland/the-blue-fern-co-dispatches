@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T034451-0800-20261116T120118080Z",
+  "scheduled_for": "2026-11-16T03:44:51-08:00",
+  "started_at": "2026-11-16T03:57:58-08:00",
+  "completed_at": "2026-11-16T04:01:18-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T01:04:21-08:00",
+    "end": "2026-11-16T04:01:18-08:00",
+    "previous_run_completed_at": "2026-11-16T01:04:21-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T004451-0800-20261116T090421577Z.json",
+    "basis": "Authenticated listing of 2026-11-16 ops/watch-ledger directory returned only the 00:44 scheduled heartbeat, completed 01:04 PST. Extended bounded recall from that last verified cutoff because intervening 01:44 and 02:44 heartbeats were not present."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261116-neurorehabilitation-43000-62pct-alquds274262",
+      "canonical_source_url": "https://alquds.com/ar/posts/274262-gaza-health-ministry-life-changing-injuries-report",
+      "title": "More than 43,000 life-changing injuries reported in Gaza; rehabilitation service capacity reduced 62%",
+      "source_title": "أكثر من 43 ألف إصابة مغيرة للحياة في غزة جراء عدوان الاحتلال المستمر",
+      "publisher": "Al-Quds",
+      "source_date": "2026-11-16",
+      "publication_date": "2026-11-16T13:02:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip, occupied Palestinian territory",
+      "affected_population_system": "People with severe traumatic injuries, rehabilitation and neurorehabilitation services, including children and young adults",
+      "finding_summary": "Al-Quds quotes Gaza Health Ministry deputy Maher Shamiya at a neurorehabilitation scientific event reporting more than 43,000 life-changing injuries accumulated since October 2023 (about one quarter of reported injuries), approximately 1,800 traumatic brain injuries and 2,000 spinal-cord injuries, and a reported 62% reduction in rehabilitation services. These are newly reported cumulative estimates and service-capacity claims, not 43,000 new injuries during this hourly window. No independent primary-source transcript located in the bounded check.",
+      "exact_supporting_passage": "تعاني المنظومة الصحية من تراجع حاد في خدمات التأهيل بنسبة وصلت إلى 62%",
+      "source_type": "established_local_reporting_attributing_statistics_to_named_health_ministry_official",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct Al-Quds latest-news homepage click following the bounded targeted searches",
+        "page_published_at": "2026-11-16T13:02:00+02:00",
+        "observed_within_pacific_window": true,
+        "high_value_miss_classes": [
+          "healthcare_disruption",
+          "functioning_capacity_changes"
+        ],
+        "independent_primary_confirmation": false,
+        "caution": "Cumulative injury figures are not newly incurred casualties; service decline is attributed to the quoted ministry official and not independently measured during this watch."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. The daily Gaza production collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed humanitarian situation report dated November 13, 2026."
+      },
+      {
+        "publisher": "OCHA OPT Situation Update",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "detail": "No newer 16 November update listed."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Conflict and health emergency overview accessible, no Nov 16 report on page."
+      },
+      {
+        "publisher": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Previously known access restriction persisted."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/16 غزة اليوم 16 نوفمبر 2026 12:00 13:00 استشهاد إصابة قصف",
+      "site:english.wafa.ps/Pages/Details/ \"November 16, 2026\" Gaza killed injured hospital",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة شهداء جرحى النازحين",
+      "site:aa.com.tr/en/middle-east/ \"November 16, 2026\" Gaza casualties aid",
+      "site:apnews.com/article/ Gaza Nov 16 2026 ceasefire aid killed",
+      "site:reuters.com/world/middle-east/ Gaza Nov 16 2026 crossing wounded strike",
+      "site:aljazeera.net/news/2026/11/16 غزة الاثنين 16 نوفمبر قتلى مصابين مساعدات",
+      "site:unrwa.org OR site:wfp.org OR site:unicef.org Gaza \"16 November 2026\" food water health",
+      "site:who.int OR site:emro.who.int Gaza \"16 November 2026\" hospital fuel medical evacuation",
+      "غزة 16 نوفمبر 2026 معبر رفح إجلاء مرضى مصابين 16/11/2026",
+      "site:un.org OR site:palestine.un.org \"16 November 2026\" Gaza humanitarian",
+      "site:msf.org OR site:icrc.org \"16 November 2026\" Gaza healthcare ambulance displacement"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic latest news",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "TIMEOUT",
+        "detail": "Index could not be fetched on this check."
+      },
+      {
+        "publisher": "Al-Quds November 16 neurorehabilitation report",
+        "url": "https://alquds.com/ar/posts/274262-gaza-health-ministry-life-changing-injuries-report",
+        "status": "ACCESSIBLE",
+        "detail": "Published 13:02 Jerusalem time; named Ministry of Health deputy quoted; cumulative healthcare capacity finding retained at medium confidence."
+      },
+      {
+        "publisher": "Al-Quds 16 November 10:29 report",
+        "url": "https://alquds.com/ar/posts/274213-gaza-occupation-violations-martyrs-displaced-targeted",
+        "status": "ACCESSIBLE",
+        "detail": "Prior day's Ministry of Economy point deaths and Khan Younis school injuries already recorded; Abu Hussein school gunfire report lacked verified new casualties."
+      },
+      {
+        "publisher": "Al-Quds November 16 07:44 shelling report",
+        "url": "https://alquds.com/ar/posts/274135-israeli-artillery-strikes-gaza-khan-younis-casualties",
+        "status": "ACCESSIBLE",
+        "detail": "Earlier shelling and recovery of 70 remains already in previous watches, no distinct newly verified civilian outcome."
+      },
+      {
+        "publisher": "Al-Quds November 15 diplomatic report",
+        "url": "https://alquds.com/ar/posts/274051-four-nations-urge-occupation-allow-gaza-aid",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 15 joint aid statement on blocked tents predates prior cutoff; not new access change."
+      },
+      {
+        "publisher": "Al-Quds November 16 government media office",
+        "url": "https://alquds.com/ar/posts/274216-gaza-government-office-occupation-violations-ceasefire",
+        "status": "ACCESSIBLE",
+        "detail": "Cumulative ceasefire, aid trucking and crossing claims; not independently reconciled as a new operational change."
+      },
+      {
+        "publisher": "UN UNISPAL",
+        "url": "https://www.un.org/unispal/",
+        "status": "HTTP_403",
+        "detail": "Direct access blocked."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously captured November 16 Jabalia shooting death and Khan Younis school injuries.",
+      "November 15 recovered remains, Rafah Ministry of Economy attack, and Zeitoun displacement material predating cutoff.",
+      "November 16 Al-Quds four fatality day-end tally that merges prior incidents; not a separately verified new incident.",
+      "November 15 four-nation diplomatic appeal, not evidence of changed crossings or aid volumes.",
+      "Al-Quds government media office cumulative ceasefire-violation totals not independently reconciled."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persisted; WHO global and OCHA OPT accessible.",
+      "WAFA latest-news index timed out and English WAFA homepage also timed out.",
+      "GitHub ledger lacks intervening hourly heartbeat records; observation window deliberately extended to the last independently verified cutoff.",
+      "Evidence is bounded to 12 targeted searches and direct accessible source pages, not exhaustive surveillance."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

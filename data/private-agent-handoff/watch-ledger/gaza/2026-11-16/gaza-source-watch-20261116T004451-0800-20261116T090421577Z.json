@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T004451-0800-20261116T090421577Z",
+  "scheduled_for": "2026-11-16T00:44:51-08:00",
+  "started_at": "2026-11-16T01:02:14-08:00",
+  "completed_at": "2026-11-16T01:04:21-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-15T23:55:08-08:00",
+    "end": "2026-11-16T01:04:21-08:00",
+    "previous_run_completed_at": "2026-11-15T23:55:08-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-15/gaza-source-watch-20261115T234451-0800-20261116T075508Z.json",
+    "basis": "Authenticated GitHub read of latest completed heartbeat on ops/watch-ledger; cross-midnight Pacific observation window; publication dates evaluated in source-local time, and older reports excluded unless verified new developments."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary production collector/publisher remains authoritative. No publication, approval, schedule or task state modified.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "detail": "Latest situation report listed November 13, 2026; no later bulletin for the observation window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO conflict overview accessible; no November 16 operational or health-capacity update listed."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/index.html",
+        "status": "HTTP_502",
+        "detail": "Previously known EMRO 502 access failure persists; WHO global alternative accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/news/2026/11/16 غزة استشهاد إصابة قصف 10:00 11:00",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 16 2026 killed wounded hospital",
+      "site:alquds.com/ar/posts/ \"16 نوفمبر 2026\" غزة إصابة استشهاد مستشفى معبر",
+      "site:aa.com.tr/en/middle-east/ Gaza November 16 2026 injured ceasefire crossings",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 wounded killings humanitarian aid",
+      "site:apnews.com/article/ Gaza November 16 2026 airstrikes aid displaced",
+      "site:unicef.org Gaza \"16 November 2026\" health shelters",
+      "site:unrwa.org OR site:wfp.org Gaza November 16 2026 food health access",
+      "غزة 16 نوفمبر 2026 11 صباحا استشهاد قصف مستشفى معبر رفح",
+      "site:aljazeera.net/news/2026/11/16 غزة صباح اليوم الاثنين غارات شهيد إسعاف",
+      "site:palestine.un.org/en/ OR site:un.org/unispal/ \"16 November 2026\" Gaza access water hospital",
+      "site:icrc.org OR site:msf.org \"16 November 2026\" Gaza hospital evacuation fuel"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA Arabic latest news",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest displayed November 16 Gaza incident at 09:06 Jerusalem was one Jabalia fatality, already recorded in preceding watch; index showed no subsequent Gaza casualty update as inspected."
+      },
+      {
+        "publisher": "WAFA 15 November day-end round-up",
+        "url": "https://www.wafa.ps/news/2026/11/15/%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%8A%D9%88%D8%A7%D8%B5%D9%84-%D8%B9%D8%AF%D9%88%D8%A7%D9%86%D9%87-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D9%81%D9%8A-%D8%BA%D8%B2%D8%A9",
+        "status": "ACCESSIBLE",
+        "detail": "23:54 Jerusalem November 15 round-up described earlier Rafah al-Mawasi drone strike and death from prior injuries, before observation window."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/2026/11/15/%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D9%82%D8%B5%D9%81-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A-%D8%B9%D9%84%D9%89-5",
+        "status": "ACCESSIBLE",
+        "detail": "November 15 report and its 23:09 Mecca update describe prior Rafah casualties, recovered remains and already documented shelling; no newly distinct verified event."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274073-two-palestinians-martyred-israeli-occupation-strikes-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "November 16 00:13 Jerusalem retrospective recounts November 15 Rafah ministry-of-economy work-point casualty and earlier-deceased victim, not fresh hourly incidents."
+      },
+      {
+        "publisher": "Al-Quds",
+        "url": "https://alquds.com/ar/posts/274213",
+        "status": "PARTIAL_SEARCH_SNIPPET_ONLY",
+        "detail": "November 16 10:29 Jerusalem result recaps four fatalities in previous 24 hours, including two at an economy-ministry point; full article disabled/unavailable and event/location details could not be independently reconciled with contemporaneous Rafah report. Not promoted without verification."
+      }
+    ],
+    "excluded_candidates": [
+      "Prior watch's November 16 09:06 Jerusalem al-Qassasib/Jabalia shooting death (duplicate).",
+      "Prior watch's three gunshot injuries including child at Khan Younis school (duplicate).",
+      "November 15 Rafah/al-Mawasi drone strike at Ministry of Economy work-point, earlier injured man's death, and recovered remains in the north (prior reporting).",
+      "Al-Quds November 16 10:29 Jerusalem retrospective four-death summary: full article unavailable and no verified new incident distinguishable from prior reporting; keep as unpromoted candidate.",
+      "Older OCHA flood/shelter figures, November 11 Nasser Hospital attack, and past-day aggregate updates (recycled)."
+    ],
+    "limitations": [
+      "WHO EMRO HTTP 502 persists as an established source access limitation; alternate official WHO global overview available.",
+      "Al-Quds November 16 10:29 report appeared in search results but direct access disabled; did not assert unverified details as a finding.",
+      "Search result rankings heavily surfaced earlier dates, so absence of findings is bounded to inspected sources, not proof of no events."
+    ],
+    "materially_new_degradation": false,
+    "previous_known_heartbeat_verified": true,
+    "production_unchanged": true,
+    "published_to_production": false,
+    "schedule_modified": false,
+    "task_disabled": false
+  }
+}

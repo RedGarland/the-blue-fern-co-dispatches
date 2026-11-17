@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T104743-0800-20261117T184951475Z",
+  "scheduled_for": "2026-11-17T10:44:51-08:00",
+  "started_at": "2026-11-17T10:47:43-08:00",
+  "completed_at": "2026-11-17T10:49:51.475-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T09:46:36.351-08:00",
+    "end": "2026-11-17T10:49:51.475-08:00",
+    "previous_run_completed_at": "2026-11-17T09:46:36.351-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T094444-0800-20261117T174636351Z.json",
+    "basis": "Supplementary recall for newly traceable incidents, material source updates or uncaptured source evidence since preceding hourly heartbeat; historical news and previously logged incidents excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative Gaza daily production collector/publisher unchanged.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct updates index checked first; latest 16 November Gaza access/movement update and 13 November situation report; no new 17 November OCHA update visible."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency portal directly checked first; current overview but displayed latest news did not surface new 17 November Gaza-specific operational report."
+      },
+      {
+        "publisher": "WHO Global, Director-General",
+        "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---17-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "17 November press remarks reviewed. Flood-exposure estimates (950,000 at flood risk; 400,000 at extremely high risk), respiratory illness warning and reported hypothermia death materially overlap Reuters/WHO reporting from 13 November and an IOM warning already reviewed in preceding watches. Speech publication hour not verified. No new incident or capacity change substantiated."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Direct regional endpoint failed to load in this execution, consistent with persistent documented WHO EMRO 502 restriction in previous watches. WHO Global direct sources remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 17 2026 WHO 33000 acute respiratory infection 950000 400000 flood risk today",
+      "Gaza November 17 2026 after 17:45 UTC Reuters AP latest new deaths wounded hospital strike aid",
+      "site:english.wafa.ps/Pages/Details \"17 November 2026\" Gaza \"killed\" \"wounded\" evening",
+      "site:un.org 17 November 2026 Gaza humanitarian daily press briefing transport hospital water",
+      "site:palestinercs.org November 17 2026 Gaza ambulances health transport",
+      "site:unicef.org Gaza 17 November 2026 children shelter cold water respiratory infections",
+      "Gaza 17 November 2026 new developments evening 18:00 UTC Khan Younis Rafah Gaza City wounded killed",
+      "site:ochaopt.org \"17 November 2026\" Gaza hospital aid crossing floods 17 Nov",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"17 Nov 2026\" health aid access Gaza",
+      "site:wfp.org/news \"17 November 2026\" Gaza trucks crossing",
+      "Gaza November 17 2026 Rafah crossing medical evacuation 17 Nov WHO fuel ambulances Nasser hospital",
+      "Gaza November 17 2026 ceasefire negotiations prisoner detainee hostage civilian impact Reuters AFP UN"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "Latest displayed Gaza six-death roundup and medical evacuation count were logged in prior hourly watches; no newer qualifying Gaza casualty update verified. WAFA homepage times not assumed to be Pacific."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "Four November 17 reported deaths in Deir al-Balah, Khan Younis and Bir Al-Naja are already recorded by prior watch entries, with additional WAFA follow-up deaths logged separately."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/respiratory-illnesses-rise-gaza-with-worst-come-winter-floods-arrive-who-says-2026-11-13/",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "November 13 WHO reporting precedes this watch and already states respiratory infections are 33,000 cases ABOVE comparable prior-year tally and nearly one million people face flood risk; the November 17 remarks should not be interpreted as 33,000 total new cases."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "Joint November 17 warning on shelter, nutrition, winter access and funding was logged before this window; no distinct change identified."
+      },
+      {
+        "publisher": "AP/Reuters",
+        "url": "https://apnews.com/article/50b547b5a82388b6b415aee4d776fbfb",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "November 12 Nasser Hospital attack had been reported days earlier; WHO November 17 reference to it is retrospective."
+      }
+    ],
+    "excluded_candidates": [
+      "WHO Director-General November 17 reiteration of November 13 public-health and flood-risk estimates, including 950,000/400,000 exposure and respiratory infection figures; no verifiable change since prior hour.",
+      "WHO-referenced infant hypothermia death, reported by IOM/Reuters and reviewed in prior heartbeat, not a distinct new death.",
+      "WAFA November 17 six-fatality roundup and Reuters November 17 four-death summary; all constituent reported casualties were recorded earlier.",
+      "WFP/IOM winter funding, hunger, 1.7 million displacement and crossing constraints already captured; no fresh operational interruption established.",
+      "November 12 Nasser Hospital strike and disrupted surgery services are historical events, not a new occurrence during observation.",
+      "UK sanctions against a group accused of interfering with aid are not evidence of a new operational change to Gaza aid access.",
+      "West Bank-only developments, older casualty and hostage reports, historical OCHA reports, uncited claims, and search syndications."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean timeout restricted regional breadth; WHO Global and OCHA remained accessible, so DEGRADED rather than FAILED.",
+      "Search indexing latency, WHO press-release hour and WAFA display timezone uncertainty limit absolute completeness of negative recall.",
+      "Not an exhaustive validation of every OCHA embedded PDF or realtime local-hospital reporting; no invented source events or new-time assertions."
+    ],
+    "overall": "No new qualifying event or independently verifiable material change distinct from the previous 09:46:36 PST heartbeat was found. Existing WHO EMRO access degradation persisted but did not materially worsen. Exactly one immutable heartbeat to be written for this execution; no production, publication, approval, permissions or schedule changes."
+  }
+}

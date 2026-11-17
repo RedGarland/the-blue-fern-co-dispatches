@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T094444-0800-20261117T174636351Z",
+  "scheduled_for": "2026-11-17T09:44:44-08:00",
+  "started_at": "2026-11-17T09:44:44-08:00",
+  "completed_at": "2026-11-17T09:46:36.351-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T08:42:34-08:00",
+    "end": "2026-11-17T09:46:36.351-08:00",
+    "previous_run_completed_at": "2026-11-17T08:42:34-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T084046-0800-20261117T164234379Z.json",
+    "basis": "Supplementary source recall of newly surfaced or updated attributable developments after preceding 08:42:34 PST heartbeat; source event dates can predate observation when source publication/update is new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Updates page checked: newest displayed item 16 November Gaza access and movement; 13 November humanitarian situation report; no new 17 November update visible."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO emergency portal checked: no 17 November Gaza-specific new situation update surfaced."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Regional endpoint returned 502 Bad Gateway again (also in preceding run). WHO Global fallback accessible; known persistent limitation, not new material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 17 2026 Reuters AP latest 17:00 UTC strikes injured civilians",
+      "site:english.wafa.ps/Pages/Details \"17 November 2026\" Gaza killed injured evening",
+      "site:un.org Gaza November 17 2026 humanitarian spokesperson briefing fuel convoy aid",
+      "site:unicef.org Gaza November 17 2026 children water displacement",
+      "site:wfp.org Gaza November 17 2026 food operations access update",
+      "site:palestinercs.org Gaza November 17 2026 ambulance emergency patients",
+      "site:who.int Gaza November 17 2026 medical evacuation hospital functioning",
+      "site:ochaopt.org Gaza \"17 Nov 2026\" access movement",
+      "site:reliefweb.int \"17 Nov 2026\" Gaza hospital water shelter",
+      "Gaza November 17 2026 Rafah Kerem Shalom crossing trucks aid movement Tuesday",
+      "Gaza November 17 2026 ceasefire negotiations hostage prisoner Israel civilians casualties",
+      "Gaza November 17 2026 IOM northern Gaza floods tents displacement shelter update after morning"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage latest news checked. Latest Gaza six-fatality roundup at displayed 17:09 site time was recorded in prior 07:47 heartbeat, as were patient evacuation limits at 14:19 and other earlier reports. No additional distinct Gaza incident identified; source site timezone unverified."
+      },
+      {
+        "publisher": "Reuters Middle East",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "Gaza headlines remain the already-reviewed November 17 four-fatality summary and IOM winter/hypothermia warning; no distinct qualifying update surfaced."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE_VIA_SEARCH",
+        "detail": "17 November joint WFP/IOM winter access warning already recorded earlier; same-day WFP story reuses the concerns, not an independent new operational change."
+      },
+      {
+        "publisher": "UN SG",
+        "url": "https://www.un.org/sg/en/content/highlight/2026-11-17.html",
+        "status": "ACCESS_DENIED",
+        "detail": "Direct check returned DisabledError; other humanitarian coverage remained available."
+      },
+      {
+        "publisher": "UNISPAL",
+        "url": "https://www.un.org/unispal/",
+        "status": "HTTP_403",
+        "detail": "Direct access returned HTTP 403; not treated as evidence of an event."
+      },
+      {
+        "publisher": "WFP news index",
+        "url": "https://www.wfp.org/news",
+        "status": "HTTP_403",
+        "detail": "News index restricted (already observed previously); individual source pages/indexed content accessible."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters November 17 four-death report: Deir al-Balah, Khan Younis and Bir Al-Naja incidents already logged in earlier watches.",
+      "WAFA November 17 six-death roundup: two additional fatalities in Rafah and delayed Jabalia death already recorded at 07:47 PST; no new delta.",
+      "WFP/IOM winter warning (1.7 million displaced, 1.4 million in acute hunger, shelter and funding pressures) previously captured; no additional confirmed operational access change.",
+      "WHO older health emergencies, OCHA November 13 situation report, UNICEF November 10 rain-and-child-fatality release and older PRCS posts are outside new-evidence window.",
+      "Political commentary, West Bank-only developments, unverified syndications and recycled Gaza articles."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean persistent 502 and secondary UN/WFP index restrictions reduce source breadth but OCHA, WHO Global, Reuters, WAFA and WFP report coverage remains available.",
+      "Search indexing delay and inconsistent news-site timezones limit negative-coverage confidence.",
+      "OCHA November 16 access/movement publication includes an embedded PDF not re-analyzed in this run; latest visible OCHA headlines checked.",
+      "No source content used to alter the authoritative daily production flow; no approvals, publication or schedule changes."
+    ],
+    "overall": "No new traceable development distinct from existing 08:42 PST watch state was verified. Degraded solely due to persistent WHO EMRO access restriction and secondary index access restrictions; no material new degradation."
+  }
+}

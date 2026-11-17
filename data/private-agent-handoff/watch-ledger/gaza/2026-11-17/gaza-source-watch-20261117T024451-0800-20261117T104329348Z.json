@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T024451-0800-20261117T104329348Z",
+  "scheduled_for": "2026-11-17T02:44:51-08:00",
+  "started_at": "2026-11-17T02:40:06-08:00",
+  "completed_at": "2026-11-17T10:43:29.348Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T01:45:40.601-08:00",
+    "end": "2026-11-17T02:43:29-08:00",
+    "previous_run_completed_at": "2026-11-17T09:45:40.601Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T014451-0800-20261117T094540601Z.json",
+    "basis": "Bounded supplementary recall since previous verified watch, including previously unrecorded earlier incidents newly traceable via current reporting. Production remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-wafa-al-jafarawi-deir-al-balah-casualties",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177055",
+      "title": "Young man killed, others wounded by occupation forces' gunfire central Gaza Strip",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T12:04:00+02:00",
+      "event_date": "2026-11-17",
+      "location": "Al-Ja'farawi area, east of Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Palestinian civilians: one young man reportedly killed and several others wounded by Israeli live fire; WAFA did not provide verified identities or precise injury count.",
+      "exact_supporting_passage": "resulting in the death of one young man and injuries to several others.",
+      "source_type": "Palestinian public news agency report citing local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "within_observation_window": "WAFA Arabic first published at 11:50 local Palestine time; English at 12:04, after previous watch's latest index at 11:20.",
+        "corroboration": "Safa local correspondent on 17 November additionally named the reported deceased as Ayoub Talat Ayoub, 21, and reported three other injuries, including one child; not independently hospital-verified.",
+        "corroborating_url": "https://safa.ps/post/423868/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D9%86%D9%8A%D8%B1%D8%A7%D9%86-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%88%D8%B3%D8%B7-%D8%B9%D9%85%D9%84%D9%8A%D8%A7%D8%AA-%D9%86%D8%B3%D9%81-%D9%88%D8%A5%D8%B7%D9%84%D8%A7%D9%82-%D9%86%D8%A7%D8%B1-%D9%81%D9%8A-%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D8%B9",
+        "distinct_from": "09:31 local WAFA report of Deir al-Balah/al-Maghazi vehicle incursion and residential demolitions, captured in preceding watch; this concerns direct reported casualties in al-Ja'farawi."
+      }
+    },
+    {
+      "finding_id": "gaza-20261117-safa-north-al-bureij-drone-critical-injury",
+      "canonical_source_url": "https://safa.ps/post/423868/%D8%B4%D9%87%D9%8A%D8%AF-%D9%88%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D9%86%D9%8A%D8%B1%D8%A7%D9%86-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%88%D8%B3%D8%B7-%D8%B9%D9%85%D9%84%D9%8A%D8%A7%D8%AA-%D9%86%D8%B3%D9%81-%D9%88%D8%A5%D8%B7%D9%84%D8%A7%D9%82-%D9%86%D8%A7%D8%B1-%D9%81%D9%8A-%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D8%B9",
+      "title": "شهيد ومصابون بنيران الاحتلال وسط عمليات نسف وإطلاق نار في القطاع",
+      "publisher": "Safa Palestinian Press Agency",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T07:10:00+02:00",
+      "event_date": "2026-11-17",
+      "location": "North of al-Bureij refugee camp, central Gaza Strip",
+      "affected_population_or_system": "One Palestinian reportedly critically injured by an Israeli drone strike; identity and hospital status unverified.",
+      "exact_supporting_passage": "وأشار إلى إصابة مواطن بجروح حرجة، جراء غارة من مسيرة إسرائيلية شمالي مخيم البريج.",
+      "source_type": "Palestinian news outlet; field-correspondent report, single source",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "within_observation_window": "Late-recalled distinct civilian injury reported in a dated local-field news account discovered in this execution; source's displayed 07:10 Palestine time precedes observation window and any later modification time is unknown.",
+        "corroboration": null,
+        "distinct_from": "Al-Ja'farawi gunshot casualties east of Deir al-Balah: different location and drone-strike mechanism; do not merge or imply independently confirmed."
+      }
+    },
+    {
+      "finding_id": "gaza-20261115-un-near-fuel-convoy-rafah-airstrike",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177064",
+      "title": "UN warns against Israeli attacks on residential areas and near aid convoys in Gaza",
+      "publisher": "WAFA, quoting UN Deputy Spokesperson Farhan Haq and OCHA officials",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T12:19:00+02:00",
+      "event_date": "2026-11-15",
+      "location": "Rafah, southern Gaza Strip",
+      "affected_population_or_system": "UN humanitarian personnel and fuel convoy exposed to reported nearby airstrike; injuries, convoy damage, fuel loss or interruption were not reported.",
+      "exact_supporting_passage": "Haq stated that on Sunday, Israel carried out an airstrike on a site very close to a UN fuel convoy in Rafah.",
+      "source_type": "Established public news agency quoting named UN spokesperson's 16 November briefing; primary UN transcript not accessed",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "within_observation_window": "Late-recalled 15 November incident relayed in UN briefing 16 November, first found here in WAFA's new 17 November 12:07 Arabic / 12:19 English publication.",
+        "corroboration": "WAFA identifies Deputy UN spokesperson Farhan Haq as reporting the account and quoting OCHA concerns, but direct UN briefing source could not be retrieved within bounds.",
+        "distinct_from": "General winter supply warnings and 16 November OCHA access map; this is a specified near-convoy security incident, not proof of changed border access or convoy cargo loss."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary source recall, not production publishing or authoritative daily collection.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct listing checked first. Latest entry 16 Nov Gaza access/movement, latest situation report 13 Nov (3-9 Nov period). No newly posted 17 Nov operational situation report at time checked."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official emergency situation overview, health and regional links checked; no new 17 Nov health service, medical evacuation, or hospital-functioning update identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Known recurring WHO regional access failure; WHO global fallback available."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza latest November 17 2026 humanitarian situation report 16 17 November",
+      "site:who.int Gaza November 17 2026 WHO health medical evacuation hospitals November 16 2026"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps/Pages/Details/ \"17/11/2026\" غزة ظهر إصابة شهداء قصف استهداف نزوح",
+      "site:english.wafa.ps/Pages/Details/ \"17/November/2026\" Gaza Tuesday injuries displaced attacks",
+      "site:un.org OR site:unrwa.org OR site:unicef.org \"17 November 2026\" Gaza shelter aid medical access",
+      "site:who.int OR site:emro.who.int \"17 November 2026\" Gaza emergency hospitals ambulance fuel medical evacuation",
+      "Reuters Gaza November 17 2026 aid crossings strikes killed ceasefire latest Tuesday",
+      "AP News November 17 2026 Gaza hospital strikes flooding humanitarian aid Tuesday",
+      "site:un.org \"16 November 2026\" Rafah \"fuel convoy\" airstrike Sunday OCHA Haq",
+      "site:msf.org OR site:palestinercs.org OR site:icrc.org \"17 November 2026\" Gaza ambulances displaced hospital",
+      "site:pchrgaza.org OR site:mezan.org \"17 November 2026\" civilian killed wounded Gaza Deir Balah Rafah",
+      "site:wfp.org OR site:iom.int OR site:reliefweb.int \"17 November 2026\" Gaza crossings food health water shelter",
+      "غزة 17 نوفمبر 2026 دير البلح الجعفراوي شهيد إصابات الثلاثاء 12",
+      "Gaza Tuesday November 17 2026 Rafah Kerem Shalom fuel convoy crossing medical aid ceasefire change"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "17 Nov local-language news index and new incident articles inspected; newest relevant Gaza reporting at 11:50, 12:07 and 12:19 Palestine local time."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews/1000",
+        "status": "ACCESSIBLE",
+        "detail": "Reviewed through 12:19 Palestine time, verified direct Deir al-Balah casualty and near-UN-convoy reports."
+      },
+      {
+        "publisher": "Safa",
+        "url": "https://safa.ps/post/423868",
+        "status": "ACCESSIBLE_ARTICLE",
+        "detail": "Local correspondent report corroborates al-Ja'farawi casualty context and describes separate critical injury near al-Bureij."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA morning 17 Nov central Gaza Deir al-Balah/al-Maghazi incursion and demolitions: captured in preceding heartbeat.",
+      "17 Nov WFP/IOM winter food and shelter access funding warning: captured in preceding heartbeat and not evidence of a newly imposed crossing restriction.",
+      "16 Nov Jabalia and Khan Younis casualty reports: previously reported or outside this new-development window.",
+      "November 12 Nasser Hospital strike and earlier flood disruption: historical/recycled.",
+      "17 Nov Palestinian Social Development Ministry online needs-registration update: administrative targeting step, not verified new aid access or delivery.",
+      "Reuters 17 Nov UK sanctions on Tzav 9 and West Bank settlement companies: no verified immediate change to Gaza aid flow or crossing status.",
+      "Reposts of WAFA al-Ja'farawi casualties by Wattan and other aggregators: duplicates, not additional independent findings.",
+      "Social-media/unverified assertions, opinion, other territories and mismatched calendar years excluded."
+    ],
+    "limitations": [
+      "WHO EMRO returned HTTP 502, recurring degraded official-source coverage; WHO global checked successfully.",
+      "OCHA November 16 access/movement PDF not analyzed; no assertion of new crossing status inferred.",
+      "UN primary briefing transcript for Nov 16 could not be verified directly; Rafah near-convoy account is attributed in WAFA to named UN spokesperson.",
+      "Safa's al-Bureij injury is single-reporter reporting and requires clinical or independent corroboration; source page shows a 07:10 local time with no verified revision time.",
+      "No access or changes made to production ingested state; dedup checked against preceding persisted watch heartbeat."
+    ],
+    "overall": "Three distinct qualifying supplemental recall items captured, with 12 additional searches and official-first checks. WHO regional source degradation persists; authoritative production, publication, approvals and schedules unchanged."
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T034451-0800-20261117T114644153Z",
+  "scheduled_for": "2026-11-17T03:44:51-08:00",
+  "started_at": "2026-11-17T03:44:57-08:00",
+  "completed_at": "2026-11-17T11:46:44.153Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T02:43:29.348-08:00",
+    "end": "2026-11-17T11:46:44.153Z",
+    "previous_run_completed_at": "2026-11-17T10:43:29.348Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T024451-0800-20261117T104329348Z.json",
+    "basis": "Supplementary bounded recall since preceding authenticated watch; older candidate incidents checked only to reject duplicates or qualify a specifically uncaptured update. Not authoritative production."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary source recall; daily production is authoritative and untouched.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official updates index checked first: latest listing 16 November Gaza Strip access and movement; 13 November situation report; no 17 November update visible at check."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official WHO emergency overview and latest news/publication index checked first; no dated 17 November new Gaza hospital status, evacuation, medical capacity or healthcare disruption release located."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Recurring 502 Bad Gateway on direct regional WHO check, also documented in prior run. Global WHO alternative accessible."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza \"17 November 2026\" humanitarian situation updates casualties aid access",
+      "site:who.int Gaza \"17 November 2026\" hospitals medical evacuations fuel healthcare"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"17/November/2026\" Gaza killed injured Tuesday",
+      "site:wafa.ps/Pages/Details/ \"17/11/2026\" غزة شهداء إصابات صباح",
+      "site:un.org \"17 November 2026\" Gaza humanitarian convoy medical aid",
+      "site:unicef.org OR site:unrwa.org \"17 November 2026\" Gaza displacement shelter supplies",
+      "site:who.int OR site:emro.who.int \"17 November 2026\" Gaza hospital evacuation ambulance",
+      "site:ochaopt.org \"17 November 2026\" Gaza aid access movements",
+      "Reuters November 17 2026 Gaza humanitarian access ceasefire raids civilians Tuesday 17",
+      "AP News Gaza November 17 2026 hospital aid crossing shelling killed Tuesday",
+      "site:palestinercs.org OR site:msf.org OR site:icrc.org \"17 November 2026\" Gaza health aid ambulance",
+      "site:wfp.org OR site:iom.int \"17 November 2026\" Gaza food shelter access fuel",
+      "site:pchrgaza.org OR site:mezan.org \"17 November 2026\" Gaza civilian displaced killed health",
+      "غزة الثلاثاء 17 نوفمبر 2026 بعد الظهر إصابات شهداء معبر مستشفى قصف مساعدات"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Index read through 13:08 Palestine time (03:08 PST); Gaza al-Ja'farawi casualties 11:50 and Rafah fuel convoy security warning 12:07 already in preceding verified heartbeat; no later qualifying Gaza event in index."
+      },
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Index checked through 12:47 Palestine time (02:47 PST); Gaza casualties 12:04 and UN convoy warning 12:19 already recorded; later 12:47 items not new direct Gaza civilian-impact developments."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "17 November IOM/WFP warning accessed directly; previously captured in earlier heartbeat, not a new event in this observation window."
+      },
+      {
+        "publisher": "Financial Times",
+        "url": "https://www.ft.com/content/463238ee-2d5f-4ae8-b48b-8a39444c08bd",
+        "status": "PAYWALLED",
+        "detail": "17 November Gaza winter coverage found, but full article not directly accessible; reported WHO respiratory illness comparison lacks accessible primary evidence/date and not elevated to finding."
+      }
+    ],
+    "excluded_candidates": [
+      "17 November WAFA al-Ja'farawi casualty, Safa al-Bureij drone injury and 15 November near-UN-fuel-convoy strike: already captured in immediately preceding heartbeat.",
+      "17 November WFP/IOM food and shelter/winter warning: captured in prior watch; no evidence of a newly imposed aid-crossing restriction.",
+      "17 November morning Deir al-Balah/al-Maghazi incursion and residential demolitions: captured in earlier watch.",
+      "17 November UK sanctions against Gaza-aid-blocking group: sanctions action reported but no observed or verified Gaza crossing or aid-delivery change.",
+      "17 November Financial Times WHO respiratory infection comparison: article gated; underlying verified date, change interval and WHO original release unavailable within bounds.",
+      "November 12-13 Nasser Hospital strike and service disruption and older November rain/flood reports: historical, not newly qualifying updates.",
+      "Reuters 17 November Jericho settler-attack injuries: outside Gaza geographical scope.",
+      "Social claims, opinion, aggregates, unrelated years and unsupported causal assertions excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean direct source continues to return HTTP 502; no new material degradation relative to prior watch.",
+      "OCHA 16 November Gaza access/movement source listing inspected, but no underlying large PDF analysis; no crossing change inferred.",
+      "Search indexing may lag events; this is a bounded recall check, not completeness certification.",
+      "No production collection, publishing, approvals, schedules, branch other than watch ledger, or automation settings touched."
+    ],
+    "overall": "Official OCHA and WHO checked first, 12 additional targeted searches completed; no fresh, independently traceable non-duplicate Gaza development qualified during the checked window. Persisted as DEGRADED/no_findings for continuing known WHO regional HTTP 502 source gap."
+  }
+}

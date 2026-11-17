@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T044451-0800-20261117T125039369Z",
+  "scheduled_for": "2026-11-17T04:44:51-08:00",
+  "started_at": "2026-11-17T04:48:24-08:00",
+  "completed_at": "2026-11-17T04:50:39-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T03:46:44.153-08:00",
+    "end": "2026-11-17T04:50:39-08:00",
+    "previous_run_completed_at": "2026-11-17T03:46:44.153-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T034451-0800-20261117T114644153Z.json",
+    "basis": "Bounded supplementary recall from prior verified watch completion; late indexing from earlier periods checked for deduplication, not treated as new incidents without an independently qualifying update."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-medical-evacuation-22-permitted-wafa-1419",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177075",
+      "title": "Medical sources warn of continued reduction in number patients and wounded permitted to leave Gaza",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T14:19:00+02:00",
+      "event_date": "2026-11-17",
+      "location": "Gaza Strip; medical departures from Gaza (crossing not independently verified)",
+      "affected_population_system": "Patients and wounded awaiting external medical evacuation; accompanying caregivers",
+      "supporting_passage": "The medical sources stated that only 22 people—patients and their companions—were granted permission to travel today, Tuesday.",
+      "source_type": "Official Palestinian news agency reporting unnamed local medical sources, not a first-party WHO or crossing authority confirmation",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "first_seen_in_watch": "2026-11-17T04:48:24-08:00",
+        "source_report_local_time": "2026-11-17T14:19:00+02:00",
+        "observation_window": "2026-11-17T03:46:44.153-08:00 to 2026-11-17T04:50:39-08:00",
+        "evidence": "17 Nov medical sources said only 22 people, including companions, permitted to depart that day; evacuation waiting lists exceed 21,000 cases, and sources claim outbound permissions linked to returnees from Egypt.",
+        "independent_corroboration": "Not located in bounded searches or accessible WHO global/OCHA pages.",
+        "limitations": "22 is combined patients and companions, not patient-only count. Identity of medical sources, formal policy documentation, actual departures, crossing location, and counterparty response not independently verified. The report confirms a newly dated restriction datapoint, not necessarily a newly implemented policy.",
+        "source_language_variants": [
+          "https://www.wafa.ps/news/2026/11/17/%D8%AA%D8%AD%D8%B0%D9%8A%D8%B1-%D9%85%D9%86-%D8%A7%D8%B3%D8%AA%D9%85%D8%B1%D8%A7%D8%B1-%D8%AA%D9%82%D9%84%D9%8A%D8%B5-%D8%A3%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D9%85%D8%B1%D8%B6%D9%89-%D9%88%D8%A7%D9%84%D8%AC%D8%B1%D8%AD%D9%89"
+        ]
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; primary daily collector and publication authoritative and untouched.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official updates index: most recent item 16 November Gaza access/movement; 13 November humanitarian situation report. No newly dated 17 November OCHA update located."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official emergency overview and news/operations indices checked; no 17 November Gaza medical-evacuation data found."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Direct regional WHO page timed out. Recurrent known source restriction; alternative WHO global coverage accessible."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza latest humanitarian situation report November 17 2026 aid access casualties 2026",
+      "site:who.int Gaza November 17 2026 health medical evacuation hospitals updates"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"17/November/2026\" Gaza killed injured afternoon",
+      "site:wafa.ps/Pages/Details/ \"17/11/2026\" غزة شهيد قصف اليوم الثلاثاء مساء",
+      "site:un.org \"17 November 2026\" Gaza access fuel shelter civilians operations",
+      "site:unicef.org OR site:unrwa.org \"17 November 2026\" Gaza winter shelter displacement aid",
+      "\"Medical sources warn of continued reduction\" \"Gaza\" November 17 2026",
+      "site:who.int OR site:emro.who.int \"17 November 2026\" Gaza evacuation hospital ambulance",
+      "site:ochaopt.org \"17 November 2026\" Gaza access crossings food water",
+      "Reuters Gaza November 17 2026 civilian casualty aid ceasefire healthcare updates afternoon",
+      "\"17 November 2026\" \"22\" Gaza \"medical evacuation\" patients companion Rafah",
+      "site:palestinercs.org OR site:msf.org OR site:icrc.org Gaza \"17 November 2026\" medical evacuations ambulances hospitals",
+      "site:wfp.org OR site:iom.int \"17 November 2026\" Gaza food shelter fuel crossing access",
+      "غزة 17 تشرين الثاني 2026 14:00 15:00 مرضى خروج رفح قصف شهداء مستشفى"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Direct news index and related-story links inspected; WAFA English medical-evacuation report published 14:19 Palestinian local time on 17 November."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Direct current index inspected; matching Arabic medical-evacuation report published 14:09 local time, same underlying claims as English edition."
+      },
+      {
+        "publisher": "WAFA English report",
+        "url": "https://english.wafa.ps/Pages/Details/177075",
+        "status": "ACCESSIBLE",
+        "detail": "New daily quantified medical-evacuation restriction: only 22 people including patients and companions reported authorized to travel 17 November, >21,000 cases waiting."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "17 November food/shelter winter warning already captured by earlier watch; not duplicated."
+      }
+    ],
+    "excluded_candidates": [
+      "17 November al-Ja'farawi fatality, al-Bureij injury and 15 November near-fuel-convoy strike: recorded in earlier authenticated watch.",
+      "17 November WFP/IOM winter food and shelter access warning: prior watch already captured; no new distinct crossing event verified.",
+      "17 November morning Deir al-Balah/al-Maghazi reported demolitions: prior watch already captured.",
+      "17 November Cabinet warning on continued obstruction of humanitarian aid: reiterates existing conditions, no new verified crossing or delivery change.",
+      "17 November WAFA fuel-kerosene video: contextual existing fuel hardship, not a new event.",
+      "17 November UNRWA and UNEP-related coverage: no independently verified new direct Gaza service interruption or damage event in scope.",
+      "Previous 12 November Nasser Hospital strike and general Gaza health capacity data: historical, not newly qualifying."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional site timed out; this is a continuing known source gap, not a newly material degradation.",
+      "WAFA medical-source claim is anonymous and not independently verified by WHO/OCHA; interpreted conservatively as reported claim rather than confirmed change in evacuation policy.",
+      "Direct index checks show source publication times in Gaza/Palestine local time; America/Los_Angeles used for watch dates and bounds.",
+      "Search-index lag and incomplete outlet coverage prevent a guarantee of completeness; all 12 additional searches were bounded.",
+      "No production publication, approvals, permissions, task schedule, branch other than watch ledger, or automation settings changed."
+    ],
+    "overall": "One new, dated medical-evacuation access datapoint discovered; pre-existing WHO regional fetch timeout keeps run DEGRADED, with accessible WHO global/OCHA alternatives. One durable heartbeat recorded."
+  }
+}

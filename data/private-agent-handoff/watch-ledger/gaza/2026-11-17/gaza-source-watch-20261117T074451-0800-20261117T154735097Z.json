@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T074451-0800-20261117T154735097Z",
+  "scheduled_for": "2026-11-17T07:44:51-08:00",
+  "started_at": "2026-11-17T07:44:50-08:00",
+  "completed_at": "2026-11-17T07:47:35-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T06:46:14-08:00",
+    "end": "2026-11-17T07:47:35-08:00",
+    "previous_run_completed_at": "2026-11-17T06:46:14-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T064451-0800-20261117T144614Z.json",
+    "basis": "Supplementary recall of source publications or newly surfaced developments following the preceding heartbeat, not necessarily events that occurred within the hour. WAFA English report displayed at 17:09 local-site clock; source's timezone unverified."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-rafah-al-shakoush-militia-gunfire-fatality-wafa",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177082",
+      "title": "Six Palestinians, including child, killed in Israeli attacks across Gaza today",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "event_date": "2026-11-17",
+      "location": "Near al-Shakoush Gate, Rafah, southern Gaza Strip",
+      "affected_population_system": "One Palestinian reported killed by militia gunfire. Name, precise incident time, whether victim was a civilian and militia affiliation are not verified.",
+      "affected_population_or_system": "One Palestinian reported killed by militia gunfire. Name, precise incident time, whether victim was a civilian and militia affiliation are not verified.",
+      "exact_supporting_passage": "another Palestinian was killed by militia gunfire near the al-Shakoush Gate",
+      "source_type": "Palestinian national news agency; aggregated casualty report attributed to medical sources, individual incident not independently confirmed",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "observation_window_start": "2026-11-17T06:46:14-08:00",
+        "discovered_at": "2026-11-17T07:47:35-08:00",
+        "discovery_method": "WAFA latest-news index directly checked after initial official OCHA OPT and WHO checks and targeted searches",
+        "reporting_context": "WAFA's November 17 six-death aggregate contains four prior-watch fatalities (two Deir al-Balah, Khan Younis, Bir al-Na'ja), plus this distinct militia-gunfire death and a separate delayed Jabalia death. No evidence this militia death was among previously logged four.",
+        "source_display_time": "17 November 2026, 05:09 PM (WAFA site; timezone not explicitly provided)",
+        "corroboration": "WAFA English and Arabic site versions report the same incident; not independent sources.",
+        "limitation": "Victim's combatant/civilian status, militia identity and exact event time unverified."
+      }
+    },
+    {
+      "finding_id": "gaza-20261117-jabalia-hafsa-school-earlier-attack-delayed-death-wafa",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177082",
+      "title": "Six Palestinians, including child, killed in Israeli attacks across Gaza today",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "event_date": "2026-11-17",
+      "location": "Jabalia al-Balad; earlier injury at Hafsa School in al-Faluja area, northern Gaza Strip",
+      "affected_population_system": "One Palestinian from Jabalia al-Balad reportedly died on November 17 from wounds sustained in a strike on Hafsa School approximately two weeks earlier. Age, identity, precise original strike date and civilian status unverified.",
+      "affected_population_or_system": "One Palestinian from Jabalia al-Balad reportedly died on November 17 from wounds sustained in a strike on Hafsa School approximately two weeks earlier. Age, identity, precise original strike date and civilian status unverified.",
+      "exact_supporting_passage": "Another Palestinian from Jabalia al-Balad succumbed to wounds",
+      "source_type": "Palestinian national news agency; medical-sources casualty roundup, no hospital record independently examined",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "observation_window_start": "2026-11-17T06:46:14-08:00",
+        "discovered_at": "2026-11-17T07:47:35-08:00",
+        "discovery_method": "WAFA latest-news index and English article, cross-checked against its Arabic-language roundup",
+        "reporting_context": "Newly reported death on November 17 refers to an attack about two weeks earlier; count as a delayed fatality, not a new November 17 strike.",
+        "source_display_time": "17 November 2026, 05:09 PM (WAFA site; timezone not explicitly provided)",
+        "corroboration": "WAFA English and Arabic versions from the same publisher; no independent confirmation.",
+        "limitation": "Original strike date and whether this casualty was previously tallied by local authorities are unknown."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza publisher/collector is authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest item listed November 16 Gaza access/movement; no newer November 17 OCHA release visible at observation."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Situation overview accessible; no new November 17 dated situation report surfaced."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Recurring 502 Bad Gateway; global WHO portal was accessible as partial fallback."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps November 17 2026 Gaza 17/11/2026 7 AM killed injured strike",
+      "site:reuters.com/world/middle-east Gaza November 17 2026 15:00 UTC airstrike deaths aid",
+      "site:palestinercs.org Gaza November 17 2026 ambulance emergency injured",
+      "site:unrwa.org Gaza November 17 2026 displaced fuel aid crossing",
+      "site:unicef.org Gaza November 17 2026 children water hospital floods",
+      "site:wfp.org Gaza November 17 2026 food operations access update",
+      "November 17 2026 Rafah Shakoush gate militia shot killed Palestinian Gaza",
+      "November 17 2026 Jabalia al-Faluja Hafsa school died wounds two weeks ago",
+      "site:wafa.ps 17-11-2026 الشاكوش المليشيات استشهد رفح حفصة الفالوجا",
+      "site:un.org OR site:news.un.org Gaza November 17 2026 OCHA WHO patients fuel convoy shelter",
+      "site:reliefweb.int November 17 2026 Gaza hospital ambulances evacuation humanitarian situation",
+      "Gaza 17 November 2026 15:00 UTC Rafah killed militia north Jabalia Deir Balah strike civilians"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/Details/177082",
+        "status": "ACCESSIBLE",
+        "detail": "November 17 six-fatality roundup; two previously uncaptured fatalities distinguished from four earlier logged deaths."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://wafa.ps/news/2026/11/17/%D8%AD%D8%B5%D9%8A%D9%84%D8%A9-%D8%A7%D9%84%D9%8A%D9%88%D9%85-6-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84-%D9%88%D8%B9%D8%AF%D8%AF-%D9%85%D9%86",
+        "status": "SEARCH_EXCERPT_ONLY",
+        "detail": "Arabic roundup surfaced via web index matching the same two deaths; direct article open was blocked (DisabledError)."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-agency-warns-gaza-hypothermia-deaths-without-more-supplies-2026-11-17/",
+        "status": "ACCESSIBLE",
+        "detail": "Article published November 17 15:10 UTC; IOM winter shelter warning largely covered by earlier WFP/IOM report; November 12 suspected hypothermia death treated as older and not counted without reliable new/uncaptured verification."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "November 17 joint statement already recorded in prior watch; excluded as duplicate."
+      }
+    ],
+    "excluded_candidates": [
+      "Four deaths in November 17 WAFA aggregate: two Deir al-Balah shooting deaths, one Khan Younis airstrike fatality and one Bir al-Na'ja airstrike fatality already captured by earlier watches.",
+      "Reuters November 17 IOM winter warning and 100,000 tents awaiting entry reflect an already-recorded WFP/IOM alert and ongoing access problems; not counted as a new access policy.",
+      "Reuters reference to 9-month-old suspected hypothermia victim on November 12 is older and lacks confirmation it was missed by prior watches; exclude as a new finding in this narrow window.",
+      "November 16 PCHR field report includes older November 12–15 events, outside immediate evidence of a new qualifying uncaptured development.",
+      "West Bank-only articles, political sanctions without verified Gaza access changes, opinion and unsupported claims excluded."
+    ],
+    "limitations": [
+      "WHO EMRO returned HTTP 502; OCHA OPT and WHO Global accessible, so coverage was usable but DEGRADED.",
+      "news.un.org was blocked by robots.txt in targeted results; reporting accessed through other official sites.",
+      "No independent verification of the two additional fatalities beyond WAFA English and Arabic editions of the same report.",
+      "Source publication hour was presented in WAFA site local time, without an explicit timezone; both reports dated November 17, 2026.",
+      "Exactly twelve targeted searches following first OCHA/WHO checks, no further web searches.",
+      "No production, publication, approvals or scheduling changes."
+    ],
+    "overall": "Two distinct fatalities in WAFA's November 17 six-death roundup were not present in previous hourly four-death watch: a Rafah militia gunfire death and delayed death from a Hafsa School strike in Jabalia. Regional WHO access remains degraded."
+  }
+}

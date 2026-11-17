@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T124451-0800-20261117T205033Z",
+  "scheduled_for": "2026-11-17T12:44:51-08:00",
+  "started_at": "2026-11-17T12:48:42-08:00",
+  "completed_at": "2026-11-17T12:50:33.268-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T11:45:19.170-08:00",
+    "end": "2026-11-17T12:50:33.268-08:00",
+    "previous_run_completed_at": "2026-11-17T11:45:19.170-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T114451-0800-20261117T194519170Z.json",
+    "basis": "Supplementary recall since preceding verified hourly heartbeat, allowing late-indexed source reports but excluding already logged incidents, historical coverage and uncorroborated aggregator claims."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. Primary daily Gaza collector/publisher remains authoritative and unchanged.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct index reviewed before supplementary targeted searches. Latest Gaza access/movement item dated 16 November, with 13 November winter appeal and humanitarian situation report; no dated 17 November new update listed."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct WHO emergency overview checked; no new Gaza operational change listed. WHO Director-General 17 November remarks were previously reviewed in preceding hourly watch and did not independently establish a change during this window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional endpoint returned 502 Bad Gateway, matching persistent documented limitation. WHO Global sources remain accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 17 2026 after 19:45 UTC latest civilian deaths Israeli strikes medics Reuters AP [recency=1]",
+      "site:english.wafa.ps Gaza \"17 November 2026\" killed injured evening new strikes [recency=1]",
+      "site:un.org OR site:news.un.org Gaza 17 November 2026 evening humanitarian aid hospital water crossings briefing [recency=2]",
+      "site:palestinercs.org Gaza 17 November 2026 emergency paramedics injured ambulance [recency=2]",
+      "site:unicef.org Gaza \"17 November 2026\" children displacement drinking water hospitals [recency=2]",
+      "site:wfp.org OR site:iom.int Gaza \"17 November 2026\" shelter flooding access food trucks [recency=2]",
+      "site:ochaopt.org \"17 November 2026\" Gaza crossings access displacement health",
+      "site:reuters.com/world/middle-east/ Gaza \"Nov 17, 2026\" after 19:00 UTC hospitals Palestinians killed new [recency=1]",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"17 Nov 2026\" ambulance medical evacuation fuel [recency=2]",
+      "Gaza November 17 2026 20:00 UTC latest civilian casualties injured hospital water shelter aid crossing [recency=1]",
+      "site:unrwa.org 17 November 2026 Gaza primary health care aid water shelter centers [recency=2]",
+      "Gaza November 17 2026 negotiations ceasefire detainee hostage release humanitarian passage Reuters AFP [recency=1]"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Direct recent-news list checked. Most recent Gaza casualty roundup continued to be six-death report (17 November 5:09 PM displayed site time); all component deaths logged in preceding watches. Later site items concerned West Bank."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "SEARCH_VERIFIED",
+        "detail": "Four Gaza deaths reported earlier on 17 November are already accounted for in watch ledger. No distinct casualty verified in window."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "DIRECT_OR_SEARCH_ACCESSIBLE",
+        "detail": "17 November funding, shelter and food access joint agency warning was already captured in earlier watch; its detailed assistance reductions do not establish a newly timestamped change during this hourly window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---17-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Direct speech available; previously reviewed earlier today, with previously documented flood, infection and hypothermia concerns."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 17 six-death Gaza roundup and Reuters four-death report: duplicate fatalities and delayed death already captured in prior watches.",
+      "November 17 WFP/IOM winter shelter/hunger/funding warning and Reuters/IOM hypothermia and waiting-tents warning: already recorded, not an additional independent operational change.",
+      "AP November 17 Board of Peace annual Gaza ceasefire assessment: warning/recommendation without verified new implementation milestone or independently confirmed new access restriction; previously evaluated.",
+      "November 12 Nasser Hospital strike and November 13 WHO respiratory-illness/flood risk estimates: historical, previously reviewed.",
+      "Gaza live-incident aggregator 17 November '3 killed, 7 injured in preceding 24 hours' and shelling alerts: independent source original and distinct incident attribution not confirmed; excluded rather than double-counting.",
+      "West Bank-only violence/sanctions, recycled older articles, unattributed/unsourced items and date-mismatched search results."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persisted. WHO Global and OCHA operational checks succeeded, so DEGRADED rather than FAILED; this restriction was present in earlier watches and is not new material worsening.",
+      "news.un.org blocked by robots.txt in bundled query; other UN primary sources checked.",
+      "Indexing delay and local site-display timezones limit precise real-time recall; no claims of exhaustive coverage."
+    ],
+    "overall": "No new qualifying distinct development found since 11:45:19 PST. Previous WHO EMRO degradation remains; no new material failure established. No production publication approval permission or schedule changes."
+  }
+}

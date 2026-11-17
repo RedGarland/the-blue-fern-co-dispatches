@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T234451-0800-20261117T074559954Z",
+  "scheduled_for": "2026-11-16T23:44:51-08:00",
+  "started_at": "2026-11-16T23:43:37.254-08:00",
+  "completed_at": "2026-11-17T07:45:59.954Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T22:49:57.121-08:00",
+    "end": "2026-11-17T07:45:59.954Z",
+    "previous_run_completed_at": "2026-11-17T06:49:57.121Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T224451-0800-20261117T064957121Z.json",
+    "basis": "Bounded supplementary recall since prior verified hourly heartbeat, with November 17 Gaza-local reports checked. Source publication times, where absent, do not establish minute-level novelty. Production is authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-wafa-deir-al-balah-maghazi-home-demolitions",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/17/آليات-الاحتلال-تتوغل-وسط-القطاع-وتنفذ-عمليات",
+      "title": "آليات الاحتلال تتوغل وسط القطاع وتنفذ عمليات نسف منازل",
+      "translated_title": "Israeli military vehicles advance in central Gaza and carry out house demolitions",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "publication_time_local": "09:31",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": "2026-11-17",
+      "location": "Southeast Deir al-Balah and east of al-Maghazi camp, central Gaza Strip",
+      "affected_population_or_system": "Residential housing and civilian infrastructure; number of affected people/houses not stated",
+      "exact_supporting_passage": "وأفاد شهود عيان، بأن قوات الاحتلال نفذت عمليات نسف شرق مخيم المغازي، وشرق دير البلح، منذ فجر اليوم.",
+      "source_type": "Established Palestinian news agency; witness accounts reported by correspondent",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "discovered_during": "2026-11-16 23:43–23:45 America/Los_Angeles",
+        "source_reported_at_local": "2026-11-17 09:31 Asia/Gaza",
+        "novelty_basis": "Published after previous watch cutoff; distinct central-Gaza incident not present in prior heartbeat.",
+        "bounded_scope": "Witnesses report detonations near al-Maghazi and Deir al-Balah and military vehicles firing southeast of Deir al-Balah; no independently verified casualty, building-count, or displacement total.",
+        "corroboration": "No independent confirmation found within bounded searches.",
+        "production_deduplication": "Not compared against authoritative production records; supplementary candidate only."
+      }
+    },
+    {
+      "finding_id": "gaza-20261117-wfp-iom-winter-aid-funding-risk-assessment",
+      "canonical_source_url": "https://www.wfp.org/videos/wfp-news-video-winter-hits-gaza-funding-needed-urgently-save-lives-wfp-and-iom-warn",
+      "title": "As Winter Hits Gaza, Funding Needed Urgently to Save Lives, WFP and IOM Warn",
+      "publisher": "United Nations World Food Programme (WFP), jointly referring to IOM warning",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "publication_time_local": null,
+      "publication_timezone": null,
+      "event_date": null,
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Humanitarian aid operations, food access and emergency shelter; WFP cites 1.7 million displaced people, 1.4 million facing acute hunger, 1.98 million needing shelter assistance",
+      "exact_supporting_passage": "critical funding shortfalls and continued access restrictions are threatening humanitarian operations in Gaza",
+      "source_type": "Primary official UN humanitarian agency media statement",
+      "classification": "follow-up",
+      "confidence": "high",
+      "discovery_context": {
+        "discovered_during": "2026-11-16 23:43–23:45 America/Los_Angeles",
+        "novelty_basis": "New dated joint agency warning found in this run, absent from the preceding heartbeat; precise publication hour is not provided.",
+        "bounded_scope": "A renewed operational-risk assessment, not proof of a newly closed crossing, a new aid-denial incident, or newly changed population estimates.",
+        "corroboration": "WFP's own official source names both WFP and IOM; independent IOM publication was not verified.",
+        "production_deduplication": "Not compared against authoritative production records; treat as an official follow-up, not additive incident statistics."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Searched civilian casualties, displacement, aid/food/water, health/fuel/evacuation, infrastructure, crossing access, detention/hostages, ceasefire and operations with civilian impact. Production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Official OCHA first check: latest readily visible situation report dated 13 November 2026, reporting 3–9 November; no new 17 November Gaza situation report verified."
+      },
+      {
+        "publisher": "OCHA OPT access-and-movement",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "LANDING_ACCESSIBLE_PDF_UNREVIEWED",
+        "detail": "16 November 2026 landing page confirmed; underlying map PDF not analyzed. No crossing change inferred."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official WHO page checked before the targeted search block. No new dated interval-specific Gaza hospital/fuel/medical evacuation change confirmed."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct source still returns 502, a known recurring restriction; WHO global fallback accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org OR site:reliefweb.int Gaza \"17 November 2026\" flooding displaced shelter aid crossings",
+      "site:who.int OR site:emro.who.int OR site:healthcluster.who.int Gaza \"17 November 2026\" hospital medical evacuation fuel",
+      "site:english.wafa.ps \"17/November/2026\" Gaza injured killed today",
+      "site:wafa.ps/Pages/Details \"17/11/2026\" غزة شهداء جرحى قصف صباح",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza \"17 November 2026\" shelters food water",
+      "site:palestinercs.org OR site:msf.org OR site:icrc.org Gaza November 17 2026 hospital ambulance medical access",
+      "WFP IOM 17 November 2026 joint warning Gaza access restrictions funding shelter displaced humanitarian operations",
+      "Reuters Gaza November 17 2026 ceasefire border aid civilian casualties latest",
+      "AP News Gaza November 17 2026 shelter tents rain strike medical",
+      "site:aljazeera.net/news/2026/11/17 غزة قتيل مصابون قصف نزوح خيام",
+      "site:pchrgaza.org OR site:mezan.org \"17 November 2026\" Gaza displacement civilian casualties",
+      "Gaza Rafah Kerem Shalom crossing aid convoys fuel November 17 2026 OCHA UN"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Index reviewed through morning of 17 Nov Gaza time; most new postings concerned the West Bank. Central Gaza 09:31 article checked directly and captured."
+      },
+      {
+        "publisher": "WAFA Palestinian press roundup",
+        "url": "https://www.wafa.ps/news/2026/11/17/أبرز-عناوين-الصحف-الفلسطينية",
+        "status": "ACCESSIBLE",
+        "detail": "17 Nov 08:53 local review of Palestinian newspapers repeated 16 Nov Jabalia casualty and 12 injuries, without verifiable new event timestamp; excluded as duplicate/recap."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/videos/wfp-news-video-winter-hits-gaza-funding-needed-urgently-save-lives-wfp-and-iom-warn",
+        "status": "ACCESSIBLE",
+        "detail": "Original WFP primary-source November 17 press video text accessible; exact release time not supplied."
+      },
+      {
+        "publisher": "WFP News releases",
+        "url": "https://www.wfp.org/news",
+        "status": "HTTP_403",
+        "detail": "News release index blocked by HTTP 403, but original WFP media item content accessible; no fatal loss of coverage."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 17 Nov Palestinian press roundup repeated earlier 16 Nov Jabalia death and prior injuries, no distinct new incident.",
+      "WAFA prior 16 Nov three injuries near Hamad City and routine Gaza aggregate toll already recorded.",
+      "OCHA 13 Nov humanitarian report and 16 Nov movement map predating interval; underlying PDF unreviewed.",
+      "15 Nov four foreign ministers' statement regarding 150,000 tents at the border already published, not interval-specific.",
+      "Search returns from 2023–2026 older hospital, flooding and ceasefire events, unrelated West Bank stories and opinion excluded."
+    ],
+    "limitations": [
+      "WHO EMRO continues to return HTTP 502 (known ongoing degradation); WHO global and OCHA first-party fallbacks remain accessible.",
+      "WFP news release index returned HTTP 403, but the November 17 WFP original video text was accessible.",
+      "No OCHA 16 Nov PDF content analyzed, so no independent crossing movement assessment was made.",
+      "Search-index publication times may be imprecise; WFP item is a follow-up warning rather than a proven new physical event.",
+      "Production ingested state was not inspected; discovered findings are not proof of production misses."
+    ],
+    "overall": "Two traceable fresh-source candidates: one newly reported central-Gaza home-demolition military incursion and one new-dated WFP/IOM official funding/access-risk warning. WHO regional access remains degraded without newly material escalation."
+  }
+}

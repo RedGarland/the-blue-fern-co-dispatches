@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T214451-0800-20261117T054819790Z",
+  "scheduled_for": "2026-11-16T21:44:51-08:00",
+  "started_at": "2026-11-16T21:46:37-08:00",
+  "completed_at": "2026-11-17T05:48:19.790Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T20:47:35.036-08:00",
+    "end": "2026-11-17T05:48:19.790Z",
+    "previous_run_completed_at": "2026-11-17T04:47:35.036Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T204617-0800-20261117T044711411Z.json",
+    "basis": "Supplementary recall relative to latest confirmed ops/watch-ledger heartbeat. Local observation date and hourly bounds use America/Los_Angeles (PST); overnight Gaza source dates can be 17 November. This is not production collection or publication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative. No production, approval, publishing, schedule, or security changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "OCHA official site checked first by targeted search, then directly. Latest entry was Gaza Strip access and movement | November 2026 dated 16 Nov; linked access-and-movement page contains a PDF map and no new change was inferred from the index."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct check 502 Bad Gateway, same known recurring source failure; fallback WHO global accessible."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Gaza/oPt emergency overview, health-status summaries and latest news list accessible; no new interval-specific incident/update found."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza November 16 2026 humanitarian situation report latest",
+      "site:who.int Gaza November 16 2026 health emergency medical evacuations"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"17/November/2026\" Gaza killed wounded 17 November",
+      "site:wafa.ps/news/2026/11/17 غزة صباح الثلاثاء 17 نوفمبر شهيد إصابات",
+      "site:aljazeera.net/news/2026/11/17 غزة فجر الثلاثاء قصف نزوح مساعدات",
+      "site:apnews.com/article/ Gaza November 17 2026 airstrikes civilians aid",
+      "Reuters Gaza November 17 2026 overnight ceasefire civilian casualties aid hostages crossing",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"17 Nov 2026\" Gaza situation water health aid",
+      "site:pchrgaza.org \"17 November 2026\" Gaza civilians",
+      "site:palestinercs.org \"17 November 2026\" Gaza ambulance emergency",
+      "site:msf.org \"17 November 2026\" Gaza hospital ambulances",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza \"17 November 2026\" aid water",
+      "Gaza Rafah Kerem Shalom crossing 17 November 2026 trucks closure medical evacuations",
+      "غزة صباح الثلاثاء 17 نوفمبر 2026 قصف جرحى شهداء سيارات إسعاف"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "As checked, most recent item dated 17 Nov 00:21 Palestinian local concerns Jericho/West Bank. Latest Gaza direct-casualty report 16 Nov 18:01 local, already recalled."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "17 Nov lead items focus on West Bank; 16 Nov 23:53 local mixed West Bank/Gaza round-up restates previously recorded Jabalia, Khan Younis school and Hamad City, Beit Lahia injuries and Gaza aggregates, not distinct events."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest visible releases dated 16 Nov (shelter restrictions and civilian-casualty update); 9 Nov medicine shortage report predates window and was not recast as new."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/",
+        "status": "ACCESSIBLE",
+        "detail": "17 Nov news index checked; visible new Gaza civilian-impact report not found in interval."
+      },
+      {
+        "publisher": "OCHA OPT access-and-movement landing",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "16 Nov map landing page checked; underlying PDF/map data not independently extracted; no unverified crossing-change conclusion."
+      },
+      {
+        "publisher": "Financial Times",
+        "url": "https://www.ft.com/content/463238ee-2d5f-4ae8-b48b-8a39444c08bd",
+        "status": "PAYWALL",
+        "detail": "17 Nov feature summarized historical flooding, aid restrictions, and reported WHO respiratory-infection increase. Full text, WHO primary dataset timing, and interval-specific change could not be verified; excluded as a new finding."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 16 Nov 23:53 Palestine-local round-up repackages prior Gaza casualty findings (Jabalia, Khan Younis, Beit Lahia) and overlapping totals; not novel.",
+      "Reuters/AP 10-12 Nov Nasser Hospital strike and injury reports: previously recorded and outside interval.",
+      "16 Nov PCHR coverage and 9 Nov drug shortage data: before interval; no isolated newly verified event.",
+      "17 Nov Reuters/WAFA/Al Jazeera coverage of settler violence near Jericho and Bethlehem: outside Gaza geographic scope.",
+      "FT 17 Nov Gaza winter-flooding context and secondhand WHO 33,000 acute respiratory-infection comparison: underlying primary WHO release, period and novelty not verified; do not treat historical crisis as interval-specific new development.",
+      "Old Gaza aid crossing, humanitarian, casualty and military reports from 2024-2026 surfaced despite exact Nov 2026 search constraints."
+    ],
+    "limitations": [
+      "WHO EMRO endpoint remains HTTP 502; official WHO global and OCHA coverage accessible, so this is DEGRADED not FAILED. Persistence is not a newly material degradation.",
+      "OCHA 16 Nov access-and-movement PDF content not reviewed; therefore no specific crossing changes inferred.",
+      "Financial Times page paywalled; a search result synopsis alone does not justify new WHO medical-capacity or disease-trend finding.",
+      "No new verified finding does not imply events did not occur, or indicate whether primary production ingested any reported items."
+    ],
+    "overall": "No distinct new and traceable Gaza civilian-impact/humanitarian development verified since preceding 20:47:35 PST watch heartbeat. WHO regional access failure persists unchanged."
+  }
+}

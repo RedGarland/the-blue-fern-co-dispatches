@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T054451-0800-20261117T134511000Z",
+  "scheduled_for": "2026-11-17T05:44:51-08:00",
+  "started_at": "2026-11-17T05:42:43-08:00",
+  "completed_at": "2026-11-17T05:45:11-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T04:50:39-08:00",
+    "end": "2026-11-17T05:45:11-08:00",
+    "previous_run_completed_at": "2026-11-17T04:50:39-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T044451-0800-20261117T125039369Z.json",
+    "basis": "Supplementary recall since last verified watch completion; previously undercaptured distinct update accepted only as late-recalled follow-up, not as a newly occurring incident or provably newly updated article."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-al-jafarawi-deir-al-balah-child-fatality-updated-toll",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/17/%D9%85%D8%AD%D8%AF%D8%AB-%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B4%D8%B1%D9%82-%D9%85%D8%AF%D9%8A%D9%86%D8%A9",
+      "title": "(محدث) شهيدان وإصابات برصاص الاحتلال شرق مدينة دير البلح وسط قطاع غزة",
+      "title_english": "(Updated) Two killed and others injured by Israeli fire east of Deir al-Balah in central Gaza",
+      "publisher": "Palestinian News and Information Agency (WAFA), Arabic edition",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T11:50:00+02:00",
+      "event_date": "2026-11-17",
+      "location": "Al-Ja'farawi area, east of Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "Palestinian civilians; WAFA's updated account reports one young man and one child killed, with others injured by live fire. Names and precise injury count unverified.",
+      "affected_population_or_system": "Palestinian civilians; WAFA's updated account reports one young man and one child killed, with others injured by live fire. Names and precise injury count unverified.",
+      "supporting_passage": "غزة 17-11-2026 وفا- استشهد شاب وطفل، ظهر اليوم الثلاثاء، وأصيب آخرون، برصاص قوات الاحتلال الإسرائيلي، شرق مدينة دير البلح وسط قطاع غزة.",
+      "exact_supporting_passage": "غزة 17-11-2026 وفا- استشهد شاب وطفل، ظهر اليوم الثلاثاء، وأصيب آخرون، برصاص قوات الاحتلال الإسرائيلي، شرق مدينة دير البلح وسط قطاع غزة.",
+      "source_type": "Palestinian public news agency citing local sources; updated Arabic report, not independent official medical confirmation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "discovered_at": "2026-11-17T05:44:11-08:00",
+        "observation_window": "2026-11-17T04:50:39-08:00 to 2026-11-17T05:45:11-08:00",
+        "previous_finding_id": "gaza-20261117-wafa-al-jafarawi-deir-al-balah-casualties",
+        "previous_report_url": "https://english.wafa.ps/Pages/Details/177055",
+        "new_information": "Previous authenticated watch documented one young man killed, several wounded, and one wounded child per Safa. A WAFA Arabic page explicitly labeled updated now reports two killed (one young man, one child) plus others injured at the same al-Ja'farawi location.",
+        "scope": "Same incident, updated fatality toll; do not double-count as a second separate attack.",
+        "timing": "Page's displayed 11:50 Palestine local publication time predates this observation interval. No independently verified update timestamp was available. This is a late-recalled change in previously recorded casualty detail, not evidence another person died during 04:50–05:45 PST.",
+        "corroboration": "The earlier Safa account described one death and a wounded child; separate confirmation of the second death was not found in 12 bounded searches. Child identity and clinical outcome unverified.",
+        "original_english_report": "https://english.wafa.ps/Pages/Details/177055",
+        "limitations": "Updated label has no revision history; a later modification or original existence of the second fatality cannot be timed. Do not assume the previously reported injured child is the reported deceased child."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest visible item 16 November access/movement graphic; 13 November humanitarian report. No verified new OCHA Gaza update on 17 November."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current conflict health emergency overview accessible; no directly dated new Gaza clinical-capacity or evacuation item seen in overview/news index."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Recurring regional source error; WHO global accessible as fallback."
+      },
+      {
+        "publisher": "WHO outdated long-form situation URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "status": "TIMEOUT",
+        "detail": "Attempted WHO variant timed out; correct WHO global situation URL accessed afterward."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 17 2026 15:00 humanitarian access latest update",
+      "site:who.int OR site:emro.who.int Gaza 17 November 2026 hospital medical evacuation health",
+      "site:english.wafa.ps/Pages/Details/ \"17/November/2026\" Gaza 03:00 PM wounded aid humanitarian",
+      "site:wafa.ps غزة الثلاثاء 17 تشرين الثاني 2026 الساعة الثالثة مساء قصف شهيد مصابين",
+      "site:un.org OR site:unnews.org \"17 November 2026\" Gaza aid access shelter civilians",
+      "site:unrwa.org OR site:unicef.org \"17 November 2026\" Gaza water tents displacement",
+      "Reuters Gaza November 17 2026 latest 15:00 ceasefire humanitarian aid strikes patients",
+      "Associated Press Gaza November 17 2026 new developments military casualties Rafah medical evacuation",
+      "site:palestinercs.org OR site:msf.org OR site:icrc.org \"17 November 2026\" Gaza ambulance hospital evacuation",
+      "site:wfp.org OR site:iom.int \"17 November 2026\" Gaza food shelter fuel crossing delivery",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 17 2026 03:00 PM 04:00 PM",
+      "site:aljazeera.com/news/2026/11/17 gaza killed injured ceasefire aid latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed Gaza medical evacuation report 14:19 Palestine local time; already recorded in previous heartbeat. 15:15 item pertains to West Bank."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Identified updated 11:50 Palestine local report with two deaths including a child for an incident whose previous watch recorded one death."
+      },
+      {
+        "publisher": "WAFA Arabic updated casualty report",
+        "url": "https://www.wafa.ps/news/2026/11/17/%D9%85%D8%AD%D8%AF%D8%AB-%D8%B4%D9%87%D9%8A%D8%AF%D8%A7%D9%86-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B4%D8%B1%D9%82-%D9%85%D8%AF%D9%8A%D9%86%D8%A9",
+        "status": "ACCESSIBLE",
+        "detail": "Now reports one man and one child killed in al-Ja'farawi, rather than one man killed only. Displayed original publication time 11:50 local; revision time not exposed."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports",
+        "status": "ACCESSIBLE",
+        "detail": "News index checked; no distinct same-hour verified loss or restoration of Gaza humanitarian service."
+      },
+      {
+        "publisher": "WFP news index",
+        "url": "https://www.wfp.org/news",
+        "status": "HTTP_403",
+        "detail": "Direct index restricted; Reuters/WFP prior and other official coverage available."
+      },
+      {
+        "publisher": "UN News",
+        "url": "https://news.un.org/en/",
+        "status": "ROBOTS_DENIED",
+        "detail": "Direct index unavailable; OCHA/WHO and related official sources available."
+      }
+    ],
+    "excluded_candidates": [
+      "17 November 14:19 WAFA medical evacuation (22 persons authorized including companions): already captured in immediate preceding heartbeat.",
+      "17 November UNRWA senior official's reported suspension of major workforce-related decisions: news conveyed via a PLO statement, no verified Gaza-specific implementation date or immediate operational capacity change; not counted.",
+      "17 November Palestinian Ministry of Social Development online needs form: administrative registration, no verified new aid delivery or beneficiary relief.",
+      "17 November 14:40 Palestinian cabinet aid access warning: repeats existing impediments, no newly verified crossing closure or delivery count.",
+      "17 November WFP/IOM winter aid/shelter warning: prior heartbeat already captured.",
+      "17 November Gaza early incursion, al-Bureij injury and 15 November near-Rafah fuel convoy incident: prior heartbeats already captured.",
+      "Historical Reuters November 11-12 Nasser Hospital strike, older UN coverage, retrospective or unverifiable items: excluded.",
+      "Projected $300m World Bank grant: anticipated financing, not confirmed actual Gaza service delivery or access change."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional index returned HTTP 502; recurring known source restriction. WHO global and OCHA official sources accessible, so watch completed DEGRADED rather than FAILED.",
+      "WFP news index returned HTTP 403 and UN News index robots denial; other relevant sources accessible.",
+      "The updated WAFA Arabic fatality toll was newly recovered against authenticated prior ledger but its actual edit timestamp is unknown and may precede the search window; mark follow-up rather than new incident.",
+      "The supplemental coverage is bounded to 12 targeted searches plus direct first-party index/page checks; search-index lag and missing corroboration limit completeness.",
+      "No schedule changes, approvals, publication, production writes, branch changes outside ops/watch-ledger, or disabling actions."
+    ],
+    "overall": "One previously uncaptured material follow-up: updated civilian death toll for already reported al-Ja'farawi gunfire, now two including a child. Known source restrictions persist; useful official coverage obtained. Exactly one heartbeat requested."
+  }
+}

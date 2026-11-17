@@ -1,0 +1,147 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T064451-0800-20261117T144614Z",
+  "scheduled_for": "2026-11-17T06:44:51-08:00",
+  "started_at": "2026-11-17T06:44:17-08:00",
+  "completed_at": "2026-11-17T06:46:14-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T05:45:11-08:00",
+    "end": "2026-11-17T06:46:14-08:00",
+    "previous_run_completed_at": "2026-11-17T05:45:11-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T054451-0800-20261117T134511000Z.json",
+    "basis": "Bounded supplementary recall. Reuters news article was published 05:49 PST, after the prior watch completed. Incident occurrence time on November 17 is not specified; newly reported is not necessarily newly occurred."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+      "title": "Israeli fire kills four, including a 6-year-old boy, in Gaza, medics say",
+      "publisher": "Reuters",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T13:49:00Z",
+      "event_date": "2026-11-17",
+      "source_type": "Established international wire report citing local health officials and medics; no separate official medical record identified for these two strikes",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261117-khan-younis-airstrike-one-fatality-reuters",
+      "location": "Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian reported killed in an Israeli airstrike; identity, exact time and further casualty details not specified. Civilian/combatant status unverified.",
+      "affected_population_or_system": "One Palestinian reported killed in an Israeli airstrike; identity, exact time and further casualty details not specified. Civilian/combatant status unverified.",
+      "exact_supporting_passage": "two separate airstrikes killed two others",
+      "supporting_passage": "two separate airstrikes killed two others",
+      "discovery_context": {
+        "discovered_via": "Targeted recent casualty search after official OCHA and WHO checks; Reuters original report retrieved directly",
+        "discovered_at": "2026-11-17T06:45:30-08:00",
+        "source_published_local": "2026-11-17T05:49:00-08:00",
+        "same_report_other_distinct_incident_id": "gaza-20261117-bir-al-naja-airstrike-one-fatality-reuters",
+        "attributable_detail": "Reuters attributes the combined two airstrike deaths, one in Khan Younis and one in Bir Al-Naja, to medics; location-specific individual count follows the stated two separate strikes, not a fully itemized medical ledger.",
+        "corroboration": "Not independently confirmed in this bounded run.",
+        "exclusions": "Earlier recorded two Deir al-Balah firearm deaths in this same Reuters article excluded as duplicates of prior WAFA update."
+      }
+    },
+    {
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+      "title": "Israeli fire kills four, including a 6-year-old boy, in Gaza, medics say",
+      "publisher": "Reuters",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17T13:49:00Z",
+      "event_date": "2026-11-17",
+      "source_type": "Established international wire report citing local health officials and medics; no separate official medical record identified for these two strikes",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261117-bir-al-naja-airstrike-one-fatality-reuters",
+      "location": "Bir Al-Naja, northern Gaza Strip",
+      "affected_population_system": "One Palestinian reported killed in a separate Israeli airstrike; identity, exact time and further casualty details not specified. Civilian/combatant status unverified.",
+      "affected_population_or_system": "One Palestinian reported killed in a separate Israeli airstrike; identity, exact time and further casualty details not specified. Civilian/combatant status unverified.",
+      "exact_supporting_passage": "in the Khan Younis and Bir Al-Naja areas",
+      "supporting_passage": "in the Khan Younis and Bir Al-Naja areas",
+      "discovery_context": {
+        "discovered_via": "Targeted recent casualty search after official OCHA and WHO checks; Reuters original report retrieved directly",
+        "discovered_at": "2026-11-17T06:45:30-08:00",
+        "source_published_local": "2026-11-17T05:49:00-08:00",
+        "same_report_other_distinct_incident_id": "gaza-20261117-khan-younis-airstrike-one-fatality-reuters",
+        "attributable_detail": "Reuters says two separate airstrikes killed two others in Khan Younis and Bir Al-Naja. Second location is in the north; individual details and casualty count not separately itemized.",
+        "corroboration": "Not independently confirmed in this bounded run.",
+        "exclusions": "Previously logged al-Bureij drone injury, Deir al-Balah deaths and earlier Deir al-Balah incursion are distinct and not double-counted."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest visible Gaza entry November 16 access-and-movement; no November 17 new OCHA report."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official global situation overview and links reviewed; no new November 17 health update surfaced."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Persistent regional-access error; WHO global remained reachable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:wafa.ps Gaza November 17 2026 killed wounded Israeli gunfire Deir al Balah latest",
+      "site:un.org Gaza November 17 2026 humanitarian aid casualties Rafah crossings",
+      "site:palestinercs.org Gaza November 17 2026 ambulance hospital",
+      "site:unicef.org Gaza November 17 2026 water shelter displacement",
+      "site:wfp.org Gaza 17 November 2026 aid access food",
+      "site:reuters.com Gaza November 17 2026 casualties ceasefire border November",
+      "site:reliefweb.int Gaza November 17 2026 situation report medical evacuation",
+      "site:news.un.org Gaza 17 November 2026 OCHA UN humanitarian",
+      "Gaza November 17 2026 afternoon latest killed wounded hospital shelling aid ceasefire 17:00",
+      "Gaza 17 November 2026 medics casualties Al Bureij Jabalia Rafah Khan Younis new",
+      "Gaza 17 November 2026 humanitarian operations blocked shipments WHO OCHA UNRWA November 17 update",
+      "site:wafa.ps/news/2026/11/17 غزة 17-11-2026 العصر شهيد إصابة غارة مخيم"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 17 top Gaza articles include the already recorded reduced medical evacuation numbers, convoy warning and Deir al-Balah fire; no additional distinct same-hour casualty details."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Updated Deir al-Balah two-fatality story already present in preceding watch; no corroboration located for the separate Khan Younis/Bir Al-Naja airstrike deaths."
+      },
+      {
+        "publisher": "Reuters original",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "ACCESSIBLE",
+        "detail": "13:49 UTC Nov 17 new report with four deaths total, two of which are separate airstrike deaths at Khan Younis and Bir Al-Naja, unlike already captured Deir al-Balah gunfire deaths."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters Deir al-Balah two gunfire fatalities, including a six-year-old boy: same two already recorded in previous watch's updated WAFA report; not counted twice.",
+      "November 17 WAFA Deir al-Balah incursion/home demolitions, al-Bureij injury, medical evacuation figure and WFP/IOM warning: captured in prior watch heartbeats.",
+      "November 17 UK sanctions against Tzav 9: no measured immediate new crossing access or delivery effect established.",
+      "Older November 11–13 Nasser Hospital strike and flooding documentation: not newly occurring and previously covered.",
+      "Historical November 2024 OCHA report appearing in indexed results: excluded despite apparent date coincidence."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean direct index returned HTTP 502; prior restriction, WHO Global accessible and useful Reuters coverage, so DEGRADED not FAILED.",
+      "UN News domain access robots restriction occurred during targeted search; OCHA and WHO global primary official sources were accessible.",
+      "Two newly reported airstrike deaths are based on one Reuters article's attribution to local medics, not independently corroborated. Exact incident times and victim civilian statuses are not verified.",
+      "Reuters report publication 05:49 PST falls after previous heartbeat at 05:45 PST, but incident times were not specified.",
+      "Bounded to precisely 12 additional targeted searches after first-party OCHA and WHO checks; no publishing, approval, schedule, or production changes."
+    ],
+    "overall": "Two newly reported fatal airstrikes (Khan Younis and Bir Al-Naja) found in Reuters report first published after prior watch. Existing WHO access restriction persists. One heartbeat only."
+  }
+}

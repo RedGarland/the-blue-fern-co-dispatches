@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T084046-0800-20261117T164234379Z",
+  "scheduled_for": "2026-11-17T08:40:46-08:00",
+  "started_at": "2026-11-17T08:40:46-08:00",
+  "completed_at": "2026-11-17T08:42:34-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T07:47:35-08:00",
+    "end": "2026-11-17T08:42:34-08:00",
+    "previous_run_completed_at": "2026-11-17T07:47:35-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T074451-0800-20261117T154735097Z.json",
+    "basis": "Supplementary recall of reports newly published or surfaced after the prior heartbeat, with duplicate checks against previously recorded reports. The 08:40:46 local timestamp is the supplied runtime invocation time; an authoritative individual run slot timestamp was not supplied."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Primary daily Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed November 16 access and movement page; November 13 humanitarian situation report; no newly posted November 17 report identified."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct emergency portal reviewed; no newly dated November 17 Gaza health situation update in displayed news."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Ongoing regional-site 502 restriction verified again; alternative WHO Global accessible. No novel material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 17 2026 latest 8 AM PST killed wounded hospital Reuters AP November 17",
+      "Gaza 17 November 2026 new airstrikes casualties after morning Reuters AFP",
+      "site:un.org Gaza 17 November 2026 humanitarian spokesperson fuel convoy water medical shelter",
+      "site:wfp.org Gaza 17 November 2026 aid access food supplies update",
+      "site:unicef.org Gaza 17 November 2026 children shelter water access",
+      "site:ochaopt.org Gaza 17 November 2026 access movement crossings latest updates",
+      "site:palestine.un.org Gaza 17 November 2026 aid movement hospital evacuation casualties",
+      "site:english.wafa.ps Gaza November 17 2026 morning killed injured Rafah Khan Yunis Gaza City",
+      "November 17 2026 Gaza 17 November Reuters new 16:00 GMT update strikes casualties ceasefire",
+      "site:english.wafa.ps/Pages/Details Gaza 17/11/2026 live morning attacks wounded ambulance hospital",
+      "site:reliefweb.int/report/occupied-palestinian-territory 17 Nov 2026 Gaza crossings transport water health",
+      "Gaza Tuesday November 17 2026 latest ceasefire border aid Kerem Shalom Rafah hostage hostages negotiations AP"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "ACCESSIBLE_HTML_PDF_EMBED_NOT_ANALYZED",
+        "detail": "November 16 access and movement page confirmed; no November 17 revision shown."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "ACCESSIBLE",
+        "detail": "13:49 UTC November 17 four-death report consists of Deir al-Balah, Khan Younis and Bir al-Naja deaths already captured by prior watches; duplicate."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-agency-warns-gaza-hypothermia-deaths-without-more-supplies-2026-11-17/",
+        "status": "ACCESSIBLE",
+        "detail": "15:10 UTC November 17 IOM warning, 100,000 tents awaiting entry and November 12 suspected hypothermia death explicitly considered/excluded by prior 07:47 PST heartbeat. No verified new access restriction or additional recent death."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "November 17 release includes winter shelter shortages, 40,000 damaged shelters, restrictions and funding needs; prior WFP/IOM report already logged, no newly verified delta."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/stories/hunger-crisis-looms-winter-hits-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Narrative details and already announced winter humanitarian constraints; no verified separate new incident beyond prior recorded joint statement."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters 13:49 UTC November 17 summary of four deaths already captured by earlier hourly watches.",
+      "Reuters 15:10 UTC November 17 hypothermia warning, 100,000 tents awaiting entry and November 12 infant death were explicitly reviewed/excluded in the previous heartbeat as known or older, with no new delta.",
+      "WFP/IOM November 17 statement and WFP same-day story repeat previously recorded food/shelter constraints; no distinct new access policy or incident verified.",
+      "Older November Gaza events, West Bank-only incidents, archived sources, unsourced live blogs and duplicate syndication."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persists; WHO Global and OCHA remained accessible, so coverage is DEGRADED rather than FAILED.",
+      "OCHA November 16 access/movement page embeds a PDF; PDF was not separately analyzed in this bounded watch. No new November 17 OCHA release visible.",
+      "Search indexing and publication-time ambiguity limit proof of exhaustive negative coverage.",
+      "No GitHub write outside this one immutable watch-heartbeat file; no production, publication, approval or scheduling changes."
+    ],
+    "overall": "No new qualifying, traceable development distinct from the previous watch was verified; recurring WHO EMRO restriction persists without new material degradation."
+  }
+}

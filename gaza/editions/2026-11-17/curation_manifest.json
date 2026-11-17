@@ -1,0 +1,289 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-17-002",
+    "title": "Israeli army kills Palestinian, blows up homes in Gaza despite ceasefire",
+    "summary": "Anadolu attributes the death of a 21-year-old east of Deir al-Balah to Al-Aqsa Hospital.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 69,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-17-anadolu-deir-al-balah"
+    ],
+    "source_ids": [
+      "gaza-2026-11-17-anadolu-deir-al-balah"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-army-kills-palestinian-blows-up-homes-in-gaza-despite-ceasefire/4127526"
+    ],
+    "publisher_names": [
+      "Anadolu"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-17-anadolu-deir-al-balah",
+        "title": "Israeli army kills Palestinian, blows up homes in Gaza despite ceasefire",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-army-kills-palestinian-blows-up-homes-in-gaza-despite-ceasefire/4127526",
+        "publisher": "Anadolu",
+        "summary_or_snippet": "Anadolu attributes the death of a 21-year-old east of Deir al-Balah to Al-Aqsa Hospital.",
+        "event_date": "2026-11-17",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Anadolu",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-17T15:24:54.360807+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 69,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza Strip",
+    "event_date": "2026-11-17",
+    "attribution": "Anadolu",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-11-17-001",
+    "prior_edition_date": "2026-11-17",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "explicit_reviewed_event_group"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-11-17-001",
+    "title": "Reports describe deaths from Israeli fire in eastern Deir al-Balah",
+    "summary": "Reuters reported that local medics said Israeli fire killed two people in separate incidents in eastern Deir al-Balah on November 17, including a six-year-old boy. Anadolu separately cited Al-Aqsa Martyrs Hospital reporting a 21-year-old man killed east of the city. Al Jazeera\u2019s Arabic report also described the deaths of a man aged 21 and a boy aged 6 in al-Jafarawi. These overlapping accounts are not added together; the outlets\u2019 wider Gaza totals cover different reported incidents. Reuters said Israeli military comment was not immediately available.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 69,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence",
+      "ceasefire_diplomacy",
+      "health_infrastructure",
+      "merged_duplicate_story=gaza-story-2026-11-17-002",
+      "merged_duplicate_story=gaza-story-2026-11-17-003"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-17-reuters-deir-al-balah",
+      "gaza-2026-11-17-anadolu-deir-al-balah",
+      "gaza-2026-11-17-aljazeera-ar-deir-al-balah"
+    ],
+    "source_ids": [
+      "gaza-2026-11-17-reuters-deir-al-balah",
+      "gaza-2026-11-17-anadolu-deir-al-balah",
+      "gaza-2026-11-17-aljazeera-ar-deir-al-balah"
+    ],
+    "source_urls": [
+      "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+      "https://www.aa.com.tr/en/middle-east/israeli-army-kills-palestinian-blows-up-homes-in-gaza-despite-ceasefire/4127526",
+      "https://www.aljazeera.net/news/2026/11/17/\u0628\u064a\u0646\u0647\u0645-\u0637\u0641\u0644-5-\u0634\u0647\u062f\u0627\u0621-\u0641\u064a-\u063a\u0632\u0629-\u0628\u0646\u064a\u0631\u0627\u0646"
+    ],
+    "publisher_names": [
+      "Reuters",
+      "Anadolu",
+      "Al Jazeera Arabic"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-17-reuters-deir-al-balah",
+        "title": "Israeli fire kills four, including a 6-year-old boy, in Gaza, medics say",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "publisher": "Reuters",
+        "summary_or_snippet": "Reuters reports four deaths overall, including a six-year-old boy; two deaths were in separate incidents in eastern Deir al-Balah and two others in separate airstrikes elsewhere. Israeli military comment was not immediately available in the report.",
+        "event_date": "2026-11-17",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Reuters",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      },
+      {
+        "source_record_id": "gaza-2026-11-17-anadolu-deir-al-balah",
+        "title": "Israeli army kills Palestinian, blows up homes in Gaza despite ceasefire",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-army-kills-palestinian-blows-up-homes-in-gaza-despite-ceasefire/4127526",
+        "publisher": "Anadolu",
+        "summary_or_snippet": "Anadolu attributes the death of a 21-year-old east of Deir al-Balah to Al-Aqsa Hospital.",
+        "event_date": "2026-11-17",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Anadolu",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      },
+      {
+        "source_record_id": "gaza-2026-11-17-aljazeera-ar-deir-al-balah",
+        "title": "\u0628\u064a\u0646\u0647\u0645 \u0637\u0641\u0644.. 5 \u0634\u0647\u062f\u0627\u0621 \u0641\u064a \u063a\u0632\u0629 \u0628\u0646\u064a\u0631\u0627\u0646 \u0627\u0644\u0627\u062d\u062a\u0644\u0627\u0644",
+        "url": "https://www.aljazeera.net/news/2026/11/17/\u0628\u064a\u0646\u0647\u0645-\u0637\u0641\u0644-5-\u0634\u0647\u062f\u0627\u0621-\u0641\u064a-\u063a\u0632\u0629-\u0628\u0646\u064a\u0631\u0627\u0646",
+        "publisher": "Al Jazeera Arabic",
+        "summary_or_snippet": "the article names Ayoub Talat Ayoub, 21, and Elias Ahmad al-Nimnim, 6, in al-Jafarawi, Deir al-Balah, and gives a broader five-death total; attribution is Al Jazeera and Palestinian press.",
+        "event_date": "2026-11-17",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera Arabic",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-17T15:24:54.360807+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza Strip",
+    "event_date": "2026-11-17",
+    "attribution": "Reuters",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-21-004",
+    "prior_edition_date": "2026-07-21",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": [
+      "same_topic",
+      "material_new_development"
+    ],
+    "dedupe_relation_scope": "Broad-topic heuristic only; not a finding that this is the same incident, an increased casualty toll, or independent corroboration. Current story ID, claim and source URL remain distinct."
+  },
+  {
+    "story_id": "gaza-story-2026-11-17-003",
+    "title": "\u0628\u064a\u0646\u0647\u0645 \u0637\u0641\u0644.. 5 \u0634\u0647\u062f\u0627\u0621 \u0641\u064a \u063a\u0632\u0629 \u0628\u0646\u064a\u0631\u0627\u0646 \u0627\u0644\u0627\u062d\u062a\u0644\u0627\u0644",
+    "summary": "the article names Ayoub Talat Ayoub, 21, and Elias Ahmad al-Nimnim, 6, in al-Jafarawi, Deir al-Balah, and gives a broader five-death total; attribution is Al Jazeera and Palestinian press.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 47,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-17-aljazeera-ar-deir-al-balah"
+    ],
+    "source_ids": [
+      "gaza-2026-11-17-aljazeera-ar-deir-al-balah"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.net/news/2026/11/17/\u0628\u064a\u0646\u0647\u0645-\u0637\u0641\u0644-5-\u0634\u0647\u062f\u0627\u0621-\u0641\u064a-\u063a\u0632\u0629-\u0628\u0646\u064a\u0631\u0627\u0646"
+    ],
+    "publisher_names": [
+      "Al Jazeera Arabic"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-17-aljazeera-ar-deir-al-balah",
+        "title": "\u0628\u064a\u0646\u0647\u0645 \u0637\u0641\u0644.. 5 \u0634\u0647\u062f\u0627\u0621 \u0641\u064a \u063a\u0632\u0629 \u0628\u0646\u064a\u0631\u0627\u0646 \u0627\u0644\u0627\u062d\u062a\u0644\u0627\u0644",
+        "url": "https://www.aljazeera.net/news/2026/11/17/\u0628\u064a\u0646\u0647\u0645-\u0637\u0641\u0644-5-\u0634\u0647\u062f\u0627\u0621-\u0641\u064a-\u063a\u0632\u0629-\u0628\u0646\u064a\u0631\u0627\u0646",
+        "publisher": "Al Jazeera Arabic",
+        "summary_or_snippet": "the article names Ayoub Talat Ayoub, 21, and Elias Ahmad al-Nimnim, 6, in al-Jafarawi, Deir al-Balah, and gives a broader five-death total; attribution is Al Jazeera and Palestinian press.",
+        "event_date": "2026-11-17",
+        "location": "Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera Arabic",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-17T15:24:54.360807+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 47,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza Strip",
+    "event_date": "2026-11-17",
+    "attribution": "Al Jazeera Arabic",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-11-17-001",
+    "prior_edition_date": "2026-11-17",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "explicit_reviewed_event_group"
+    ]
+  }
+]

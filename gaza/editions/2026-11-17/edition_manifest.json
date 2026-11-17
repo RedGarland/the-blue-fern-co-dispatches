@@ -1,0 +1,84 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-17",
+  "generated_at": "2026-11-17T15:24:54.360807+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-17/",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 3,
+  "story_count": 1,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera Arabic",
+    "Anadolu",
+    "Reuters"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 3 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from Reuters."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "sources_manifest.json",
+  "curation_manifest_path": "curation_manifest.json",
+  "free_public_artifacts": [
+    "index.html",
+    "edition_manifest.json",
+    "sources_manifest.json",
+    "curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 3 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "All rendered public stories in this edition rely on sources from Reuters.",
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-11-17T06:00:00-08:00",
+  "scheduled_run_time_basis": "default_06:00_America/Los_Angeles_reference_not_execution_evidence",
+  "retrieval_timing_complete": false,
+  "retrieval_time_precision_counts": {
+    "date": 3
+  },
+  "actual_run_local_time": "2026-11-17T07:24:54-08:00",
+  "source_window_start_utc": "2026-11-17T13:49:00Z",
+  "source_window_end_utc": "2026-11-17T15:01:00Z",
+  "first_source_retrieved_at": null,
+  "last_source_retrieved_at": null,
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-17",
+      "retrieved_at_precision": "date",
+      "retrieved_calendar_date": "2026-11-17",
+      "retrieved_local_date": null,
+      "retrieval_boundary_date": "2026-11-17",
+      "retrieved_at_utc": null,
+      "retrieved_at_local": null,
+      "batch_classification": "date_only_batch",
+      "source_record_ids": [
+        "gaza-2026-11-17-reuters-deir-al-balah",
+        "gaza-2026-11-17-anadolu-deir-al-balah",
+        "gaza-2026-11-17-aljazeera-ar-deir-al-balah"
+      ],
+      "source_count": 3
+    }
+  ],
+  "public_archive_title": "Reports describe deaths from Israeli fire in eastern Deir al-Balah",
+  "public_archive_summary": "Reuters reported that local medics said Israeli fire killed two people in separate incidents in eastern Deir al-Balah on November 17, including a six-year-old boy. Anadolu separately cited Al-Aqsa Martyrs Hospital reporting a 21-year-old man killed east of the city. Al Jazeera’s Arabic report also described the deaths of a man aged 21 and a boy aged 6 in al-Jafarawi. These overlapping accounts are not added together; the outlets’ wider Gaza totals cover different reported incidents. Reuters said Israeli military comment was not immediately available."
+}

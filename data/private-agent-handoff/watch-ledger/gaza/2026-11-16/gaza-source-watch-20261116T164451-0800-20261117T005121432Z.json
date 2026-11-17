@@ -1,0 +1,100 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T164451-0800-20261117T005121432Z",
+  "scheduled_for": "2026-11-16T16:44:51-08:00",
+  "started_at": "2026-11-16T16:49:51-08:00",
+  "completed_at": "2026-11-17T00:51:21.432Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T15:44:53.924-08:00",
+    "end": "2026-11-17T00:51:21.432Z",
+    "previous_run_completed_at": "2026-11-16T23:44:53.924Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T154239-0800-20261116T234453924Z.json",
+    "basis": "Prior completed heartbeat fetched from ops/watch-ledger. Recall of distinct newly reported Gaza developments since its cutoff; older uncaptured events checked for duplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; Gaza production collector/publisher remains authoritative. No production, publication, approval, or scheduling changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Reviewed updates index and 13 Nov situation report; newest Gaza item remains 16 Nov access-and-movement map, already listed by preceding watch. No newly issued narrative report."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously documented HTTP 502 reproduced; no newly developed outage."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official fallback overview/news and publications examined; no new in-window Gaza-specific WHO health update."
+      },
+      {
+        "publisher": "OCHA OPT movement map",
+        "url": "https://www.ochaopt.org/content/gaza-strip-access-and-movement-november-2026",
+        "status": "LANDING_ACCESSIBLE_PDF_TOO_LARGE",
+        "detail": "16 Nov map landing page available. Underlying 16,050,841-byte PDF denied with retrieval 400 size limit; same preexisting map-only gap, so no crossing changes inferred."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation report 16 November 2026 latest",
+      "site:who.int Gaza 16 November 2026 healthcare hospitals medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"17/November/2026\" Gaza injured killed airstrike November 17",
+      "site:wafa.ps/news/2026/11/17 غزة قصف شهداء إصابات فجر الثلاثاء",
+      "site:aljazeera.net/news/2026/11/17 غزة شهداء جرحى غارات قصف وقف إطلاق النار",
+      "Gaza November 17 2026 01:00 03:00 local time civilians wounded airstrike Beit Lahia Gaza City Khan Younis",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 2026 ceasefire casualties aid talks",
+      "site:apnews.com/article Gaza November 16 2026 aid crossings hospitals November 17",
+      "site:un.org OR site:unicef.org OR site:unrwa.org Gaza November 16 2026 Nov 17 water shelter crossings food new development",
+      "site:wfp.org OR site:logcluster.org Gaza 16 November 2026 aid truck distribution fuel supply update",
+      "site:msf.org OR site:palestinercs.org OR site:who.int Gaza 16 November 2026 hospital ambulance fuel medical evacuation capacity",
+      "site:quds.com Gaza November 17 2026 aid hospital bombings injuries Tuesday",
+      "غزة 17 نوفمبر 2026 فجر الثلاثاء إصابات شهداء طائرات مسيرة قصف احتلال",
+      "Gaza Israel ceasefire November 16 2026 late latest crossings hostages prisoner releases civilian 17 November"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest displayed 17 Nov 00:21 Palestine local news concerns Jericho; no newer Gaza item. 16 Nov 18:01 Gaza strike previously recorded."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest displayed 17 Nov 00:07 Palestine local item concerns Jericho; 16 Nov 23:53 Gaza roundup predates cutoff and was already assessed."
+      },
+      {
+        "publisher": "Al Jazeera Arabic",
+        "url": "https://www.aljazeera.net/news/",
+        "status": "ACCESSIBLE",
+        "detail": "Index checked for Gaza-specific, in-window, distinct civilian/humanitarian event; no adequately traceable candidate."
+      }
+    ],
+    "excluded_candidates": [
+      "16 Nov reported casualties and earlier individual incidents (Beit Lahia, Jabalia, Khan Younis) were captured or assessed by preceding watches.",
+      "OCHA 13 Nov report, 16 Nov access map listing, earlier WHO statements and Gaza rain/flood damage were older or known.",
+      "Search results surfaced old Reuters/AP/Al Jazeera stories, West Bank-only incidents, unrelated material and unverified updates; none qualified as a distinct new Gaza development."
+    ],
+    "limitations": [
+      "WHO regional site HTTP 502 persists; global WHO and OCHA fallback available.",
+      "OCHA 16 Nov map PDF too large for direct retrieval; map-only crossing/road changes unverified.",
+      "Some targeted search results were stale or sparse. Very recent incident reports may surface at next check."
+    ],
+    "overall": "No distinct, sufficiently traceable new Gaza humanitarian development verified in the observation window. Persistent WHO regional and map PDF access limitations warrant DEGRADED rather than SUCCESS. No new material degradation."
+  }
+}

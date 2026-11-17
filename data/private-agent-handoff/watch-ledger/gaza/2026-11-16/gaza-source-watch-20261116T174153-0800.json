@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261116T174153-0800",
+  "scheduled_for": "2026-11-16T17:41:53-08:00",
+  "started_at": "2026-11-16T17:41:53-08:00",
+  "completed_at": "2026-11-17T01:44:22.831Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-16",
+    "start": "2026-11-16T16:51:21.432-08:00",
+    "end": "2026-11-17T01:44:22.831Z",
+    "previous_run_completed_at": "2026-11-17T00:51:21.432Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-16/gaza-source-watch-20261116T164451-0800-20261117T005121432Z.json",
+    "basis": "Supplementary recall of distinct developments reported or surfaced since previous completed heartbeat, including documented previously missed cases; event date distinguished from discovery date."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261113-al-zaytoun-fattouh-drone-explosives-forced-displacement",
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-16-palestinians-including-two-women-and-a-child-and-continues-to-destroy-remaining-homes-in-gaza/",
+      "title": "Israel Kills 16 Palestinians, Including Two Women and a Child, and Continues to Destroy Remaining Homes in Gaza",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_publication_date": "2026-11-16",
+      "source_publication_at": null,
+      "event_date": "2026-11-13",
+      "event_time": "11:00 Palestine local time (approximate; reported by PCHR)",
+      "location": "Fattouh Street near al-Sikkah Street, al-Zaytoun neighborhood, east Gaza City, Gaza Strip",
+      "affected_population_or_system": "Dozens of families reportedly displaced after drone-dropped explosive charges destroyed residential houses and tents; no casualties reported in this incident.",
+      "exact_supporting_passage": "This forced dozens of families to flee the area without having time to retrieve their belongings.",
+      "source_type": "Independent Palestinian human rights NGO; primary field-research documentation",
+      "classification": "new",
+      "confidence": "medium",
+      "corroborating_sources": [],
+      "bounded_discovery_context": {
+        "first_seen_in_this_run": true,
+        "classification_detail": "Late-recalled, independently documented incident from 13 Nov, described in PCHR's 16 Nov publication; NOT a casualty or displacement incident occurring in the present hour.",
+        "unique_feature": "Reported deliberate drone drops of explosive-laden boxes onto homes in al-Zaytoun with forced displacement of dozens of families, distinguishable from 6–9 Nov storm displacement and known 16 Nov casualty cases.",
+        "prior_deduplication": "Previous completed heartbeat and 15:44/10:44 checkpoints reviewed; this al-Zaytoun explosive-charge displacement case was not described in those ledgers. Does not establish full production collector coverage.",
+        "source_evidence": "PCHR names Fattouh/al-Sikkah streets and dates the episode to approx. 11:00 on 13 Nov, saying charges detonated about 40 minutes later and further drops continued until evening.",
+        "uncertainty": "Publication hour not verified; independent corroboration, exact number of displaced families, and full neighborhood damage assessment not confirmed.",
+        "discovery_method": "Last batch of 12 additional targeted searches surfaced original PCHR report; primary page opened directly; older general civilian casualties excluded."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. The production Gaza collector/publisher remains authoritative. No schedule, approval, publication or production changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Live update index checked; latest 16 Nov access-and-movement map previously known. Most recent narrative situation report dated 13 Nov; no new report in this interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Regional site direct retrieval timed out. Prior heartbeat reported persistent HTTP 502; current failure is a timeout, not a newly confirmed HTTP 502."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Global Gaza/oPt health situation overview checked as fallback; latest news/publications listed no new in-window Gaza-specific WHO update."
+      }
+    ],
+    "initial_official_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation report November 16 2026 November 17 access displacement casualties",
+      "site:who.int Gaza 16 November 2026 17 November 2026 medical evacuation hospitals emergency WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details Gaza \"17/November/2026\" killed injured 02:00 03:00",
+      "site:wafa.ps/news/2026/11/17 غزة شهداء إصابات قصف شمال خان يونس فجر الثلاثاء",
+      "site:aljazeera.net/news/2026/11/17 غزة شهيد جرحى غارات خرق وقف إطلاق النار فجر",
+      "site:reuters.com/world/middle-east/ Gaza November 16 2026 November 17 civilians killed strike ceasefire aid",
+      "site:apnews.com/article Gaza November 16 2026 Tuesday November 17 casualties aid hospitals",
+      "site:un.org OR site:unrwa.org OR site:unicef.org \"Gaza\" \"16 November 2026\" displaced food water aid",
+      "site:wfp.org OR site:logcluster.org Gaza November 16 2026 food access delivery crossings truck fuel",
+      "site:msf.org OR site:palestinercs.org OR site:who.int Gaza November 16 2026 hospital ambulance referral evacuation Nasser",
+      "site:reliefweb.int/report/occupied-palestinian-territory 16 Nov 2026 Gaza water shelter displacement aid",
+      "site:english.wafa.ps/Pages/Details/ \"November 17, 2026\" \"GAZA\" killed injured strike",
+      "غزة 17 نوفمبر 2026 فجر الثلاثاء قصف اصابات شهيد مستشفى مساعدات معبر",
+      "Gaza latest November 16 2026 17 2026 evening PST ceasefire aid crossings displaced casualties hostages negotiations"
+    ],
+    "direct_verifications": [
+      {
+        "publisher": "WAFA English",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed 17 Nov 00:21 local concerns Jericho/West Bank; latest listed Gaza strike (16 Nov 18:01 local) already in preceding ledger."
+      },
+      {
+        "publisher": "WAFA Arabic",
+        "url": "https://www.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed 17 Nov 00:07 local concerns Jericho; 16 Nov Gaza roundup predates previous cutoff."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-16-palestinians-including-two-women-and-a-child-and-continues-to-destroy-remaining-homes-in-gaza/",
+        "status": "ACCESSIBLE",
+        "detail": "Primary field report dated 16 Nov documenting 13 Nov drone-dropped explosive devices and forced residential displacement in al-Zaytoun."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israeli-restrictions-on-shelter-materials-threaten-the-lives-of-displaced-palestinians-in-gaza/",
+        "status": "ACCESSIBLE",
+        "detail": "Separate 16 Nov shelter statement reviewed; much underlying data refers to 6–9 Nov flooding and earlier OCHA reporting, excluded as historical/recycled."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously captured 16 Nov WAFA Gaza casualties (including three injured north Khan Younis), 24-hour fatality aggregate and other Beit Lahia/Jabalia incidents.",
+      "13 Nov OCHA flooding, 16 Nov OCHA movement-map listing, older WHO briefing and 12 Nov Nasser Hospital strike: historical or previously assessed.",
+      "16 Nov PCHR shelter statement: underlying storm events dated 6–9 Nov and known OCHA aid/shelter data; no distinct in-window operational change substantiated.",
+      "Financial Times 16 Nov shelter and health comparisons: article paywalled and original WHO data date not verified; not counted as separate.",
+      "Reuters/AP search results primarily historical; recent Jericho/Bethlehem reports concern West Bank, outside Gaza watch scope."
+    ],
+    "limitations": [
+      "WHO regional access timed out; WHO global and OCHA fallback accessible, so DEGRADED rather than FAILED.",
+      "PCHR source dated 16 Nov without a verified clock time; 13 Nov incident is explicitly late recalled and must not be labeled an event within the current hourly interval.",
+      "Independent confirmation of al-Zaytoun incident and full displacement count unavailable; reported only as PCHR field observation with medium confidence.",
+      "OCHA 16 Nov map's oversized PDF was already a known earlier retrieval gap; no unverified map changes inferred."
+    ],
+    "overall": "One distinct, previously unrecorded primary-field-documented displacement/infrastructure incident recovered, with explicit historical event date and source date. Persistent regional WHO access issue, but useful coverage survived."
+  }
+}

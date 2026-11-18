@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T224451-0800-20261118T065043Z",
+  "scheduled_for": "2026-11-17T22:44:51-08:00",
+  "started_at": "2026-11-17T22:49:04-08:00",
+  "completed_at": "2026-11-17T22:50:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T21:45:26.397-08:00",
+    "end": "2026-11-17T22:50:43-08:00",
+    "previous_run_completed_at": "2026-11-17T21:45:26.397-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T214451-0800-20261118T054526397Z.json",
+    "basis": "Bounded supplementary recall of newly indexed or late-recovered distinct high-value Gaza humanitarian developments since the preceding authenticated hourly heartbeat; production remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; not the primary collector or publisher. No approval, publication, schedule, automation or production changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official index checked before follow-on searches. Latest dated Gaza access/movement item 16 November; latest humanitarian situation report 13 November; no newly listed November 17-18 Gaza operating change."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official emergency page verified directly as current URL; no newly posted dated November 18 hospital/medical evacuation/fuel change seen."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Direct regional WHO check timed out, consistent with prior documented HTTP 502 regional access problem. Global WHO fallback remains usable."
+      },
+      {
+        "publisher": "WHO Newsroom",
+        "url": "https://www.who.int/news-room",
+        "status": "ACCESSIBLE",
+        "detail": "Index inspected, 17 November entries were not Gaza-specific operational news."
+      },
+      {
+        "publisher": "WHO legacy URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "status": "HTTP_404",
+        "detail": "Noncanonical initial URL returned 404; immediately corrected to verified live WHO conflict-in-Israel-and-oPt page. No independent coverage gap beyond continuing regional endpoint restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza 18 November 2026 06:00 UTC latest Israeli strike killed injured Reuters AP",
+      "site:english.wafa.ps Gaza November 18 2026 overnight killed wounded Rafah Khan Younis",
+      "site:ochaopt.org November 17 18 2026 Gaza aid access crossing fuel shelter update",
+      "site:who.int Gaza November 17 18 2026 medical evacuation hospital patients latest",
+      "Gaza UNRWA IOM November 17 18 2026 winter shelter displacement floods new humanitarian",
+      "Gaza November 18 2026 food water UNICEF WFP aid distribution health system",
+      "Gaza 18 November 2026 Rafah Kerem Shalom crossing trucks closures medical evacuation",
+      "Gaza ceasefire negotiations November 18 2026 Hamas Israel Reuters latest overnight",
+      "Gaza November 18 2026 hostages Palestinian detainees prisoner release allegations Reuters",
+      "Gaza November 18 2026 explosive demolitions Israeli military operations civilian impact",
+      "Gaza PRCS ambulance emergency medical transport fuel November 18 2026",
+      "Gaza 18 November 2026 overnight attack casualties neighborhoods WAFA Anadolu Al Jazeera"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 latest items through 08:36 local publication time concerned West Bank matters or Israeli parliamentary activity; last Gaza casualty roundup remains November 17 at 17:09, previously recorded."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "Regional index checked directly; no new distinct Gaza casualty or access event recovered in this window."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Current Middle East feed inspected. Gaza IOM/WFP winter-hunger warning dated 17 November is previously assessed, no fresh operational change isolated."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "17 November joint primary release inspected: severe shelter/food needs, reduced WFP hot meal frequency and food/cash assistance. This release and changes had already been evaluated by prior watch; no new date or subsequent operational cut verified in this observation interval."
+      },
+      {
+        "publisher": "GitHub prior heartbeat",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T214451-0800-20261118T054526397Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Immediate prior 21:45:26.397 PST heartbeat fetched from GitHub, along with 20:50 and 19:41 records, for duplicate and temporal comparisons."
+      }
+    ],
+    "excluded_candidates": [
+      "17 November WFP/IOM shelter/hunger and assistance reduction announcement: already explicitly reviewed in the immediately preceding watch; no newly observed change with verified event date.",
+      "17 November WAFA six-fatality Gaza casualty roundup, and earlier Reuters/WAFA casualty, medical evacuation, demolition and IOM hypothermia stories: already captured or assessed by previous hourly watches.",
+      "OCHA November 13 Gaza situation report and November 16 access/movement bulletin: no fresh November 18 operations update.",
+      "Search-engine OCHA #347 result describes events dated December 2026, after this November 17 watch; excluded as future-dated content.",
+      "WAFA November 18 early headlines relating to West Bank or Israeli Knesset, not Gaza."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean /opt/ did not respond (timeout); persistent known regional access restriction results in DEGRADED status rather than failure. WHO Global and OCHA remained available.",
+      "One attempted outdated WHO URL returned 404 but correct live WHO endpoint was checked successfully.",
+      "Some search results were stale or future-dated and were filtered by article and event dates; search-index coverage cannot establish that no incident occurred."
+    ],
+    "overall": "No newly verified distinct qualifying Gaza development since the authenticated 21:45 PST heartbeat after official-first OCHA/WHO checks, exactly 12 additional targeted searches and WAFA, Reuters, Anadolu and WFP primary/direct reviews. DEGRADED due to persistent WHO regional access restriction; no newly material failure or production change."
+  }
+}

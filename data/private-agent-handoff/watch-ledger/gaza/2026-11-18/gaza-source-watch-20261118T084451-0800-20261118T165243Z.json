@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T084451-0800-20261118T165243Z",
+  "scheduled_for": "2026-11-18T08:44:51-08:00",
+  "started_at": "2026-11-18T08:49:23-08:00",
+  "completed_at": "2026-11-18T08:52:43.033-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T07:52:01-08:00",
+    "end": "2026-11-18T08:52:43.033-08:00",
+    "previous_run_completed_at": "2026-11-18T07:52:01-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T074451-0800-20261118T155201Z.json",
+    "basis": "Supplementary bounded recall since the previous completed hourly watch. Late-recalled publication is eligible only if a distinct, material Gaza development was not previously logged; production remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Recall of civilian casualties, displacement, humanitarian aid/crossings, food and water, healthcare and medical evacuation/ambulance/transport/fuel/capacity, infrastructure destruction, detention/hostages, ceasefire/negotiation developments and military operations with documented civilian impact.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official updates index checked before supplementary searches. Latest visible entry November 16 Gaza Strip access and movement; latest humanitarian situation report dated November 13. No new November 18 operational update identified."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official health emergency page checked before supplementary searches. No newly dated November 18 Gaza facility, medical evacuation, transport or fuel announcement identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional portal returned 502 Bad Gateway. This is the same recurring access failure documented in previous runs; WHO Global remained accessible."
+      }
+    ],
+    "initial_official_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 18 2026 OCHA humanitarian update",
+      "site:who.int Gaza WHO 18 November 2026 medical evacuation hospitals health emergency"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 18, 2026\" killed wounded drone hospital 18 November morning",
+      "site:reuters.com/world/middle-east/ gaza November 18 2026 15:00 UTC aid strikes ceasefire",
+      "site:apnews.com/article/ gaza November 18 2026 latest Palestinians killed ceasefire hospital",
+      "site:aa.com.tr/en/middle-east/ Gaza November 18 2026 14:00 15:00 aid killed wounded",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza 18 November 2026 shelter water food humanitarian",
+      "site:who.int OR site:ochaopt.org Gaza November 18 2026 emergency medical evacuation hospitals crossings",
+      "Gaza November 18 2026 8am PST strikes casualties displacement Reuters Anadolu WAFA",
+      "Gaza November 18 2026 18 November Wednesday hospital ambulance healthcare medical evacuation patients new",
+      "Erez Rafah Kerem Shalom Gaza crossing November 18 2026 aid trucks inspection latest",
+      "Gaza November 18 2026 ceasefire negotiations hostages detainees war peace talks latest Israel Hamas",
+      "Gaza November 18 2026 displaced families killed bombardment 15:00 UTC \"November 18\"",
+      "Gaza 18 November 2026 OCHA WHO WFP ICRC Red Crescent fuel water sewage aid capacity update"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 index inspected; reported Gaza fatalities at 09:25 Palestine time overlap previously logged incidents. November 18 14:55 cancer-care feature is about Beit Jala and other West Bank locations, outside Gaza watch scope."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 Board of Peace report reviewed directly; its assessment and stalled-roadmap description had already been evaluated and excluded in the prior 05:44 PST heartbeat because no new implemented ceasefire arrangement was identified."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Central Gaza military advance, associated Al-Mughraqa fatality and family displacement overlap previously recorded 05:44 PST finding; no distinct new casualty/crossing/health event identified."
+      },
+      {
+        "publisher": "JNS quoting COGAT",
+        "url": "https://www.jns.org/news/israel-news/cogat-rafah-crossing-open-for-limited-travel-not-goods",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 statement says Rafah open for limited travel but not goods; no independently established new status change or new aid throughput."
+      },
+      {
+        "publisher": "GitHub watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/tree/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read previous three watch heartbeats including previous run ending 07:52 PST. Checked deduplication of Abu Safiya detention, military advance, Erez inspections and Board of Peace article."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters November 18 Board of Peace report (published 11:19 UTC / 03:19 PST) was already evaluated by the earlier 05:44 PST watch; no newly implemented ceasefire/negotiation change to recover.",
+      "WAFA Gaza casualty report November 18 at 09:25 Palestine time repeats the known pair of fatalities previously captured; Reuters/Anadolu ground operation, Al-Mughraqa fatality and displacement logged earlier.",
+      "Erez crossing inspection reopening logged in the 00:52 PST heartbeat; no new independently verified aid truck entry or delivery in Gaza. Rafah limited-travel/no-goods description reports existing arrangement, not a new change.",
+      "Abu Safiya's six-month detention extension was logged by the prior 07:52 PST heartbeat.",
+      "WAFA's November 18 cancer patients story concerns West Bank hospital care, not Gaza.",
+      "Older OCHA/UNICEF/WHO reporting, generic ongoing aid and healthcare constraints, commentary, social claims, unsourced or unverifiable casualty reports excluded.",
+      "British sanctions reporting involving a group accused of obstructing Gaza aid did not establish a new concrete change in Gaza aid access during this bounded window."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional portal remained unavailable with HTTP 502; WHO Global and OCHA remained accessible.",
+      "Search ranking returned many old articles despite November 18 date constraints; no claim was promoted without verifying date, Gaza relevance and novelty.",
+      "No independent evidence was found for a distinct qualifying new incident published since the previous watch completion. This is a bounded recall search, not proof that no incident occurred."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

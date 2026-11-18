@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T144451-0800-20261118T224527976Z",
+  "scheduled_for": "2026-11-18T14:44:51-08:00",
+  "started_at": "2026-11-18T14:42:30-08:00",
+  "completed_at": "2026-11-18T14:45:27-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T13:47:59.500-08:00",
+    "end": "2026-11-18T14:45:27-08:00",
+    "previous_run_completed_at": "2026-11-18T13:47:59.500-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T134451-0800-20261118T214759500Z.json",
+    "basis": "Bounded supplementary recall since previous hourly check. Older publication dates considered only when a material previously unrecorded report is recovered; source publication time distinguished from the watch discovery time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-board-of-peace-second-unsc-report-ceasefire-implementation-aid",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/trumps-board-peace-faults-israel-hamas-failure-end-gaza-war-2026-11-18/",
+      "title": "Trump's Board of Peace faults Israel and Hamas for failure to end Gaza war",
+      "publisher": "Reuters",
+      "source_date": null,
+      "publication_date": "2026-11-18",
+      "publication_time": "2026-11-18T11:19:00Z",
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip / United Nations Security Council reporting process, New York",
+      "affected_population_or_system": "Gaza ceasefire implementation, civilian security, humanitarian access, reconstruction and preparations for winter flooding; affected population includes displaced Gazans dependent on shelter and supplies.",
+      "exact_supporting_passage": "a ceasefire that delivers nothing visible cannot be sustained indefinitely.",
+      "source_type": "Established first-hand document-based reporting; Reuters says it reviewed the Board of Peace's 12-page second report to the UN Security Council; original document not independently retrieved",
+      "classification": "new",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovery_method": "Found during a capped set of 12 targeted news/humanitarian searches; followed a direct Reuters article link and checked the publisher's full report. Cross-checked against authenticated previous watch heartbeat and official-first OCHA OPT/WHO checks.",
+        "discovery_time": "2026-11-18T14:45:27-08:00",
+        "late_recall": true,
+        "publication_vs_window": "Published November 18 at 11:19 UTC (03:19 PST), before the 13:47:59 PST previous watch ended; newly recovered report, not a claim that the underlying ceasefire violation began this hour.",
+        "distinct_increment": "Reuters obtained a 12-page Board of Peace report, its second to the Security Council, warning that both parties' noncompliance threatens the process; document faults Israeli restrictions on flood-preparation supplies and uncertainty over Palestinian civilian policing, and alleges Hamas taxes on goods impair commodity access. Expected presentation to UNSC at end of November, not yet confirmed delivered.",
+        "agreement_or_policy_change_confirmed": false,
+        "unverified": "Report issuance date and full text not independently available; the article describes an expected future UNSC presentation. Claims attributed to report rather than independently verified operational measurements.",
+        "duplicate_controls": "Previously captured central Gaza ground advance and displacement, individual deaths, court detention extension, Erez inspections and OCHA exposure figures were not re-counted."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value miss-class coverage: civilian casualties, displacement, crossings, aid/food/water, health/ambulance/transport/fuel/medical evacuations, infrastructure, detention/hostages, ceasefire/negotiations and military operations with civilian consequences.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Checked live homepage and 16 November access/movement notice; latest situation report on index dated 13 November. No new November 18 primary situation bulletin appeared."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked emergency situation overview, latest regional updates and news. No new 18 November hospital, medical-evacuation or health-service operational update located."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct WHO EMRO page returned 502 Bad Gateway. This is a documented pre-existing source-access restriction, with WHO Global available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza November 18 2026 evening 23:00 00:00 killed wounded displacement 19 November",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 Wednesday afternoon latest air strikes deaths aid",
+      "site:apnews.com/article/ Gaza November 18 2026 Wednesday evening Israeli strike health aid humanitarian",
+      "site:aa.com.tr/en/middle-east/ Gaza November 18 2026 late Wednesday attacks killed wounded displaced 19 November",
+      "site:aljazeera.com/news/2026/11/18/ Gaza November 18 2026 afternoon Wednesday displaced hospital strike",
+      "site:unicef.org OR site:unrwa.org OR site:wfp.org Gaza November 18 2026 water food shelters health new update",
+      "Gaza November 18 2026 23:00 Jerusalem time Israel operation casualties Wednesday night new WAFA",
+      "Gaza 18 November 2026 Wednesday ceasefire talks Israeli strikes Gaza City Nuseirat Reuters latest",
+      "site:english.wafa.ps/Pages/Details Gaza 18/November/2026 ambulance hospital patients injuries medicine",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"18 Nov 2026\" Gaza health water food aid access",
+      "Gaza Rafah Erez Kerem Shalom 18 November 2026 19 November 2026 trucks fuel medical evacuation crossing aid",
+      "Gaza November 18 2026 Israeli detainees hostages prisoner release negotiations OCHA WHO humanitarian"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Direct current index checked. Latest Gaza road closure/displacement and hospital-director detention items duplicate previously recorded findings; older article on cancer access lacks a verifiable new operational change."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Direct index checked. Previously captured central Gaza population-at-risk reports not re-counted."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/trumps-board-peace-faults-israel-hamas-failure-end-gaza-war-2026-11-18/",
+        "status": "ACCESSIBLE",
+        "detail": "Direct document-based report read; source quotes a 12-page Board of Peace report not independently available."
+      },
+      {
+        "publisher": "GitHub previous watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T134451-0800-20261118T214759500Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read previous heartbeat and used prior run context to exclude central Gaza advance, exposure estimates, Erez inspection, medical-evacuation and detention items."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters November 18 central Gaza advance, deaths and displacement already recorded in previous watches.",
+      "WAFA road closures/displacement and Abu Safiya detention extension duplicate previous findings.",
+      "Erez crossing reopening remains inspection-only; no new independently verified aid deliveries.",
+      "UNICEF global November 18 headline concerns Yemen rather than Gaza; older OCHA/WHO briefings and historic 2023-25 search hits excluded.",
+      "No verified new casualty, medical evacuation, hospital-functioning, ambulance or fuel operational change during the current window."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persists; usable OCHA OPT and WHO Global coverage prevented total failure.",
+      "Board of Peace 12-page document was reported as reviewed by Reuters but not independently accessible; its allegation about taxes and supply constraints is attributed rather than accepted as independently confirmed fact.",
+      "Report's first public appearance precedes this hourly window. Classification is a late-recalled newly traceable policy/humanitarian assessment, not a new ceasefire deal or proven change in enforcement.",
+      "Searches bounded at 12 beyond OCHA OPT/WHO official-first checks."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

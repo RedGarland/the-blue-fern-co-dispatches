@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T184451-0800-20261118T024406201Z",
+  "scheduled_for": "2026-11-17T18:44:51-08:00",
+  "started_at": "2026-11-17T18:41:23-08:00",
+  "completed_at": "2026-11-17T18:44:06.201-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T17:49:04.204-08:00",
+    "end": "2026-11-17T18:44:06.201-08:00",
+    "previous_run_completed_at": "2026-11-17T17:49:04.204-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T174451-0800-20261118T014904204Z.json",
+    "basis": "Supplementary recall of newly indexed distinct high-value reporting since the previous committed watch; production collector/publisher remains authoritative. Late-recalled November 17 publication date, exact publication time unverified."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-anadolu-zeitoun-explosive-drone-boxes-demolitions-displacement",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israel-drops-explosives-packaged-in-boxes-in-gaza/4127278",
+      "title": "Israel drops explosives packaged in boxes in Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "event_date": null,
+      "reported_event_date_range": {
+        "start": "2026-11-10",
+        "end": "2026-11-16",
+        "precision": "Reported discrete operations on November 10 and 16 and a November 13 displacement account; exact incident times unknown"
+      },
+      "location": "Zeitoun and Tuffah east Gaza City; Bureij, Nuseirat, eastern Deir al-Balah, and eastern al-Maghazi in central Gaza; near Dar al-Salam Hospital in northeastern Khan Younis, Gaza Strip",
+      "affected_population_system": "Reported demolition/damage of Palestinian homes and other buildings through remotely detonated boxes dropped by quadcopter drones. Local sources told Anadolu dozens fled Zeitoun on November 13 fearing more demolitions. Number of persons independently confirmed displaced and full structural damage total unknown.",
+      "affected_population_or_system": "Housing/infrastructure damage and displacement of residents; Anadolu attributes reports to local sources, residents, witnesses and described video, without independent confirmation of the specific device or count.",
+      "exact_supporting_passage": "Local sources said dozens of Palestinians fled Zeitoun neighborhood on Friday, fearing their homes would be targeted next.",
+      "source_type": "Established news agency; on-the-ground eyewitness/local-source reporting with described video, not independent technical confirmation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "observation_window_start": "2026-11-17T17:49:04.204-08:00",
+        "discovered_at": "2026-11-17T18:44:06.201-08:00",
+        "discovery_method": "Recovered in the last of 12 targeted searches following OCHA OPT and WHO official-first checks; inspected source report directly and compared with 18 prior Gaza watch heartbeats.",
+        "reporting_context": "Prior watches captured demolitions and Deir al-Balah military advances, but not this specifically reported drone-delivered explosive-box tactic, additional Zeitoun/Tuffah, Nuseirat and Khan Younis locations, or the reported dozens fleeing Zeitoun. This is late-recalled reporting dated November 17 rather than proof the tactic began during the current hourly window.",
+        "corroboration": "Anadolu cites witnesses and footage; the reported tactic, location-level counts and displacement lack independent corroboration in OCHA/WHO or Reuters within this bounded check.",
+        "limitations": "Individual eyewitnesses unnamed; video not independently authenticated in this watch; military attribution and event timings unverified. Counts are source reports, not independently established facts."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; not a primary publisher or collector.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest OCHA updates index lists November 16 Gaza access and movement and November 13 humanitarian reports; no new dated November 17-18 Gaza update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Situation page and latest regional resources examined; no new operational Gaza health/fuel/evacuation report dated within the watch window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Persistent 502 Bad Gateway previously documented by hourly watches; WHO Global is available as official fallback."
+      }
+    ],
+    "official_first_targeted_searches": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 18 2026 02:00 UTC casualties airstrikes killed wounded Reuters AP 17 November late",
+      "site:english.wafa.ps/Pages/Details/ November 18 2026 Gaza killed wounded Tuesday evening November 17",
+      "site:ochaopt.org Gaza November 17 2026 November 18 aid movement shelters water hospital",
+      "site:who.int OR site:emro.who.int Gaza 17 November 2026 18 November evacuation medical ambulance hospital operations",
+      "site:palestinercs.org 17 November 2026 18 November 2026 Gaza ambulance rescue deaths fuel",
+      "site:unrwa.org OR site:unicef.org Gaza November 17 2026 November 18 2026 water aid health shelter new",
+      "site:wfp.org OR site:iom.int Gaza November 18 2026 overnight assistance crossings aid convoy",
+      "Gaza November 17 2026 evening US Israel Hamas ceasefire negotiations stabilization force civilian impact latest Reuters",
+      "Gaza November 18 2026 04:00 Gaza local time dawn explosion airstrike injuries casualties IDF WAFA",
+      "Gaza November 17 2026 18:00 PST 18 November 02:00 UTC air strikes displacement homes demolished Reuters BBC Al Jazeera",
+      "Gaza November 18 2026 Rafah crossing patients evacuation UN WHO transport fuel medical aid",
+      "site:news.un.org OR site:un.org Gaza November 17 2026 18 November humanitarian food water hospital displaced 2026"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No newly indexed Gaza-specific incidents after prior watch; six-death November 17 aggregate is already logged."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east/israel-drops-explosives-packaged-in-boxes-in-gaza/4127278",
+        "status": "ACCESSIBLE",
+        "detail": "Distinct late-recalled, eyewitness-attributed demolition method and reported Zeitoun flight; verified against prior ledger for duplicates."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "SEARCH_ACCESSIBLE",
+        "detail": "Previously recorded November 17 casualties, not added again."
+      },
+      {
+        "publisher": "GitHub prior watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/tree/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-17",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Verified prior 17:49:04 PST no-findings heartbeat and checked all 18 existing November 17 entries for overlapping incidents and novelty."
+      }
+    ],
+    "excluded_candidates": [
+      "November 17 Reuters Deir al-Balah, Khan Younis and Bir al-Naja deaths already logged in previous hourly watches.",
+      "November 17 Anadolu Bureij drone-strike critical injury and Deir al-Balah advance/demolitions already captured; only distinct wider multi-site explosive-box method/flight retained.",
+      "November 17 Board of Peace ceasefire warning and WFP/IOM winter-shelter reports previously evaluated; no verified newly implemented ceasefire/access change.",
+      "November 15 Rafah airstrike fatalities, earlier Nasser Hospital strike, older Gaza health reports and West Bank-only items excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean /opt/ still HTTP 502. This is persistent, not a newly material watch failure.",
+      "news.un.org search restricted by robots.txt; alternative UN/OCHA/WHO official pages and major media remained available.",
+      "Search indexing frequently returned 2023-2025 or months-old articles. The absence of recent material in these sources does not prove no incident occurred.",
+      "Anadolu's report describes events over roughly one week and was published November 17 with no verified hour, so discovery is late recall, not new-hour event occurrence."
+    ],
+    "overall": "One distinct late-recalled account of multi-site explosive-box drone demolitions with witness-reported flight in Zeitoun; medium confidence on the attributed eyewitness reporting, not independent verification of tactical details. DEGRADED for pre-existing WHO regional 502 and UN News search restrictions. No production, approval, publication or schedule modifications."
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T054451-0800-20261118T134453Z",
+  "scheduled_for": "2026-11-18T05:44:51-08:00",
+  "started_at": "2026-11-18T05:41:32-08:00",
+  "completed_at": "2026-11-18T05:44:53.358-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T04:44:45-08:00",
+    "end": "2026-11-18T05:44:53.358-08:00",
+    "previous_run_completed_at": "2026-11-18T04:44:45-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T044451-0800-20261118T124445178Z.json",
+    "basis": "Bounded supplementary discovery since the last completed hourly watch. The primary daily Gaza publisher/collector remains authoritative. Include new publication of previously uncaptured events while excluding known duplicates."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-central-gaza-ground-offensive-al-mughraqa-one-death-displacement",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+      "title": "Israeli military begins a new thrust in Gaza, kills three people",
+      "publisher": "Reuters",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_utc": "2026-11-18T13:01:00Z",
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Central Gaza: Al-Mughraqa, Wadi Gaza bridge/Salah al-Din road and Al-Daawa neighborhood north of Nuseirat; Gaza Strip",
+      "affected_population_or_system": "Palestinian residents near a new Israeli ground offensive west of the Yellow Line, including families displaced from Al-Daawa; Al-Awda Hospital in Nuseirat reportedly received one newly killed person and several wounded following a drone strike in Al-Mughraqa. Movement on sections of Salah al-Din road was restricted. The deceased person's civilian status, identity and precise number of displaced families are unverified. Reuters mentions three deaths on November 18; its other two in Deir al-Balah and Gaza City were already recorded in preceding watches and are NOT counted anew.",
+      "exact_supporting_passage": "An Israeli airstrike near the army raid killed one person, Palestinian medics said.",
+      "source_type": "Established wire reporting citing witnesses and Palestinian medics; corroborated by Anadolu correspondent, hospital source and reported Israeli COGAT announcement",
+      "classification": "new",
+      "confidence": "high for new ground operation and road restrictions; medium for the reported death, injuries and family displacement",
+      "corroborating_source_urls": [
+        "https://www.aa.com.tr/en/middle-east/1-palestinian-killed-families-displaced-in-israel-s-1st-broad-ground-offensive-in-central-gaza-in-a-year/4129345",
+        "https://www.aa.com.tr/en/middle-east/israeli-army-launches-military-offensive-in-central-gaza-despite-ceasefire/4129297"
+      ],
+      "discovery_context": {
+        "observation_window": "2026-11-18T04:44:45-08:00 to 2026-11-18T05:44:53.358-08:00",
+        "first_seen": "Discovered during the Reuters and Anadolu direct regional-feed checks after OCHA/WHO and 12 supplementary searches. Reuters story time: 13:01 UTC/05:01 PST on November 18; published after the previous 04:44:45 PST heartbeat.",
+        "novelty": "New Israeli ground advance west of the Yellow Line in central Gaza, announced by military and documented by Reuters/Anadolu; one distinct reported death and several injuries near Al-Mughraqa; families fled Al-Daawa; COGAT-reported closure of sections of Salah al-Din road. Not covered in the immediately preceding heartbeat.",
+        "corroboration": "Reuters reported tanks on Salahudeen road, one death near ground raid and an Israeli military confirmation of an operation; Anadolu correspondent independently located advances in Al-Mughraqa, Wadi Gaza bridge area and Al-Daawa. Anadolu cited an Al-Awda Hospital source for one death and several injuries and attributed road closure in blocks 660, 661 and 666 to COGAT.",
+        "limitations": "Exact time of incident, identity/civilian status of the deceased, injury count, number of displaced families and duration of road closure unverified. Israeli description of the targets as Hamas infrastructure is an attributed claim, not established fact. Separately reported Deir al-Balah and Gaza City fatalities are duplicate prior-watch findings and excluded from new count."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Nonpublishing, supplementary Gaza recall watch covering casualties/displacement, humanitarian aid and water/food/crossings, health and medical evacuations/fuel/transport, infrastructure, detainees/hostages, ceasefire developments, and documented civilian-impact military operations.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official index opened before supplementary searches. Latest 16 November Gaza access/movement entry and 13 November report; no new 18 November Gaza bulletin."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official global situation page checked before supplementary searches; no distinct new 18 November hospital functionality, evacuation or fuel operational update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Regional page timed out again. This is a previously documented source access limitation, not a new material failure; WHO Global and OCHA remain available."
+      }
+    ],
+    "official_first_targeted_search_count": 2,
+    "official_first_targeted_search_queries": [
+      "site:ochaopt.org Gaza situation report November 18 2026 humanitarian update",
+      "site:who.int Gaza occupied Palestinian territory November 18 2026 medical evacuation hospitals health"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza November 18 2026 Wednesday killed wounded morning",
+      "site:aa.com.tr/en/middle-east/ Gaza November 18 2026 Wednesday civilian casualties Israeli strikes",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 aid civilians killed strikes",
+      "site:apnews.com/article/ Gaza November 18 2026 ceasefire aid crossing casualties",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 18 2026 food water distribution shelter flooding",
+      "site:palestinercs.org Gaza November 18 2026 ambulance hospital medical evacuation fuel",
+      "Gaza November 18 2026 Wednesday 14:00 15:00 local time Palestinians killed drone strike bombardment",
+      "Gaza November 18 2026 Erez inspection aid trucks Kerem Shalom actual transit crossings",
+      "Gaza November 18 2026 WHO hospitals patient evacuations ambulance capacity oxygen medicine fuel",
+      "Gaza November 18 2026 ceasefire negotiations hostage detainees operational change humanitarian access",
+      "Gaza November 18 2026 displacement demolitions tents flooding destroyed homes emergency shelter",
+      "Gaza November 18 2026 UN OCHA WFP trucks food water supplies blockade distribution"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "New 18 November 13:01 UTC report of ground operation, one newly attributable death, and confirmed military operation. Prior two earlier-in-day casualties deduplicated."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Fresh central Gaza ground-operation coverage; corroborated advances, one death/several injuries at Al-Mughraqa, displacement of families from Al-Daawa and Israeli-announced Salah al-Din road closure."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest 14:55 Palestine-time cancer-care feature pertains to West Bank, excluded; November 18 09:25 Gaza two-strike fatalities already recorded in prior watch."
+      },
+      {
+        "publisher": "GitHub watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T044451-0800-20261118T124445178Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read preceding 04:44 PST heartbeat and preceding 03:46 PST heartbeat; no central Gaza new ground offensive recorded."
+      }
+    ],
+    "excluded_candidates": [
+      "November 18 reported fatalities in Deir al-Balah and Sheikh Ajlin/Gaza City were logged in November 17 23:48 PST watch; no double count. Reuters story's three fatalities include these two.",
+      "Erez reopening for aid-truck inspection was logged 00:52 PST; no verified new truck throughput or direct Gaza entry.",
+      "WAFA November 17 medical departure permissions (22 people including companions) and >21,000 patient backlog logged 02:45 PST.",
+      "Reuters November 18 Board of Peace report was already evaluated in prior watches and makes no newly implemented or operational ceasefire change.",
+      "WAFA November 18 14:55 local cancer-care article concerns West Bank/Beit Jala, not Gaza.",
+      "Previously dated OCHA winter flooding, WFP aid obstacles, Anadolu earlier Gaza demolitions and other undated recirculated reports excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean direct access timed out. Coverage remained effective via accessible WHO Global, OCHA, Reuters and Anadolu; thus DEGRADED, not FAILED.",
+      "Exactly twelve additional targeted searches after the OCHA/WHO initial checks; direct publisher feed/article openings are not additional targeted searches.",
+      "Search engines may index with delay; observation cutoff is the completion timestamp in America/Los_Angeles.",
+      "No publishing, approvals, posts, production runner, automation schedule or task state changes."
+    ],
+    "overall": "One new qualifying, corroborated central-Gaza military operation with documented casualties, displacement and road closure. No other novel qualifying developments established. Persistent known WHO regional timeout; watch otherwise operational."
+  }
+}

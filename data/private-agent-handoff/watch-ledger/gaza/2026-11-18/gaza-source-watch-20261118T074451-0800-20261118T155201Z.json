@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T074451-0800-20261118T155201Z",
+  "scheduled_for": "2026-11-18T07:44:51-08:00",
+  "started_at": "2026-11-18T07:49:17-08:00",
+  "completed_at": "2026-11-18T07:52:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T06:48:29.937-08:00",
+    "end": "2026-11-18T07:52:01-08:00",
+    "previous_run_completed_at": "2026-11-18T06:48:29.937-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T064451-0800-20261118T144829937Z.json",
+    "basis": "Bounded supplementary discovery since the last completed watch; late-recalled publication of otherwise uncaptured development eligible; primary Gaza publication/collector remains authoritative. Duplicates and older incidents excluded."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-hussam-abu-safiya-detention-extended-six-months",
+      "canonical_source_url": "https://apnews.com/article/mideast-news-iran-bahrain-us-november-18-2026-b71b1d25f3cff987b4b125196ecb4c3a",
+      "title": "Saudi-backed forces launch a major attack on Houthi rebels in Yemen, and other Mideast news (section: Israel rejects request to release Palestinian doctor)",
+      "publisher": "Associated Press",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_utc": null,
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Beersheba court, Israel; detainee formerly directed Kamal Adwan Hospital, northern Gaza",
+      "affected_population_or_system": "Dr. Hussam Abu Safiya, former director of Kamal Adwan Hospital in Gaza, detained since December 2024 without trial or filed criminal charges; continued detention has direct implications for the detained healthcare professional. Reported health deterioration remains an attributed concern, not independently medically verified.",
+      "exact_supporting_passage": "An Israeli court on Wednesday extended the detention of Dr. Hussam Abu Safiya, the former director of Gaza’s Kamal Adwan Hospital, by six months.",
+      "source_type": "Established wire reporting (AP), corroborated by Anadolu Agency report citing Physicians for Human Rights-Israel",
+      "classification": "follow-up",
+      "confidence": "medium-high for reported six-month detention extension and denied release; primary court order not independently inspected",
+      "corroborating_source_urls": [
+        "https://www.anews.com.tr/middle-east/2026/11/18/israel-extends-detention-of-gaza-hospital-director-abu-safiya-by-6-months-without-charges"
+      ],
+      "discovery_context": {
+        "observation_window_start": "2026-11-18T06:48:29.937-08:00",
+        "observation_window_end": "2026-11-18T07:52:01-08:00",
+        "first_seen": "Associated Press November 18 rolling regional news article checked during this watch; independent Anadolu-attributed report discovered in targeted detainee search.",
+        "novelty": "New court order on November 18 extending an existing Gaza hospital director's detention another six months, and rejecting a request for release. The prior hourly heartbeat included no detainee/court update. This is a follow-up change in detention status, not a new arrest.",
+        "corroboration": "AP directly reports the court order and release refusal. The Anadolu-syndicated November 18 report attributes the same decision to Physicians for Human Rights-Israel, specifying Beersheba and no criminal charges.",
+        "limitations": "Exact ruling time, case docket, written court order and primary PHRI statement were not directly obtained. AP rolling article does not supply a reliable precise Gaza-section insertion time. Court justification and contested underlying allegations are not treated as proven."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary nonpublishing recall of casualties, displacement, aid, food/water, health and emergency transport/evacuation/capacity, infrastructure/crossings, detention and hostages, ceasefire changes, and military operations documented to affect civilians.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked first. Latest index entry November 16 Gaza movement/access and November 13 humanitarian situation report; no distinct November 18 operational update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official Gaza/oPt health emergency page checked before supplementary searches; no new November 18 hospital capacity or evacuation development apparent on page."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Regional portal returned Bad Gateway, continuing the same previously documented restriction. Initial alternative WHO URL attempts also returned 404 before the correct WHO Global page was opened."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza November 18 2026 17:00 18:00 Palestine injuries killed displacement",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 latest killed civilians ground operation",
+      "site:aa.com.tr/en/middle-east Gaza November 18 2026 2026/11/18 afternoon deaths hospitals",
+      "site:apnews.com/article/ Gaza November 18 2026 Wednesday aid ceasefire civilians",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 18 2026 food water shelter winter",
+      "site:who.int OR site:ochaopt.org Gaza November 18 2026 evacuation hospitals truck aid capacity",
+      "Hussam Abu Safiya court extends detention six months November 18 2026 Israeli court",
+      "site:english.wafa.ps November 18 2026 Hussam Abu Safiya detention court",
+      "Gaza November 18 2026 17:00 18:00 local hospital wounded killed new strike",
+      "Gaza November 18 2026 Erez aid crossing inspections trucks entered update",
+      "November 18 2026 Gaza health ministry ambulance evacuation patients hospital capacity fuel operation",
+      "Gaza November 18 2026 ceasefire hostages prisoners negotiations exchange operational announcement"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest list dated November 18 checked. Gaza two-death story dated 09:25 Palestine time is a previously recorded pair; later index stories concerned West Bank or diplomacy."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "Existing central Gaza ground operation and Al-Mughraqa casualty, displacement and road restriction were already documented in prior 05:44 heartbeat."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Ground operation and reported casualty are prior-watch material; detainee extension supported by separate Anadolu-syndicated targeted result."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/mideast-news-iran-bahrain-us-november-18-2026-b71b1d25f3cff987b4b125196ecb4c3a",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 rolling update contains specific court extension of Abu Safiya's detention by six months and denial of his release request."
+      },
+      {
+        "publisher": "Physicians for Human Rights-Israel",
+        "url": "https://www.phr.org.il/en/",
+        "status": "ACCESSIBLE_NO_MATCHING_NEW_POST",
+        "detail": "Primary organization's main English site accessible, but the November 18 statement attributed by Anadolu was not present in the homepage index; primary statement and court order not independently retrieved."
+      },
+      {
+        "publisher": "GitHub watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T064451-0800-20261118T144829937Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read the 06:48 PST prior heartbeat and 05:44 preceding heartbeat; checked the branch directory for prior-run duplicate findings."
+      }
+    ],
+    "excluded_candidates": [
+      "November 18 Israeli ground advance at Al-Mughraqa/Nuseirat with one death and displacement already logged in 05:44 PST heartbeat; Reuters/AP references are not additive.",
+      "Two Gaza drone-strike fatalities in Deir al-Balah and Sheikh Ajlin already recorded in November 17 23:48 PST heartbeat.",
+      "Erez crossing screening reopening was logged 00:52 PST; newer descriptions of 20-truck scanning plan do not independently confirm deliveries or a new entry route.",
+      "OCHA and WHO pages show no new distinct November 18 medical-evacuation or hospital-functioning announcement; older severe Nasser Hospital damage and shortage reports excluded.",
+      "Gaza Ministry of Health aggregate casualties reported in the prior heartbeat were not added to incident counts; no separate additional identifiable incident established.",
+      "Older recycled reports and unrelated West Bank/Yemen/Iran articles, commentary and unsupported social posts excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean returned persistent HTTP 502. WHO Global and OCHA OPT remained accessible. Watch status DEGRADED due to ongoing regional source-access limitation; no new material watch-system failure.",
+      "Exactly twelve supplementary targeted web searches were made after the official OCHA/WHO first checks, plus direct source opens and previous ledger readback.",
+      "Search indexes can lag; source event/publication clock times were not guessed. Detainee court order and first-party PHRI statement were not obtained; corroboration remains secondary wire reporting.",
+      "No approval, publication, production runner, social post, task schedule, or automation changes."
+    ],
+    "overall": "One qualifying new follow-up: the November 18 six-month court extension of Gaza hospital director Hussam Abu Safiya's detention without charge. No other new independently traceable Gaza humanitarian incident established this window. Persistent previously known WHO EMRO access limitation."
+  }
+}

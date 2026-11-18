@@ -1,0 +1,91 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T164451-0800-20261118T004747Z",
+  "scheduled_for": "2026-11-17T16:44:51-08:00",
+  "started_at": "2026-11-17T16:46:38-08:00",
+  "completed_at": "2026-11-17T16:47:47-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T15:49:48.271-08:00",
+    "end": "2026-11-17T16:47:47-08:00",
+    "previous_run_completed_at": "2026-11-17T15:49:48.271-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T154451-0800-20261117T234948Z.json",
+    "basis": "Bounded supplementary recall for new traceable high-value Gaza developments after the prior watch; late-indexed older events included only if distinct and not previously recorded. Production remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only; no publication, approval, scheduler or production edits.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed update as checked was Gaza Strip access and movement | November 2026, dated November 16; no newly listed November 17 Gaza situation update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO conflict situation page reviewed; no new clearly dated Gaza medical evacuation, health-facility function, ambulance, healthcare fuel or casualty developments in this interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Previously documented regional endpoint continued returning 502 Bad Gateway; WHO Global remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 17 2026 latest 23:00 UTC airstrikes civilian killed wounded Reuters AP [recency=1]",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 17 2026 evening killed wounded Rafah Khan Younis [recency=1]",
+      "site:news.un.org Gaza November 17 2026 late humanitarian aid ceasefire November 18 [recency=2]",
+      "site:who.int Gaza November 17 2026 18 November hospital evacuation medical transport fuel capacity [recency=2]",
+      "site:palestinercs.org Gaza November 17 2026 emergency ambulance casualty [recency=2]",
+      "site:wfp.org Gaza November 17 2026 evening food supplies humanitarian crossing shipments [recency=2]",
+      "site:unicef.org Gaza 17 November 2026 water children hospital new humanitarian [recency=2]",
+      "site:iom.int Gaza November 17 2026 shelter displacement flooding tent winter [recency=2]",
+      "site:unrwa.org Gaza 17 November 2026 displacement food access updates [recency=2]",
+      "Gaza November 17 2026 18 November 2026 late afternoon evening Israeli strikes casualties Al Jazeera [recency=1]",
+      "Gaza November 17 2026 evening ceasefire hostages exchange negotiations crossing latest [recency=1]",
+      "Gaza 17 November 2026 evening fuel hospitals water desalination infrastructure damage aid transport crossings updates [recency=1]"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza-specific six-fatality roundup listed November 17 at 17:09 Palestinian local time (07:09 PST), predating this interval and duplicating previously recorded incidents; later headlines concerned West Bank or political developments."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "ACCESSIBLE",
+        "detail": "Article published November 17 at 13:49 UTC (05:49 PST); reported Deir al-Balah, Khan Younis and Bir Al-Naja fatalities were already captured in preceding heartbeats."
+      },
+      {
+        "publisher": "WFP/IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "November 17 food and winter-shelter shortfall warning already captured in prior watch; no verified distinct change since last run."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 17 six-death Gaza roundup: already logged incident-level casualties, not fresh events.",
+      "Reuters November 17 four-death Gaza report: already logged in prior hourly heartbeats.",
+      "WFP/IOM November 17 food/shelter funding and access warning: previously logged situation, not a newly verified operational change.",
+      "Older 2023-2026 humanitarian content, West Bank-only events, generic ceasefire concern and unsupported or duplicated claims."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional site returned HTTP 502; persistent in previous runs. WHO Global site served as official fallback.",
+      "news.un.org was blocked by robots.txt when targeted search was attempted, but OCHA, WHO, WFP and established reporting remained available.",
+      "Search results exhibited stale indexing and older articles despite date-constrained queries. This watch cannot guarantee immediate capture of unpublished or unindexed events."
+    ],
+    "overall": "No new distinct qualifying Gaza event or material follow-up verified between 15:49:48 and 16:47:47 PST on November 17, 2026. DEGRADED reflects persistent WHO regional access restriction and limited UN News search access, but no newly material watch failure. Production, publication, approvals and schedules unchanged."
+  }
+}

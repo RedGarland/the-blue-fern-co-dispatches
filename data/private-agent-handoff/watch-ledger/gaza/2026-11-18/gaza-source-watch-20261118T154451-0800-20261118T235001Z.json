@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T154451-0800-20261118T235001Z",
+  "scheduled_for": "2026-11-18T15:44:51-08:00",
+  "started_at": "2026-11-18T15:48:56-08:00",
+  "completed_at": "2026-11-18T15:50:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T14:45:27-08:00",
+    "end": "2026-11-18T15:50:01-08:00",
+    "previous_run_completed_at": "2026-11-18T14:45:27-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T144451-0800-20261118T224527976Z.json",
+    "basis": "Observation since prior hourly completion. Older items considered only to identify previously unrecorded material developments; previously captured facts excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary watch for high-value Gaza misses only; does not collect for or publish the primary daily dispatch.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Directly checked OCHA OPT homepage and targeted OCHA search first. Homepage most recent update was 16 November Gaza access/movement, with 13 November situation report and winter-supply alert; no new November 18 bulletin found."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Directly opened WHO global conflict/occupied Palestinian territory situation page, WHO-focused search and health-cluster context. No newly published November 18 Gaza facility, ambulance, fuel, evacuation or hospital-capacity operational change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct open returned 502 Bad Gateway. Identical to previously documented source restriction; not a newly material failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza \"November 18, 2026\" killed wounded Gaza latest 19 November",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 Wednesday latest strikes evacuations",
+      "site:apnews.com/article/ Gaza November 18 2026 Wednesday aid Israeli shelling ceasefire",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 18 2026 late night deaths displaced military",
+      "site:un.org/sg/en/content/ OR site:un.org/unispal Gaza November 18 2026 latest civilians humanitarian aid 18 November",
+      "site:unicef.org OR site:unrwa.org OR site:wfp.org \"18 November 2026\" Gaza aid water food health",
+      "site:english.wafa.ps/Pages/Details/ \"November 18, 2026\" \"GAZA\" \"hospital\" OR \"patients\" OR \"water\"",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"18 Nov 2026\" Gaza shelter food medical",
+      "Gaza \"November 19, 2026\" killed injured November 19 Thursday morning Israel strike",
+      "Gaza 18 November 2026 19 November 2026 Reuters ceasefire strikes Nuseirat new casualties Wednesday night",
+      "Gaza November 18 2026 Erez Rafah Kerem Shalom crossings fuel trucks WHO medical evacuations latest",
+      "Gaza November 18 2026 hospital ambulance dialysis generator health displaced families water supply humanitarian update"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Newest Gaza stories on the current feed were road closure/displacement, Abu Safiya detention extension, strikes on Deir al-Balah/Gaza City, and general cancer patient access feature; the specific incidents or case already captured, while the feature lacked verified new operational increment."
+      },
+      {
+        "publisher": "Anadolu Agency Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Index showed previously captured two drone-strike fatalities, central Gaza ground operation and population risk estimates; no distinct new impact found."
+      },
+      {
+        "publisher": "Reuters targeted reporting",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "status": "ACCESSIBLE",
+        "detail": "The day's central Gaza operation, one operation-related fatality and two separate fatalities had been captured. Separate Board of Peace report from November 18 also already captured in previous watch."
+      },
+      {
+        "publisher": "GitHub previous heartbeat",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T144451-0800-20261118T224527976Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Previous heartbeat read from ops/watch-ledger, showing November 18 14:45:27 PST completion and already captured Board of Peace ceasefire/aid assessment."
+      }
+    ],
+    "excluded_candidates": [
+      "Deir al-Balah and Gaza City two named drone-strike fatalities and central Gaza ground-operation death and displacement: previously recorded.",
+      "Expanded Salah al-Din road obstruction, central Gaza displacement site risks (over 18,000 exposed, 5,260 at six sites): previously recorded; no new quantified impact.",
+      "Dr. Hussam Abu Safiya six-month detention extension: previously recorded; reposts not new.",
+      "Erez inspection-only crossing reopening, not verified newly changed aid throughput: previously recorded.",
+      "Reuters Board of Peace second UNSC report on ceasefire and aid access: recorded by immediately preceding watch.",
+      "WHO/OCHA historical summaries, UN November 18 UNICEF Yemen release, and opinion/secondary recycled articles: out of scope or not new.",
+      "No independently verifiable new hospital/ambulance/fuel/medical evacuation/food-water operating change since preceding watch."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean live page returned pre-existing HTTP 502, while WHO Global and OCHA remained accessible; source coverage incomplete but usable.",
+      "Search engine surfaced older or duplicate articles despite freshness filters; event/publication dates checked before exclusion.",
+      "Search count bounded at 12 beyond official-first OCHA/WHO checks."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

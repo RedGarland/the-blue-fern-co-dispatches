@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T174451-0800-20261118T014904204Z",
+  "scheduled_for": "2026-11-17T17:44:51-08:00",
+  "started_at": "2026-11-17T17:45:58-08:00",
+  "completed_at": "2026-11-17T17:49:04.204-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T16:47:47-08:00",
+    "end": "2026-11-17T17:49:04.204-08:00",
+    "previous_run_completed_at": "2026-11-17T16:47:47-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T164451-0800-20261118T004747Z.json",
+    "basis": "Supplementary hourly recall since previous committed watch, with bounded late-indexed checks for distinct unrecorded high-value events. This is not the primary collector or publisher."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production remains authoritative; no publication, approval, scheduler or task-state edits.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest update listed November 16 Gaza access and movement. November 13 humanitarian report; no newly listed November 17-18 Gaza report."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO conflict situation and linked resources reviewed; no distinct newly dated clinical/medical evacuation/ambulance/hospital/fuel operational update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Persistent previously documented 502 Bad Gateway; WHO Global was accessible fallback."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 18 2026 03:00 local time Israeli strikes casualties November 17 late Reuters AP [recency=1]",
+      "site:english.wafa.ps Gaza November 18 2026 dawn civilians killed wounded Israeli gunfire [recency=2]",
+      "site:news.un.org Gaza 17 November 2026 evening 18 November new humanitarian aid health [recency=2]",
+      "site:palestinercs.org 18 November 2026 Gaza ambulance emergency 17 November [recency=2]",
+      "site:reuters.com/world/middle-east/ Gaza November 17 2026 late 18 shelter hypothermia baby IOM published time [recency=1]",
+      "site:iom.int Gaza 17 November 2026 baby hypothermia shelter rain death IOM [recency=2]",
+      "site:apnews.com/article/ Gaza board of peace November 17 2026 Security Council report ceasefire collapse date [recency=2]",
+      "site:english.wafa.ps/Pages/LastNews 18 November 2026 Gaza latest news casualties early morning [recency=1]",
+      "Gaza November 17 2026 18 November 2026 evening hospital ambulance fuel evacuation WHO OCHA PRCS new [recency=1]",
+      "Gaza overnight November 18 2026 03:00 Rafah Kerem Shalom crossing aid trucks water treatment blocked [recency=1]",
+      "Gaza 17 November 2026 late Reuters strikes Deir al Balah Khan Younis Bureij Gaza City after 21:00 GMT [recency=1]",
+      "Gaza 17 November 2026 18 November ceasefire implementation hostage exchange civilian police stabilization force new agreement [recency=1]"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed Gaza-specific November 17 six-death roundup at 17:09 Palestinian local time, already logged earlier. Newer listed headlines focused on West Bank/politics, not new Gaza developments."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/un-agency-warns-gaza-hypothermia-deaths-without-more-supplies-2026-11-17/",
+        "status": "ACCESSIBLE",
+        "detail": "Reuters article published 15:10 UTC November 17 (07:10 PST), describing November 12 suspected infant hypothermia death and IOM tent/funding/access warnings; explicitly evaluated and excluded in prior watch heartbeats, not a new distinct observation."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/board-of-peace-us-israel-gaza-hamas-189d58d05fa984cc9573f98ec7d638be",
+        "status": "ACCESSIBLE",
+        "detail": "Board of Peace assessment warns ceasefire at risk and records stalled governance/security deployment; previously evaluated in multiple earlier heartbeats, no verified newly implemented agreement or change."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-fire-kills-four-including-6-year-old-boy-gaza-medics-say-2026-11-17/",
+        "status": "SEARCH_ACCESSIBLE",
+        "detail": "November 17 deaths in Deir al-Balah, Khan Younis and Bir Al-Naja have already been recorded individually."
+      },
+      {
+        "publisher": "GitHub prior watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/tree/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-17",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read prior 16:47:47 PST heartbeat and inspected all 17 existing November 17 watches for duplicate incidents, IOM hypothermia report, and Board of Peace assessment."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters/IOM 17 November winter shelter warning and 12 November suspected hypothermia infant death: already reviewed and excluded in 07:47, 08:42, 10:49 and other prior watch heartbeats; not new to this watch.",
+      "AP November 17 Board of Peace report: ceasefire warning and stalled implementation evaluated in preceding watches, no newly confirmed policy or deployment change.",
+      "November 17 Deir al-Balah, Rafah, Jabalia, Khan Younis and Bir Al-Naja fatalities: captured in earlier incident-level ledger entries.",
+      "WFP/IOM November 17 food and shelter warning, WHO longer-running health risks, WAFA November 17 medical evacuation figure: already recorded.",
+      "West Bank-only headlines, historical November 2025 stories, older 2026 hospital/health reports and unsupported claims."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean opt/ continues to return HTTP 502, as in preceding runs; WHO Global and OCHA remain accessible.",
+      "news.un.org search was blocked by robots.txt; alternate UN/OCHA/WHO, Reuters, AP and WAFA sources remained accessible.",
+      "Targeted search results returned stale 2023-2025 items; absence of indexed new reports is not evidence that no incidents occurred."
+    ],
+    "overall": "No distinct, traceable qualifying Gaza development was verified in the November 17 16:47:47–17:48 PST recall window. DEGRADED records persistent regional WHO 502 and UN News access restrictions, not a newly material failure. No publication, schedule, approval or production changes."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T134451-0800-20261118T214759500Z",
+  "scheduled_for": "2026-11-18T13:44:51-08:00",
+  "started_at": "2026-11-18T13:45:21-08:00",
+  "completed_at": "2026-11-18T13:47:59.500-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T12:43:16-08:00",
+    "end": "2026-11-18T13:47:59.500-08:00",
+    "previous_run_completed_at": "2026-11-18T12:43:16-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T124451-0800-20261118T204316Z.json",
+    "basis": "Bounded supplementary recall after previous hourly watch. Previously ongoing military advance assessed only for new, independently attributable and not previously logged information; primary Gaza production remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-central-gaza-un-18000-at-risk-humanitarian-services",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/un-warns-over-18-000-palestinians-at-risk-of-displacement-amid-israeli-offensive-in-gaza/4129808",
+      "title": "UN warns over 18,000 Palestinians at risk of displacement amid Israeli offensive in Gaza",
+      "publisher": "Anadolu Agency (attributing assessment to UN OCHA via UN deputy spokesperson Farhan Haq)",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time": null,
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Deir al-Balah / central Gaza, areas beyond the Yellow Line around Nuseirat",
+      "affected_population_or_system": "More than 18,000 people reportedly present within affected 2.5 km² area, including about 4,000 at displacement sites; potential service disruption to local humanitarian operations. These are people at risk, not a confirmed number newly displaced.",
+      "exact_supporting_passage": "Initial analysis suggests that more than 18,000 people were staying in the affected area, which spans about 2.5 square kilometers (1 square mile).",
+      "source_type": "Established reporting quoting official UN deputy spokesperson/OCHA estimate; original UN briefing transcript inaccessible",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery_method": "Direct check of Anadolu Middle East index after OCHA OPT and WHO-first review and 12 targeted searches; original linked article read directly.",
+        "prior_event": "Military ground advance west of Yellow Line, one reported fatality, Salah al-Din road obstruction, and families fleeing were already recorded in earlier November 18 watch ledgers. Those facts are not counted as new incidents.",
+        "new_increment": "UN spokesperson's first traceable quantitative estimate of >18,000 exposed, ~4,000 at displacement sites, and threatened humanitarian services, with confirmed reports of some people fleeing but no verified total fled.",
+        "related_source_url": "https://www.aa.com.tr/en/middle-east/israeli-offensive-threatens-over-5-260-displaced-palestinians-in-central-gaza-civil-defense-warns/4129826",
+        "related_source_detail": "Gaza Civil Defense separately warned of risks to more than 5,260 already displaced people at six sites and said emergency responses face equipment and vehicle shortages. This potentially overlapping group is not added to the UN's 18,000 estimate.",
+        "original_primary_source_directly_verified": false,
+        "certainty_limits": "No UN/OCHA November 18 standalone bulletin or original press transcript accessible; both risk estimates describe exposed people rather than confirmed new displacement. Details reported on November 18 without an independently verified publication hour."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value Gaza recall: civilian deaths/injuries, displacement, access/food/water/crossings, medical evacuations/hospitals/ambulances/transport/fuel/capacity, infrastructure, detention/hostages, ceasefire or negotiations, and military operations with documented civilian consequences.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked OCHA OPT homepage and updates before supplemental searches; latest posted update November 16 (access/movement); latest situation report November 13. No new November 18 operational report on index."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked WHO emergency page, including latest news and November 17 WHO Director-General remarks; no new qualifying November 18 Gaza hospital or medical-evacuation capacity update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct page returned 502 Bad Gateway; pre-existing WHO regional access restriction, with WHO Global accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza November 18 2026 21:00 22:00 killed displaced wounded road",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 late Wednesday casualties civilians hospital aid",
+      "site:apnews.com/article/ Gaza November 18 2026 new attack casualties aid ceasefire",
+      "site:aa.com.tr/en/middle-east/ November 18 2026 Gaza Wednesday evening wounded displaced",
+      "site:aljazeera.com/news/2026/11/18 Gaza latest 18 November 2026 strikes displaced",
+      "site:unrwa.org OR site:unicef.org Gaza November 18 2026 displacement shelter water food",
+      "site:english.wafa.ps/Pages/LastNews Gaza 18/November/2026 23:00 Palestinian killed tonight",
+      "Gaza November 18 2026 21:00 UTC new killed Nuseirat Deir al Balah drone WAFA",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"18 Nov 2026\" Gaza hospital emergency aid displacement",
+      "site:wfp.org OR site:icrc.org Gaza \"18 November 2026\" deliveries medical ambulance",
+      "Gaza November 18 2026 Rafah Erez Kerem Shalom opening trucks fuel medical evacuation afternoon Wednesday",
+      "Gaza November 18 2026 hostages detainees ceasefire negotiations military operations civilian impact evening"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 index newest entries at 22:58 Palestine-local relate to Kafr Qasim; Gaza detention article repeats previously logged Abu Safiya extension, and 19:13 Gaza road-displacement report repeats a logged operation."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Discovered November 18 UN/OCHA-attributed >18,000 exposed / 4,000 at displacement sites update and separate Gaza Civil Defense >5,260 people at six sites warning, read two original articles and kept population estimates distinct."
+      },
+      {
+        "publisher": "UN Secretariat briefing direct pages",
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight/2026-11-18",
+        "status": "ACCESS_DENIED",
+        "detail": "Direct UN Secretariat briefing URL returned DisabledError; un.org/unispal returned HTTP 403. UN primary transcript could not be independently retrieved."
+      },
+      {
+        "publisher": "GitHub previous watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T124451-0800-20261118T204316Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read previous 12:43 PST heartbeat and 11:46/10:49 preceding heartbeats to exclude already logged central Gaza incursion, deaths, road disruption, Erez inspections, detention, and older briefs."
+      }
+    ],
+    "excluded_candidates": [
+      "New casualty or displacement claims duplicating the previously captured November 18 central Gaza advance west of Yellow Line and Salah al-Din restrictions, and earlier Deir al-Balah/Sheikh Ajlin strikes.",
+      "Anadolu Civil Defense figure >5,260 at six displacement sites potentially overlaps the UN/OCHA >18,000 at risk; not separately counted as a distinct population or unrelated event.",
+      "WAFA November 18 later posting about continuing detention of Dr. Hussam Abu Safiya duplicates recorded six-month extension; no independently verified changed detention order.",
+      "Erez reopened for inspection not proven new Gaza truck entry; earlier event already logged. No new medical departures, hospital closure, ambulance loss or fuel supply changes confirmed.",
+      "Older UNRWA November 4 data, historical Reuters/AP articles returned by search ranking, undated opinion or unsupported social reports excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean access continued returning HTTP 502; DEGRADED rather than FAILED because WHO Global, OCHA OPT, WAFA and established reporting were usable.",
+      "Direct United Nations briefing transcript blocked/403, so specific UN numerical estimate relies on a report quoting UN deputy spokesperson rather than independently retrieved source. This lowers confidence but is a traceable attributed report.",
+      "Search ranking surfaced many obsolete November 2023/2025 reports; source/event dates evaluated and false recency discarded.",
+      "The quantitative estimates describe people at risk; no independently verified count of newly displaced people or services already discontinued.",
+      "No approval, production, publication, schedule or task changes."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

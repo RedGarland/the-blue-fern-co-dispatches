@@ -1,0 +1,187 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261117T234451-0800-20261118T074825324Z",
+  "scheduled_for": "2026-11-17T23:44:51-08:00",
+  "started_at": "2026-11-17T23:44:49-08:00",
+  "completed_at": "2026-11-17T23:48:25.324-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-17",
+    "start": "2026-11-17T22:50:43-08:00",
+    "end": "2026-11-17T23:48:25.324-08:00",
+    "previous_run_completed_at": "2026-11-17T22:50:43-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T224451-0800-20261118T065043Z.json",
+    "basis": "Supplementary recall of new/late-indexed source-based Gaza developments since previous authenticated hourly heartbeat; production collector/publisher authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-deiralbalah-fadi-ismail-drone-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177096",
+      "title": "Two Palestinians killed, several others injured in Israeli strikes on central and southern Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_local": "2026-11-18T09:25:00+02:00",
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Central Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Reported death of Fadi Nahid Rajab Ismail, 35, following an Israeli drone strike against a group of Palestinians; victim civilian status unverified.",
+      "exact_supporting_passage": "killing Fadi Nahid Rajab Ismail, 35.",
+      "source_type": "Palestinian news agency correspondent citing local reporting; corroborating Anadolu medical-source reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "corroborating_source_urls": [
+        "https://www.aa.com.tr/en/middle-east/israeli-drone-strikes-kill-2-palestinians-in-gaza-despite-ceasefire-/4128574"
+      ],
+      "discovery_context": {
+        "observation_window": "2026-11-17T22:50:43-08:00 to completion of this run",
+        "first_seen": "WAFA latest-news feed published 18 November 09:25 Palestinian local time, after previous heartbeat",
+        "novelty": "Not the November 17 Deir al-Balah casualties in earlier watches; different named victim reported killed on November 18",
+        "limitations": "Exact strike time and independent onsite verification unknown."
+      }
+    },
+    {
+      "finding_id": "gaza-20261118-sheikhajlin-vehicle-drone-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177096",
+      "title": "Two Palestinians killed, several others injured in Israeli strikes on central and southern Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_local": "2026-11-18T09:25:00+02:00",
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Sheikh Ajlin, southwest Gaza City, northern Gaza Strip",
+      "affected_population_or_system": "One reported death and several injuries after drone attack on a vehicle; Anadolu identifies the deceased as Thaer Ismail al-Wadiyeh, 32. Victim civilian status unverified.",
+      "exact_supporting_passage": "a Palestinian was killed and others injured",
+      "source_type": "Palestinian news agency quoting Al-Shifa Medical Complex medical sources; corroborating Anadolu medical-source reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "corroborating_source_urls": [
+        "https://www.aa.com.tr/en/middle-east/israeli-drone-strikes-kill-2-palestinians-in-gaza-despite-ceasefire-/4128574"
+      ],
+      "discovery_context": {
+        "observation_window": "2026-11-17T22:50:43-08:00 to completion of this run",
+        "first_seen": "November 18 WAFA 09:25 local report, separately described from Deir al-Balah",
+        "novelty": "New Gaza City vehicle strike, not same as November 17 Khan Younis/Bir al-Naja/Jabalia/Deir al-Balah incidents",
+        "limitations": "Medical-source reports align but are not independent onsite incident verification; exact time, full injury count unknown."
+      }
+    },
+    {
+      "finding_id": "gaza-20261118-east-maghazi-home-demolitions",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strikes-kill-2-palestinians-in-gaza-despite-ceasefire-/4128574",
+      "title": "Israeli drone strikes kill 2 Palestinians in Gaza despite ceasefire",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_local": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "East of Maghazi refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Palestinian homes reportedly demolished with explosive-laden quadcopter-dropped boxes; numbers of homes, residents and displaced people unverified.",
+      "exact_supporting_passage": "large-scale demolition of Palestinian homes east of the Maghazi refugee camp",
+      "source_type": "Established international news agency citing local sources",
+      "classification": "follow-up",
+      "confidence": "medium-low",
+      "corroborating_source_urls": [],
+      "discovery_context": {
+        "observation_window": "2026-11-17T22:50:43-08:00 to completion of this run",
+        "first_seen": "New November 18 Anadolu report describes a specific east-Maghazi demolition operation",
+        "novelty": "Locality-specific addition to previously captured November 10-17 drone explosive-box demolition pattern; potentially distinct operation, not a newly established method",
+        "limitations": "Exact demolition date and number of destroyed homes unverified; no independent confirmation or verified displacement figure. Avoid counting as separately confirmed if production already captured Maghazi."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza source recall only; no approval, publication, production, automation or schedule changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage and updates index checked first; latest Gaza access-and-movement 16 November and situation report 13 November; no fresher operational report listed."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Persistent regional 502 Bad Gateway matching prior hourly restriction; regional WHO source inaccessible directly."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Valid WHO global emergency situation page directly checked; no new 18 November WHO hospital/fuel/evacuation bulletin visible."
+      },
+      {
+        "publisher": "WHO noncanonical legacy link",
+        "url": "https://www.who.int/emergencies/situations/occupied-palestinian-territory",
+        "status": "HTTP_404",
+        "detail": "Initial guessed URL gave 404; corrected and read current canonical WHO emergency page."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int Gaza 17 November 2026 WHO health medical evacuation OR hospital OR fuel OR situation",
+      "site:ochaopt.org Gaza 17 November 2026 18 November 2026 new aid access humanitarian update",
+      "site:english.wafa.ps Gaza November 18 2026 09:00 killed injured strikes Wednesday morning",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 civilian deaths airstrikes overnight",
+      "site:unicef.org Gaza November 17 18 2026 water food children damaged health facilities",
+      "site:wfp.org OR site:unrwa.org Gaza 18 November 2026 food shelter supplies crossing aid",
+      "site:palestinercs.org Gaza November 18 2026 ambulance medical transport health",
+      "Gaza 18 November 2026 Wednesday Rafah crossing medical evacuation patients stranded WHO health ministry update",
+      "Gaza 18 November 2026 Maghazi demolition quadcopter homes east camp police station Deir al Balah",
+      "Gaza November 18 2026 ceasefire hostages prisoner negotiations new agreement Reuters AP",
+      "Gaza November 18 2026 overnight water shortages desalination fuel hospital ambulance new",
+      "Gaza 18 November 2026 floods displaced tents shelter UN aid access OCHA IOM latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "New November 18 09:25 Palestine-local story reports two distinct Gaza drone strike deaths; earlier 08:36 listings were non-Gaza."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "Regional index checked; no new matching Gaza operation verified from this index at observation time."
+      },
+      {
+        "publisher": "Anadolu Agency",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 story opened; confirms named death locations and adds east-Maghazi demolitions."
+      },
+      {
+        "publisher": "Anadolu prior-day report",
+        "url": "https://www.aa.com.tr/en/middle-east/-israeli-army-kills-6-palestinians-blows-up-homes-in-gaza/4127526",
+        "status": "ACCESSIBLE",
+        "detail": "November 17 article checked for duplicate screening; preceding casualty set and generic eastern central-Gaza demolition method excluded."
+      },
+      {
+        "publisher": "GitHub previous heartbeat",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T224451-0800-20261118T065043Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "22:50:43 PST heartbeat and 21:45/20:50 predecessors retrieved for cross-run novelty and dedup checks; newest 09:25 WAFA and specific Maghazi report absent."
+      }
+    ],
+    "excluded_candidates": [
+      "November 17 WAFA six-death summary, earlier medical-evacuation restriction, Anadolu method-of-demolition reports, and previously reported Deir al-Balah/Khan Younis/Bir al-Naja/Rafah/Jabalia incidents were excluded as earlier findings.",
+      "November 17 WFP/IOM winter aid shortage and November 13 OCHA flooding situation report: previously reviewed; no novel change established in this observation interval.",
+      "West Bank-only incidents and old/undated generalized claims excluded; unconfirmed numbers of displaced people at east Maghazi not asserted.",
+      "Anadolu November 18 casualty totals are the same two cases as WAFA, not double-counted as separate casualties."
+    ],
+    "limitations": [
+      "WHO EMRO direct endpoint continues to return HTTP 502; WHO Global and OCHA accessible. DEGRADED rather than FAILED due to continued partial official coverage.",
+      "Exact incident times, victim civilian status, full injury tally and independent verification unavailable for November 18 drone strikes.",
+      "East Maghazi home demolition event date and house count are unknown, and a degree of overlap with prior regional drone-demolition reports remains possible.",
+      "Search results favor recycled stories; no evidence that no further incidents occurred."
+    ],
+    "overall": "Three candidate findings: two newly reported separate November 18 fatal drone strikes, and a follow-up location-specific report of home demolition east of Maghazi. OCHA and WHO checked first, exactly 12 targeted searches, direct WAFA/Reuters/Anadolu reviews, authenticated prior ledger cross-check. Production unchanged."
+  }
+}

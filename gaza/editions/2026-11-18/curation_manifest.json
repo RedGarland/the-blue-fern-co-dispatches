@@ -1,0 +1,262 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-18-003",
+    "title": "Winter Hits Gaza Hard as Food and Shelter Aid Runs Short, IOM and WFP Warn",
+    "summary": "In a November 17 joint statement, IOM and WFP warn that funding shortfalls and access restrictions threaten winter humanitarian operations in Gaza. Shelters are being damaged and food assistance is being reduced. Funding figures cover Palestine beyond Gaza and are not presented as Gaza-only totals.",
+    "category": "humanitarian_access_and_food_security",
+    "story_scope": "core_gaza",
+    "score": 80,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-17-wfp-iom-winter-warning"
+    ],
+    "source_ids": [
+      "gaza-2026-11-17-wfp-iom-winter-warning"
+    ],
+    "source_urls": [
+      "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn"
+    ],
+    "publisher_names": [
+      "WFP / IOM"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-17-wfp-iom-winter-warning",
+        "title": "Winter Hits Gaza Hard as Food and Shelter Aid Runs Short, IOM and WFP Warn",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "publisher": "WFP / IOM",
+        "summary_or_snippet": "In a November 17 joint statement, IOM and WFP warn that funding shortfalls and access restrictions threaten winter humanitarian operations in Gaza. Shelters are being damaged and food assistance is being reduced. Funding figures cover Palestine beyond Gaza and are not presented as Gaza-only totals.",
+        "event_date": "2026-11-17",
+        "location": "Gaza Strip; funding scope includes Palestine",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian_access_and_food_security",
+        "attribution": "WFP / IOM",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-18T16:10:46.693777+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 80,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_statement",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian_access_and_food_security",
+    "location": "Gaza Strip; funding scope includes Palestine",
+    "event_date": "2026-11-17",
+    "attribution": "WFP / IOM",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-18-002",
+    "title": "Palestinians flee refugee camp as Israel begins operation in central Gaza",
+    "summary": "Al Jazeera reports the operation near Salah al-Din Street east of Nuseirat and north of Bureij, and says families fled the northern Nuseirat camp. The page is by Reuters and includes Al Jazeera correspondent reporting; casualty figures are excluded from the shared summary.",
+    "category": "military_activity_and_displacement",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-18-aljazeera-central-operation"
+    ],
+    "source_ids": [
+      "gaza-2026-11-18-aljazeera-central-operation"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/18/palestinians-flee-refugee-camp-as-israel-begins-operation-in-central-gaza"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-18-aljazeera-central-operation",
+        "title": "Palestinians flee refugee camp as Israel begins operation in central Gaza",
+        "url": "https://www.aljazeera.com/news/2026/11/18/palestinians-flee-refugee-camp-as-israel-begins-operation-in-central-gaza",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera reports the operation near Salah al-Din Street east of Nuseirat and north of Bureij, and says families fled the northern Nuseirat camp. The page is by Reuters and includes Al Jazeera correspondent reporting; casualty figures are excluded from the shared summary.",
+        "event_date": "2026-11-18",
+        "location": "Central Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "military_activity_and_displacement",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-18T16:10:46.693777+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "military_activity_and_displacement",
+    "location": "Central Gaza Strip",
+    "event_date": "2026-11-18",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-11-18-001",
+    "prior_edition_date": "2026-11-18",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "explicit_reviewed_event_group"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-11-18-001",
+    "title": "Israeli military begins a new thrust in Gaza, witnesses say",
+    "summary": "Reuters reports that Israeli tanks advanced along the Salahudeen road west of the Yellow Line in central Gaza. Residents said nearby families fled amid gunfire and shelling. Reuters separately reports casualty claims and an Israeli military response; this edition does not combine those figures.",
+    "category": "military_activity_and_displacement",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence",
+      "displacement",
+      "merged_duplicate_story=gaza-story-2026-11-18-002"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-18-reuters-central-operation",
+      "gaza-2026-11-18-aljazeera-central-operation"
+    ],
+    "source_ids": [
+      "gaza-2026-11-18-reuters-central-operation",
+      "gaza-2026-11-18-aljazeera-central-operation"
+    ],
+    "source_urls": [
+      "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+      "https://www.aljazeera.com/news/2026/11/18/palestinians-flee-refugee-camp-as-israel-begins-operation-in-central-gaza"
+    ],
+    "publisher_names": [
+      "Reuters",
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-18-reuters-central-operation",
+        "title": "Israeli military begins a new thrust in Gaza, witnesses say",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "publisher": "Reuters",
+        "summary_or_snippet": "Reuters reports that Israeli tanks advanced along the Salahudeen road west of the Yellow Line in central Gaza. Residents said nearby families fled amid gunfire and shelling. Reuters separately reports casualty claims and an Israeli military response; this edition does not combine those figures.",
+        "event_date": "2026-11-18T13:01:28Z",
+        "location": "Central Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "military_activity_and_displacement",
+        "attribution": "Reuters",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      },
+      {
+        "source_record_id": "gaza-2026-11-18-aljazeera-central-operation",
+        "title": "Palestinians flee refugee camp as Israel begins operation in central Gaza",
+        "url": "https://www.aljazeera.com/news/2026/11/18/palestinians-flee-refugee-camp-as-israel-begins-operation-in-central-gaza",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera reports the operation near Salah al-Din Street east of Nuseirat and north of Bureij, and says families fled the northern Nuseirat camp. The page is by Reuters and includes Al Jazeera correspondent reporting; casualty figures are excluded from the shared summary.",
+        "event_date": "2026-11-18",
+        "location": "Central Gaza Strip",
+        "development_type": "primary_report",
+        "affected_system": "military_activity_and_displacement",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-18T16:10:46.693777+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "military_activity_and_displacement",
+    "location": "Central Gaza Strip",
+    "event_date": "2026-11-18T13:01:28Z",
+    "attribution": "Reuters",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

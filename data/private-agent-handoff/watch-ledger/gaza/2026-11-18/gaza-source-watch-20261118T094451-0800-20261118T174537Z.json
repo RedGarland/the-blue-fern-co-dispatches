@@ -1,0 +1,136 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T094451-0800-20261118T174537Z",
+  "scheduled_for": "2026-11-18T09:44:51-08:00",
+  "started_at": "2026-11-18T09:41:53-08:00",
+  "completed_at": "2026-11-18T09:45:37.524-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T08:52:43.033-08:00",
+    "end": "2026-11-18T09:45:37.524-08:00",
+    "previous_run_completed_at": "2026-11-18T08:52:43.033-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T084451-0800-20261118T165243Z.json",
+    "basis": "Bounded supplementary recall since preceding hourly check; new concrete follow-up only. Primary daily Gaza collector/publisher remains authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-salah-al-din-bureij-nuseirat-road-closure-bulldozing-displacement-followup",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177108",
+      "title": "Israeli forces cut off Salah al-Din Road, bar movement in central Gaza",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_source": "07:13 PM (as displayed by WAFA; source local clock)",
+      "publication_time_utc": null,
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Salah al-Din Road between Bureij and Nuseirat refugee camps, northeast of Nuseirat, central Gaza Strip",
+      "affected_population_or_system": "Dozens of displaced families reportedly moved west from west of Bureij and northeast of Nuseirat; road users and vehicles on Salah al-Din Road blocked; farmland/land and road corridor affected by armored vehicles, bulldozers, and earth mounds.",
+      "exact_supporting_passage": "The developments triggered the displacement of dozens of families from areas west of the Bureij refugee camp and northeast of Nuseirat",
+      "source_type": "Named news agency's reporting by Gaza correspondent, direct attributed field reporting; Israeli military operation is also established in earlier Reuters and Al Jazeera coverage",
+      "classification": "follow-up",
+      "confidence": "medium: WAFA field report of additional road closure and location-specific displacement; no independent confirmation of exact dozens-of-families count, extent of land clearance or duration of closure",
+      "discovery_context": {
+        "previous_run_completed_at": "2026-11-18T08:52:43.033-08:00",
+        "first_seen_in_this_watch": "WAFA latest index/direct article accessed after official OCHA OPT and WHO checks and 12 bounded searches",
+        "novelty": "A 19:13 Palestine-local WAFA report (after the previous watch closed) says movement on Salah al-Din Road was barred, bulldozers levelled land and built earth mounds, and dozens of families fled west of Bureij / northeast Nuseirat. Prior 05:44 watch logged a central Gaza operation, an Al-Mughraqa fatality, families fleeing Al-Daawa and a partial road closure; this record is a bounded follow-up to the evolving movement/access and displacement effects, not a new operation or new fatality.",
+        "earlier_logged_overlap": "November 18 05:44 PST military advance and displacement; prior 08:52 PST watch had no further findings. Existing fatalities not counted again.",
+        "corroboration_context": "Earlier Reuters/Al Jazeera reporting establishes the operation and civilian displacement, but WAFA is the sole direct source inspected for the latest blocked-traffic, bulldozing and specific displacement-location details.",
+        "limitations": "No confirmed independent total displaced, closure duration, civilian identities or geographic extent of bulldozing; do not infer permanent destruction or the start of a second military operation."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary high-value recall covering casualties, displacement, aid/crossings, food/water, hospitals/ambulances/transport/fuel/medical evacuation/functioning capacity, infrastructure, detention/hostages, ceasefire, and military operations with documented civilian impact.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Checked before supplementary searches; latest news item dated November 16 (Gaza access/movement), latest situation report November 13. No newly dated November 18 OCHA incident found."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official Gaza/oPt health emergency page opened after navigating the WHO emergency listings. No November 18 medical evacuation, emergency transport or hospital capacity update appeared."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Regional source returned Bad Gateway, a previously documented recurring source restriction. WHO Global accessible as alternative."
+      },
+      {
+        "publisher": "WHO incorrect/retired URL",
+        "url": "https://www.who.int/emergencies/situations/emergency-situation-in-the-occupied-palestinian-territory",
+        "status": "HTTP_404",
+        "detail": "Initial deep link returned 404; resolved by using current WHO Global Gaza emergency page, not counted as independent source evidence."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 18 2026 humanitarian report casualties aid",
+      "site:who.int OR site:emro.who.int Gaza November 18 2026 hospitals evacuation",
+      "site:unrwa.org Gaza November 18 2026 displacement aid shelters",
+      "site:unicef.org Gaza November 18 2026 water children food humanitarian",
+      "site:reliefweb.int Gaza \"18 Nov 2026\" humanitarian update",
+      "site:reuters.com Gaza November 18 2026 killed wounded Israeli operations",
+      "site:apnews.com Gaza November 18 2026 civilian casualties displaced ceasefire",
+      "site:english.wafa.ps Gaza 18 November 2026 killed wounded hospital",
+      "site:aljazeera.com Gaza November 18 2026 Nuseirat Al Mughraqa soldiers",
+      "Gaza November 18 2026 Erez Rafah Kerem Shalom aid crossing status",
+      "Gaza November 18 2026 ceasefire negotiation hostages prisoners detained",
+      "Gaza November 18 2026 ambulance fuel hospitals medical evacuation new"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/",
+        "status": "ACCESSIBLE",
+        "detail": "Current index contained November 18 19:13 Palestine-local Gaza road-closure and displacement report; article directly read and promoted as distinct follow-up."
+      },
+      {
+        "publisher": "WAFA report",
+        "url": "https://english.wafa.ps/Pages/Details/177108",
+        "status": "ACCESSIBLE",
+        "detail": "Article directly describes armored advance, bulldozers leveling and earth mounds, complete road movement obstruction, and dozens of families displaced from areas not fully specified in prior run."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/18/palestinians-flee-refugee-camp-as-israel-begins-operation-in-central-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Confirms the larger central Gaza military operation and displacement, but reported deaths, road operation and prior Al-Mughraqa incident overlap earlier watches."
+      },
+      {
+        "publisher": "GitHub prior hourly watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T084451-0800-20261118T165243Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read prior 08:44 run ending 08:52:43 PST; no qualifying findings. Compared that run with 07:44 and 05:44 documented overlap."
+      }
+    ],
+    "excluded_candidates": [
+      "The November 18 two drone-strike fatalities in Deir al-Balah and Sheikh Ajlin were recorded in the November 17 23:48 PST run; no duplicate deaths carried forward.",
+      "The original Nuseirat/Al-Mughraqa military advance, Al-Mughraqa fatality, initial family displacement and partial Salah al-Din road closure were recorded by the 05:44 PST watch. Only newly reported specifics of worsened road restriction and additional location-specific displacement qualified here.",
+      "Erez aid truck inspection reopening recorded in 00:52 PST run; new actual Gaza aid entry or throughput not verified.",
+      "Abu Safiya detention extension recorded in 07:52 PST watch; no second detention event found.",
+      "WAFA November 18 oncology access feature is about West Bank patients in/around Beit Jala; excluded as outside Gaza.",
+      "Older November 13 OCHA reporting and older UNICEF/WHO results, unsourced claims and opinion excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean continues failing with HTTP 502; OCHA OPT and WHO Global accessible, so watch completed in DEGRADED rather than FAILED state.",
+      "Search engine result ranking yielded older or recycled stories despite date constraints. Findings rely on source timestamps and directly opened articles.",
+      "One WAFA report provides the newly described effects; independently corroborated earlier operation is not evidence of exact new road-block or family-count detail.",
+      "A bounded supplementary watch does not establish that all contemporaneous incidents have been captured."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

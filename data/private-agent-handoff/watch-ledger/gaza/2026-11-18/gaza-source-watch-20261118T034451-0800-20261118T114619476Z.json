@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T034451-0800-20261118T114619476Z",
+  "scheduled_for": "2026-11-18T03:44:51-08:00",
+  "started_at": "2026-11-18T03:43:18-08:00",
+  "completed_at": "2026-11-18T03:46:19.476-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T02:45:32.875-08:00",
+    "end": "2026-11-18T03:46:19.476-08:00",
+    "previous_run_completed_at": "2026-11-18T02:45:32.875-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T024451-0800-20261118T104532875Z.json",
+    "basis": "Bounded supplementary recall of newly published or previously uncaptured traceable high-value Gaza developments, excluding known duplicates and older unsupported reports. Production remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Nonpublishing supplementary Gaza recall watch, without production, approvals, schedule, or task changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked before additional searches. Latest index was November 16 Gaza access/movement and November 13 humanitarian situation report; no new November 18 update identified."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Opened before supplementary searches. No newly dated November 18 change to health capacity, patient evacuation, ambulances, or fuel established."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Returned 502 Bad Gateway. Alternate regional Palestine news URL timed out. Existing degradation also recorded in preceding hourly heartbeat."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:who.int Gaza November 18 2026 hospital medical evacuation health disruption WHO",
+      "site:ochaopt.org Gaza November 18 2026 humanitarian access displacement casualty latest",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 18 2026 Wednesday killed injured Rafah hospital",
+      "site:aa.com.tr/en/middle-east/ Gaza November 18 2026 Wednesday Israeli strikes aid ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 killed aid crossing ceasefire",
+      "site:apnews.com/article/ Gaza November 18 2026 casualty aid hospital ceasefire",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza November 18 2026 water food aid displacement",
+      "site:palestinercs.org Gaza November 18 2026 ambulance paramedics hospital medical evacuation",
+      "Gaza 18 November 2026 latest November 18 2026 Palestinians killed injured airstrikes Wednesday",
+      "Gaza 18 November 2026 humanitarian aid Erez Rafah Kerem Shalom crossing convoy UN OCHA WFP",
+      "Gaza 18 November 2026 hospital fuel ambulance medical evacuation health services patients WHO PRCS",
+      "Gaza 18 November 2026 displacement flooding homes demolitions ceasefire negotiation hostages humanitarian impact"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 Gaza casualties at 09:25 Palestine time duplicate two earlier watch findings. Later updates on November 18 concern West Bank or politics, not newly qualifying Gaza incidents."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 two reported Gaza drone-strike fatalities and Maghazi demolitions already recorded. November 17 six-death article includes the same Deir al-Balah child and adult deaths, Khan Younis and Bir al-Naja fatalities and a delayed Jabalia death, previously accounted for."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "No novel Gaza civilian-impact incident found in direct regional feed. Report on Board of Peace repeats November 17 ceasefire assessment already assessed by prior watch."
+      },
+      {
+        "publisher": "Prior GitHub watch heartbeats",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T024451-0800-20261118T104532875Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read previous completed 02:45 PST heartbeat and earlier November 17/18 casualty, demolition and Erez-crossing findings to exclude duplicates."
+      }
+    ],
+    "excluded_candidates": [
+      "Anadolu November 18 two drone-strike deaths at Deir al-Balah and Sheikh Ajlin and east-Maghazi demolition: already three findings in November 17 23:48 PST heartbeat.",
+      "Anadolu updated November 17 report of six fatalities: six-year-old boy and another death east of Deir al-Balah were specifically excluded as previously logged; Khan Younis, Bir al-Naja and delayed Jabalia death were also recorded.",
+      "Board of Peace November 17 report on failure to implement ceasefire and access restrictions received renewed November 18 AP/Reuters coverage but no newly enacted change or newly documented civilian-impact operation; prior 00:52 PST watch already examined it.",
+      "Erez aid-truck inspection reopening captured at 00:52 PST; no corroborated new throughput, crossing-entry or aid-delivery measurement.",
+      "WAFA November 17 medical-evacuation authorization cap (22 people including companions) and patient backlog >21,000 already captured at 02:45 PST.",
+      "Older OCHA November 13 flooding and November 16 access/movement updates, undated health limitations, and West Bank-only incidents were excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean remained inaccessible (HTTP 502; Palestine news direct URL timeout). This is continuing known source restriction, not a newly material watch failure; WHO global and OCHA remained accessible.",
+      "12 targeted searches maximum completed; indexed reporting and source publication time can lag the search. Direct source checks supplemented index without introducing further targeted searches.",
+      "No novel, independently attributable Gaza development meeting the event novelty and source traceability criteria established within observation interval."
+    ],
+    "overall": "No new qualifying traceable Gaza development found since previous 02:45 PST heartbeat. Existing WHO regional accessibility restriction persists; useful coverage retained. No approvals, publication, postings, branch other than ledger, or schedule changes."
+  }
+}

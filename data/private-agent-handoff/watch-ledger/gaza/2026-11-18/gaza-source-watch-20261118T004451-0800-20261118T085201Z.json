@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T004451-0800-20261118T085201Z",
+  "scheduled_for": "2026-11-18T00:44:51-08:00",
+  "started_at": "2026-11-18T00:49:08-08:00",
+  "completed_at": "2026-11-18T00:52:01.070-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-17T23:48:25.324-08:00",
+    "end": "2026-11-18T00:52:01.070-08:00",
+    "previous_run_completed_at": "2026-11-17T23:48:25.324-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T234451-0800-20261118T074825324Z.json",
+    "basis": "Supplementary recall of distinct or late-recovered traceable high-value Gaza developments since preceding authenticated hourly watch. Prior source publication is permitted for late-recalled material, but is flagged rather than presented as newly occurring. Production collector/publisher is authoritative."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-erez-crossing-inspection-resumption",
+      "canonical_source_url": "https://www.timesofisrael.com/liveblog_entry/erez-crossing-opens-for-inspection-of-gaza-aid-trucks-for-first-time-since-february-2025/",
+      "title": "Erez Crossing opens for inspection of Gaza aid trucks for first time since February 2025",
+      "publisher": "The Times of Israel",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18",
+      "publication_time_local": "2026-11-18T09:22:00+02:00",
+      "event_date": "2026-11-18",
+      "event_time": null,
+      "location": "Erez Crossing, northern Gaza Strip; onward truck movement planned to Kerem Shalom Crossing, southern Gaza Strip",
+      "affected_population_or_system": "Humanitarian aid cargo inspection and crossing logistics. Israeli security source says Erez restarted cargo-truck screening, not direct entry of aid into Gaza; a few dozen trucks planned to undergo checks before onward routing through Kerem Shalom. Actual throughput and aid delivery not independently confirmed.",
+      "exact_supporting_passage": "The Erez Crossing in the northern Gaza Strip reopened this morning for the inspection of aid trucks only",
+      "source_type": "Established Israeli news outlet, first-hand reporting attributed to an unnamed security source; no independent official verification located",
+      "classification": "new",
+      "confidence": "medium",
+      "corroborating_source_urls": [],
+      "discovery_context": {
+        "observation_window": "2026-11-17T23:48:25.324-08:00 to 2026-11-18T00:52:01.070-08:00",
+        "first_seen": "Recovered in this watch from a targeted crossing search; article dated 18 November 09:22 Israel local (17 November 23:22 PST), predating the immediately previous heartbeat, so this is late-recalled reporting rather than an event first reported during the current watch.",
+        "novelty": "Specific reported resumption of Erez cargo inspections using a donated German scanner is absent from preceding authenticated 23:48 PST heartbeat. OCHA 16 November access/movement item predates alleged reopening.",
+        "limitations": "Single established outlet quoting an unnamed Israeli security source. Crossing is reported open for inspection only; trucks are supposed to enter Gaza through Kerem Shalom. No independently verified truck transit count, admission or delivery. Event time described only as 'this morning'."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall; no publication, production, approval, automation or schedule changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official updates index directly opened first. Latest access and movement item 16 November and Gaza situation report 13 November; no newer Gaza operational bulletin listed."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official WHO conflict emergency page opened first. No verified November 18 medical capacity, evacuation or fuel bulletin located."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional page still returned 502 Bad Gateway; persistent previously documented restriction. WHO Global alternative accessible."
+      }
+    ],
+    "official_first_targeted_search_count": 2,
+    "official_first_targeted_search_queries": [
+      "site:ochaopt.org Gaza humanitarian situation report 18 November 2026 November 17 casualties humanitarian access",
+      "site:who.int Gaza 17 November 2026 hospital medical evacuation emergency health"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ 18 November 2026 Gaza killed injured drone airstrike 10:00 11:00",
+      "site:reuters.com/world/middle-east/ Gaza Nov 18 2026 airstrike civilians ceasefire medical transport",
+      "site:ochaopt.org Gaza 18 November 2026 access humanitarian movement supply trucks flood",
+      "site:who.int Gaza 18 November 2026 hospital medical evacuation fuel WHO",
+      "site:unicef.org Gaza November 17 18 2026 drinking water food child health crisis",
+      "site:wfp.org OR site:unrwa.org Gaza November 18 2026 rations aid food access emergency",
+      "site:palestinercs.org Gaza 18 November 2026 ambulance attack health fuel medical services",
+      "site:reliefweb.int Gaza 18 Nov 2026 operational response update aid displacement crossing",
+      "Gaza November 18 2026 Rafah Kerem Shalom crossing patients evacuation latest Wednesday",
+      "Gaza November 18 2026 Israel Hamas ceasefire talks detainees hostage releases latest Reuters AP",
+      "Gaza November 18 2026 overnight strikes killed injured homes shelling Al Jazeera Anadolu WAFA",
+      "Gaza November 18 2026 water desalination fuel hospital medical evacuation 11am Gaza updates"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 09:25 Palestinian local Gaza drone-strike report still latest Gaza report in index; both deaths already recorded by prior heartbeat."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/",
+        "status": "ACCESSIBLE",
+        "detail": "Regional feed inspected; no newly qualifying distinct Gaza developments recovered."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Prior Gaza 18 November fatal strikes and Maghazi demolitions already in previous heartbeat; no new distinct incident verified."
+      },
+      {
+        "publisher": "The Times of Israel",
+        "url": "https://www.timesofisrael.com/liveblog_entry/erez-crossing-opens-for-inspection-of-gaza-aid-trucks-for-first-time-since-february-2025/",
+        "status": "ACCESSIBLE",
+        "detail": "First-hand November 18 09:22 Israel local update quotes Israeli security source on Erez aid-truck inspection resumption; precise scope distinguished from entry into Gaza."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/board-of-peace-us-israel-gaza-hamas-189d58d05fa984cc9573f98ec7d638be",
+        "status": "ACCESSIBLE",
+        "detail": "Board of Peace UN Security Council report dated Tuesday November 17 evaluated; warnings and approvals deadlock appear to repeat existing risks, no dated new implementation change isolated."
+      },
+      {
+        "publisher": "GitHub previous heartbeat",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-17/gaza-source-watch-20261117T234451-0800-20261118T074825324Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Immediate prior 23:48 PST and two earlier heartbeats fetched and compared to avoid repeated casualty and demolition findings."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA/Anadolu November 18 two reported deaths at Deir al-Balah and Sheikh Ajlin, and east-Maghazi house demolition: identical to three findings preserved in preceding 23:48 PST heartbeat.",
+      "AP Board of Peace November 17 report: significant summary of ongoing ceasefire implementation paralysis and restrictions, but no independently evidenced newly changed operational arrangement isolated; not counted as new.",
+      "OCHA November 13 floods/health/aid report and 16 November movement report: preexisting, outside the relevant watch interval.",
+      "Older Reuters Nasser Hospital November 11 strike and legacy WHO documents excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean endpoint remains HTTP 502; status DEGRADED due to persistent access restriction, with OCHA and WHO Global still available. Not a new material failure.",
+      "The Erez opening is reported by a single established news outlet citing an unnamed security source; WHO/OCHA did not independently corroborate and actual aid throughput is unverified.",
+      "No more than 12 supplementary targeted searches; false negatives possible from stale indexing."
+    ],
+    "overall": "One newly recovered distinct, high-value crossing logistics development (reported Erez aid-truck inspections resumed November 18). It was published before last heartbeat but missed then; classified late-recalled, not as fresh incident. WHO regional restriction persists. Production authoritative and unchanged."
+  }
+}

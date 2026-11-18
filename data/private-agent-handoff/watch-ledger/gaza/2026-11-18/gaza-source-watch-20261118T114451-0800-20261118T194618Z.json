@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T114451-0800-20261118T194618Z",
+  "scheduled_for": "2026-11-18T11:44:51-08:00",
+  "started_at": "2026-11-18T11:44:25-08:00",
+  "completed_at": "2026-11-18T11:46:18-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T10:49:43.750-08:00",
+    "end": "2026-11-18T11:46:18-08:00",
+    "previous_run_completed_at": "2026-11-18T10:49:43.750-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T104451-0800-20261118T184943Z.json",
+    "basis": "Bounded supplementary recall since the prior hourly check. Older traceable reports considered only as potentially missed developments; production remains authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "High-value supplementary recall of Gaza civilian casualties, displacement, aid/crossings, food and water, health system/hospitals/ambulances/fuel/transport/medical evacuations/capacity, infrastructure, detention/hostages, ceasefire and military operations with verified civilian effects.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official updates index opened and searched first; latest listed publication is Gaza access and movement dated 16 November and latest situation report 13 November, with no newly dated November 18 operational update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official emergency page opened before additional targeted searches; latest listed WHO news older than November 18. No newly dated November 18 medical-evacuation, hospital, ambulance, fuel, or capacity update found."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional page returned 502 Bad Gateway, continuing the same documented restriction from prior hourly checks. WHO Global remained accessible."
+      }
+    ],
+    "initial_official_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 18 2026 latest update",
+      "site:who.int Gaza occupied Palestinian territory November 18 2026 medical evacuation hospital health latest"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"November 18, 2026\" Gaza 20:00 21:00 22:00 killed wounded",
+      "site:reuters.com/world/middle-east/ Gaza November 18 2026 19:00 UTC 20:00 UTC humanitarian deaths ceasefire",
+      "site:apnews.com/article/ Gaza November 18 2026 evening strikes civilians displaced aid",
+      "site:aa.com.tr/en/middle-east/ Gaza 18 November 2026 evening casualties displacement medical",
+      "site:aljazeera.com/news/2026/11/18 Gaza Wednesday evening November 18 operations civilian casualties",
+      "site:unrwa.org OR site:unicef.org Gaza \"18 November 2026\" water shelter food humanitarian",
+      "site:reliefweb.int OR site:unocha.org \"18 Nov 2026\" Gaza occupied Palestinian humanitarian hospitals",
+      "Gaza November 18 2026 medical evacuation patients hospital ambulances fuel WHO update 18:00 UTC",
+      "site:english.wafa.ps \"18/November/2026\" \"08:\" \"09:\" \"Gaza\" casualties",
+      "Gaza November 18 2026 19:00 UTC 20:00 UTC latest Israel Gaza killed ceasefire displacement",
+      "Gaza November 18 2026 Erez Rafah Kerem Shalom aid shipments crossed new status late Wednesday",
+      "Gaza November 18 2026 hostages prisoners detention ceasefire negotiations new Wednesday afternoon"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed item November 18 at 20:29 Palestine local time describes UN committee draft resolutions; no new Gaza casualty, access, hospital, crossing, or displacement incident later than the previously logged 19:13 Palestine-local Salah al-Din road obstruction report."
+      },
+      {
+        "publisher": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "status": "ACCESSIBLE",
+        "detail": "Checked recent headlines and directly read article about Israel Katz's conditional territorial-seizure threat and Hamas condemnation of the already documented central Gaza ground operation. No verified new territorial seizure, evacuation, implemented ceasefire change, or distinct casualty reported."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "status": "SEARCH_RESULT",
+        "detail": "Latest search surfaced already logged central Gaza ground operation and three fatalities. No separate post-prior-watch event established."
+      },
+      {
+        "publisher": "GitHub previous hourly watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T104451-0800-20261118T184943Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read preceding watch's completed_at, findings and exclusions, and earlier 09:44 and 08:44 ledgers for deduplication."
+      }
+    ],
+    "excluded_candidates": [
+      "Central Gaza Israeli advance west of Yellow Line, Al-Mughraqa fatality, initial flight of families, Salah al-Din obstruction and location-specific westward displacement were already recorded in the 05:44 and 09:44 PST heartbeats; Reuters, Anadolu and WAFA repeats excluded.",
+      "WAFA November 18 drone strike fatalities in Deir al-Balah and Sheikh Ajlin duplicate the previously recorded cases; no new victim promoted.",
+      "Anadolu November 18 reports Israeli Defense Minister Israel Katz's conditional threat to seize territory and evacuate residents in future escalation. No actual newly verified displacement, seizure, or change to the existing operation; excluded as prospective statement without independently documented civilian impact.",
+      "Anadolu November 18 reports Hamas condemnation of the already documented ground advance and a call to mediators, but no independently implemented ceasefire or negotiation change; excluded as rhetoric, not distinct event.",
+      "WAFA 20:29 Palestine-local reports Fourth Committee adoption of UNRWA/refugee/property/settlement draft resolutions; no verified Gaza relief flow, facility access or operational change, so excluded from this incident-focused watch.",
+      "Erez truck-inspection reopening recorded 00:52 PST; new through-entry or final aid delivery was not independently verified. AI-assisted aggregators and secondary retellings excluded.",
+      "Abu Safiya detention extension recorded 07:52 PST; no new detention or hostage development identified.",
+      "WHO and OCHA historical reporting, November 11 Nasser Hospital strike, November 2025 OCHA update #342, recycled headlines, and speculative, opinion or unsupported social items excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean direct page returned HTTP 502, a persistent pre-existing restriction. WHO Global and OCHA OPT were accessible; degraded rather than failed.",
+      "Additional search engine results contained recycled November 2025 and older reports; checked original publication/event dates when possible.",
+      "A bounded search with no newly verified qualifying reports does not establish that no Gaza incident occurred.",
+      "No changes to publication, schedule, approvals or primary Gaza production."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T184451-0800-20261119T024302Z",
+  "scheduled_for": "2026-11-18T18:44:51-08:00",
+  "started_at": "2026-11-18T18:43:02-08:00",
+  "completed_at": "2026-11-18T18:45:26.558-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T17:49:33-08:00",
+    "end": "2026-11-18T18:45:26.558-08:00",
+    "previous_run_completed_at": "2026-11-18T17:49:33-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T174451-0800-20261119T014933Z.json",
+    "basis": "Hourly discovery window bounded by last authenticated heartbeat completion and this run's observation completion. Search also checked November 17-18 for potentially missed items; publication dates outside window do not imply that events occurred during it."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; primary production collector/publisher is authoritative; no approval or deployment undertaken.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct updates index and site-specific search checked before the 12 supplementary targeted searches. Latest displayed update was Gaza Strip access and movement dated 2026-11-16; general humanitarian situation report latest dated 2026-11-13. No new dated update during this hourly window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct WHO official crisis portal and official-source search checked first. Most recent listed relevant DG briefing dated 2026-11-17, whose two substantive new health details were recorded in prior 17:44 run. No new hourly WHO announcement verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional WHO access returned 502 Bad Gateway; known repeated restriction, not a newly detected outage. Global WHO accessible so health coverage remained useful."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 18 2026 Reuters evening Israel strikes civilians killed latest ceasefire",
+      "Gaza November 18 2026 AP News latest casualties military civilian November 19",
+      "site:english.wafa.ps \"November 18, 2026\" Gaza killed injured displacement",
+      "site:news.un.org Gaza \"18 November 2026\" humanitarian civilians",
+      "site:unicef.org Gaza 18 November 2026 displacement winter children water",
+      "site:wfp.org Gaza November 18 2026 food kitchens crossings",
+      "site:icrc.org Gaza \"18 November 2026\" hospital ambulance hostages detained",
+      "site:msf.org Gaza \"18 November 2026\" hospital trauma capacity",
+      "Gaza November 18 2026 Erez Rafah Kerem Shalom trucks aid crossings update",
+      "Gaza Nuseirat Deir al Balah Israel military operation November 18 2026 19 new casualties displacement",
+      "Gaza November 18 2026 hostages detainees court ceasefire talks Reuters AFP AP",
+      "Gaza November 18 2026 fuel hospital medical evacuation water pumping UNICEF UNRWA new"
+    ],
+    "search_issues": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "kind": "HTTP_502",
+        "impact": "Direct regional WHO pages unavailable; preserved DEGRADED and continued with WHO Global."
+      },
+      {
+        "source": "UN News",
+        "kind": "ROBOTS_TXT",
+        "impact": "Search service reported robots.txt access block for news.un.org. OCHA, WHO Global, Reuters, Al Jazeera and UNICEF accessible."
+      }
+    ],
+    "reviewed_sources": [
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "publication_date": "2026-11-18",
+        "decision": "EXCLUDE_DUPLICATE",
+        "detail": "Published 13:01 UTC / 05:01 PST, central Gaza ground operation, local death/displacement and road disruption already captured in earlier watch heartbeats; no separately dated later change substantiated."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/trumps-board-peace-faults-israel-hamas-failure-end-gaza-war-2026-11-18/",
+        "publication_date": "2026-11-18",
+        "decision": "EXCLUDE_DUPLICATE",
+        "detail": "Ceasefire compliance and aid restriction report recorded in 14:44 watch."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/18/palestinians-flee-refugee-camp-as-israel-begins-operation-in-central-gaza",
+        "publication_date": "2026-11-18",
+        "decision": "EXCLUDE_RESTATEMENT",
+        "detail": "Summarizes the same November 18 central Gaza operation, casualties, evacuation and military claim; no reliable uniquely dated material change found."
+      },
+      {
+        "publisher": "The Times of Israel",
+        "url": "https://www.timesofisrael.com/liveblog_entry/erez-crossing-opens-for-inspection-of-gaza-aid-trucks-for-first-time-since-february-2025/",
+        "publication_date": "2026-11-18",
+        "decision": "EXCLUDE_DUPLICATE",
+        "detail": "Erez inspections-only reopening reported and logged at 00:44 run. No confirmed direct new Gaza-entry throughput."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/press-releases/three-children-killed-heavy-rains-batter-displaced-families-gaza-unicef",
+        "publication_date": "2026-11-09",
+        "decision": "EXCLUDE_OLD",
+        "detail": "Verified public-primary flood health and shelter impacts were dated Nov 9; no new Nov 18 update."
+      }
+    ],
+    "deduplication": "Compared with authenticated previous heartbeat (17:44 run) and preceding documented Gaza watch findings: WHO 33,000 respiratory cases and laboratory-supply denials; food-service and tent restrictions; central Gaza incursion, casualties, blocked Salah al-Din road and displacement; OCHA impact estimates; Abu Safiya detention; Erez inspections; Board of Peace truce report; medical-evacuation approvals. No materially new, source-traceable event retained.",
+    "result": "No qualifying non-duplicate development substantiated by source checks within the bounded observation window or late-recall scan. Regional WHO and UN News access degraded but independent primary and established news coverage remained usable.",
+    "notification_decision": "No notification: zero new findings; previously known WHO EMRO access failure was not a new material watch failure.",
+    "restrictions": "No production publication, approval, schedule changes, or disabling."
+  }
+}

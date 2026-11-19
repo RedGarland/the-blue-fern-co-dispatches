@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T214451-0800-20261119T054644Z",
+  "scheduled_for": "2026-11-18T21:44:51-08:00",
+  "started_at": "2026-11-18T21:44:25-08:00",
+  "completed_at": "2026-11-18T21:46:44.240-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T20:48:31.357-08:00",
+    "end": "2026-11-18T21:46:44.240-08:00",
+    "previous_run_completed_at": "2026-11-18T20:48:31.357-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T204451-0800-20261119T044831Z.json",
+    "basis": "Since authenticated immediately preceding hourly watch completion; expanded late-recall scan over November 17-19, explicitly separating article publication dates from incident dates. No date-unverified candidate treated as new."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; primary daily Gaza collector/publisher is authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Verified updates index before 12 targeted supplemental searches. Most recent listed Gaza access/movement update dated 16 November and general humanitarian report dated 13 November; no newly dated qualifying Gaza report."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Verified primary WHO crisis portal before supplemental searches; no new Gaza hospital, evacuation or disease-service change. November 17 WHO DG remarks already recalled in 17:44 watch."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct access returned 502 Bad Gateway, consistent with prior recurrent failure. This limits WHO regional source coverage; global WHO remained available."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 morning strike killed injured civilians Reuters AP ceasefire",
+      "site:english.wafa.ps \"November 19, 2026\" Gaza injured killed Israeli forces",
+      "site:aa.com.tr/en/middle-east Gaza November 19 2026 killings aid displacement",
+      "site:un.org OR site:news.un.org Gaza \"19 November 2026\" humanitarian shelter hospital aid",
+      "Gaza 19 November 2026 medical evacuation hospital ambulance WHO fuel health service",
+      "Gaza 18 November 2026 evening 19 November 2026 Nuseirat Deir al Balah operation roads displaced OCHA",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"19/11/2026\" Israeli army airstrike hospital displaced",
+      "site:reuters.com/world/middle-east/ Gaza Israel \"November 19, 2026\" killed ceasefire aid",
+      "site:apnews.com/article/ Gaza \"Nov 19, 2026\" civilian military aid",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza \"19 November 2026\" shelter food water",
+      "site:icrc.org OR site:msf.org Gaza November 18 2026 19 November 2026 health access ambulances",
+      "Gaza November 19 2026 05:00 06:00 07:00 Gaza City Nuseirat Deir al Balah new casualties crossings blockade"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest displayed Gaza stories were the already-recorded November 18 Abu Safiya detention extension, central Gaza road closure and casualties. A November 18 oncology feature was inspected and concerns West Bank/Beit Jala, not Gaza."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "status": "ACCESSIBLE",
+        "detail": "Central Gaza incursion, civilian movement and casualty reporting restate previously logged 05:44, 09:44 and 13:44 developments; no new incident established."
+      },
+      {
+        "publisher": "Xinhua via China Daily Asia",
+        "url": "https://www.chinadailyasia.com/hk/article/642884",
+        "status": "ACCESSIBLE",
+        "detail": "Published morning November 19 local China time, but describes Wednesday November 18 operation and OCHA 18,000 exposure estimate already captured; later publication is not a new event."
+      },
+      {
+        "publisher": "Israeli Defense Forces",
+        "url": "https://www.idf.il/en/mini-sites/israel-hamas-war-gaza/articles-israel-hamas-war-gaza/a-broken-record-on-repeat-major-ceasefire-violations/",
+        "status": "ACCESSIBLE_WITH_DATE_AMBIGUITY",
+        "detail": "Rolling chronology contains a November 19, 2026 entry referring to 'Wednesday'; November 19, 2026 is Thursday. Page header dated 19 February 2026 and references potentially recycled events. No reliable November 19 civilian-impact event could be established, so excluded."
+      },
+      {
+        "publisher": "GitHub ops/watch-ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T204451-0800-20261119T044831Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read immediately previous 20:44 heartbeat (no_findings, completed 20:48:31 PST), plus 18:44 and 19:44 records; deduplicated against established November 17-18 recall history."
+      }
+    ],
+    "search_issues": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "kind": "HTTP_502",
+        "impact": "Persistent known source failure; WHO Global and OCHA remain accessible, retain DEGRADED without new material escalation."
+      },
+      {
+        "source": "UN News",
+        "kind": "ROBOTS_TXT",
+        "impact": "news.un.org denied search crawling, previously documented; other official UN sources and OCHA available."
+      },
+      {
+        "source": "Search precision",
+        "kind": "STALE_RESULTS",
+        "impact": "Search results repeatedly returned 2023-25 incidents or November 17-18 restatements; excluded after checking event/report dates."
+      }
+    ],
+    "excluded_candidates": [
+      "Xinhua November 19 article reports the already-recorded Wednesday November 18 incursion near Nuseirat/Bureij and previously recorded OCHA population-at-risk estimates; article recency alone insufficient.",
+      "Reuters, Anadolu, Guardian Gaza November 18 civilian casualties and Salah al-Din road restriction: already recorded in 05:44/09:44/13:44 watches.",
+      "WAFA Abu Safiya six-month detention extension: recorded 07:44 watch.",
+      "WHO November 17 33,000 respiratory infections and laboratory supply denial details: recorded 17:44 watch.",
+      "UN WFP meal frequency cut and IOM 38mm tent restriction: recorded 16:44 watch.",
+      "WAFA November 18 Beit Jala cancer-treatment reporting: West Bank, out of Gaza scope.",
+      "IDF rolling chronology November 19, 2026 text contradicts weekday and lacks independently corroborated new civilian impact; do not count.",
+      "Older November 9-13 OCHA flooding and clinic/service disruptions; not new.",
+      "Older 2025 and 2024 Gaza incidents returned by search; rejected by verified publication dates."
+    ],
+    "deduplication": "Compared prior 20:44, 19:44 and 18:44 authenticated watch ledgers and known Gaza findings already logged during the day. No newly substantiated distinct civilian casualty, displacement, humanitarian access, food/water, hospital functioning, medical evacuation, transport/fuel, crossing, detainee, ceasefire negotiation, or military civilian-impact development found.",
+    "result": "No new source-traceable, non-duplicate Gaza development verified in the bounded window; WHO Eastern Mediterranean remains unavailable but coverage retained via WHO Global, OCHA, WAFA, Reuters and other established reporting.",
+    "material_new_degradation": false,
+    "notification_decision": "No notification: no qualifying new development; recurrent WHO regional access failure is known, not material new degradation.",
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T224451-0800-20261119T065017776Z",
+  "scheduled_for": "2026-11-18T22:44:51-08:00",
+  "started_at": "2026-11-18T22:47:19-08:00",
+  "completed_at": "2026-11-18T22:50:17.776-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T21:46:44.240-08:00",
+    "end": "2026-11-18T22:50:17.776-08:00",
+    "previous_run_completed_at": "2026-11-18T21:46:44.240-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T214451-0800-20261119T054644Z.json",
+    "basis": "Bounded hourly discovery window, with a short look-back for late recall and source/event date and cross-run deduplication. No qualifying, independently traceable new development or material new factual increment confirmed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; production is authoritative. No collection, publishing, editorial approval, permission or schedule changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage checked before supplemental searches. Latest visible Gaza access/movement update November 16, 2026, and latest humanitarian situation report November 13. Neither supplies a newly dated incident in the search window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current WHO emergency portal checked before supplemental searches; most recent listed Gaza-specific Director-General speech was November 17, 2026 and its 33,000 respiratory infections and repeated laboratory-supply refusals were recorded by an earlier watch."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Regional entry point still inaccessible with 502 Bad Gateway; persistent known degradation also recorded in previous watches."
+      },
+      {
+        "publisher": "WHO obsolete URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "status": "HTTP_404",
+        "detail": "Obsolete initial link; immediately corrected to accessible WHO canonical portal, so WHO Global coverage remained intact."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"18 November 2026\" Gaza killed injured displaced",
+      "site:reuters.com/world/middle-east/ Gaza \"November 18, 2026\" civilians aid truce",
+      "site:apnews.com/article Gaza \"November 18, 2026\" ceasefire casualties aid",
+      "site:aa.com.tr/en/middle-east Gaza \"18.11.2026\" \"19.11.2026\" casualties",
+      "site:un.org OR site:news.un.org Gaza \"18 November 2026\" situation aid displaced",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza \"18 November 2026\" medical water food",
+      "site:english.wafa.ps Gaza \"19/November/2026\" casualties shelling displacement",
+      "site:who.int Gaza \"19 November 2026\" OR \"18 November 2026\" hospital evacuation",
+      "site:unicef.org OR site:unrwa.org Gaza \"18 November 2026\" fuel water clinics shelters",
+      "site:wfp.org OR site:icrc.org Gaza \"18 November 2026\" crossing food supplies ambulances",
+      "Gaza November 18 2026 late evening 19 November airstrike Nuseirat Deir Balah killed residents",
+      "Gaza November 18 2026 night ceasefire hostage negotiations Erez Rafah Kerem Shalom aid trucks"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Most recent Gaza-linked articles on November 18 describe the previously recorded Hussam Abu Safiya detention extension, central Gaza Salah al-Din road restrictions and known drone-strike fatalities; later other headlines concern West Bank or politics."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en/326353-winter-rains-deepen-gaza-crisis-amid-restricted-access-and-aid-cuts",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 UN account reiterates WFP hot meals once per two days and IOM shelter entry screening, logged earlier; no new dated change."
+      },
+      {
+        "publisher": "GitHub watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T214451-0800-20261119T054644Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read prior 21:44 watch (ended 21:46:44 PST), as well as 18:44–20:44 watches, for exclusion of overlaps."
+      }
+    ],
+    "excluded_candidates": [
+      "November 18 central Gaza Al-Mughraqa/Nuseirat ground operation, families fleeing, casualties, Salah al-Din road closure and OCHA's 18,000 people exposed: reported in earlier watches, not a new event.",
+      "November 18 WAFA/Anadolu Deir al-Balah and Sheikh Ajlin drone fatalities: recorded in preceding ledger.",
+      "November 18 Reuters Board of Peace ceasefire implementation warning and Erez inspection reopening: previously recorded; no new agreement, confirmed crossing throughput or delivery figure.",
+      "November 18 WAFA court extension of Dr. Hussam Abu Safiya detention: previously recorded.",
+      "November 17 WHO respiratory infection total and laboratory supply denial, WFP hot-meal frequency reduction and IOM tent pole screening criterion: already recorded.",
+      "November 18 UN Palestine heavy-rain story repeats earlier incidents, including children killed in older cooking fires; not fresh casualties.",
+      "Older Nasser Hospital damage report from November 12, West Bank incidents and older 2024/2025 results excluded.",
+      "Gaza News Live automatically assembled item about Erez inspection lacks independent corroboration of direct truck delivery and duplicates the already captured crossing development."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persists; WHO Global primary source was accessible. This is an existing degraded source path, not a newly material failure.",
+      "UN News domain search returned robots.txt restriction and UN Secretary-General transcript direct open returned HTTP 403; UN Palestine and OCHA OPT coverage available.",
+      "Search results contained older and irrelevant material; relevant event dates and publication dates were checked.",
+      "No independently verified new incident, evacuation, quantified service-capacity change, crossing throughput, civilian casualties, or fresh ceasefire implementation change was established since the preceding run.",
+      "Exactly 12 additional targeted searches performed after OCHA and WHO first checks."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "previous_run_comparison": "Prior 21:44 heartbeat outcome no_findings, status DEGRADED; similar WHO EMRO limitation. No distinct material deterioration this run."
+  }
+}

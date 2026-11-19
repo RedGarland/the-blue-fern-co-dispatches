@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T104350-0800-20261119T184602782Z",
+  "scheduled_for": "2026-11-19T10:44:51-08:00",
+  "started_at": "2026-11-19T10:43:50-08:00",
+  "completed_at": "2026-11-19T10:46:02.782-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T09:43:35.642-08:00",
+    "end": "2026-11-19T10:46:02.782-08:00",
+    "previous_run_completed_at": "2026-11-19T09:43:35.642-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T093958-0800-20261119T174335642Z.json",
+    "basis": "Bounded supplementary recall since last completed heartbeat; allow distinctive late-recalled dated developments but exclude earlier recorded incidents, undated aggregates, historical reports, and duplicate or unsupported claims."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official updates index checked first; newest index item dated November 19 is West Bank, not Gaza. Latest Gaza entry November 16 access/movement, November 13 humanitarian situation report. No new Gaza report in window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official emergency overview and its news/speeches listings checked after OCHA; last Gaza-related dated speech November 17, no new dated medical evacuation, hospital, ambulance, transport, fuel or functioning-capacity change in window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Direct official regional page returned 502 Bad Gateway; chronic limitation from previous runs, WHO Global still available."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza Humanitarian Situation Report November 19 2026 OCHA latest",
+      "site:who.int Gaza November 19 2026 WHO emergency health hospital evacuation supplies"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 today 18:00 GMT 19:00 GMT casualties killed wounded humanitarian",
+      "site:english.wafa.ps \"19/November/2026\" Gaza evening casualties 19:00",
+      "site:reuters.com/world/middle-east/ 2026-11-19 Gaza latest November 19 2026 18:00 UTC",
+      "site:aa.com.tr/en/middle-east/ \"Nov 19, 2026\" Gaza casualties evacuation",
+      "site:unicef.org Gaza November 19 2026 children shelter water aid response",
+      "site:wfp.org Gaza November 19 2026 crossing food delivery emergency",
+      "site:english.wafa.ps/Pages/Details/ November 19 2026 Gaza 19:00 time shelling ambulances killed",
+      "site:aljazeera.com/news/2026/11/19/ Gaza November 19 afternoon evening latest Israeli fire food displacement",
+      "site:apnews.com/article/ Gaza Nov 19 2026 airstrike aid crossing hospital latest",
+      "site:reliefweb.int/report/occupied-palestinian-territory 19 Nov 2026 Gaza update humanitarian",
+      "site:who.int Gaza \"19 November 2026\" medical evacuation health hospital",
+      "site:unrwa.org \"19 November 2026\" Gaza situation report 239 access shelters"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest index item at 19:15 Palestinian time concerns UN committee resolution, not a new Gaza civilian impact incident. Latest Gaza casualty story dated 16:46 Palestinian time was already logged in earlier 07:44 watch; no new Gaza incident in check window."
+      },
+      {
+        "publisher": "World Food Programme",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 17 joint IOM/WFP winter aid and food shortage update repeated material recovered in earlier watches."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "UNAVAILABLE",
+        "detail": "Full November 19 Situation Report #239 remains inaccessible; no contents inferred."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/gaza-israel-hospital-strike-people-killed-50b547b5a82388b6b415aee4d776fbfb",
+        "status": "ACCESSIBLE",
+        "detail": "Report concerns Nov 12 Nasser Hospital strike and suspended services; not newly occurring during this hourly observation; not promoted as an hourly new development."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 16:46 Palestine Nov 19 multiple Gaza casualties/injuries match prior 07:44 heartbeat; no double counting.",
+      "AP Nov 12 Nasser Hospital airstrike, fatalities, injuries and surgical-capacity disruption is a historical event outside window; no evidence this run identified a new change in capacity.",
+      "AP Nov 19 Save the Children report primarily summarizes 2025 global grave-violation statistics, not a new dated Gaza incident or verified change during window.",
+      "Board of Peace ceasefire implementation report was delivered on Nov 17 and already represented in prior coverage; not a new change during this hour.",
+      "WFP Nov 17 hunger and winterization figures overlap previously recorded food-aid and shelter restrictions.",
+      "WAFA Nov 19 19:15 Palestinian time UN committee right-to-self-determination resolution did not report a change to Gaza ceasefire implementation or civilian operations."
+    ],
+    "limitations": [
+      "WHO EMRO direct page HTTP 502, previously documented and unchanged.",
+      "UNRWA Nov 19 situation report details inaccessible, previously documented and unchanged.",
+      "Two official-first targeted searches followed by 12 additional targeted searches; no more than the specified 12 additional searches performed."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

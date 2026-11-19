@@ -1,0 +1,218 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T074451-0800-20261119T154811967Z",
+  "scheduled_for": "2026-11-19T07:44:51-08:00",
+  "started_at": "2026-11-19T07:44:30-08:00",
+  "completed_at": "2026-11-19T07:48:11.967-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T06:47:55.839-08:00",
+    "end": "2026-11-19T07:48:11.967-08:00",
+    "previous_run_completed_at": "2026-11-19T06:47:55.839-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T064451-0800-20261119T144755839Z.json",
+    "basis": "Previously unrecorded developments discovered since prior hourly check including late-recall publication just before prior completion; no repeated or cumulative counts."
+  },
+  "findings": [
+    {
+      "source_date": "2026-11-19",
+      "event_date": "2026-11-19",
+      "classification": "new",
+      "finding_id": "gaza-20261119-kuwait-roundabout-drone-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177132",
+      "title": "Two Palestinians killed, several others injured by Israeli attacks across Gaza",
+      "publisher": "WAFA",
+      "publication_date": "2026-11-19T16:46:00+02:00",
+      "location": "Salah al-Din Street near Kuwait Roundabout, southeast Gaza City, Gaza Strip",
+      "affected_population_system": "One Palestinian civilian reported killed by drone fire; civilian casualties",
+      "exact_supporting_passage": "killing one person instantly",
+      "source_type": "Palestinian public news agency, eyewitness reporting; corroborated by Anadolu citing Al-Shifa Hospital medical source",
+      "confidence": "MEDIUM_HIGH",
+      "bounded_discovery_context": {
+        "first_recorded_in_this_watch": true,
+        "source_publication_just_before_prior_heartbeat_completion": true,
+        "previous_watch_end": "2026-11-19T06:47:55.839-08:00",
+        "discovery": "Direct WAFA Latest News review; Anadolu November 19 report provides separate hospital-source corroboration.",
+        "corroborating_url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "non_duplicate_basis": "Kuwait Roundabout drone death is separate from already recorded death following an earlier Al-Bureij strike.",
+        "verification_limits": "Individual identity and exact attack time unconfirmed; attributed reporting; not added to cumulative casualty totals."
+      }
+    },
+    {
+      "source_date": "2026-11-19",
+      "event_date": "2026-11-19",
+      "classification": "new",
+      "finding_id": "gaza-20261119-zeitoun-artillery-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177132",
+      "title": "Two Palestinians killed, several others injured by Israeli attacks across Gaza",
+      "publisher": "WAFA",
+      "publication_date": "2026-11-19T16:46:00+02:00",
+      "location": "Zeitoun neighborhood, eastern Gaza City, Gaza Strip",
+      "affected_population_system": "One Palestinian reported killed by artillery shelling; body received at Al-Ahli Arab Hospital",
+      "exact_supporting_passage": "His body was taken to Al-Ahli Arab Hospital",
+      "source_type": "Palestinian public news agency; independently corroborated by Anadolu citing Al-Ahli Hospital medical source",
+      "confidence": "MEDIUM_HIGH",
+      "bounded_discovery_context": {
+        "first_recorded_in_this_watch": true,
+        "source_publication_just_before_prior_heartbeat_completion": true,
+        "discovery": "WAFA article revised/expanded to two deaths; Anadolu separately identifies a Zeitoun artillery death.",
+        "corroborating_url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "non_duplicate_basis": "Different location and attack type from the Kuwait Roundabout drone death and earlier Al-Bureij death.",
+        "verification_limits": "Victim name and event time unverified; no cumulative tally adjustment."
+      }
+    },
+    {
+      "source_date": "2026-11-19",
+      "event_date": "2026-11-19",
+      "classification": "new",
+      "finding_id": "gaza-20261119-siham-school-shelter-two-injured",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177132",
+      "title": "Two Palestinians killed, several others injured by Israeli attacks across Gaza",
+      "publisher": "WAFA",
+      "publication_date": "2026-11-19T16:46:00+02:00",
+      "location": "Siham School near Nasser Medical Complex, western Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Two Palestinians wounded, including a child, at or near a school/shelter adjacent to a major hospital",
+      "exact_supporting_passage": "two Palestinians, including a child, were injured",
+      "source_type": "Palestinian public news agency; Anadolu separately reports a child wounded inside a Khan Younis shelter, possible overlap",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "first_recorded_in_this_watch": true,
+        "discovery": "WAFA report reviewed against earlier 06:44 heartbeat; possible partial overlap with Anadolu Al-Dhahra shelter injury.",
+        "corroborating_url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "non_duplicate_basis": "School/shelter casualties distinct from previously recorded Hamad City wounded woman; Anadolu child injury not added separately.",
+        "verification_limits": "No evidence that Siham School or Nasser Hospital capacity changed; shelter status not independently established. Exact timing not confirmed."
+      }
+    },
+    {
+      "source_date": "2026-11-19",
+      "event_date": "2026-11-19",
+      "classification": "new",
+      "finding_id": "gaza-20261119-bahloul-displaced-shelter-drone-injury",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177132",
+      "title": "Two Palestinians killed, several others injured by Israeli attacks across Gaza",
+      "publisher": "WAFA",
+      "publication_date": "2026-11-19T16:46:00+02:00",
+      "location": "Bahloul station, Zeitoun neighborhood, eastern Gaza City, Gaza Strip",
+      "affected_population_system": "At least one Palestinian reported wounded at a site sheltering internally displaced people; civilian displacement shelter",
+      "exact_supporting_passage": "which shelters displaced people in the Zeitoun neighborhood",
+      "source_type": "Palestinian public news agency; Anadolu attributes additional injured persons including a woman to hospital source, number inconsistent or unspecified",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "first_recorded_in_this_watch": true,
+        "discovery": "WAFA direct report with Anadolu follow-up; reported injury minimum deliberately conservative.",
+        "corroborating_url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "non_duplicate_basis": "Different site from Zeitoun artillery fatality and earlier central Gaza raid findings.",
+        "verification_limits": "WAFA says one person injured; Anadolu says several injured near a fuel-station shelter, including a woman. Counts not summed."
+      }
+    },
+    {
+      "source_date": "2026-11-19",
+      "event_date": "2026-11-19",
+      "classification": "new",
+      "finding_id": "gaza-20261119-hosni-al-masdar-mosque-deir-al-balah-injury",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+      "title": "3 Palestinians killed, others injured in Israeli attacks across Gaza despite truce",
+      "publisher": "Anadolu Agency",
+      "publication_date": "2026-11-19",
+      "location": "Near Hosni Al-Masdar Mosque, east of Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "One Palestinian reported moderately wounded by Israeli fire",
+      "exact_supporting_passage": "moderate injuries from Israeli army fire near the Hosni Al-Masdar Mosque",
+      "source_type": "Established news wire citing Al-Aqsa Martyrs Hospital medical source",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "first_recorded_in_this_watch": true,
+        "discovery": "Anadolu November 19 report found in bounded targeted search; no separate confirmation from another outlet yet.",
+        "corroborating_url": null,
+        "non_duplicate_basis": "Reported east Deir al-Balah injury is spatially distinct from Khan Younis shelter, Zeitoun, Kuwait Roundabout, and earlier Al-Bureij incident.",
+        "verification_limits": "Individual identity and incident time unverified; exact publication time unavailable."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza production collector/publisher authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Updates page listed Nov 19 West Bank-only item, Nov 16 Gaza access-and-movement, and Nov 13 Gaza situation report; no new Gaza bulletin."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO emergency overview accessible; no new Nov 19 Gaza health-capacity/evacuation change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Persistent known 502 Bad Gateway; other WHO global coverage accessible."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza latest humanitarian situation report November 19 2026",
+      "site:who.int Gaza health emergency update 19 November 2026 medical evacuation hospital"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:reuters.com/world/middle-east/ Gaza November 19 2026 2026-11-19 hospital ceasefire aid displaced",
+      "site:apnews.com/article/ Gaza November 19 2026 strikes injuries aid crossings",
+      "site:english.wafa.ps/Pages/Details/ Gaza Nov 19 2026 casualties displaced morning",
+      "site:news.un.org/en/story/2026/11 Gaza November 19 2026 relief supplies displacement",
+      "site:palestinercs.org November 19 2026 Gaza ambulance hospital injuries",
+      "site:unrwa.org Gaza 19 November 2026 shelters flooding displaced aid",
+      "Gaza Kuwait Roundabout drone Salah al Din street 19 November 2026 killed Zeitoun Siham school Bahloul station",
+      "Gaza Nov 19 2026 drone Kuwait roundabout killed Zeitoun artillery displaced shelter",
+      "site:aa.com.tr/en/middle-east/ Gaza 19 Nov 2026 Thursday killed Zeitoun Khan Younis",
+      "site:aljazeera.com/news/2026/11/19/ Gaza attacks deaths hospital displaced",
+      "site:wfp.org Gaza 19 November 2026 food distributions crossings November",
+      "site:unicef.org Gaza November 19 2026 clean water hospital child health"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 19 16:46 Palestine-time new Gaza casualties report was found; retrieved canonical article."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177132",
+        "status": "ACCESSIBLE",
+        "detail": "Two deaths at separate Gaza City sites and injuries at Khan Younis school and displaced shelter in Zeitoun."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "status": "ACCESSIBLE",
+        "detail": "Hospital-source corroboration for two Gaza City deaths; an already logged Al-Bureij death was omitted as duplicate; one separate central Gaza injury newly identified."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "Nov 19 UNRWA situation report listing/title accessible, but detailed body not exposed in retrieved page; no fact extracted from it."
+      }
+    ],
+    "excluded_candidates": [
+      "Anadolu's third November 19 death refers to earlier north Al-Bureij strike fatality already recorded in Nov 19 00:44 watch; excluded.",
+      "Anadolu Hamad City woman wounded and earlier WAFA north Al-Bureij fatality recorded in prior watch.",
+      "Anadolu's Khan Younis Al-Dhahra child-shelter injury may overlap WAFA Siham School child injury: do not count twice.",
+      "Reuters Nov 19 raid conclusion, Salah al-Din reopening, and ~6,000 displacement previously recorded in Nov 19 02:44 watch.",
+      "Previously published OCHA Nov 13 flood, WHO Nov 17 respiratory/lab, WFP hot meal reductions, and six-month extension of Abu Safiya detention already recorded or retrospective.",
+      "UNRWA new report page lacks accessible body; no unverified statistics taken from title; unrelated West Bank incidents and opinion excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean persistent HTTP 502; already known, not newly material.",
+      "UN News targeted query robots-restricted; OCHA/WHO Global/UNRWA accessed via other routes.",
+      "WAFA article appears to have been updated from an earlier one-death excerpt to two deaths; Anadolu separately reports two deaths plus already-recorded Al-Bureij death. Event totals deliberately not inferred.",
+      "Several injuries were separately reported; possible shelter-event overlap not counted twice.",
+      "Twelve additional targeted searches are a bounded recall and not exhaustive."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T034451-0800-20261119T114751Z",
+  "scheduled_for": "2026-11-19T03:44:51-08:00",
+  "started_at": "2026-11-19T03:45:26-08:00",
+  "completed_at": "2026-11-19T03:47:51-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T02:41:53.486-08:00",
+    "end": "2026-11-19T03:47:51-08:00",
+    "previous_run_completed_at": "2026-11-19T02:41:53.486-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T024451-0800-20261119T104153488Z.json",
+    "basis": "New source-supported developments within the window or previously uncaptured distinct operational changes; exclude repeated incidents, outdated totals, prospective risks and commentary."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; the production Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Checked homepage before broader searches. Nov 19 item addressed the West Bank, most recent Gaza access/movement page dated Nov 16, and latest Gaza situation report dated Nov 13. No new Gaza operational report."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked official emergency overview and targeted global-WHO search before other searches. No distinct November 19 medical evacuation, hospital-capacity or aid update recovered."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Regional page returned 502 Bad Gateway on direct access, consistent with previous hour's documented access issue. Global WHO remained accessible."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian update 19 November 2026 18 November 2026 crossings displacement casualties",
+      "site:who.int Gaza 19 November 2026 WHO emergency health medical evacuation hospitals"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 latest 11:00 UTC casualties hospitals aid crossing Israeli strikes Reuters AP",
+      "site:english.wafa.ps/Pages/Details/ \"19/November/2026\" Gaza \"injured\" \"killed\"",
+      "site:aa.com.tr/en/middle-east/ \"Nov 19, 2026\" Gaza ceasefire displaced killed",
+      "site:un.org \"19 November 2026\" Gaza humanitarian displaced medical",
+      "site:who.int \"19 November 2026\" Gaza medical evacuations hospital WHO",
+      "site:reuters.com/world/middle-east/ \"Nov 19, 2026\" \"Gaza\" food aid health",
+      "site:english.wafa.ps/Pages/Details/ \"19/November/2026\" \"Gaza\" \"PM\"",
+      "Gaza November 19 2026 Thursday 12:00 UTC latest Palestinian wounded killed near Khan Younis Nuseirat",
+      "site:apnews.com/article \"Nov 19, 2026\" Gaza casualties aid crossing Rafah",
+      "site:aljazeera.com/news/2026/11/19/ Gaza health winter hospital displacement ceasefire",
+      "site:wfp.org OR site:unicef.org OR site:unrwa.org \"19 November 2026\" Gaza food water medicine shelter",
+      "site:reliefweb.int \"19 Nov 2026\" \"Gaza\" health displacement humanitarian"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza casualty and Maghazi demolition story was the November 19 09:35 Palestine-time WAFA item, already recorded in preceding heartbeats; later prominent entries concerned the West Bank."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177116",
+        "status": "ACCESSIBLE",
+        "detail": "WAFA restated UN calls for humanitarian funding, safe civilian access and improvements to Rafah medical evacuation transit conditions; dated before prior watch and no verified new crossing restriction, closure, capacity loss or actual change."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/19/displacement-by-design-trumps-gaza-peace-plan-a-failure-aid-groups-say",
+        "status": "ACCESSIBLE",
+        "detail": "New report of a five-NGO policy scorecard and background quantities from earlier periods; no new, independently dated operational change isolated from commentary or historical data."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "RETRIEVED_IN_SEARCH",
+        "detail": "Completion of central Gaza tank raid, claimed road reopening and attributed ~6,000 displaced estimate already captured in immediately preceding watch."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T024451-0800-20261119T104153488Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Previous heartbeat read on ops/watch-ledger and compared for duplicate incidents and repeat estimates."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters Nov 19 10:09 UTC completion of the central Gaza raid, Israeli military claim that Salah al-Din road reopened, and Gaza government media office estimate of about 6,000 people displaced: all in previous heartbeat.",
+      "WAFA Nov 19 09:35 Palestine-time death from prior Al-Bureij strike, woman injured in Khan Younis and Maghazi house demolitions: all previously recorded.",
+      "WAFA Nov 19 08:42 Palestine-time UN reiteration on Rafah medical evacuation transfer conditions and flood risks: no new dated on-the-ground service or infrastructure change; do not treat requested improvements or hypothetical risks as incidents.",
+      "Nov 19 reporting on five-NGO Gaza peace-plan scorecard: policy assessment and historical quantities, not a verified new medical evacuation, aid-delivery or territorial incident during window.",
+      "Nov 12 Nasser Hospital strike and other older casualties, displaced people and shelter data: historical repeats; West Bank-only stories excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional page remains HTTP 502, a known rather than new material restriction.",
+      "Search coverage is bounded, not exhaustive; some newly published items may only become indexable after this watch.",
+      "No findings are promoted from opinion, historical statistics, proposals or secondary recounting without independently identifiable operational change."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

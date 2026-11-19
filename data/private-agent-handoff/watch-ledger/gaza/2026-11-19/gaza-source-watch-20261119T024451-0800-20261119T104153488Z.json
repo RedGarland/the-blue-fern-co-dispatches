@@ -1,0 +1,153 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T024451-0800-20261119T104153488Z",
+  "scheduled_for": "2026-11-19T02:44:51-08:00",
+  "started_at": "2026-11-19T02:40:05-08:00",
+  "completed_at": "2026-11-19T02:41:53.486-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T01:47:58.814-08:00",
+    "end": "2026-11-19T02:41:53.486-08:00",
+    "previous_run_completed_at": "2026-11-19T01:47:58.814-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T014451-0800-20261119T094758814Z.json",
+    "basis": "New source publications since the previous watch, or distinct previously unrecorded source-supported developments; prior incidents not double-counted."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261119-central-raid-reported-complete-salahudeen-road-reopening",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+      "title": "Israel says it concludes Gaza tank raid",
+      "publisher": "Reuters",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19T10:09:00Z",
+      "event_date": "2026-11-19",
+      "location": "Salah al-Din (Salahudeen) Road, central Gaza Strip",
+      "affected_population_system": "Road users, displaced civilians and north-south transport access in central Gaza",
+      "affected_population": "Civilian road users and nearby displaced families; exact number affected by reopening unknown",
+      "affected_system": "Main north-south Salah al-Din road and security conditions after the incursion",
+      "exact_supporting_passage": "the main north-south Salahudeen road had been reopened for traffic.",
+      "source_type": "Established international news reporting attributing Israeli military announcement",
+      "classification": "follow-up",
+      "confidence": "MEDIUM_HIGH",
+      "summary": "Reuters reports that the Israeli military announced completion of its ground/tank operation against a suspected tunnel west of the Yellow Line and said Salah al-Din Road was reopened. Residents separately reported sporadic gunfire and continuing danger; reopening is an Israeli claim, not confirmation the route is safe or fully accessible.",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "source_published_after_previous_completed_at": true,
+        "reported_at_utc": "2026-11-19T10:09:00Z",
+        "prior_coverage": "November 18 incursion, displacement, road closure and bulldozing already logged; reported termination and claimed reopening are new.",
+        "verification_limits": "Military's original Facebook statement not directly obtained; Reuters attributes it. Residents disputed practical safety. Unverified social footage was excluded."
+      }
+    },
+    {
+      "finding_id": "gaza-20261119-central-raid-6000-estimated-displaced",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+      "title": "Israel says it concludes Gaza tank raid",
+      "publisher": "Reuters",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19T10:09:00Z",
+      "event_date": "2026-11-18",
+      "location": "Central Gaza near Nuseirat and Salah al-Din Road",
+      "affected_population_system": "Palestinian families displaced by the November 18 Israeli incursion",
+      "affected_population": "Approximately 6,000 people reportedly fled on November 18, according to Gaza government media office; independently verified count unknown",
+      "affected_system": "Civilian displacement and access to shelter",
+      "exact_supporting_passage": "around 6,000.",
+      "source_type": "Established international news reporting an attributed estimate from Gaza government media office",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "summary": "Reuters supplied a new displacement magnitude: the Gaza government media office estimated about 6,000 people fled the operation area on November 18. This is attributed and not independently confirmed; it does not represent an additional 6,000 beyond previously reported displaced groups, and is not additive to OCHA's population-at-risk figure.",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "source_published_after_previous_completed_at": true,
+        "reported_at_utc": "2026-11-19T10:09:00Z",
+        "prior_coverage": "Prior watches recorded families/dozens fleeing and an OCHA estimate of 18,000 at risk, not a 6,000-displaced estimate.",
+        "verification_limits": "Estimate attributed to Gaza government media office via Reuters; no independent displacement registration or original statement checked. Avoid double counting or converting estimate into verified census."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary humanitarian recall only; primary Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage checked first; latest Gaza page was the November 16 access/movement item and latest Gaza situation report November 13. No newly released November 19 Gaza situation update visible."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO global Gaza emergency page checked first; no distinct new November 19 operational or medical-evacuation update detected."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "TIMEOUT",
+        "detail": "Persistent regional portal access failure, previously HTTP 502 and now timed out on direct request; WHO global available."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza November 19 2026 humanitarian situation report",
+      "site:who.int Gaza November 19 2026 health access medical evacuation hospital"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 Thursday latest Israeli strikes casualties displaced central Gaza Nuseirat Reuters AP",
+      "site:english.wafa.ps/Pages/Details/ \"19/November/2026\" Gaza killed injured hospital",
+      "site:aa.com.tr/en/middle-east/ \"Nov 19, 2026\" Gaza aid ceasefire crossings displaced",
+      "site:un.org \"19 November 2026\" Gaza humanitarian supplies civilians OCHA",
+      "site:who.int OR site:emro.who.int \"19 November 2026\" Gaza health medical evacuation hospitals",
+      "Gaza November 19 2026 10:00 UTC Rafah ambulance hospital fuel water aid ceasefire",
+      "site:reuters.com/world/middle-east/ \"Nov 19, 2026\" \"Gaza\" \"aid\" \"crossings\"",
+      "site:apnews.com/article \"November 19, 2026\" Gaza hospital fuel casualties displacement",
+      "site:aljazeera.com/news/2026/11/19/ Gaza Israeli troops road reopened 6000 displaced",
+      "site:wfp.org OR site:unrwa.org OR site:unicef.org Gaza November 19 2026 water meals aid shelter",
+      "site:reliefweb.int \"19 Nov 2026\" Gaza humanitarian displacement casualties health",
+      "Gaza November 19 2026 10:00 UTC 11:00 UTC latest ceasefire medevac Nasser hospital aid Reuters"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest relevant Gaza report remains 09:35 Palestinian local time, previously recorded. Later entries were West Bank or unrelated."
+      },
+      {
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "WFP/IOM November 17 joint release reviewed; every-other-day meals, shelter constraints and flood damage represent earlier reporting, not novel developments in current window."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "ACCESSIBLE",
+        "detail": "Reuters November 19 10:09 UTC report explicitly adds claimed end of raid/reopening of road and an attributed approx. 6,000 displaced estimate."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T014451-0800-20261119T094758814Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Immediate prior heartbeat reviewed to exclude previously logged casualties, Maghazi demolitions and Nuseirat displacement."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 19 09:35 Al-Bureij named death, Hamad City woman injury and Maghazi demolitions already logged in preceding heartbeats.",
+      "November 18 OCHA displacement-risk population 18,000 and Reuters November 18 operation launch/road closure previously logged; only new November 19 closure-status update and 6,000 reported displaced estimate retained.",
+      "WFP/IOM November 17 shelter, food and crossing data overlap earlier public statements and previous recall watches; no new change established in current observation window.",
+      "Reuters explicitly unverified social media videos excluded.",
+      "Older Gaza stories and West Bank-only items excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional portal timed out on direct request; this is a pre-existing limitation (formerly HTTP 502), not newly material degradation.",
+      "Original Israeli military post and original Gaza government media office count not independently retrieved; Reuters reporting supports precise attribution, not ground truth.",
+      "Search results are not exhaustive and publication timestamps can be updated after first release."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "runtime_note": "Automation invocation occurred before the nominal :44:51 occurrence; scheduled_for preserves the nominal occurrence without changing the schedule."
+  }
+}

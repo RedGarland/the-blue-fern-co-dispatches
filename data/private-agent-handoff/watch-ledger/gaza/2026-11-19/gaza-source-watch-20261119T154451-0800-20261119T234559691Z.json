@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T154451-0800-20261119T234559691Z",
+  "scheduled_for": "2026-11-19T15:44:51-08:00",
+  "started_at": "2026-11-19T15:44:06-08:00",
+  "completed_at": "2026-11-19T15:45:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T14:45:15.453-08:00",
+    "end": "2026-11-19T15:45:59-08:00",
+    "previous_run_completed_at": "2026-11-19T14:45:15.453-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T144451-0800-20261119T224515453Z.json",
+    "basis": "Latest authenticated predecessor heartbeat through this run; targeted late recall permitted for documented earlier incidents not present in prior supplementary watch ledger. Reporting dates and Palestine local timestamps distinguished from America/Los_Angeles observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza production collector and publication remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked first via targeted search then direct updates index. November 19 lead entry West Bank-only. Latest Gaza-specific item Gaza access and movement November 16; latest Gaza situation report November 13. No newly published Gaza-specific change during interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked second via targeted search and direct WHO page. Most recent WHO Director-General listed speech November 17; no dated November 19 health-service or evacuation update verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Direct fetch returned HTTP 502, consistent with prior watch's known restriction. WHO global fallback accessible; not a newly material failure."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report 19 November 2026 latest access casualties displacement",
+      "site:who.int Gaza occupied Palestinian territory emergency 19 November 2026 health evacuations hospitals"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:reuters.com/world/middle-east/ Gaza 19 November 2026 23:00 GMT overnight 20 November Palestinians wounded killed evacuation",
+      "site:english.wafa.ps/Pages/Details/ Gaza 19 November 2026 evening 20 November 2026 latest casualties",
+      "site:aa.com.tr/en/middle-east/ 19 November 2026 Gaza latest casualties homes displaced night",
+      "site:apnews.com/article/ Gaza 19 November 2026 late afternoon ceasefire victims",
+      "site:pchrgaza.org November 19 2026 Gaza Palestinian civilians demolition latest displacement",
+      "site:palestinercs.org 19 November 2026 Gaza ambulances hospital evacuations",
+      "site:unrwa.org/news-reports/reports Gaza situation report 19 November 2026 20 November",
+      "site:wfp.org 19 November 2026 Gaza food access border crossings trucks",
+      "site:unicef.org Gaza 19 November 2026 water displacement children",
+      "site:msf.org 19 November 2026 Gaza medical hospitals fuel ambulance",
+      "Gaza Nov 19 2026 23:00 UTC Nov 20 2026 00:00 UTC latest casualties civilian Gaza Reuters WAFA",
+      "Gaza 19 November 2026 ceasefire negotiations aid access crossings hostages military operation latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Current last-news listing checked; newest Gaza casualty entry dated November 19 16:46 Palestine time, already in preceding supplementary ledger. Later listing items concern West Bank or diplomatic issues."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+        "status": "ACCESSIBLE",
+        "detail": "November 19 report read in full. November 16–18 named fatalities and injuries already represented in prior supplementary heartbeats; northeastern Nuseirat operation/road closure/reopening/displacement overlap earlier watch and not duplicated."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "detail": "Current rolling emergency summary mentions food parcel and hot-meal cuts, but page has no verifiable new publication/change timestamp during interval; excluded as undated/current-state rather than new incident."
+      }
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T144451-0800-20261119T224515453Z.json",
+      "status": "READ_VERIFIED",
+      "findings_count": 6
+    },
+    "excluded_candidates": [
+      "PCHR's November 16–18 reports of deaths, injury, central Gaza demolition and flight: preceding supplementary heartbeat(s), no distinct new event or validated new timestamp.",
+      "WAFA November 19 Kuwait Roundabout, Zeitoun and Khan Younis cases previously recorded.",
+      "WFP undated rolling cut figures; not established as a change during the latest observation window.",
+      "OCHA November 13 and WHO November 17 materials are previously published historical context, not new developments.",
+      "Search results limited to older established reports or duplicate accounts; unsupported or uncertain-dated claims excluded."
+    ],
+    "limitations": [
+      "WHO EMRO HTTP 502 persists, so this run is DEGRADED rather than SUCCESS even though primary OCHA and WHO Global access remained available.",
+      "Search indexing may delay publication of latest reports; no claim that all possible Gaza events were comprehensively reviewed.",
+      "No positive findings established as newly distinct versus authenticated previous watch ledger; primary publisher's production state was not accessed or modified."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

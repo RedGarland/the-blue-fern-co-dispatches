@@ -1,0 +1,174 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T004451-0800-20261119T085217Z",
+  "scheduled_for": "2026-11-19T00:44:51-08:00",
+  "started_at": "2026-11-19T00:47:03-08:00",
+  "completed_at": "2026-11-19T00:52:17.043-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-18T23:46:56.498-08:00",
+    "end": "2026-11-19T00:52:17.043-08:00",
+    "previous_run_completed_at": "2026-11-18T23:46:56.498-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T234451-0800-20261119T074656Z.json",
+    "basis": "New publications or late-recalled traceable distinct information since prior recorded watch, without treating earlier events as new events."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177118",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "publication_time": "09:35 local (Palestinian time; 2026-11-18 23:35 PST)",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency; attributed medical and local eyewitness accounts; not independently corroborated",
+      "confidence": "medium",
+      "finding_id": "gaza-20261119-al-bureij-ahmad-abu-armanah-succumbs-prior-strike",
+      "title": "WAFA reports Ahmad Abu Armanah died from injuries in an earlier Israeli strike near Al-Bureij",
+      "event_date": null,
+      "location": "Near Al-Bureij refugee camp, central Gaza; Al-Aqsa Martyrs Hospital reporting",
+      "affected_population_or_system": "One Palestinian male reported deceased following prior strike; age and civilian status unverified; may overlap reported aggregate fatalities",
+      "exact_supporting_passage": "Ahmad Abu Armanah had died from injuries",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-19T00:52:17.043-08:00",
+        "publication_predates_previous_heartbeat_completion": true,
+        "late_recall": true,
+        "prior_heartbeat_completed_at": "2026-11-18T23:46:56.498-08:00",
+        "previously_logged": "Earlier central Gaza operation and other named-location casualties; this reported named death from an earlier Al-Bureij strike was not present in audited recent heartbeats.",
+        "new_increment": "Newly recovered attributed medical report of a death following an earlier strike.",
+        "qualification": "Named case; no independent medical documentation, exact death time, age, or double-count check against cumulative Gaza health totals. Do not automatically add to aggregate counts."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177118",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "publication_time": "09:35 local (Palestinian time; 2026-11-18 23:35 PST)",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency; attributed medical and local eyewitness accounts; not independently corroborated",
+      "confidence": "medium",
+      "finding_id": "gaza-20261119-hamad-city-woman-injured-gunfire",
+      "title": "WAFA reports woman wounded by gunfire at homes and displacement tents in Hamad City",
+      "event_date": null,
+      "location": "Hamad City, north of Khan Younis, southern Gaza",
+      "affected_population_or_system": "One woman reportedly wounded; residents and displaced people exposed to gunfire around homes and tents",
+      "exact_supporting_passage": "a woman was wounded by Israeli gunfire",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-19T00:52:17.043-08:00",
+        "publication_predates_previous_heartbeat_completion": true,
+        "late_recall": true,
+        "previously_logged": "Recent ledger records central Gaza incursion and other civilian casualties but not this Hamad City injury.",
+        "new_increment": "Distinct reported injury at a southern Gaza residential/displacement location.",
+        "qualification": "Medical sources cited by WAFA; identity, injury severity, timing and independent verification unavailable."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177118",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "publication_time": "09:35 local (Palestinian time; 2026-11-18 23:35 PST)",
+      "event_time": null,
+      "source_type": "Established Palestinian news agency; attributed medical and local eyewitness accounts; not independently corroborated",
+      "confidence": "medium",
+      "finding_id": "gaza-20261119-al-maghazi-evacuated-homes-destroyed",
+      "title": "WAFA reports demolition of evacuated homes east of Al-Maghazi during continued central Gaza ground incursion",
+      "event_date": "2026-11-19",
+      "location": "East of Al-Maghazi refugee camp; additional explosions near Al-Nuseirat, central Gaza",
+      "affected_population_or_system": "Evacuated residential buildings and nearby communities; number of structures beyond 'several' and further displacements not independently quantified",
+      "exact_supporting_passage": "destroyed several evacuated homes east of Al-Maghazi",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-19T00:52:17.043-08:00",
+        "publication_predates_previous_heartbeat_completion": true,
+        "late_recall": true,
+        "previously_logged": "November 18 incursion west of Yellow Line, road closure, earthworks and displacement were already logged; do not count those as new.",
+        "new_increment": "Specific reported destruction of evacuated residential structures east of Al-Maghazi on Thursday, using explosives allegedly delivered by quadcopter drones.",
+        "qualification": "Local and eyewitness sources attributed by WAFA; physical damage and delivery method not independently verified. No new civilian displacement total or injuries from demolition established."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza collection/publication remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "November 19 newest home item concerns October West Bank snapshot, not Gaza. Latest Gaza access/movement item November 16; November 13 Gaza report already available."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Latest relevant speech listed November 17; known cases and lab supply restrictions already recorded."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "WHO Eastern Mediterranean regional portal and emergency situation reports returned HTTP 502; pre-existing documented limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 19 2026 humanitarian update casualties aid displacement",
+      "site:who.int Gaza November 19 2026 hospital medical evacuation health",
+      "site:un.org Gaza November 19 2026 OCHA humanitarian spokesperson briefing",
+      "Gaza November 19 2026 08:00 UTC Reuters civilian killed aid crossing ceasefire",
+      "Gaza Nov 19 2026 08:00 UTC AP casualties displacement strikes",
+      "Gaza overnight November 19 2026 food water winter shelter UNICEF WFP UNRWA",
+      "site:english.wafa.ps 19 November 2026 Gaza 10:00 11:00 killed ambulance medical hospital",
+      "site:aa.com.tr/en/middle-east \"19.11.2026\" Gaza civilians displaced roads aid",
+      "site:reuters.com/world/middle-east/ \"November 19, 2026\" Gaza Israeli forces Palestinians",
+      "site:apnews.com/article/ \"November 19, 2026\" Gaza aid Israeli strikes Palestinians",
+      "site:unrwa.org OR site:unicef.org OR site:wfp.org Gaza November 19 2026 new aid deliveries flooding hospital",
+      "Gaza Palestine 19 Nov 2026 Thursday morning 08:30 GMT civilian casualties hospital fuel crossing Rafah new developments"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177118",
+        "status": "ACCESSIBLE",
+        "detail": "WAFA November 19 09:35 (Palestine time), first identified via targeted search; article explicitly reports two casualty developments and newly destroyed evacuated homes. Publication precedes previous heartbeat completion by approximately 12 minutes, hence late recall."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Confirmed November 19 09:35 WAFA article timestamp in live latest-news listing."
+      },
+      {
+        "url": "https://www.thenews.pk/print/1449561-three-palestinians-killed-as-israel-launches-ground-operation-in-gaza-despite-truce",
+        "status": "ACCESSIBLE",
+        "detail": "AFP syndicated Nov 19 account recaps Wednesday incursion, flight, prior drone fatalities; not proof of newly distinct Nov 19 killings."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T234451-0800-20261119T074656Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read prior heartbeat and earlier 22:44, 17:44 and 13:44 watches to filter previously recorded details."
+      }
+    ],
+    "excluded_candidates": [
+      "AFP Nov 19 syndicated recap of three deaths and Wednesday ground incursion: casualties and displacement already covered; not new event.",
+      "November 18 Erez inspections, ceasefire Board of Peace assessment, Abu Safiya detention extension, WFP/IOM shelter and hot-meal restrictions, WHO respiratory infection/laboratory denials already recorded.",
+      "WAFA 08:42 UN concerns repeat earlier operation and UN estimates, without newly verified affected count.",
+      "Unrelated West Bank October snapshot, undated WFP overview, and old hospital material excluded.",
+      "WAFA November 19 claims reported with attribution; separate follow-ups and one new injury are not represented as independently confirmed totals."
+    ],
+    "limitations": [
+      "WHO EMRO portal and situation reports HTTP 502 persists, but WHO Global and OCHA first checks succeeded.",
+      "New qualifying items each rely on a single attributed WAFA article, not independent cross-confirmation; no numeric aggregation into previous fatality totals.",
+      "Article published approximately 11 minutes before prior watch completed but was absent from that run's findings; captured here as late recall rather than new publication after 23:46 PST."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

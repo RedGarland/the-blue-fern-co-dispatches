@@ -1,0 +1,169 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T174451-0800-20261119T014933Z",
+  "scheduled_for": "2026-11-18T17:44:51-08:00",
+  "started_at": "2026-11-18T17:46:03-08:00",
+  "completed_at": "2026-11-18T17:49:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T16:53:22.475-08:00",
+    "end": "2026-11-18T17:49:33-08:00",
+    "previous_run_completed_at": "2026-11-18T16:53:22.475-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T164451-0800-20261119T005322475Z.json",
+    "basis": "Hourly recall window for newly discovered information; WHO facts were published on 17 November and are expressly late-recalled, not a claim that the underlying events began this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-who-acute-respiratory-infection-33000-winter-risk",
+      "canonical_source_url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---17-november-2026",
+      "title": "WHO reports 33,000 acute respiratory infection cases in Gaza and year-on-year increase",
+      "publisher": "World Health Organization; Director-General Tedros Adhanom Ghebreyesus",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Residents experiencing acute respiratory infections in flood-affected displacement conditions; surveillance reporting period and age distribution not stated.",
+      "exact_supporting_passage": "There are already 33 000 cases of acute respiratory infection – higher than at this time last year.",
+      "source_type": "Primary WHO Director-General press-briefing statement",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-18T17:49:33-08:00",
+        "discovery_method": "Direct first-pass WHO Global emergency portal check and follow-through to WHO Director-General's 17 November primary statement, then checked against the immediately preceding authenticated GitHub watch heartbeat. Twelve additional targeted searches found no fresher independent confirmation.",
+        "late_recall": true,
+        "source_predates_window": true,
+        "new_during_observation_window": false,
+        "dated_change_or_period_verified": false,
+        "duplicate_audit": "The immediately previous 16:44 run recorded WFP hot-meal frequency and IOM tent clearance dimensions, not these WHO respiratory and laboratory-surveillance figures; prior Gaza incursion, medical-evacuation, detention and crossing findings were excluded.",
+        "material_increment": "WHO quantified winter-related acute respiratory infection burden as 33,000 cases, higher than at the same point in the prior year, a previously unrecorded precise health surveillance signal.",
+        "caveats": "WHO did not specify whether 33,000 is a weekly, seasonal or cumulative count, the reporting interval, or facility source data; no assertion of new infections occurring during the observation hour."
+      }
+    },
+    {
+      "finding_id": "gaza-20261117-who-repeated-laboratory-supply-entry-denials",
+      "canonical_source_url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---17-november-2026",
+      "title": "WHO reports repeated refusal of laboratory supplies needed for outbreak detection in Gaza",
+      "publisher": "World Health Organization; Director-General Tedros Adhanom Ghebreyesus",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip crossings and laboratory disease surveillance; individual sites not specified",
+      "affected_population_or_system": "Gaza public-health laboratory diagnostics and disease-outbreak early warning, residents relying on timely detection and response.",
+      "exact_supporting_passage": "We also need unhindered entry of laboratory supplies that have been denied multiple times, so that disease outbreaks can be detected and responded to early.",
+      "source_type": "Primary WHO Director-General press-briefing statement",
+      "classification": "follow-up",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-18T17:49:33-08:00",
+        "discovery_method": "Direct first-pass WHO Global emergency portal check and follow-through to WHO Director-General's 17 November primary statement, then checked against the immediately preceding authenticated GitHub watch heartbeat. Twelve additional targeted searches found no fresher independent confirmation.",
+        "late_recall": true,
+        "source_predates_window": true,
+        "new_during_observation_window": false,
+        "dated_change_or_period_verified": false,
+        "duplicate_audit": "The immediately previous 16:44 run recorded WFP hot-meal frequency and IOM tent clearance dimensions, not these WHO respiratory and laboratory-surveillance figures; prior Gaza incursion, medical-evacuation, detention and crossing findings were excluded.",
+        "material_increment": "WHO explicitly identified multiple entry denials for laboratory supplies as a hindrance to detection and early response to outbreaks, a specific health-service capacity bottleneck rather than generalized aid restrictions.",
+        "caveats": "The WHO statement does not date the denials, identify supplies, crossings, responsible review determinations, number of consignments or quantified downstream impact. This is a reported ongoing restriction, not proof of a new denial during this hour."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only, not collection, editorial approval or publication.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage and update index checked first; newest listed Gaza access/movement report dated November 16, newest general humanitarian situation report dated November 13; no new November 18/19 item."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Correct official situation portal and global news checked first; followed link to November 17 Director-General primary statement and verified both quoted passages. An obsolete WHO address initially returned HTTP 404, corrected by canonical address."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional source still returns 502 Bad Gateway; pre-existing degradation from earlier watches; WHO Global remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 19, 2026\" killed injured hospital displacement",
+      "site:reuters.com/world/middle-east/ Gaza \"November 18, 2026\" November 19 civilian killed aid ceasefire",
+      "site:apnews.com/article/ Gaza \"November 18, 2026\" latest civilians hospital aid ceasefire",
+      "site:aa.com.tr/en/middle-east/ Gaza \"19.11.2026\" killed displaced bulldozers",
+      "site:un.org OR site:news.un.org Gaza November 18 2026 evening humanitarian civilians displaced aid",
+      "site:reliefweb.int/report/occupied-palestinian-territory Gaza \"18 November 2026\" \"19 November 2026\" health access",
+      "site:who.int Gaza November 18 2026 November 19 hospital evacuation ambulance fuel WHO",
+      "site:unicef.org OR site:unrwa.org Gaza November 18 2026 water displaced aid emergency",
+      "site:wfp.org OR site:palestine.un.org Gaza November 18 2026 food tent crossing trucks",
+      "site:icrc.org OR site:palestinercs.org Gaza \"18 November 2026\" \"19 November 2026\" ambulance hospitals",
+      "Gaza 18 November 2026 evening Thursday 19 November airstrike casualties Nuseirat Deir Balah",
+      "Gaza November 18 2026 Netanyahu Hamas ceasefire negotiations hostages Erez crossing Kerem Shalom late"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza headlines are previously documented central Gaza road/displacement, two known fatalities and Abu Safiya detention extension; cancer feature concerned West Bank, excluded."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza winter article November 18 reiterated WFP/IOM findings logged in preceding watch; excluded duplicate."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-238-humanitarian-crisis-occupied-palestinian-territory",
+        "status": "ACCESSIBLE",
+        "detail": "Prominent Situation Report #238 was published November 4; not newly released."
+      },
+      {
+        "publisher": "WHO Director-General",
+        "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---17-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Primary November 17 transcript confirms 33,000 respiratory infection cases and repeated entry denial of laboratory supplies."
+      },
+      {
+        "publisher": "GitHub watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T164451-0800-20261119T005322475Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read preceding 16:44 watch heartbeat for overlap and exclusion decisions."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters November 18 Board of Peace ceasefire report already entered in watch ledger.",
+      "WAFA central Gaza west-of-Yellow-Line incursion, Salah al-Din road blockage and dozens of displaced families: prior recorded findings.",
+      "WAFA Abu Safiya court detention extension: previously recorded.",
+      "WAFA cancer-patient feature described access to Beit Jala hospital in the West Bank; outside Gaza scope.",
+      "UN Palestine November 18 WFP hot-meal frequency and IOM 38 mm tent screening: duplicates from immediate preceding watch.",
+      "UNRWA Situation Report #238 published November 4 and older UNICEF/WFP background releases, not new.",
+      "No distinct new Gaza casualty event, crossing-truck throughput, medical evacuation, hospital closure, or ceasefire implementation change confirmed in target hour."
+    ],
+    "limitations": [
+      "WHO EMRO HTTP 502 persists; WHO Global primary testimony was accessible.",
+      "A targeted UN-news domain returned a non-retryable robots restriction; other official sources provided useful coverage.",
+      "Targeted searches returned many older irrelevant items; source publication and event dating were manually checked.",
+      "Both captured items come from November 17 WHO remarks and are late-recalled operational and disease-surveillance signals, not new incidents on November 18.",
+      "The WHO case tally reporting interval and the laboratory-supply refusal dates, quantities and causal impacts are not stated.",
+      "Exactly 12 supplemental targeted searches performed."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

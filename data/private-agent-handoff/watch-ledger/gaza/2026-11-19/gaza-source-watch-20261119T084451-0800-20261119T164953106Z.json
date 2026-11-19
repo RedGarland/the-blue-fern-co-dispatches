@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T084451-0800-20261119T164953106Z",
+  "scheduled_for": "2026-11-19T08:44:51-08:00",
+  "started_at": "2026-11-19T08:48:13-08:00",
+  "completed_at": "2026-11-19T08:49:53.106-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T07:48:11.967-08:00",
+    "end": "2026-11-19T08:49:53.106-08:00",
+    "previous_run_completed_at": "2026-11-19T07:48:11.967-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T074451-0800-20261119T154811967Z.json",
+    "basis": "Only previously unrecorded traceable developments since previous hourly watch, with bounded late-recall review. No duplicate events or retrospective statistics accepted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; authoritative daily Gaza collector and publisher unchanged.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed Nov 19 West Bank-only snapshot; most recent Gaza-specific OCHA access/movement Nov 16 and situation report Nov 13. No new Gaza update in this window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency Gaza health overview accessible. No verified new Gaza facility, ambulance, fuel, medical evacuation or capacity change during this window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "TIMEOUT",
+        "detail": "Direct page timed out. This is the previously documented recurring regional WHO restriction; WHO global coverage available."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report 19 November 2026 OCHA latest",
+      "site:who.int Gaza 19 November 2026 health WHO emergencies"
+    ],
+    "additional_targeted_search_count": 10,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org/updates/ Gaza 19 November 2026 aid movement humanitarian",
+      "site:who.int/news Gaza 19 November 2026 medical evacuations health",
+      "site:reuters.com/world/middle-east/ Gaza Nov 19 2026 latest Israeli airstrike civilians 2026 November 19",
+      "site:apnews.com/article/ Gaza November 19 2026 latest casualties water aid",
+      "site:unrwa.org \"Situation Report #239\" Gaza 19 November 2026 aid healthcare displacement",
+      "site:unicef.org Gaza November 19 2026 hospital child injured water situation",
+      "site:wfp.org/news Gaza November 19 2026 meals deliveries trucks hunger",
+      "site:palestinercs.org Gaza 19 November 2026 ambulance injuries rescue",
+      "site:news.un.org/en/story/2026/11 Gaza 19 November aid ceasefire shelters children",
+      "site:savethechildren.net 19 November 2026 Gaza children violations 12500 report"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza incident report remained Nov 19 16:46 Palestine time, matching five distinct incident findings recorded by previous heartbeat. No later qualifying Gaza report observed."
+      },
+      {
+        "url": "https://www.unrwa.org/resources/reports",
+        "status": "ACCESSIBLE",
+        "detail": "UNRWA Situation Report #239 dated Nov 19 listed. Index supplies title and date but not substantive event data."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "Detailed report content not exposed in retrieved source; no unverified figures extracted."
+      },
+      {
+        "url": "https://apnews.com/article/mideast-wars-gaza-palestinians-children-89dcebbb9ad85f63488b5a8641cd9f66",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 19 article about Save the Children's annual report documents violations in 2025, not a verified new incident/change in the current watch interval."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "ACCESSIBLE",
+        "detail": "Central Gaza ground-operation conclusion, Salah al-Din road reopening and ~6,000 displacement estimate already recorded in Nov 19 02:44 heartbeat."
+      }
+    ],
+    "excluded_candidates": [
+      "AP Nov 19 Save the Children annual 2025 violation statistics (nearly 12,500 cases in Palestinian territories) are retrospective and not a new Gaza incident or change during this observation interval.",
+      "WAFA Nov 19 16:46 Palestinian-time two Gaza City deaths and related injuries match previous 07:44 heartbeat; no duplicate entries.",
+      "Reuters Nov 19 central Gaza raid end, road re-opening and displacement estimate previously logged.",
+      "WFP/IOM winter supplies and food restrictions Nov 17 previously recorded; no new dated change.",
+      "UNRWA #239 exists but body not available from retrieved page; no source-backed qualifying fact extracted."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean timed out (long-standing known access issue).",
+      "Targeted UN News query blocked by robots; OCHA and WHO global official checks succeeded.",
+      "UNRWA #239 title and publication date accessible, report body unavailable; possible developments inside not evaluated.",
+      "Ten additional targeted searches plus two official-first targeted searches; bounded, nonexhaustive."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

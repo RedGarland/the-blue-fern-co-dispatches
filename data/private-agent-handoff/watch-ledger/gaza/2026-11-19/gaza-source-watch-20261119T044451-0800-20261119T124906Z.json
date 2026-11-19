@@ -1,0 +1,123 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T044451-0800-20261119T124906Z",
+  "scheduled_for": "2026-11-19T04:44:51-08:00",
+  "started_at": "2026-11-19T04:49:06-08:00",
+  "completed_at": "2026-11-19T04:52:03.986-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T03:47:51-08:00",
+    "end": "2026-11-19T04:52:03.986-08:00",
+    "previous_run_completed_at": "2026-11-19T03:47:51-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T034451-0800-20261119T114751Z.json",
+    "basis": "Previously unrecorded traceable developments discovered in the bounded interval, including late-recalled official/established reports; exclude recycled incidents, unsourced claims and duplicative quantities."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261118-hussam-abu-safiya-detention-extended-six-months",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177113",
+      "title": "Israeli court extends detention of Gaza hospital director for 6 months",
+      "publisher": "WAFA (Palestinian News & Information Agency)",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-18T22:46:00+02:00",
+      "event_date": null,
+      "location": "Israeli court in Beersheba, Israel; detainee is director of Kamal Adwan Hospital, northern Gaza Strip",
+      "affected_population_system": "Dr. Hussam Abu Safiya; detained Gaza physician and hospital leadership/medical workforce",
+      "affected_population": "Dr. Hussam Abu Safiya; detention of other physicians mentioned as background only",
+      "affected_system": "Detention and due-process status of Gaza medical personnel; no independently verified present-day change to Kamal Adwan Hospital service capacity",
+      "exact_supporting_passage": "An Israeli occupation court extended the detention of the director of a Gaza hospital for another six months without filing charges against him",
+      "source_type": "Established Palestinian news agency reporting named human-rights organization Physicians for Human Rights–Israel (PHR); underlying court order not directly reviewed",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "summary": "WAFA reported, citing Physicians for Human Rights–Israel, that a Beersheba court rejected attorney Nasser Odeh's release request and extended without charges by six months the detention of Kamal Adwan Hospital director Dr. Hussam Abu Safiya, held since December 27, 2024. Report also cited concerns regarding his health and detention conditions. This is a change in an ongoing detention, not a new arrest.",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "source_published_after_previous_completed_at": false,
+        "reported_at_utc": "2026-11-18T20:46:00Z",
+        "prior_coverage": "Not present among findings in preceding 01:44, 02:44 and 03:44 PST ledger files and not described in earlier visible watch summaries; late-recalled item rather than event dated in this hour.",
+        "discovered_via": "Direct review of WAFA Latest News list after 12 targeted searches.",
+        "verification_limits": "WAFA attributes decision to PHR-Israel; original court order and PHR statement were not obtained. Date/time of court ruling not separately verified. No broader detention counts inferred."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Searched OCHA OPT before other targeted discovery; updates index listed Nov 19 West Bank monthly snapshot but most recent Gaza access/movement Nov 16 and Gaza situation report Nov 13. No newly dated Gaza humanitarian report."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Searched official WHO global site before other targeted discovery; emergency overview accessible. No Nov 19 distinct Gaza health or evacuation change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Direct regional page fetch returned 502 Bad Gateway, as in prior watches; this is not a new material degradation."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza November 19 2026 latest humanitarian update OCHA OPT",
+      "site:who.int Gaza 19 November 2026 health medical evacuation hospital WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza latest Nov 19 2026 12:00 GMT civilians killed wounded strikes",
+      "site:reuters.com/world/middle-east/ Gaza November 19 2026 ceasefire civilians aid",
+      "site:apnews.com Gaza November 19 2026 casualties shelter strike",
+      "site:english.wafa.ps Gaza November 19 2026 Palestinian civilians morning",
+      "site:news.un.org Gaza November 19 2026 humanitarian access displacement",
+      "site:palestinercs.org Gaza November 19 2026 ambulances patients medical",
+      "site:english.wafa.ps/Pages/Details/ Gaza Thursday 19/11/2026 killed injured displaced",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 19 2026 killed aid crossing",
+      "site:aljazeera.com/news/2026/11/19/ Gaza displaced hospitals ceasefire",
+      "site:middleeasteye.net/news/gaza 19 November 2026 casualties displacement food",
+      "site:unicef.org Gaza 19 November 2026 water health children displacement",
+      "site:wfp.org Gaza 19 November 2026 food distribution humanitarian situation"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Found Nov 18 22:46 Palestine-time WAFA report on new six-month extension of Gaza hospital director's detention, previously overlooked; most recent Nov 19 Gaza casualty report was already recorded."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "ACCESSIBLE",
+        "detail": "Raid conclusion, claimed Salah al-Din reopening and ~6,000 displaced estimate were all in prior 02:44 watch."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T034451-0800-20261119T114751Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read latest heartbeat and 01:44/02:44 files to check for duplicate findings and preserve prior window."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters Nov 19 10:09 UTC claimed Gaza raid conclusion and road reopening, sporadic gunfire, and estimated 6,000 displaced: already recorded in prior hourly finding.",
+      "WAFA Nov 19 09:35 Palestine-time death from earlier Al-Bureij strike, woman injured in Khan Younis and Maghazi home destruction: all captured in earlier heartbeat.",
+      "Earlier OCHA flood, WFP food-ration reductions, WHO respiratory-infection statistics and NGO policy-scorecard reports: historical, undated or previously captured rather than new incident.",
+      "West Bank-only incidents, unverified social footage and prospective hypothetical risk estimates."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional access still HTTP 502; global WHO accessible.",
+      "UN News targeted search robots-restricted; other UN primary sources remained accessible.",
+      "The identified detention change is late-recalled (WAFA publication before observation window), court ruling date unknown; attributed report rather than independently reviewed judicial record.",
+      "Targeted search indexes may lag; 12-query bounded scope is not exhaustive."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

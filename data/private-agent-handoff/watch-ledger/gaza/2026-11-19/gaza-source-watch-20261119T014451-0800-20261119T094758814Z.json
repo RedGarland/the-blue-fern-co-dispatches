@@ -1,0 +1,101 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T014451-0800-20261119T094758814Z",
+  "scheduled_for": "2026-11-19T01:44:51-08:00",
+  "started_at": "2026-11-19T01:45:36-08:00",
+  "completed_at": "2026-11-19T01:47:58.814-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T00:52:17.043-08:00",
+    "end": "2026-11-19T01:47:58.814-08:00",
+    "previous_run_completed_at": "2026-11-19T00:52:17.043-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T004451-0800-20261119T085217Z.json",
+    "basis": "New publications since preceding watch or distinct previously unrecorded traceable facts recovered in this bounded check. Previously logged events are not double counted."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall; primary Gaza collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage newest Nov 19 item is West Bank October snapshot; latest Gaza access/movement Nov 16 and Gaza situation report Nov 13. Targeted site search also found no distinct new Nov 19 Gaza update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO Gaza emergency overview accessible; no newly posted Nov 19 Gaza operational or healthcare development identified; WHO Nov 17 health details were recorded in preceding watches."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Known persistent regional WHO site gateway failure. WHO global site available."
+      }
+    ],
+    "official_first_targeted_site_searches": [
+      "site:ochaopt.org \"19 Nov 2026\" Gaza humanitarian report displacement aid",
+      "site:who.int \"19 November 2026\" Gaza health medical evacuation hospital"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 09:00 UTC latest casualties Nuseirat Khan Younis Reuters AP",
+      "site:english.wafa.ps/Pages/Details/ \"November 19, 2026\" Gaza 10:00 hospital killed displaced",
+      "site:aa.com.tr/en/middle-east Gaza November 19 2026 11:00 12:00 Palestinians casualties aid",
+      "site:un.org \"19 November 2026\" Gaza humanitarian access crossings emergency",
+      "site:unicef.org OR site:wfp.org OR site:unrwa.org \"19 November 2026\" Gaza shelters food water",
+      "Gaza November 19 2026 early morning medical evacuation ambulances fuel hospitals aid Rafah",
+      "site:reuters.com/world/middle-east/ \"November 19, 2026\" Gaza ceasefire Israeli Palestinian",
+      "site:apnews.com/article \"November 19, 2026\" Gaza strikes aid deaths displacement",
+      "site:aljazeera.com/news/2026/11/19/ gaza hospitals food ceasefire strikes",
+      "site:news.un.org/en/story/2026/11 Gaza 19 November 2026 flood medical aid",
+      "site:reliefweb.int/report/occupied-palestinian-territory \"19 Nov 2026\" Gaza",
+      "site:aa.com.tr/en/middle-east/ 19 November 2026 Gaza ceasefire housing crossings emergency health"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest observed Gaza story remains the Nov 19 09:35 Palestinian-time report already logged in preceding heartbeat; later 11:02 item concerns West Bank checkpoints."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-army-blows-up-palestinian-homes-in-central-gaza-amid-continued-ceasefire-violations-/4130077",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 19 Anadolu account repeats evacuated-home destruction near Maghazi, Hamad City woman injury, and Ahmed Abu Armana death already captured in prior watch; provides independent attributed reporting but not a distinct new development."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177104",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 18 WAFA cancer-treatment report concerns West Bank/Beit Jala, excluded as outside Gaza watch."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/blob/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T004451-0800-20261119T085217Z.json",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read immediately preceding watch to exclude repeated Al-Bureij death, Hamad City injury and Maghazi demolition."
+      }
+    ],
+    "excluded_candidates": [
+      "Anadolu Nov 19 repetition of Maghazi evacuated-home destruction, Nuseirat incursion, Hamad City injury and Al-Bureij named death; identical developments captured in preceding run, so do not create new findings.",
+      "WAFA Nov 19 08:42 repeats previously recovered UN humanitarian-access briefing and displacement/road closure.",
+      "Reuters Nov 18 Board of Peace ceasefire assessment previously logged; earlier strikes, WHO laboratory restrictions, WFP meals and IOM shelter access details previously captured.",
+      "WAFA Nov 18 cancer-patient feature relates to the West Bank rather than Gaza.",
+      "Stale 2023–2026 older news and West Bank-only developments excluded."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean portal HTTP 502 is a documented pre-existing coverage limitation; WHO Global remains accessible.",
+      "One targeted news.un.org search encountered robots denial; OCHA official site and other UN reporting searches remained available, so useful coverage continued.",
+      "Search engine results are not exhaustive, especially for very recent publications; absence of findings is not proof that no events occurred."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

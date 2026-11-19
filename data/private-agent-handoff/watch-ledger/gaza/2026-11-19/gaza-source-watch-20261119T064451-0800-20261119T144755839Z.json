@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T064451-0800-20261119T144755839Z",
+  "scheduled_for": "2026-11-19T06:44:51-08:00",
+  "started_at": "2026-11-19T06:44:24-08:00",
+  "completed_at": "2026-11-19T06:47:55.839-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T05:45:35.134-08:00",
+    "end": "2026-11-19T06:47:55.839-08:00",
+    "previous_run_completed_at": "2026-11-19T05:45:35.134-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T054451-0800-20261119134535134Z.json",
+    "basis": "Bounded recall for traceable new developments since preceding hourly check, with late-recall for independent unlogged events; exclude known incidents, opinions, unsupported claims and duplicate reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only. Primary Gaza collector/publisher is authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked first; as of this watch, Nov 19 listing was West Bank-only. Latest Gaza-specific listed item Gaza Strip access and movement Nov 16; latest Gaza situation report Nov 13. No new Gaza-specific OCHA report verified."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked with OCHA before targeted discovery; overview accessible but no new date-specific Gaza medical evacuation, operating hospital capacity, fuel or laboratory supply event established. Direct fetch of Nov 17 DG remarks timed out; earlier watch documented it."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "TIMEOUT",
+        "detail": "Regional oPt health-news landing page timed out. WHO EMRO's longstanding HTTP 502/unavailability is documented in preceding hourly ledgers; not a newly material failure."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 19 2026 OCHA OPT",
+      "site:who.int Gaza November 19 2026 hospitals medical evacuation disease supplies WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 latest civilian casualties displacement 16:00 Palestine 19 November",
+      "site:reuters.com/world/middle-east/ November 19 2026 Gaza latest aid ceasefire civilians",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"19/11/2026\" killed injured bombing afternoon",
+      "site:news.un.org Gaza November 19 2026 OCHA new displacement aid winter",
+      "site:apnews.com/article/ Gaza 19 November 2026 ceasefire casualties",
+      "site:palestinercs.org Gaza November 19 2026 ambulances hospital evacuations",
+      "site:unicef.org Gaza November 19 2026 water supplies shelter malnutrition children",
+      "site:wfp.org Gaza November 19 2026 food aid meals bread deliveries",
+      "site:aa.com.tr/en/middle-east/ Gaza 19 November 2026 Israeli gunfire civilian killed central",
+      "site:aljazeera.com/news/2026/11/19/ Gaza attacks hospitals Rafah humanitarian",
+      "site:middleeasteye.net/news/ Gaza November 19 2026 killed injured tents",
+      "Gaza November 19 2026 hospital WHO medical evacuation crossing fuel ceasefire talks November 19"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Chronological WAFA feed through Nov 19 16:29 Palestine time (06:29 PST): new listings after earlier 15:05 were West Bank/diplomatic only; latest Gaza item was Nov 19 09:35 and already recorded."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "ACCESSIBLE",
+        "detail": "Claimed conclusion of raid, Salah al-Din reopening and 6,000 displaced are in preceding Nov 19 02:44 watch."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 18 three fatalities (near central raid, Deir al-Balah, Gaza City) were recorded or explicitly deduplicated in Nov 18 hourly watch ledgers, including Nov 18 15:44 exclusion; no new casualty assigned."
+      },
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/18/israeli-tanks-cross-yellow-line-boundary-into-hamas-controlled-central-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 19 updated Guardian report mainly reproduces the above Reuters/AFP central operation and earlier deaths; excluded as recycled."
+      },
+      {
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/tree/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-19",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read Nov 19 05:44 and 04:44 heartbeats to bound prior search and verify previous findings; reviewed relevant Nov 18 records to identify already-covered Reuters casualty events."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters/Guardian Nov 18 three deaths near central Gaza incursion, Deir al-Balah and Gaza City: previously recorded or expressly excluded as duplicates in Nov 18 ledger; not newly qualifying.",
+      "Reuters Nov 19 conclusion of tank raid, purported Salah al-Din road reopening and estimated 6,000 displaced: recorded Nov 19 02:44 watch.",
+      "WAFA Nov 19 earlier Al-Bureij strike fatality, Khan Younis woman wounded and Al-Maghazi demolitions: recorded Nov 19 00:44 watch.",
+      "PHR-Israel / WAFA Nov 18 six-month extension of Dr Hussam Abu Safiya's detention: recorded Nov 19 04:44 watch.",
+      "ICSPR Nov 19 recap cites Nov 18 Ministry of Health 24-hour casualty figures and already known winter access issues without a separately established new incident; excluded as retrospective and secondary.",
+      "Older Nasser Hospital strike, WHO Nov 17 respiratory/laboratory testimony, OCHA Nov 13 flood/shelter report, WFP cuts, Board of Peace report, West Bank-only items, opinion and unsourced social footage."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean site inaccessible again (direct timeout, prior hourly HTTP 502); WHO global information accessible. This is existing degradation, not a new material failure.",
+      "UN News domain robots-blocked for targeted search; other OCHA primary information accessible.",
+      "Newly indexed old reports are not new developments; 12-query targeted scan is bounded and is not an exhaustive guarantee."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

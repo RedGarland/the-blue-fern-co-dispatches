@@ -1,0 +1,165 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261118T164451-0800-20261119T005322475Z",
+  "scheduled_for": "2026-11-18T16:44:51-08:00",
+  "started_at": "2026-11-18T16:49:08-08:00",
+  "completed_at": "2026-11-18T16:53:22.475-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-18",
+    "start": "2026-11-18T15:50:01-08:00",
+    "end": "2026-11-18T16:53:22.475-08:00",
+    "previous_run_completed_at": "2026-11-18T15:50:01-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-18/gaza-source-watch-20261118T154451-0800-20261118T235001Z.json",
+    "basis": "Bounded recall since prior hourly watch completion. Late-recalled primary-source operational information predating observation window is identified as such; no claim a new event occurred this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-wfp-displacement-camps-hot-meal-every-other-day",
+      "canonical_source_url": "https://www.unognewsroom.org/story/en/3327/gaza-winter-wfp-iom/9890",
+      "title": "Gaza winter - WFP, IOM: tented displacement camps now receive hot meals every other day",
+      "publisher": "United Nations Office at Geneva (WFP Country Director Shaun Hughes)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Tented displacement camps, Gaza Strip; individual sites not identified",
+      "affected_population_or_system": "WFP-supported displaced families in tented camps; hot-meal frequency. Number of beneficiaries experiencing this frequency is not given.",
+      "exact_supporting_passage": "Now it's one hot meal every two days.",
+      "source_type": "Primary humanitarian operational testimony at UN Geneva press briefing; UN audiovisual story and attributed speaker quotation",
+      "classification": "follow-up",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-18T16:53:22.475-08:00",
+        "discovery_method": "One of 12 supplemental targeted searches led to United Nations in Palestine November 18 report and primary United Nations Geneva November 17 press briefing and WFP/IOM news footage transcript.",
+        "late_recall": true,
+        "source_predates_window": true,
+        "change_timing_verified": false,
+        "material_increment": "WFP Palestine country director explicitly described hot-meal service at tented displacement camps changing from daily to every other day. The October 19 overall WFP assistance cuts were already known; the camp-level meal delivery frequency is a previously unrecorded operational detail, not a claim of a new cut this hour.",
+        "caveats": "The source does not quantify affected camps, people or the date the reduced frequency started; may be part of pre-existing October WFP cuts, not independently a new policy change.",
+        "duplicate_audit": "Compared all November 17–18 ops/watch-ledger Gaza finding titles/identifiers and previous heartbeat exclusions; no earlier watch finding recorded this camp-level frequency."
+      }
+    },
+    {
+      "finding_id": "gaza-20261117-iom-tent-central-pole-diameter-38mm-gaza-entry-restriction",
+      "canonical_source_url": "https://www.unognewsroom.org/story/en/3327/gaza-winter-wfp-iom/9890",
+      "title": "IOM details Gaza tent-entry screening restriction on central pole diameter",
+      "publisher": "United Nations Office at Geneva (IOM Gaza programme head Karl Baker)",
+      "source_date": "2026-11-17",
+      "publication_date": "2026-11-17",
+      "publication_time": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip entry procedures; more than 100,000 tents staged outside Gaza, including supplies awaiting dispatch from Egypt",
+      "affected_population_or_system": "Displaced families requiring durable winter shelter and IOM/humanitarian tents subject to Israeli import clearance; quantity rejected specifically for pole size not reported.",
+      "exact_supporting_passage": "Usually anything under 38 millimetres is okay; anything above, it’s usually deemed as not acceptable.",
+      "source_type": "Primary IOM operational testimony at United Nations Geneva press briefing and UN-authored video transcript",
+      "classification": "follow-up",
+      "confidence": "medium-high",
+      "bounded_discovery_context": {
+        "discovered_at": "2026-11-18T16:53:22.475-08:00",
+        "discovery_method": "Found in United Nations November 18 field report during bounded search and verified against primary November 17 UN Geneva news-footage shotlist, with an explicit attributed statement from IOM's Gaza head.",
+        "late_recall": true,
+        "source_predates_window": true,
+        "change_timing_verified": false,
+        "material_increment": "IOM specified a concrete central-pole diameter threshold (38 mm) in clearance of tents entering Gaza, clarifying a specific operational impediment to winter shelter access not recorded by earlier watches.",
+        "caveats": "More than 100,000 tents awaiting delivery is a separate overall inventory figure; the testimony does not establish how many were rejected under the 38 mm rule, whether a categorical legal prohibition applies, or any new policy adoption date.",
+        "duplicate_audit": "November 17–18 Gaza watch finding ledger reviewed; past OCHA/IOM descriptions of general shelter restrictions do not provide this specific clearance threshold."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall for civilian casualties and displacement, food and water, aid/shelter/crossings, health/ambulances/fuel/medical evacuation, infrastructure damage, detention, ceasefire and civilian impact of military operations. Primary Gaza production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked live OCHA homepage and updates index first; newest index update dated 16 November on Gaza movement, newest humanitarian situation report 13 November. No November 18 update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked WHO global emergency portal and latest news, speeches, health-service resources. No newly verified operational change from WHO. An obsolete WHO URL returned HTTP 404; canonical URL was available."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct page returned pre-existing HTTP 502 Bad Gateway; WHO Global was usable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"November 19, 2026\" killed injured occupation",
+      "site:reuters.com/world/middle-east/ Gaza \"November 18, 2026\" latest casualties aid hospital",
+      "site:apnews.com/article/ Gaza \"November 18, 2026\" new strike casualties aid",
+      "site:aa.com.tr/en/middle-east/ \"November 19, 2026\" Gaza killed wounded displacement",
+      "site:un.org/sg/en/content OR site:un.org/unispal Gaza November 18 2026 19 November access displaced aid humanitarian latest",
+      "site:unrwa.org OR site:unicef.org OR site:wfp.org Gaza November 18 2026 November 19 water food shelter new",
+      "site:reliefweb.int/report/occupied-palestinian-territory November 18 2026 November 19 Gaza health food displacement",
+      "site:icrc.org OR site:palestinercs.org Gaza 18 November 2026 19 November ambulance medical evacuation latest",
+      "Gaza two children died tents fire cooking heat humanitarian partners November 17 18 2026 IOM",
+      "Gaza \"18 November 2026\" \"two children\" \"fires\" tents",
+      "Gaza \"19 November 2026\" \"killed\" \"hospital\" \"drone\" overnight",
+      "Gaza November 18 2026 Erez crossing inspection aid trucks medical evacuation water fuel Wednesday night"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Index contained no new Gaza incident since preceding run; central Gaza operations, Abu Safiya extension and prior drone strike fatalities were repeats."
+      },
+      {
+        "publisher": "United Nations in Palestine",
+        "url": "https://palestine.un.org/en/326353-winter-rains-deepen-gaza-crisis-amid-restricted-access-and-aid-cuts",
+        "status": "ACCESSIBLE",
+        "detail": "November 18 UN story checked; followed the source into November 17 first-hand WFP/IOM testimony."
+      },
+      {
+        "publisher": "UN Geneva primary press statement and audiovisual transcription",
+        "url": "https://www.unognewsroom.org/story/en/3327/gaza-winter-wfp-iom/9890",
+        "status": "ACCESSIBLE",
+        "detail": "Verified November 17 briefing quotes by WFP's Shaun Hughes and IOM's Karl Baker; dates and operational specificity checked."
+      },
+      {
+        "publisher": "UN Geneva briefing transcript",
+        "url": "https://www.unognewsroom.org/teleprompter/en/3326/un-geneva-press-briefing-17-november-2026/9892",
+        "status": "ACCESSIBLE",
+        "detail": "Verified original summary; described WFP cuts, dual-use clearance, tents awaiting replacement."
+      },
+      {
+        "publisher": "GitHub watch ledger",
+        "url": "https://github.com/RedGarland/the-blue-fern-co-dispatches/tree/ops/watch-ledger/data/private-agent-handoff/watch-ledger/gaza/2026-11-18",
+        "status": "AUTHENTICATED_READ",
+        "detail": "Read the immediately preceding heartbeat and reviewed 40 prior November 17–18 Gaza finding records for duplicate event identities and food/shelter access details."
+      }
+    ],
+    "excluded_candidates": [
+      "November 18 central Gaza incursion, displaced families, road blocks, >18,000 exposed, and previously logged fatalities: duplicates.",
+      "November 18 Board of Peace ceasefire report and court extension of hospital director's detention: duplicates.",
+      "Erez inspection-only opening: already captured; no newly verified Gaza truck deliveries.",
+      "UN IOM mentions two infant deaths in cooking fires: independently traced to a November 1 incident; not new.",
+      "UN November 18 OCHA briefing on 18,000 exposed: previous watch already captured from Anadolu; primary transcript URL also returned 403.",
+      "Previous WFP overall October relief cuts and historical Nasser hospital strike: not presented as new findings.",
+      "No verified new casualties or separately documented November 18/19 health-facility/medical-evacuation/crossing operational change during current watch."
+    ],
+    "limitations": [
+      "WHO EMRO still HTTP 502, a pre-existing incomplete official-source channel. OCHA and WHO Global accessible.",
+      "Both qualifying details are late-recalled operational testimony first reported on 17 November, not evidence that food or shelter rules changed during the current hour.",
+      "WFP camp scope and start date unknown; IOM threshold's total rejected tent count and regulatory basis not independently verified.",
+      "No more than 12 supplemental targeted searches; source and event dating checked against prior ledger."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

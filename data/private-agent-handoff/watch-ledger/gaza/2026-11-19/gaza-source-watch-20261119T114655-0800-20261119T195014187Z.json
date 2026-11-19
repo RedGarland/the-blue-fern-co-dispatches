@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T114655-0800-20261119T195014187Z",
+  "scheduled_for": "2026-11-19T11:44:51-08:00",
+  "started_at": "2026-11-19T11:46:55-08:00",
+  "completed_at": "2026-11-19T11:50:14.187-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T10:44:51-08:00",
+    "end": "2026-11-19T11:50:14.187-08:00",
+    "previous_run_completed_at": null,
+    "previous_heartbeat_path": null,
+    "last_verified_run_completed_at": "2026-11-19T09:43:35.642-08:00",
+    "last_verified_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T093958-0800-20261119T174335642Z.json",
+    "basis": "Nominal preceding hourly slot (10:44:51 PST) to completed_at, with supplementary late recall of dated previously unrecorded events. The actual preceding 10:44 run heartbeat was not independently located, so exact new-to-ledger status relative to it is not confirmed."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261117-jabalia-beer-al-najah-drone-strike-nabhan-adult-child",
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "event_date": "2026-11-17",
+      "follow_up_event_date": "2026-11-18",
+      "location": "Be'er al-Na'jah, Jabalia, northern Gaza Strip",
+      "affected_population_or_system": "Civilian Palestinians; Saber Nayef Mahmoud Nabhan, 34, killed; Mansour Khader Nabhan, 11, injured in the same strike and died the following morning; another injured person",
+      "exact_supporting_passage": "killing him instantly",
+      "source_type": "Primary local human rights incident documentation (indexed excerpt; direct article access restricted)",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Discovered in a November 19 PCHR report during a bounded November 19 search. The dated November 17 strike and November 18 subsequent death were not identifiable in the last independently read 09:43 PST watch heartbeat. This is late recall, not evidence an incident happened this hour. Reporting is not independently corroborated here; do not add into cumulative totals."
+    },
+    {
+      "finding_id": "gaza-20261116-jabalia-al-qasaseeb-shaaban-fatal-shooting",
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "event_date": "2026-11-16",
+      "location": "Al-Qasaseeb area, Jabalia, northern Gaza Strip",
+      "affected_population_or_system": "Civilian near his displacement tent, Yousif Mohammed Ahmed Sha'aban, 35; reported fatal gunshot wound",
+      "exact_supporting_passage": "while near his tent",
+      "source_type": "Primary local human rights incident documentation (indexed excerpt; direct article access restricted)",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "PCHR documented a November 16 incident west of the Yellow Line. Not in the last independently inspected 09:43 watch heartbeat; not a newly occurring incident. Distinct in location/date from the already logged November 19 Gaza City fatalities."
+    },
+    {
+      "finding_id": "gaza-20261116-khan-younis-hamad-housing-project-three-injuries",
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "event_date": "2026-11-16",
+      "location": "Near Hamad Housing Project, northwest of al-Mawasi, Khan Younis",
+      "affected_population_or_system": "Three Palestinians reported injured in a drone strike, one seriously; transferred to Nasser Medical Complex",
+      "exact_supporting_passage": "injuring three of them",
+      "source_type": "Primary local human rights incident documentation (indexed excerpt; direct article access restricted)",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "The incident is dated November 16, separate in time from the November 19 Hamad City injury already recorded. Full article access restricted; indexed excerpt supplies the date, place, number injured and receiving hospital. Previously unrecorded relative to the last independently inspected heartbeat, with incomplete comparison to any 10:44 run."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; daily collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked first. Latest listed November 19 update concerns the West Bank; latest Gaza access and movement November 16 and humanitarian situation report November 13. No newly published Gaza-specific operational change on index."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked second. Global situation page and latest listed WHO Director-General statement dated November 17, already previously captured; no new health operating-capacity, hospital, fuel, ambulance or evacuation change verified during current interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Previously documented 502 persists, alternate WHO global source accessible."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 19 2026 aid casualties access crossings latest",
+      "site:who.int Gaza WHO situation November 19 2026 health attacks medical evacuation supplies"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:reuters.com/world/middle-east/ Gaza November 19 2026 latest deaths ceasefire aid evening",
+      "site:english.wafa.ps/Pages/Details/ Gaza 19 November 2026 evening Thursday casualties displaced hospitals",
+      "site:aa.com.tr/en/middle-east/ Gaza November 19 2026 evening civilian casualties army operation",
+      "site:apnews.com/article/ Gaza November 19 2026 ceasefire casualties aid crossings",
+      "site:unrwa.org/news-reports/reports/unrwa-situation-report-239 November 19 2026 Gaza shelter clinics",
+      "site:news.un.org/en/ November 19 2026 Gaza humanitarian storm medical",
+      "Gaza November 19 2026 Thursday late evening November 19 new civilian deaths injuries displacement aid 21:00 Gaza",
+      "site:wfp.org Gaza November 19 2026 food cooked meals flour aid crossing latest",
+      "site:unicef.org Gaza November 19 2026 water flooding health children report",
+      "site:palestinercs.org Gaza November 19 2026 ambulance medical evacuation hospital",
+      "site:msf.org Gaza 19 November 2026 hospital medical evacuation fuel patient capacity",
+      "Gaza November 19 2026 kerem shalom rafah crossing aid access closure opening civilians latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza civilian-casualty item remained November 19 16:46 Palestine time; already logged. Later listed WAFA stories concern diplomacy or the West Bank."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "November 19 report title and date readable; detailed report text unavailable. No numbers inferred."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+        "status": "INDEXED_EXCERPTS_ONLY",
+        "detail": "Primary incident account indexed with November 16–19 details; direct article fetch returned a restriction. Three distinct late-recall incident findings retained with medium confidence and explicit uncertainty."
+      }
+    ],
+    "excluded_candidates": [
+      "PCHR references to November 19 death of Ahmed Abu Armanah near al-Bureij and ongoing Nuseirat operation: already logged by prior watches.",
+      "WAFA/Anadolu November 19 Kuwait Roundabout and Zeitoun deaths, Khan Younis, Zeitoun station and Deir al-Balah injuries: already logged.",
+      "Reuters/Guardian November 19 Yellow Line incursion termination, Salah al-Din Road reopening and reported displacement: previously recorded.",
+      "PCHR Ayoub/Eyas casualty excerpt: incomplete incident chronology and location context, held for future validation instead of speculative deduplication.",
+      "AP November 19 Save the Children 2025 retrospective violation totals: no newly dated in-window incident established.",
+      "WHO November 12 HeRAMS report based on October 31 data; historical baseline, not new in this hour.",
+      "AI-assisted Gaza crossing status from secondary site not accepted without original official confirmation.",
+      "UNRWA #239 detailed contents inaccessible, no invented findings."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean longstanding HTTP 502; WHO global source accessible.",
+      "UN News site-restricted/robots blocked during targeted search; other sources provided useful coverage.",
+      "UNRWA #239 body unavailable, same limitation as preceding verified watch.",
+      "PCHR direct article fetch restricted; findings based only on searchable dated indexed text; medium confidence, may require source-body review.",
+      "Could inspect a verified 09:43 PST prior heartbeat but could not locate a putative 10:44 heartbeat; comparison with immediately preceding executed run is incomplete.",
+      "12 additional searches maximum maintained; source and event dates distinguished from observation-window timestamps."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

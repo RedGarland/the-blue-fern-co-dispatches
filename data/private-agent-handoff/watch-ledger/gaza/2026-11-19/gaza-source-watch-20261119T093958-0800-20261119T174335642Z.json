@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T093958-0800-20261119T174335642Z",
+  "scheduled_for": "2026-11-19T09:44:51-08:00",
+  "started_at": "2026-11-19T09:39:58-08:00",
+  "completed_at": "2026-11-19T09:43:35.642-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T08:49:53.106-08:00",
+    "end": "2026-11-19T09:43:35.642-08:00",
+    "previous_run_completed_at": "2026-11-19T08:49:53.106-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T084451-0800-20261119T164953106Z.json",
+    "basis": "Bounded supplementary recall since preceding completed hourly check, plus review for newly identified, previously unrecorded dated developments; excludes already logged incidents, undated changes and unsupported figures.",
+    "scheduling_note": "Execution was invoked before the nominal 09:44:51-08:00 hourly slot; scheduled_for retains the nominal slot while started_at records actual invocation."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; the authoritative daily Gaza collector and publisher were not changed.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official updates index checked first; newest Gaza-specific index item remains Gaza access and movement dated Nov 16 and situation report Nov 13. Nov 19 top index item concerns West Bank, not Gaza."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO global Gaza/oPt emergency overview and WHO Nov 17 Director-General statement checked; no new dated hospital, ambulance, fuel, medical evacuation, healthcare capacity or disease-surveillance change verified in the window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Direct regional page returned 502 Bad Gateway, matching previously documented persistent access issue; WHO Global remains accessible."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 19 2026 OCHA OPT",
+      "site:who.int Gaza November 19 2026 hospital medical evacuation health update"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 afternoon latest casualties 19 November 2026 killed wounded WAFA hospital",
+      "site:reuters.com/world/middle-east Gaza November 19 2026 latest civilians crossings ceasefire",
+      "site:apnews.com/article Gaza November 19 2026 aid injured strikes latest",
+      "site:english.wafa.ps 19/November/2026 Gaza later Thursday killed injuries bombardment",
+      "site:unrwa.org Gaza 19 November 2026 humanitarian situation report 239 details",
+      "site:unicef.org/press-releases Gaza November 19 2026 water malnutrition shelters",
+      "site:wfp.org/news Gaza November 19 2026 aid meals crossing",
+      "site:who.int Gaza 19 November 2026 evacuation hospital ambulance medical shipments",
+      "Gaza November 19 2026 17:00 UTC 18:00 UTC Palestine civilians killed humanitarian situation",
+      "site:aa.com.tr/en/middle-east Gaza Nov 19 2026 evening airstrikes wounded ambulances",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 19 2026 18:00 Palestine time injuries shelling",
+      "site:aljazeera.com/news/2026/11/19/gaza latest ceasefire aid displacement killed November 19"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza-related casualty update in feed remained Nov 19 16:46 Palestinian local time, already captured as five separate findings by 07:44 watch."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "ACCESSIBLE",
+        "detail": "Article's central Gaza operation, road reopening, 6,000 fleeing and returning residents were already logged. A two-death report attributed to Zeitoun tank shelling was not recorded as a new separate casualty: overlap with previously captured Zeitoun artillery fatality and Kuwait Roundabout death cannot be ruled out; Reuters page displays original 10:09 UTC timestamp without a verifiable later update time."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "status": "ACCESSIBLE",
+        "detail": "Three reported deaths include an older Al-Bureij death plus Zeitoun and Kuwait Roundabout deaths already logged; associated injuries match preceding records."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "UNAVAILABLE",
+        "detail": "Situation Report #239 was indexed as dated Nov 19, but direct detailed report page could not be accessed; no content or statistics were inferred."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/19/displacement-by-design-trumps-gaza-peace-plan-a-failure-aid-groups-say",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 19 humanitarian and evacuation figures largely refer to accumulated conditions or advocacy claims without a dated new change in this watch window; ceasefire implementation concerns have already been recorded."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 19 Gaza City fatalities, Khan Younis school injuries, Zeitoun displaced-station injury and Deir al-Balah injury: recorded in 07:44 heartbeat.",
+      "Reuters updated text referring to two deaths from tank shelling in Zeitoun differs from prior source segmentation; insufficient evidence to treat any additional victim as a distinct new fatality, so no double count.",
+      "Reuters central Gaza incursion conclusion, road reopening, ~6,000 displacement estimate and return descriptions: previously captured or descriptive updates without newly verified distinct event.",
+      "Anadolu third Gaza death is a previously logged earlier Al-Bureij injury death.",
+      "Al Jazeera medical-evacuation waiting list and mortality counts lack a newly verified event/change date; older accumulated figures not accepted as incident-level change.",
+      "UNRWA Situation Report #239 contents inaccessible, so no speculative findings."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persistent from earlier watches, with WHO Global coverage available.",
+      "UNRWA Situation Report #239 full contents inaccessible (known limitation from previous watch).",
+      "Twelve additional targeted searches performed after two official-first searches; bounded and nonexhaustive.",
+      "Reuters casualty wording inconsistent with more granular WAFA/Anadolu incident breakdown; not treated as a new independent incident."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T144451-0800-20261119T224515453Z",
+  "scheduled_for": "2026-11-19T14:44:51-08:00",
+  "started_at": "2026-11-19T14:42:19-08:00",
+  "completed_at": "2026-11-19T14:45:15.453-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T13:50:09-08:00",
+    "end": "2026-11-19T14:45:15.453-08:00",
+    "previous_run_completed_at": "2026-11-19T13:50:09-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T134451-0800-20261119T214804000Z.json",
+    "basis": "Interval from latest authenticated previous watch heartbeat through this execution, with supplementary late recall of distinct earlier events documented in full on November 19. Event, publication and observation dates are distinct; Gaza is 11 hours ahead of PST."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "source_type": "Primary local human-rights field incident documentation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Late recall from a November 19 PCHR field report. Full primary article became accessible during this watch after prior watches could retrieve only indexed excerpts. Incident not present among the three PCHR findings in 11:50 PST ledger or subsequent 12:44 and 13:50 ledgers. Event predates this observation interval; no independent corroboration performed and not checked against production publication; do not add to cumulative totals.",
+      "finding_id": "gaza-20261118-al-mughraqa-abdel-raouf-nabhan-fatal-drone-strike",
+      "event_date": "2026-11-18",
+      "event_time_local": "13:20",
+      "location": "Al-Mughraqa, central Gaza Strip",
+      "affected_population_or_system": "Abdel Ra'ouf Na'im Abdel Hay Nabhan, Palestinian man, 36; reported killed while walking",
+      "exact_supporting_passage": "killing him immediately"
+    },
+    {
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "source_type": "Primary local human-rights field incident documentation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Late recall from a November 19 PCHR field report. Full primary article became accessible during this watch after prior watches could retrieve only indexed excerpts. Incident not present among the three PCHR findings in 11:50 PST ledger or subsequent 12:44 and 13:50 ledgers. Event predates this observation interval; no independent corroboration performed and not checked against production publication; do not add to cumulative totals.",
+      "finding_id": "gaza-20261118-gaza-city-rasheed-thaer-wadiyah-fatality-six-injuries",
+      "event_date": "2026-11-18",
+      "event_time_local": "07:30",
+      "location": "Near the Marine Club, Al-Rasheed Street, west Gaza City",
+      "affected_population_or_system": "Tha'er Isma'il Mustafa al-Wadiyah, Palestinian man, 32, reported killed; six others including school-bound children wounded; patients transferred to Al-Shifa Medical Complex, one seriously injured",
+      "exact_supporting_passage": "injured six other Palestinians"
+    },
+    {
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "source_type": "Primary local human-rights field incident documentation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Late recall from a November 19 PCHR field report. Full primary article became accessible during this watch after prior watches could retrieve only indexed excerpts. Incident not present among the three PCHR findings in 11:50 PST ledger or subsequent 12:44 and 13:50 ledgers. Event predates this observation interval; no independent corroboration performed and not checked against production publication; do not add to cumulative totals.",
+      "finding_id": "gaza-20261118-deir-al-balah-al-ansar-mosque-fadi-ismail-fatal-strike",
+      "event_date": "2026-11-18",
+      "event_time_local": "07:10",
+      "location": "Near Al-Ansar Mosque, central Deir al-Balah, Gaza Strip",
+      "affected_population_or_system": "Fadi Nahedh Rajab Isma'il, Palestinian man, 35, reported killed while walking; a nearby police vehicle also struck without reported casualties",
+      "exact_supporting_passage": "killing him instantly"
+    },
+    {
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "source_type": "Primary local human-rights field incident documentation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Late recall from a November 19 PCHR field report. Full primary article became accessible during this watch after prior watches could retrieve only indexed excerpts. Incident not present among the three PCHR findings in 11:50 PST ledger or subsequent 12:44 and 13:50 ledgers. Event predates this observation interval; no independent corroboration performed and not checked against production publication; do not add to cumulative totals.",
+      "finding_id": "gaza-20261117-rafah-mawasi-jadallah-alarja-fatal-shooting",
+      "event_date": "2026-11-17",
+      "event_time_local": "15:00 (time body presented to hospital; shooting time unknown)",
+      "location": "Near Abu Hafez Zo'arob Well, Al-Mawasi, northwest Rafah, southern Gaza Strip",
+      "affected_population_or_system": "Jadallah Ahmed 'Odatallah al-'Arja, Palestinian man, 25, reportedly shot dead; body brought to ICRC field hospital and transferred to Nasser Medical Complex",
+      "exact_supporting_passage": "shot in the abdomen"
+    },
+    {
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "source_type": "Primary local human-rights field incident documentation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Late recall from a November 19 PCHR field report. Full primary article became accessible during this watch after prior watches could retrieve only indexed excerpts. Incident not present among the three PCHR findings in 11:50 PST ledger or subsequent 12:44 and 13:50 ledgers. Event predates this observation interval; no independent corroboration performed and not checked against production publication; do not add to cumulative totals.",
+      "finding_id": "gaza-20261117-khan-younis-batn-al-sameen-ashraf-tubasi-drone-strike",
+      "event_date": "2026-11-17",
+      "event_time_local": "14:30",
+      "location": "Al-Batn al-Sameen, south Khan Younis, Gaza Strip",
+      "affected_population_or_system": "Ashraf Nayef Mohammed Tubasi, Palestinian man, 50, reportedly killed by drone strike; one other moderately injured",
+      "exact_supporting_passage": "moderately injuring another"
+    },
+    {
+      "canonical_source_url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+      "title": "Israel Kills 11 Palestinians in Gaza and Escalates Home Demolitions and Forced Displacement of Residents in Northern al-Nuseirat",
+      "publisher": "Palestinian Centre for Human Rights (PCHR)",
+      "source_date": "2026-11-19",
+      "publication_date": "2026-11-19",
+      "source_type": "Primary local human-rights field incident documentation",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": "Late recall from a November 19 PCHR field report. Full primary article became accessible during this watch after prior watches could retrieve only indexed excerpts. Incident not present among the three PCHR findings in 11:50 PST ledger or subsequent 12:44 and 13:50 ledgers. Event predates this observation interval; no independent corroboration performed and not checked against production publication; do not add to cumulative totals.",
+      "finding_id": "gaza-20261117-deir-al-balah-jafarawi-ayoub-nemnem-fatal-gunfire",
+      "event_date": "2026-11-17",
+      "event_time_local": "10:35; subsequent child death announced 14:15",
+      "location": "Al-Ja'afarawi area, southeast Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Ayoub Tal'at Musbah Ayoub, Palestinian man, 21, reportedly killed; several others injured; Eyas Ahmed Zuhair al-Nemnem, Palestinian child, 6, died of gunshot injury later the same day near family's tent; injured treated at Al-Aqsa Martyrs Hospital",
+      "exact_supporting_passage": "succumbed to critical injuries"
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary daily Gaza collection/publication remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked first; latest Nov 19 item West Bank-only. Latest Gaza access/movement November 16 and situation report November 13. No fresh Gaza-specific official entry."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked second; latest listed director-general briefing November 17, no new hospital functioning/evacuation/fuel transport change in current interval."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Longstanding 502 replicated. WHO Global accessible as alternate."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 19 2026 civilians aid access health displacement",
+      "site:who.int Gaza November 19 2026 health emergency medical evacuation hospitals WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:reuters.com/world/middle-east/ Gaza November 19 2026 latest 22:00 GMT civilians casualties truce displaced",
+      "site:english.wafa.ps/Pages/Details/ Gaza 19 November 2026 evening 20 November 2026 23:00 Palestine killed injured",
+      "site:aa.com.tr/en/middle-east/ Gaza November 19 2026 evening November 20 strikes wounded killed hospital",
+      "site:apnews.com/article/ Gaza November 19 2026 evening 20 November 2026 ceasefire casualties aid",
+      "site:pchrgaza.org November 19 2026 Gaza late November 20 civilian killed injured military operations",
+      "site:palestinercs.org 19 November 2026 Gaza ambulance medical evacuation hospital health",
+      "site:unrwa.org/news-reports/reports/ November 19 2026 situation report 239 Gaza humanitarian displaced shelter food health",
+      "site:wfp.org Gaza 19 November 2026 20 November food trucks bakeries Kerem Shalom access",
+      "site:unicef.org Gaza 19 November 2026 20 November water sanitation displacement children aid",
+      "site:msf.org Gaza 19 November 2026 November 20 emergency medical evacuation health capacity",
+      "Gaza 19 November 2026 22:00 UTC 20 November Palestinian casualties displacement access road hospital latest Reuters WAFA",
+      "Gaza November 19 2026 ceasefire negotiations Israel Hamas crossings reopening aid military operations new announcement"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+        "status": "ACCESSIBLE",
+        "detail": "Primary dated full article accessible this run after earlier watch indexed-only access. Six additional distinct November 17–18 casualty incidents verified as documented by PCHR; three prior PCHR findings and known al-Bureij fatality excluded."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest November 19 Gaza casualty report at 16:46 Palestine time already captured; subsequent entries West Bank/diplomatic."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "RESTRICTED",
+        "detail": "Full report still inaccessible; no unverified statistics."
+      }
+    ],
+    "excluded_candidates": [
+      "Three November 16–18 PCHR incidents (Jabalia Nabhan adult/child, Jabalia Sha'aban and Khan Younis Hamad Housing Project injuries) already included in 11:50 PST heartbeat.",
+      "Ahmed Abu Armanah al-Bureij fatality, central Nuseirat operation, Salah al-Din road changes and 6,000 displacement estimate previously logged.",
+      "WAFA November 19 Kuwait Roundabout, Zeitoun, Siham School, displaced-person shelter and Deir al-Balah casualties already captured.",
+      "PCHR's explosive-laden boxes, damaged homes and displacement around al-Maghazi/al-Nuseirat overlap prior central-Gaza military and infrastructure accounts; no separate count.",
+      "Undated/historical WFP UNICEF MSF figures, retrospectives, opinion, unattributed social claims and West Bank-only items."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean 502 and UNRWA report access limitation pre-exist; alternate official coverage remains usable.",
+      "Findings rely on PCHR's primary local documentation, not independently corroborated incident-for-incident.",
+      "Production Gaza ledger not inspected; the six incidents are newly distinguished in recent supplementary watch heartbeats, not asserted absent from the primary publisher.",
+      "12 additional targeted searches conducted, and no more."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

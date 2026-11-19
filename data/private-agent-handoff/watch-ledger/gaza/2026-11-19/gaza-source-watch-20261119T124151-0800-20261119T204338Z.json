@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T124151-0800-20261119T204338Z",
+  "scheduled_for": "2026-11-19T12:44:51-08:00",
+  "started_at": "2026-11-19T12:41:51-08:00",
+  "completed_at": "2026-11-19T12:44:23.097-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T11:50:14.187-08:00",
+    "end": "2026-11-19T12:44:23.097-08:00",
+    "previous_run_completed_at": "2026-11-19T11:50:14.187-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T114655-0800-20261119T195014187Z.json",
+    "basis": "Last authenticated prior watch heartbeat to this watch's completion time; previous late-recall findings and earlier in-day events excluded from new detections."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked directly before additional targeted searches. Latest indexed update dated November 19 was West Bank-only; latest Gaza-specific movement page listed November 16, humanitarian situation report November 13; no new qualifying Gaza change in the watch interval."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked directly after OCHA. Current Gaza health situation page with latest WHO Director-General Gaza-specific remarks dated November 17, already logged previously. No new hospital functioning, ambulance, fuel, evacuation, medical supplies or outbreak change detected."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Previously documented HTTP 502 still present; WHO global source remained available."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza November 19 2026 latest humanitarian situation update casualties displacement aid crossings",
+      "site:who.int Gaza November 19 2026 WHO health situation hospitals medical evacuation fuel"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:reuters.com/world/middle-east/ Gaza November 19 2026 19:00 20:00 GMT casualties aid latest",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 19 2026 Thursday night evening deaths injuries",
+      "site:aa.com.tr/en/middle-east/ Gaza November 19 2026 Thursday latest evening ceasefire Israeli attacks",
+      "site:apnews.com/article/ gaza November 19 2026 Thursday deaths aid displacement",
+      "site:unrwa.org/news-reports/reports/unrwa-situation-report-239 November 19 2026 details food water shelter",
+      "site:news.un.org/en/ Gaza 19 November 2026 humanitarian civilian casualties",
+      "site:wfp.org November 19 2026 Gaza food assistance trucks bakeries crossings meals",
+      "site:unicef.org Gaza November 19 2026 water shelter children medical supplies",
+      "site:palestinercs.org Gaza November 19 2026 ambulances evacuation wounded hospital",
+      "site:msf.org Gaza November 19 2026 hospital capacity fuel medical evacuation",
+      "Gaza November 19 2026 Rafah Kerem Shalom Salah al Din border aid access new change Thursday evening",
+      "Gaza November 19 2026 Thursday 20:00 UTC 19:00 GMT casualties displacement food water hospital latest"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed news at 22:06 Palestine time was West Bank water-line damage, outside Gaza scope. Latest Gaza casualty entry, at 16:46 Palestine time November 19, already captured in a previous heartbeat."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "ACCESSIBLE",
+        "detail": "November 19 10:09 UTC story of central Gaza raid ending, disputed road safety, displacement estimate, Zeitoun casualties predates watch window and repeats already logged developments."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "Report title/date 19 November visible, content beyond metadata unavailable; no figures inferred, same limitation as previous watch."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+        "status": "RESTRICTED",
+        "detail": "Direct article unavailable. Earlier watch already captured three dated PCHR late-recall incidents; no distinct verifiable additional incidents included."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters/Guardian November 18-19 Yellow Line ground raid, Salah al-Din reopening, approximately 6,000 displaced and subsequent security concerns: previously recorded.",
+      "WAFA/Anadolu November 19 Kuwait Roundabout, Zeitoun, Khan Younis, Deir al-Balah and other casualty reports: already recorded by earlier watches; no independent new casualty incident established.",
+      "PCHR November 16-18 Jabalia and Hamad Housing Project incident claims: already captured in preceding 11:50 PST heartbeat; no re-emission.",
+      "AP November 19 Save the Children report discusses 2025 child protection violation totals and historical impacts, rather than a newly dated change during current observation window.",
+      "WFP/IOM November 17 winter shelter and food operations warnings: historical to current observation window.",
+      "GazaNews.live November 19 unverified, automated local casualty and crossing snippets without cited primary sources: rejected under unsourced-claims exclusion.",
+      "UNRWA situation report #239 contents not accessible; no speculative figures or trends included."
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean previously documented HTTP 502 persisted; alternate WHO global access succeeded.",
+      "UN News targeted search was blocked by robots restrictions; alternate authoritative and established sources checked.",
+      "UNRWA #239 remains title/date-only; cannot verify substantive figures.",
+      "PCHR full article remains inaccessible; all three previously captured dated claims excluded from repeat reporting."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T104359-0800-20261120T20261120T184617035Z",
+  "scheduled_for": "2026-11-20T10:44:51-08:00",
+  "started_at": "2026-11-20T10:43:59-08:00",
+  "completed_at": "2026-11-20T18:46:17.035Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T09:48:56-08:00",
+    "end": "2026-11-20T18:46:17.035Z",
+    "previous_run_completed_at": "2026-11-20T09:48:56-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T094718-0800-20261120T174718Z.json",
+    "basis": "Discoveries relative to previous verified heartbeat; retrospective source updates distinguish event date from discovery time, and primary production retains authority."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261120-bureij-ap-four-fatalities-update-previous-two",
+      "canonical_source_url": "https://apnews.com/article/saudi-yemen-war-iran-iraq-november-20-2026-16c39c487a23b53b73c5eabb7f0fd57a",
+      "title": "Saudi Arabia says it attacked Yemen’s Houthis and intercepted more missiles and drones, and other Mideast news",
+      "publisher": "The Associated Press",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_datetime_local": null,
+      "event_date": "2026-11-20",
+      "event_datetime": null,
+      "location": "Al-Bureij refugee camp, central Gaza Strip",
+      "affected_population_or_system": "People killed in reported Israeli strike; AP cites four fatalities in Al-Bureij, while predecessor WAFA account reported two; not six combined",
+      "exact_supporting_passage": "A third strike killed four people in the Bureij Refugee camp on Friday evening.",
+      "source_type": "Established international news agency citing health officials at Gaza's Awda and Al-Aqsa Martyrs hospitals",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "finding_summary": "AP's November 20 rolling regional report reports four deaths in an evening Bureij strike, compared with the two deaths recorded from a WAFA medical-source report in the preceding heartbeat. This is a potentially material count revision for the SAME incident, not a new incident or an additive casualty figure; precise report/update timing is not independently verified.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T09:48:56-08:00",
+        "observation_window_end": "2026-11-20T18:46:17.035Z",
+        "discovery_type": "Newly discovered corroborating report with conflicting higher casualty count for a previously logged strike",
+        "predecessor_finding_id": "gaza-20261120-al-bureij-airstrike-two-killed-several-injured-wafa1926",
+        "predecessor_source_url": "https://english.wafa.ps/Pages/Details/177154",
+        "previous_reported_fatalities": 2,
+        "ap_reported_fatalities": 4,
+        "additional_fatalities_confirmed": false,
+        "ap_publication_or_revision_time_verified": false,
+        "publisher_attribution": "AP attributes Friday central Gaza death count to health officials at Awda hospital and Al-Aqsa Martyrs hospital",
+        "independent_corroboration_status": "Different established reporter relying on Gaza hospital figures; no independent official confirmation of which Bureij count is final",
+        "production_collector_duplicate_status": null
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza production collector/publisher authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Updates index and 18 Nov Gaza humanitarian situation report (published Nov 20) accessible; figures reviewed earlier in watch; no new post-predecessor OCHA dispatch."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Emergency overview reviewed; no new hour-specific medical capacity, access or evacuation change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "detail": "Previously known persistent 502 error; continued with WHO global and OCHA coverage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" \"Gaza\" \"PM\" airstrike killed injured latest",
+      "Gaza 20 November 2026 20:00 21:00 Jerusalem latest killed injured Rafah Bureij Deir al Balah WAFA",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza Friday evening killed wounded displaced",
+      "Gaza November 20 2026 Reuters AP AFP evening Israeli strikes killed Palestinians 20:00",
+      "site:un.org \"20 November 2026\" Gaza humanitarian relief crossing hospitals aid briefing",
+      "site:who.int \"20 November 2026\" Gaza medical evacuations hospital equipment attacks",
+      "site:palestinercs.org 20 November 2026 Gaza ambulance medical crew strike evacuation",
+      "site:unicef.org \"20 November 2026\" Gaza water sanitation children displaced",
+      "\"Bureij\" \"four\" \"Nov 20, 2026\" Gaza AP hospital",
+      "\"Bureij\" \"4\" \"Nov 20, 2026\" \"two\" killed airstrike",
+      "Gaza November 20 2026 latest aid Kerem Shalom Rafah medical evacuations OCHA WHO UNRWA WFP November 20",
+      "Gaza ceasefire November 20 2026 negotiation hostage remains military operations civilian impact Friday evening"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/saudi-yemen-war-iran-iraq-november-20-2026-16c39c487a23b53b73c5eabb7f0fd57a",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 20 rolling report: six total central Gaza fatalities (Nuseirat one, Deir al-Balah one, Bureij four). Only Bureij four is new relative to previous log; aggregate not an independent count."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest index at check through 20:00 Jerusalem lists Bureij article 19:26 Jerusalem with two dead; no later Gaza-specific article listed."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/sop/press-releases/italy-and-un-agencies-partner-strengthen-integrated-services-children-and-young",
+        "status": "DIRECT_OPEN_DISABLED; SEARCH_EXCERPT_AVAILABLE",
+        "detail": "Nov 20 EUR10m program launch; not evidence of immediate service restoration or newly delivered assistance and excluded."
+      }
+    ],
+    "excluded_candidates": [
+      "AP Nuseirat one fatality and Deir al-Balah one fatality already logged; they are not additional deaths to count again.",
+      "AP Bureij four is a potential revision to WAFA Bureij two, not four newly distinct deaths or another strike.",
+      "November 10–16 OCHA health, logistics, WASH, schooling and evacuation reports already covered by prior watches.",
+      "Previously recorded Nuseirat, Al-Sabra, Al-Daraj, Al-Maghazi, Al-Bureij and Deir al-Balah incidents excluded as duplicate events.",
+      "UNICEF program launch and children's play data are not hour-specific documented high-value miss-class changes.",
+      "West Bank incidents, older news returns, opinions and unsourced claims excluded."
+    ],
+    "search_failures": [
+      "WHO EMRO regional report page returned HTTP 502, ongoing known limitation",
+      "UNICEF press release direct open disabled; indexed official excerpt available"
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T094718-0800-20261120T174718Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED"
+    },
+    "limitations": [
+      "Exact AP article initial publication and last update clock time unavailable; discovery and reporting discrepancy established, temporal order of AP update not verified.",
+      "Hospital-source counts differ between reporting agencies; the four-death figure must not be counted additively or labeled confirmed revision.",
+      "Production deduplication state not read; primary publisher is authoritative."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

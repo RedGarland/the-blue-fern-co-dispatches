@@ -1,0 +1,181 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T084232-0800-20261120T164540557Z",
+  "scheduled_for": "2026-11-20T08:44:51-08:00",
+  "started_at": "2026-11-20T08:42:32-08:00",
+  "completed_at": "2026-11-20T08:45:40.557-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T07:46:06.969-08:00",
+    "end": "2026-11-20T08:45:40.557-08:00",
+    "previous_run_completed_at": "2026-11-20T07:46:06.969-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T074058-0800-automation11.json",
+    "basis": "Supplementary source-based recall since prior heartbeat; findings are prior-period data newly recalled, not incidents occurring in this hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261110-16-orthopedic-tables-three-moh-hospitals-ocha20261120",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+      "title": "Humanitarian Situation Report | 18 November 2026",
+      "publisher": "United Nations OCHA OPT",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_period_start": "2026-11-10",
+      "event_period_end": "2026-11-16",
+      "location": "Three major Ministry of Health hospitals, Gaza Strip (facilities not individually named)",
+      "affected_population_or_system": "Surgical and orthopedic care equipment supply; four specialized orthopedic operating tables delivered to three Ministry of Health hospitals",
+      "exact_supporting_passage": "WHO delivered four specialized orthopedic operating tables to three major MoH hospitals",
+      "source_type": "Official UN OCHA humanitarian situation report conveying WHO operational delivery data",
+      "classification": "new",
+      "confidence": "HIGH",
+      "finding_summary": "Retrospective operational recall: WHO delivered four specialized orthopedic operating tables to three major Gaza MoH hospitals during 10–16 November. Equipment delivery verified; installation, utilization and changed surgery throughput not established.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T07:46:06.969-08:00",
+        "source_publication_window": "2026-11-20 (hour of first appearance unknown)",
+        "discovery_type": "Previously unrecorded detail recovered by direct read of official OCHA report already available before this watch",
+        "report_section": "Humanitarian response activities at a glance – Gaza Strip; Health",
+        "not_a_current_hour_event": true,
+        "predecessor_ledger_crosschecked": true,
+        "production_collector_duplicate_status": null,
+        "dedup_note": "Distinct from previously logged Nasser Medical Complex strike, Al-Aqsa Hospital physiotherapy opening, and Nov 10–16 medical evacuations"
+      }
+    },
+    {
+      "finding_id": "gaza-202610-commercial-truck-market-access-decline-wfp-ocha20261120",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+      "title": "Humanitarian Situation Report | 18 November 2026",
+      "publisher": "United Nations OCHA OPT (citing WFP October 2026 Palestine Market Monitor)",
+      "source_date": "2026-11-18",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_period_start": "2026-10-01",
+      "event_period_end": "2026-10-31",
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Commercial food and essential-goods market access; commercial truck entries fell from a September average of 129/day to an October average of 60/day; 75% of surveyed households had difficulty accessing markets, 96% of those due to financial constraints",
+      "exact_supporting_passage": "commercial truck entries into Gaza fell by more than half",
+      "source_type": "Official UN OCHA humanitarian report citing primary WFP monthly market-monitor survey",
+      "classification": "new",
+      "confidence": "HIGH",
+      "finding_summary": "Retrospective food/market access finding: WFP reports a fall in average daily commercial truck entries (129 in September to 60 in October 2026), with 75% of surveyed households struggling to access markets, predominantly because of financial constraints. These figures are not humanitarian offloading counts and should not be mixed with UN partner aid-truck numbers.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T07:46:06.969-08:00",
+        "discovery_type": "Previously unrecorded WFP October market-access metrics recovered on rereading OCHA November 20 publication",
+        "report_section": "Livelihoods, markets and food security",
+        "original_data_period": "October 2026 with September comparison",
+        "not_a_current_hour_event": true,
+        "first_publication_datetime": null,
+        "predecessor_ledger_crosschecked": true,
+        "production_collector_duplicate_status": null,
+        "dedup_note": "Commercial traffic market-monitor measure distinct from Gaza Crossings Authority aid-and-fuel counts for Nov 6–12, and OCHA UN/partner aid-truck arrivals Nov 9–15; do not sum or treat as same denominator"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct OCHA update index reviewed; Nov 20 publication of Nov 18 report remains the latest Gaza report. Retrospective health equipment and October market data recalled; no new current-hour OCHA bulletin."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct WHO conflict health overview checked; no fresh hour-specific Gaza hospital/evacuation/ambulance event established."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "ACCESS_ERROR_TIMEOUT",
+        "detail": "Direct regional situation report URL timed out. Previously documented 502/timeouts; WHO global fallback and OCHA/WHO referenced data used."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 20 2026 Friday 18:00 Jerusalem Palestinian civilians killed injured Israeli attacks Reuters AFP",
+      "Gaza November 20 2026 evening 6pm Israel Palestine ceasefire aid civilians latest AP",
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" \"Gaza\" injured killed",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza injured displaced killed",
+      "site:un.org \"20 November 2026\" \"Gaza\" hospital aid access displaced",
+      "site:who.int \"20 November 2026\" \"Gaza\" hospital evacuations health",
+      "site:unicef.org \"20 November 2026\" Gaza water children aid hospital",
+      "site:wfp.org \"20 November 2026\" Gaza food supplies crossings",
+      "site:palestinercs.org Gaza \"20 November 2026\" ambulance injury hospital",
+      "site:unrwa.org \"20 November 2026\" Gaza shelters displacement health",
+      "\"Gaza\" \"20 November 2026\" \"18:00\" \"killed\" \"injured\"",
+      "Gaza Friday 20 November 2026 evening new ceasefire negotiations Rafah crossing medical evacuation aid convoy hospitals civilian impact"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest 17:02 Jerusalem item for Deir al-Balah fatality is already in predecessor watch; no later Gaza casualty report observed."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest posted Gaza-specific item dated November 10."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL_ACCESS",
+        "detail": "November 19 report title/date accessible but the report content was not exposed in the fetch."
+      },
+      {
+        "publisher": "UNICEF",
+        "url": "https://www.unicef.org/sop/press-releases/children-claim-their-right-play-gaza-world-childrens-day",
+        "status": "SEARCH_RESULT_ONLY_DIRECT_FETCH_DISABLED",
+        "detail": "November 20 press release about play access located in search result but not promoted as a new high-value casualty, health or aid-access event."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official report inspected for health, food-market, water/sanitation, flood and crossings data; two unrecorded data points selected after dedupe."
+      }
+    ],
+    "excluded_candidates": [
+      "Already logged Nov 20 Nuseirat, Sabra, Al-Daraj, Al-Maghazi and Deir al-Balah casualties; no distinct new casualty incident substantiated.",
+      "Already logged Nov 10–16 Al-Aqsa physiotherapy operations and OCHA medical-evacuation count; excluded from new findings.",
+      "OCHA's Nov 9–15 UN/partner aid-truck figures are not comparable with the previously recorded Gaza-side Nov 6–12 aid/fuel bulletin; did not promote as a new hourly change.",
+      "OCHA November flood damage, about 201 affected learning spaces and hospital strikes repeat earlier records.",
+      "UNICEF November 20 Back to Play campaign and undated no-safe-play-survey metrics were not promoted as high-value Gaza watch developments.",
+      "UNRWA situation report body inaccessible; no unverified content promoted.",
+      "Search results on Nov 18 tank incursion, ceasefire stability, winter tents, food-ration warnings and historical casualty totals repeat older developments."
+    ],
+    "search_failures": [
+      "WHO EMRO regional situation report direct fetch timed out (pre-existing recurring issue)",
+      "UNICEF Nov 20 press release direct fetch disabled; search excerpt available",
+      "UNRWA report body unavailable; index accessible"
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T074058-0800-automation11.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "findings",
+      "previous_run_completed_at": "2026-11-20T07:46:06.969-08:00"
+    },
+    "limitations": [
+      "Both findings are retrospective: 10–16 November surgical equipment supply and October 2026 WFP market-access data; neither implies a new November 20 08:00 PST incident.",
+      "No authoritative primary production deduplication state inspected; findings require collector reconciliation and must not be treated as published.",
+      "WHO Eastern Mediterranean primary regional site unavailable; WHO global and OCHA official reporting provided useful coverage.",
+      "First appearance in current hour not verified; classification new refers to previously unrecorded specific detail within the bounded watch."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

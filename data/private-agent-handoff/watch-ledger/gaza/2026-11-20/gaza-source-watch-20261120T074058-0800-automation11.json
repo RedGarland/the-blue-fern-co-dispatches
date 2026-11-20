@@ -1,0 +1,252 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T074058-0800-automation11",
+  "scheduled_for": "2026-11-20T07:44:51-08:00",
+  "started_at": "2026-11-20T07:40:58-08:00",
+  "completed_at": "2026-11-20T07:46:06.969-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T06:49:01.392-08:00",
+    "end": "2026-11-20T07:46:06.969-08:00",
+    "previous_run_completed_at": "2026-11-20T14:49:01.392Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T064622-0800-20261120T144901392Z.json",
+    "basis": "Newly published and previously unrecorded high-value Gaza humanitarian details since the predecessor watch; explicitly distinguish a fresh incident from retrospective recall."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261120-deir-al-balah-displaced-firas-aqel-killed-wafa177153",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177153",
+      "title": "Palestinian killed in Israeli strike on Deir al-Balah",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": "2026-11-20",
+      "event_time_local": null,
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "source_type": "Palestinian news agency correspondent citing medical sources",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "publication_datetime_local": "2026-11-20T17:02:00+02:00",
+      "location": "Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Firas Aqel, displaced Palestinian originally from Jabalia refugee camp; one reported fatality",
+      "exact_supporting_passage": "identified the victim as Firas Aqel, a displaced Palestinian from Jabalia refugee camp",
+      "finding_summary": "WAFA reports a displaced Palestinian, Firas Aqel, killed in an Israeli attack in Deir al-Balah, separate from the previously logged Nuseirat killing of Diab Issa Radi.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T06:49:01.392-08:00",
+        "discovery_url": "https://english.wafa.ps/Pages/Details/177153",
+        "published_after_prior_watch": true,
+        "published_at_pacific": "2026-11-20T07:02:00-08:00",
+        "distinct_from": "Nuseirat drone killing (victim Diab Issa Radi) already logged",
+        "independent_corroboration": "Not obtained within bounded watch; do not add to cumulative totals before production reconciliation"
+      }
+    },
+    {
+      "finding_id": "gaza-20261120-nuseirat-al-ishrin-displaced-tent-four-injured-anadolu4131821",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+      "title": "Palestinian killed, 13 injured in Israeli attacks across Gaza despite ceasefire",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": "2026-11-20",
+      "event_time_local": null,
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "source_type": "Established news-agency report citing medical and local sources",
+      "publisher": "Anadolu Agency",
+      "publication_datetime_local": null,
+      "location": "Al-Ishrin Street, Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Four Palestinians injured when a drone reportedly struck a tent sheltering displaced people",
+      "exact_supporting_passage": "four Palestinians were injured when an Israeli drone struck a tent",
+      "finding_summary": "Anadolu reports four injuries in a Nuseirat tent strike, a distinct incident from the previously logged fatal drone strike on a man walking in Nuseirat.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T06:49:01.392-08:00",
+        "source_updated_date": "2026-11-20",
+        "article_update_time": null,
+        "novelty_basis": "Previously unrecorded incident detail found during this watch in an existing November 20 article; first appearance within the observation hour not independently established",
+        "distinct_from": "Nuseirat street fatality; does not represent four new deaths",
+        "independent_corroboration": "Not independently obtained; require production reconciliation"
+      }
+    },
+    {
+      "finding_id": "gaza-20261120-sabra-drone-electric-bicycle-four-injured-follow-up-anadolu4131821",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+      "title": "Palestinian killed, 13 injured in Israeli attacks across Gaza despite ceasefire",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": "2026-11-20",
+      "event_time_local": null,
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "source_type": "Established news-agency report citing medical sources",
+      "publisher": "Anadolu Agency",
+      "publication_datetime_local": null,
+      "location": "Al-Sabra, southern Gaza City",
+      "affected_population_or_system": "Four Palestinians injured, one seriously, in a drone strike on an electric bicycle",
+      "exact_supporting_passage": "four Palestinians were injured, one seriously",
+      "finding_summary": "Anadolu quantifies four injuries, one serious, in a Sabra drone attack. Probably corresponds to the earlier WAFA Sabra report that only said 'several' were injured; not counted as a separate incident.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T06:49:01.392-08:00",
+        "novelty_basis": "Newly recalled injury count and target detail; previously logged Sabra incident had unspecified injured count",
+        "correlation_caution": "Likely the same Al-Sabra incident as WAFA 177139; do not add four to a previously unknown count or count as a second strike",
+        "article_update_time": null
+      }
+    },
+    {
+      "finding_id": "gaza-20261110-16-al-aqsa-physiotherapy-operations-ocha20261120",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+      "title": "Humanitarian Situation Report | 18 November 2026",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_time_local": null,
+      "classification": "new",
+      "confidence": "HIGH",
+      "source_type": "Official OCHA OPT humanitarian situation report",
+      "publisher": "United Nations OCHA OPT",
+      "event_period_start": "2026-11-10",
+      "event_period_end": "2026-11-16",
+      "location": "Al-Aqsa Hospital, central Gaza Strip",
+      "affected_population_or_system": "Rehabilitation and physiotherapy service capacity; approximately 400 assistive devices distributed in reporting period",
+      "exact_supporting_passage": "the physiotherapy department at Al-Aqsa Hospital commenced operations",
+      "finding_summary": "OCHA states the Al-Aqsa Hospital physiotherapy department began operating during 10–16 November; a retrospective service-capacity change recovered from a November 20 publication, not a November 20 opening.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T06:49:01.392-08:00",
+        "novelty_basis": "Previously unrecorded specific functioning-capacity change identified on detailed review of OCHA report",
+        "not_first_published_this_hour": true,
+        "report_title_date": "2026-11-18",
+        "report_page_publication_date": "2026-11-20",
+        "production_reconciliation": "Unknown whether primary daily collector already captured"
+      }
+    },
+    {
+      "finding_id": "gaza-20261110-16-medical-evacuations-97-patients-ocha20261120",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+      "title": "Humanitarian Situation Report | 18 November 2026",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_time_local": null,
+      "classification": "new",
+      "confidence": "HIGH",
+      "source_type": "Official OCHA OPT humanitarian situation report",
+      "publisher": "United Nations OCHA OPT",
+      "event_period_start": "2026-11-10",
+      "event_period_end": "2026-11-16",
+      "location": "Rafah and Kerem Shalom crossings, Gaza Strip",
+      "affected_population_or_system": "97 patients (including 34 children) and 145 companions medically evacuated from Gaza",
+      "exact_supporting_passage": "97 patients, including 34 children, and 145 companions were medically evacuated",
+      "finding_summary": "OCHA's 10–16 November medical-evacuation count is a distinct later reporting period from the Gaza-side Nov 6–12 bulletin previously logged. Different measures/overlap may exist; do not sum across the two sources.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T06:49:01.392-08:00",
+        "novelty_basis": "Previously unrecorded OCHA medical-evacuation count found on review of report published Nov 20",
+        "not_first_published_this_hour": true,
+        "report_title_date": "2026-11-18",
+        "report_page_publication_date": "2026-11-20",
+        "duplicate_risk": "Earlier NCF report covered Nov 6–12 and counted 96 patients among departures; periods overlap, so do not add them",
+        "production_reconciliation": "Unknown whether primary daily collector already captured"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary Gaza production publisher remains authoritative. No publishing, approvals, schedule or task-state changes.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 20 update listing and detailed November 18 report reviewed. Data cover November 10–16; two retrospective service/evacuation details identified. Other prior incidents not repeated."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Fallback global conflict/health overview; no new hour-specific WHO medical event verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "ACCESS_ERROR_502",
+        "detail": "Previously known recurring 502 Bad Gateway/timeout, partially limiting direct regional WHO coverage."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza Nov 20 2026 Friday Reuters fresh casualties aid ceasefire after 16:00 Jerusalem",
+      "Gaza November 20 2026 AP News strikes injured killed Friday latest",
+      "site:english.wafa.ps/Pages/Details/ November 20 2026 Gaza injured November 20 Friday",
+      "site:who.int Gaza November 20 2026 health hospital ambulance evacuation",
+      "site:unicef.org Gaza 20 November 2026 floods water children shelter",
+      "site:wfp.org Gaza 20 November 2026 aid trucks food access",
+      "site:unrwa.org Gaza 20 November 2026 medical water displaced Nov 20 humanitarian",
+      "site:news.un.org/en 20 November 2026 Gaza hospitals crossings civilians",
+      "site:palestinercs.org 20 November 2026 Gaza ambulance rescue health facility",
+      "November 20 2026 Gaza 17:00 Jerusalem crossing aid ceasefire Reuters AFP Al Jazeera",
+      "November 20 2026 Gaza detainees hostages exchange ceasefire negotiations latest Friday",
+      "site:aa.com.tr/en/middle-east/ 20 November 2026 Gaza Palestinians wounded displaced"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "detail": "Direct latest list stale at 15:05 Palestinian local, but linked related-news on WAFA 09:46 page exposed a 17:02 Deir al-Balah fatality item."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177153",
+        "detail": "Direct article timed 17:02 Palestinian local (07:02 PST) identifies new fatality Firas Aqel, displaced from Jabalia."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+        "detail": "November 20 updated report specifies 4 wounded in separate Nuseirat tent strike and 4 in Sabra; 5 Maghazi injuries already logged; 1 Nuseirat death already logged."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "detail": "Nov 19 situation report listing accessible but report body absent from page, no additional verified detail promoted."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "detail": "Latest Gaza-specific listed PRCS news Nov 10, no independent new event."
+      }
+    ],
+    "excluded_candidates": [
+      "Anadolu Nov 20 Nuseirat killed Diab Issa Radi duplicates previously logged Nuseirat death. The newly reported Firas Aqel in Deir al-Balah is a different named victim and location.",
+      "Five Maghazi injuries in Anadolu report duplicate WAFA 14:34 Nov 20 Al-Maghazi incident already logged by predecessor.",
+      "Sabra four injuries counted as clarification of prior Sabra event, not four extra injuries.",
+      "Anadolu Al-Tina Street firing at homes and tents lacks verified injuries or property damage; no standalone finding.",
+      "Shuja'iyya and east Khan Younis demolition claims lack sufficiently specific dated civilian-impact consequence to count independently.",
+      "OCHA Nov 10–16 Nasser Medical Complex strike, rain damage, and >200 learning sites repeat previously recorded events; not re-counted.",
+      "OCHA Nov 9–15 aid truck statistics not promoted without reconciliation against previously recorded Nov 6–12 crossings bulletin, whose measures and dates differ.",
+      "WFP November 17 winterization warning and WFP rolling food-aid cuts already available prior, not a new incident.",
+      "Historical ceasefire/hostage search hits and 2023–25 year-collision results excluded.",
+      "UNRWA #239 report page contained title/date but no extractable operational content; nothing inferred."
+    ],
+    "search_failures": [
+      "WHO EMRO regional report path returned 502 (recurring, previously documented)",
+      "UN News robots.txt blocked site search (recurring, partially mitigated by OCHA UN sources)"
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T064622-0800-20261120T144901392Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "no_findings",
+      "previous_run_completed_at": "2026-11-20T14:49:01.392Z"
+    },
+    "limitations": [
+      "New Deir al-Balah death currently sourced to one Palestinian news agency report; independent second-source verification not obtained.",
+      "Anadolu publication update time not supplied, so exact publication within watch hour cannot be verified for Nuseirat/Sabra details.",
+      "OCHA findings are retrospective 10–16 November; not fresh real-time 20 November changes.",
+      "No access to authoritative production collector dedupe state; do not imply publication."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

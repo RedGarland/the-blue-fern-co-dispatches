@@ -1,0 +1,113 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T204451-0800-20261120T044140Z",
+  "scheduled_for": "2026-11-19T20:44:51-08:00",
+  "started_at": "2026-11-19T20:39:58-08:00",
+  "completed_at": "2026-11-19T20:41:40.066-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T19:45:01.284-08:00",
+    "end": "2026-11-19T20:41:40.066-08:00",
+    "previous_run_completed_at": "2026-11-19T19:45:01.284-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T194451-0800-20261120T034239Z.json",
+    "basis": "Verified immediate predecessor from ops/watch-ledger. Bounded search for developments reported since predecessor completion, with retroactive recall only if distinguishable from earlier ledger findings. Source-local dates (Gaza/Palestine) checked separately from America/Los_Angeles observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production Gaza collector and publishing remain authoritative. No changes to publication, approvals, schedule, or task.",
+    "official_first_targeted_queries": [
+      "site:ochaopt.org Gaza November 19 2026 humanitarian situation update aid displacement casualties crossings",
+      "site:who.int Gaza 19 November 2026 hospitals medical evacuation fuel healthcare"
+    ],
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official updates list reviewed; Nov 19 item is West Bank snapshot, most recent Gaza access and movement Nov 16, Gaza humanitarian situation report Nov 13. No newly dated Gaza update in observation window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official emergency page reviewed; latest relevant director-general remarks dated Nov 17; no newly documented Gaza-specific hospital, ambulance, transport, fuel, medical evacuation, or functional capacity changes."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct WHO regional source returned HTTP 502; same restriction as prior hourly heartbeat; WHO Global used as fallback. Source-specific coverage gap; not a newly material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"20/November/2026\" killed injured Gaza",
+      "site:aa.com.tr/en/middle-east/ Gaza November 20 2026 killed injured casualties ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 20 2026 19 November evening displaced aid crossings",
+      "site:apnews.com/article/ Gaza November 19 2026 November 20 Israeli strikes wounded displaced",
+      "site:pchrgaza.org November 20 2026 Gaza casualties displacement North Nuseirat",
+      "site:unrwa.org \"20 November 2026\" Gaza situation shelter fuel health",
+      "site:wfp.org Gaza \"19 November 2026\" OR \"20 November 2026\" food deliveries",
+      "site:unicef.org Gaza November 19 2026 20 children water winter tents",
+      "site:msf.org Gaza 19 November 2026 20 hospital aid health services",
+      "site:palestinercs.org Gaza November 20 2026 ambulance evacuation",
+      "Gaza November 20 2026 Rafah Kerem Shalom crossing medical evacuations fuel aid ceasefire Reuters AFP",
+      "Gaza November 20 2026 early morning November 19 evening airstrike civilians north Gaza Khan Younis Zeitoun"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest visible news is Nov 19 22:06 Palestine time; latest Gaza casualty entry Nov 19 16:46 Palestine time, repeating prior-recorded Zeitoun/Kuwait Roundabout and injury reports."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Most recent Gaza-specific report Nov 19 reviewing Nov 16–18 incidents and Nuseirat displacement, which prior recall runs already recorded."
+      },
+      {
+        "publisher": "Palestine Red Crescent Society",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage most recent dated announcement Nov 10; no new sourced ambulance or patient-evacuation change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "Report heading accessible but detailed text not retrievable; persistent partial-access limitation also logged in previous run."
+      }
+    ],
+    "reviewed_existing_reports": [
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-others-injured-in-israeli-attacks-across-gaza-despite-truce/4131195",
+        "note": "Published Nov 19; casualties in Kuwait Roundabout/Zeitoun, Al-Bureij delayed death and shelter injuries predate observation and overlap earlier recall records."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "note": "Nov 19 Nuseirat incursion end, displaced population and infrastructure impact recorded previously; Zeitoun reported death count inconsistent with other accounts, no independent increment."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+        "note": "Nov 19 field report Nov 16–18 cases previously recalled."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/189d58d05fa984cc9573f98ec7d638be",
+        "note": "Nov 17 Board of Peace ceasefire warning was previously published; no newly confirmed implementation change."
+      }
+    ],
+    "exclusions": "Searches produced older November 2025/2023 returns, Nov 19 already logged casualty/displacement articles, and general humanitarian situation context without new change. No independent new casualty count inferred from conflicting Zeitoun reports. No unsupported social claims or untraceable Gaza aggregation included.",
+    "coverage_assessment": "Broad official and established-media coverage retained despite previously documented WHO EMRO 502 and incomplete UNRWA report body. No independently verified new qualifying development since previous hourly heartbeat."
+  }
+}

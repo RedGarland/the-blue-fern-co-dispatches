@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T094718-0800-20261120T174718Z",
+  "scheduled_for": "2026-11-20T09:44:51-08:00",
+  "started_at": "2026-11-20T09:47:18-08:00",
+  "completed_at": "2026-11-20T09:48:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T08:45:40.557-08:00",
+    "end": "2026-11-20T09:48:56-08:00",
+    "previous_run_completed_at": "2026-11-20T08:45:40.557-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T084232-0800-20261120T164540557Z.json",
+    "basis": "Supplementary discovery since prior persisted heartbeat; source publication time after the previous completed run. Findings are not production publication decisions."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261120-al-bureij-airstrike-two-killed-several-injured-wafa1926",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177154",
+      "title": "Israeli strike kills two Palestinians, injures others in central Strip",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_datetime_local": "2026-11-20T19:26:00+02:00",
+      "event_date": "2026-11-20",
+      "event_datetime": null,
+      "location": "Al-Bureij refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Palestinian civilians; two reported fatalities and several injuries (unspecified count) attributed to an Israeli airstrike",
+      "exact_supporting_passage": "Two Palestinians were killed and several others injured on Friday evening in an Israeli airstrike targeting Al-Bureij refugee camp",
+      "source_type": "Palestinian public news agency; correspondent attributing casualty count to medical sources",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "finding_summary": "WAFA reported two Palestinians killed and several others injured in an Israeli airstrike on Al-Bureij refugee camp on Friday evening, 20 November 2026. Medical-source reporting was not independently corroborated. The article's total of five Gaza deaths since morning is a daily aggregate and must not be added as additional casualties.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T08:45:40.557-08:00",
+        "observation_window_end": "2026-11-20T09:48:56-08:00",
+        "source_publication_time_local": "2026-11-20T09:26:00-08:00",
+        "discovery_type": "Newly posted casualty report following the predecessor's completion",
+        "earlier_distinct_al_bureij_report": "https://english.wafa.ps/Pages/Details/177118",
+        "distinct_from_previous_findings": "Nov 19 death from earlier Al-Bureij attack; Nov 20 Nuseirat, Al-Sabra, Al-Daraj, Al-Maghazi and Deir al-Balah casualty items",
+        "predecessor_ledger_crosschecked": true,
+        "production_collector_duplicate_status": null,
+        "corroboration": "WAFA correspondent cited unnamed medical sources; no independent corroborating report established in bounded checks",
+        "event_hour_verified": false
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; primary collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "INDEX_ACCESSIBLE; REPORT_DIRECT_FETCH_FAILED",
+        "detail": "Official update index accessible; latest Gaza humanitarian situation report listed as 18 Nov 2026 and published 20 Nov. Direct permalink fetch failed; accessible search excerpt showed pre-existing reporting already in prior ledger; no newly dated OCHA Gaza bulletin."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO official emergency overview checked; no newly published hour-specific Gaza operational change identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "ACCESS_ERROR_TIMEOUT",
+        "detail": "Direct regional report URL timed out, continuing previously documented EMRO accessibility problem; WHO global fallback checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza 20 November 2026 November 20 late Friday killed injured displaced civilians drone shelling Reuters AFP AP",
+      "site:english.wafa.ps \"20/November/2026\" \"Gaza\" killed injured latest",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza killed injured tent camp",
+      "site:un.org \"20 November 2026\" Gaza humanitarian crossing fuel aid hospitals update",
+      "site:who.int \"20 November 2026\" Gaza patient evacuation hospital ambulance medical equipment",
+      "site:unicef.org \"20 November 2026\" Gaza shelter water wastewater health",
+      "site:wfp.org \"November 20, 2026\" Gaza food deliveries blockade markets",
+      "site:unrwa.org \"20 November 2026\" Gaza shelters displaced situation report",
+      "site:palestinercs.org \"20 November 2026\" Gaza ambulances paramedics injured",
+      "Gaza November 20 2026 Bureij two killed injured evening strike Reuters Associated Press WAFA",
+      "Gaza November 20 2026 Friday Rafah Kerem Shalom crossing medical evacuation fuel humanitarian access ceasefire talks",
+      "Gaza November 20 2026 19:00 Jerusalem Bureij Deir al Balah Nuseirat fatalities shelter bombing latest"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177154",
+        "status": "ACCESSIBLE",
+        "detail": "Article timestamp 19:26 Jerusalem / 09:26 PST, after prior 08:45 PST heartbeat, confirmed two fatalities and unspecified number injured in Bureij."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "DIRECT_FETCH_FAILED; INDEX_AND_SEARCH_EXCERPT_AVAILABLE",
+        "detail": "Existing November 18 situation report already screened previously; no duplicated WFP market or orthopedic/evacuation data promoted."
+      },
+      {
+        "publisher": "Times of Israel",
+        "url": "https://www.timesofisrael.com/liveblog-november-20-2026/",
+        "status": "ACCESSIBLE",
+        "detail": "Reviewed contemporaneous Israeli military reporting, but no verified independently matching civilian casualty figure for this specific Bureij strike."
+      }
+    ],
+    "excluded_candidates": [
+      "Previously recorded Nov 20 Nuseirat fatality and tent injuries, Al-Sabra and Al-Daraj injuries, Al-Maghazi shelling and displacement, and Deir al-Balah fatality.",
+      "Earlier Nov 19 Al-Bureij death from wounds, not same as newly reported Nov 20 evening airstrike.",
+      "Previously recorded Nov 10–16 hospital physiotherapy, medical evacuations, specialized orthopedic tables and October WFP market-access decline.",
+      "Previously recorded Nov 6–12 crossing aid/fuel and travel figures and November flood/infrastructure damage.",
+      "November 18–19 central Gaza tank movement/displacement and previously reported ceasefire discussions; no newly verified distinct hour-specific impact.",
+      "Uncorroborated claims, unsourced social posts, and older search results excluded."
+    ],
+    "search_failures": [
+      "WHO EMRO direct URL timed out (previously recorded recurrent issue)",
+      "OCHA latest Gaza situation report direct permalink inaccessible although OCHA index and indexed excerpt were available"
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T084232-0800-20261120T164540557Z.json",
+      "status": "READ_VERIFIED",
+      "previous_run_completed_at": "2026-11-20T08:45:40.557-08:00",
+      "previous_status": "DEGRADED"
+    },
+    "limitations": [
+      "WAFA account cites medical sources; no independent corroboration of two deaths and unspecified injuries found in 12-search budget.",
+      "Unverified event clock time and casualty identities intentionally null/unspecified; do not treat the separately stated daily death tally as additional deaths.",
+      "Only previous watch ledger crosschecked; authoritative production deduplication state not inspected.",
+      "WHO EMRO timed out and OCHA report permalink was inaccessible, but official indexes and fallback sources provided useful coverage."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

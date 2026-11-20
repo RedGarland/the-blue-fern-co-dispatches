@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T114356-0800-20261120T194523220Z",
+  "scheduled_for": "2026-11-20T11:44:51-08:00",
+  "started_at": "2026-11-20T11:43:56-08:00",
+  "completed_at": "2026-11-20T19:45:23.220Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T10:46:17.035-08:00",
+    "end": "2026-11-20T19:45:23.220Z",
+    "previous_run_completed_at": "2026-11-20T18:46:17.035Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T104359-0800-20261120T20261120T184617035Z.json",
+    "basis": "Supplementary discovery since preceding verified watch; older source reports or prior watch findings excluded. Primary production collection and deduplication remain authoritative."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not primary publisher or collector.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 20 published humanitarian situation report for Nov 18 checked. Prior ledger already examined it and recorded selected new retrospective health/food figures; no new OCHA Gaza report since previous heartbeat."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO emergency overview and available latest news checked; no fresh hour-specific Gaza operational change."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct WHO regional page returned Bad Gateway; recurrent accessibility problem noted in prior heartbeats. WHO global/OCHA fallback usable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" Gaza 20:00 21:00 22:00 killed wounded displaced",
+      "Gaza November 20 2026 Friday latest 21:00 Jerusalem 11:00 Pacific killed injured airstrike AP Reuters WAFA",
+      "site:aa.com.tr/en/middle-east \"Nov 20, 2026\" Gaza deaths wounded Friday afternoon",
+      "site:un.org \"20 November 2026\" Gaza Gaza civilians aid trucks hospital shelter UN briefing",
+      "site:who.int \"20 November 2026\" Gaza health ambulance evacuations medical aid",
+      "site:palestinercs.org November 20 2026 Gaza ambulance operations",
+      "site:unicef.org \"20 November 2026\" Gaza water displacement damaged shelters children",
+      "site:wfp.org \"20 November 2026\" Gaza food deliveries hot meals markets cash",
+      "site:unrwa.org \"20 November 2026\" Gaza health shelters displaced school",
+      "Reuters AFP Gaza Friday November 20 2026 evening ceasefire negotiation civilian killed crossing",
+      "Gaza November 20 2026 Rafah Kerem Shalom crossings medical evacuations aid fuel evening update",
+      "Gaza November 20 2026 Israeli military Gaza 21:00 22:00 strike civilians hostages captives negotiations"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed WAFA Gaza casualty item at 19:26 Jerusalem (09:26 Pacific), prior to preceding heartbeat; newer indexed 19:46–20:07 items concern West Bank or diplomatic sanctions, not Gaza."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/saudi-yemen-war-iran-iraq-november-20-2026-16c39c487a23b53b73c5eabb7f0fd57a",
+        "status": "ACCESSIBLE",
+        "detail": "Central Gaza incident breakdown remains 1 killed Nuseirat, 1 Deir al-Balah, 4 Bureij; all previously logged, including Bureij count discrepancy."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 20 publication covering predominantly Nov 10–16 reviewed; source was already read during preceding watch and earlier OCHA findings logged."
+      }
+    ],
+    "excluded_candidates": [
+      "AP Friday central Gaza strikes (Nuseirat, Deir al-Balah, Bureij): all previously recorded, including unresolved WAFA two versus AP four Bureij fatality count discrepancy. No new verified count.",
+      "WAFA Friday Al-Maghazi, Al-Sabra, Al-Daraj and Nuseirat incidents already logged in prior watch series.",
+      "OCHA Nov 10–16 retrospective healthcare, flood damage, displacement site, humanitarian logistics, food, water and education metrics sourced to previously reviewed Nov 20 report; no newly published hour-specific change.",
+      "UNICEF Nov 9 flood deaths/shelter-risk report and NCF Nov 6–12 crossing statistics older and previously reviewed.",
+      "West Bank-only incidents, older conflict reports, irrelevant regional events, opinions, unsupported social content and unsourced claims excluded."
+    ],
+    "search_failures": [
+      "WHO EMRO direct page HTTP 502 (previously documented persistent limitation)"
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T104359-0800-20261120T20261120T184617035Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED"
+    },
+    "limitations": [
+      "Bounded public-source recall does not establish completeness; publication/revision times on rolling wire articles can be unverified.",
+      "WHO regional feed unavailable (ongoing). WHO global and OCHA were available.",
+      "Production collector deduplication state not inspected; this supplement does not approve or publish content."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

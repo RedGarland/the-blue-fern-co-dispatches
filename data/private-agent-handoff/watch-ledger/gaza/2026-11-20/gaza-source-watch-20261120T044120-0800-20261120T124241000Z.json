@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T044120-0800-20261120T124241000Z",
+  "scheduled_for": "2026-11-20T04:44:51-08:00",
+  "started_at": "2026-11-20T04:41:20-08:00",
+  "completed_at": "2026-11-20T04:42:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T03:51:32.095-08:00",
+    "end": "2026-11-20T04:42:41-08:00",
+    "previous_run_completed_at": "2026-11-20T11:51:32.095Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T034451-0800-20261120T115132095Z.json",
+    "basis": "Supplementary recall since last authenticated completed heartbeat; exclude prior findings and historical context, retain only distinct verified incidents or material follow-up."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only; primary Gaza collection and publication remain authoritative.",
+    "execution_note": "Run was invoked before the nominal 04:44:51 PST hourly slot; scheduled_for records that nominal slot, started_at is the actual early invocation time.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct updates index checked. Latest items November 19 West Bank, November 16 Gaza movement/access, November 13 Gaza humanitarian report; no newly dated Gaza release."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/palestine/index.html",
+        "status": "ACCESS_ERROR",
+        "detail": "Regional Palestine page inaccessible; same recurrent access limitation as prior heartbeat."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct conflict situation page checked; no fresh November 20 hospital, health-capacity, evacuation, transport or supply update. Regional news list had no recent November Gaza item."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" Gaza killed injured strike Friday afternoon",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 20, 2026\" Friday injured civilians",
+      "site:reuters.com/world/middle-east/ Gaza \"November 20, 2026\" civilians strikes aid ceasefire",
+      "site:apnews.com/article/ gaza November 20 2026 strikes killed aid ceasefire",
+      "site:unrwa.org Gaza 20 November 2026 shelter floods displacement aid",
+      "site:unicef.org Gaza 20 November 2026 water health school flood",
+      "Gaza November 20 2026 Friday November 20 14:00 Palestine casualties aid hospital crossings ceasefire",
+      "site:palestinercs.org Gaza \"20 November 2026\" ambulance evacuation",
+      "site:msf.org Gaza \"20 November 2026\" hospitals medical transport",
+      "site:wfp.org Gaza November 20 2026 food crossings trucks supplies",
+      "site:ohchr.org Gaza 20 November 2026 civilian casualties detention operations",
+      "site:pchrgaza.org November 20 2026 Gaza casualties civilian strikes"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest indexed November 20 items through 13:39 Palestinian local time. Newest items concern West Bank. Gaza entries 09:46 casualty incidents and 10:02 UN-attributed Gaza humanitarian report were recorded by earlier watch runs."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/resources/reports",
+        "status": "ACCESSIBLE_INDEX_ONLY",
+        "detail": "Report listing checked; most recent published Gaza/OPT situation report #239 dated November 19, already accessible before current observation interval."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-as-israel-continues-to-violate-gaza-ceasefire/4131821",
+        "status": "ACCESSIBLE",
+        "detail": "November 20 Nuseirat victim Diab Issa Radi and firing at Al-Tina Street homes/tents; Nuseirat incident captured previously, no distinct independently established new civilian-impact event."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-16-palestinians-including-two-women-and-a-child-and-continues-to-destroy-remaining-homes-in-gaza/",
+        "status": "ACCESSIBLE",
+        "detail": "Article dated November 16; outside observation window and not a distinct follow-up."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 20 09:46 Nuseirat, Al-Sabra and Al-Daraj casualties were already recorded at 00:44.",
+      "WAFA November 20 10:02 Gaza UN-attributed temporary learning sites damage already recorded at 02:44; no distinct material update since prior watch.",
+      "Anadolu's Nuseirat victim is same previously recorded incident, not an additional fatality.",
+      "November 19 raid/displacement and November 6–12 crossing and medical-access figures were previously recorded.",
+      "PCHR November 16 and older reports, weekly retrospective summaries, older WFP information, broad UNICEF humanitarian appeal and unrelated West Bank incidents excluded.",
+      "No fresh qualifying WHO/OCHA, health-system, medical evacuation, crossings, food/water, hostage/detention, or ceasefire change verified."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T034451-0800-20261120T115132095Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "no_findings",
+      "previous_run_completed_at": "2026-11-20T11:51:32.095Z"
+    },
+    "limitations": [
+      "WHO EMRO direct access error persists, with WHO global fallback accessible. This is not a newly material degradation.",
+      "Search indexing and source publication delays may conceal very recent developments; no unsupported claims promoted."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

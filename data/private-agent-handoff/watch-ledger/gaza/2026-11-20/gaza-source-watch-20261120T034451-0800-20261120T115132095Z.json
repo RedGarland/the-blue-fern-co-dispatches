@@ -1,0 +1,118 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T034451-0800-20261120T115132095Z",
+  "scheduled_for": "2026-11-20T03:44:51-08:00",
+  "started_at": "2026-11-20T03:49:27-08:00",
+  "completed_at": "2026-11-20T03:51:32.095-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T02:45:17.288-08:00",
+    "end": "2026-11-20T03:51:32.095-08:00",
+    "previous_run_completed_at": "2026-11-20T10:45:17.288Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T024451-0800-20261120T104517288Z.json",
+    "basis": "Bounded supplementary late-recall check since the preceding verified completed heartbeat; retrospective information considered only if a distinct previously unrecorded development or material quantified follow-up."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only; primary daily Gaza collection, production, and publication remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official updates page checked before targeted searches. Latest listed items: 19 November West Bank snapshot, 16 November Gaza access/movement and 13 November Gaza humanitarian situation report. No new dated Gaza development."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/palestine/index.html",
+        "status": "ACCESS_ERROR",
+        "detail": "Direct WHO regional Palestinian territory page inaccessible via browsing tool (previously documented recurring limitation)."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Reached via WHO global news site's dedicated conflict link; no newly dated Gaza hospital, ambulance, fuel, transport, evacuation, or functioning-capacity update. Regional-news list dates no later than August 2026."
+      },
+      {
+        "publisher": "WHO global news",
+        "url": "https://www.who.int/news",
+        "status": "ACCESSIBLE",
+        "detail": "Direct global index checked; no new Gaza-specific release."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza 20 November 2026 situation report access displacement latest",
+      "site:who.int Gaza November 20 2026 hospital health evacuation fuel WHO",
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" Gaza killed wounded displaced 2026",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza Israeli strikes casualties humanitarian",
+      "site:reuters.com/world/middle-east Gaza November 20 2026 Friday civilians aid ceasefire strikes",
+      "site:apnews.com/article Gaza November 20 2026 Israeli strikes Palestinians food aid ceasefire",
+      "site:unrwa.org Gaza 20 November 2026 shelter flood aid conditions",
+      "site:unicef.org/sop Gaza November 20 2026 flood water children medical",
+      "site:palestinercs.org Gaza \"20 November 2026\" ambulance hospital medical evacuation",
+      "site:msf.org Gaza \"20 November 2026\" healthcare disruption evacuations",
+      "site:wfp.org Gaza \"20 November 2026\" food supplies crossings distributions",
+      "Gaza November 20 2026 13:00 14:00 GMT+2 casualties ambulance Nuseirat ceasefire news"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Fresh official agency listing checked; 20 November Gaza entries 09:46 and 10:02 Palestine-local time already recorded in prior heartbeats (casualty incidents and UN-attributed damaged learning sites). Newer 11:24, 12:33, 12:39 entries concern the West Bank, not Gaza."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-as-israel-continues-to-violate-gaza-ceasefire/4131821",
+        "status": "ACCESSIBLE",
+        "detail": "Diab Issa Radi, 60, killed in Nuseirat, already covered in earlier watch. Mention of firing toward Al-Tina Street homes and tents does not establish verified separate casualties or displacement, and was available in the previous watch."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "status": "INDEXED",
+        "detail": "November 19 Nuseirat/Bureij raid, 6,000 reported displaced, subsequent return, and Zeitoun casualties are prior developments."
+      },
+      {
+        "publisher": "Next Century Foundation",
+        "url": "https://www.nextcenturyfoundation.org/gaza-information-index-20-november-2026/",
+        "status": "ACCESSIBLE",
+        "detail": "Week of November 6-12 crossing/medical-access bulletin already recorded two heartbeats earlier; no new dated follow-up."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 20 November 09:46 Nuseirat, Al-Sabra, and Al-Daraj strike casualty incidents were already in the 00:44 watch.",
+      "WAFA 20 November 10:02 roughly 200 flood-damaged temporary learning sites were already captured by the previous 02:44 watch.",
+      "Anadolu 20 November named Nuseirat victim Diab Issa Radi repeats an already counted incident; no additional death counted.",
+      "Anadolu mention of Al-Tina Street firing did not establish a distinct newly documented civilian-impact change compared with the already available previous report.",
+      "Reuters November 19 Nuseirat raid and displacement reports and November 17-19 death reporting are earlier, already reported, or not new.",
+      "Next Century Foundation November 20 report covers November 6-12 and was logged previously; do not count the crossing and evacuation figures again.",
+      "UNICEF older winter PDF, WHO historic facts, advocacy commentary, undated claims, year-collision results, and unrelated West Bank developments excluded."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T024451-0800-20261120T104517288Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "findings",
+      "previous_findings_count": 1,
+      "previous_run_completed_at": "2026-11-20T10:45:17.288Z"
+    },
+    "limitations": [
+      "WHO Eastern Mediterranean direct access remained unavailable; WHO global page accessible and scanned; this is a previously known limitation, not a newly material failure.",
+      "Search engines may lag behind source publication; no new verified event identified within the completed 12-search bound.",
+      "Several searches matched older 2025 or early-2026 records; date checked before exclusion."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

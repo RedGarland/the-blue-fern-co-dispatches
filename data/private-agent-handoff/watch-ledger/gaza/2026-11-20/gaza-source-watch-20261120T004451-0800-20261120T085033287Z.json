@@ -1,0 +1,201 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T004451-0800-20261120T085033287Z",
+  "scheduled_for": "2026-11-20T00:44:51-08:00",
+  "started_at": "2026-11-20T00:47:27-08:00",
+  "completed_at": "2026-11-20T08:50:33.287Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-19T22:47:49.971-08:00",
+    "end": "2026-11-20T08:50:33.287Z",
+    "previous_run_completed_at": "2026-11-19T22:47:49.971-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+    "basis": "Follow-on bounded recall search since last committed watch. Newly published material may report events before this window; date of report and date of incident are distinguished."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177139",
+      "title": "Palestinian killed, several others injured in Israeli strikes across Gaza",
+      "publisher": "Palestine News & Information Agency (WAFA)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_time_local": "09:46",
+      "publication_timezone": "Asia/Hebron (Palestinian local time)",
+      "source_type": "local news-agency report citing local sources; firsthand corroboration not independently secured",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window_start": "2026-11-19T22:47:49.971-08:00",
+        "first_identified_in_this_run": true,
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+        "novelty_basis": "Published at 09:46 Palestine local time on November 20, after the predecessor's WAFA snapshot ending with its November 19 16:46 article; not previously logged in the predecessor.",
+        "corroboration": "WAFA source accessible directly; no independent contemporaneous corroboration found within the bounded targeted search budget",
+        "caution": "Reported incident; not an independently verified casualty total. Do not automatically add to cumulative numbers."
+      },
+      "finding_id": "gaza-20261120-nuseirat-new-camp-drone-killing-wafa177139",
+      "category": "civilian_casualties",
+      "event_date": "2026-11-20",
+      "event_time_local": null,
+      "location": "New Camp, north of Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_system": "A Palestinian person killed; civilian/combatant status not independently established",
+      "incident_summary": "WAFA reports that an Israeli drone attack killed one Palestinian in New Camp north of Nuseirat early on Friday.",
+      "casualties_reported": {
+        "killed": 1,
+        "injured": null
+      },
+      "exact_supporting_passage": "A Palestinian was killed early Friday"
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177139",
+      "title": "Palestinian killed, several others injured in Israeli strikes across Gaza",
+      "publisher": "Palestine News & Information Agency (WAFA)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_time_local": "09:46",
+      "publication_timezone": "Asia/Hebron (Palestinian local time)",
+      "source_type": "local news-agency report citing local sources; firsthand corroboration not independently secured",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window_start": "2026-11-19T22:47:49.971-08:00",
+        "first_identified_in_this_run": true,
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+        "novelty_basis": "Published at 09:46 Palestine local time on November 20, after the predecessor's WAFA snapshot ending with its November 19 16:46 article; not previously logged in the predecessor.",
+        "corroboration": "WAFA source accessible directly; no independent contemporaneous corroboration found within the bounded targeted search budget",
+        "caution": "Reported incident; not an independently verified casualty total. Do not automatically add to cumulative numbers."
+      },
+      "finding_id": "gaza-20261120-sabra-electricity-company-drone-injuries-wafa177139",
+      "category": "civilian_casualties",
+      "event_date": null,
+      "event_time_local": null,
+      "location": "Near Electricity Distribution Company headquarters, Al-Sabra, south Gaza City",
+      "affected_population_system": "Several Palestinians reportedly injured; number unspecified",
+      "incident_summary": "WAFA reports multiple injuries in an Israeli drone attack near the Electricity Distribution Company headquarters in Al-Sabra.",
+      "casualties_reported": {
+        "killed": null,
+        "injured": null,
+        "injury_quantity_text": "several"
+      },
+      "exact_supporting_passage": "Several other Palestinians were injured"
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177139",
+      "title": "Palestinian killed, several others injured in Israeli strikes across Gaza",
+      "publisher": "Palestine News & Information Agency (WAFA)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_time_local": "09:46",
+      "publication_timezone": "Asia/Hebron (Palestinian local time)",
+      "source_type": "local news-agency report citing local sources; firsthand corroboration not independently secured",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window_start": "2026-11-19T22:47:49.971-08:00",
+        "first_identified_in_this_run": true,
+        "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+        "novelty_basis": "Published at 09:46 Palestine local time on November 20, after the predecessor's WAFA snapshot ending with its November 19 16:46 article; not previously logged in the predecessor.",
+        "corroboration": "WAFA source accessible directly; no independent contemporaneous corroboration found within the bounded targeted search budget",
+        "caution": "Reported incident; not an independently verified casualty total. Do not automatically add to cumulative numbers."
+      },
+      "finding_id": "gaza-20261119-al-daraj-al-maamel-house-strike-five-injured-wafa177139",
+      "category": "civilian_casualties",
+      "event_date": "2026-11-19",
+      "event_time_local": null,
+      "location": "Al-Maamel Street, Al-Daraj neighborhood, east Gaza City",
+      "affected_population_system": "Five Palestinians reportedly injured, one seriously, in a strike on a house",
+      "incident_summary": "In a separate attack late Thursday, WAFA reports Israeli bombardment of a house on Al-Maamel Street injured five Palestinians, one seriously. Retrospectively identified after prior check.",
+      "casualties_reported": {
+        "killed": null,
+        "injured": 5,
+        "seriously_injured": 1
+      },
+      "exact_supporting_passage": "five Palestinians were injured, one of them seriously"
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Latest listed report November 19 West Bank; latest Gaza access/movement November 16, latest Gaza humanitarian situation report November 13. No new official Gaza update."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO emergency page accessible; no new dated Gaza medical evacuation, fuel, hospital, or capacity change seen."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "HTTP_502",
+        "detail": "Existing documented 502 Bad Gateway; WHO global fallback accessible; no newly material failure."
+      }
+    ],
+    "official_first_targeted_queries": [
+      "site:ochaopt.org Gaza latest humanitarian situation report 19 20 November 2026 OCHA",
+      "site:who.int occupied Palestinian territory Gaza 19 November 2026 healthcare hospitals medical evacuations latest WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza 20 November 2026 November 19 overnight Israeli attacks civilians killed wounded ceasefire Gaza City Nuseirat",
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" Gaza killed injured",
+      "site:reuters.com/world/middle-east/ Gaza November 20 2026 ceasefire Israeli strike civilians casualties",
+      "site:apnews.com/article/ Gaza November 20 2026 strikes deaths aid latest",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza civilian deaths strikes",
+      "site:pchrgaza.org Gaza \"20 November 2026\" human rights casualties displacement",
+      "site:un.org \"19 November 2026\" \"women-headed\" \"Gaza\" \"learning\" floods",
+      "site:unwomen.org Gaza November 19 2026 female headed households needs 25 percent",
+      "site:unicef.org Gaza \"20 November 2026\" floods school water child displacement",
+      "site:unrwa.org Gaza \"20 November 2026\" tents shelters food displaced health",
+      "site:wfp.org Gaza 20 November 2026 trucks hunger supplies crossing",
+      "site:msf.org OR site:palestinercs.org Gaza November 20 2026 hospitals ambulance fuel medical evacuation"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "New November 20 09:46 Palestine-local article directly read; contains three separately located casualty incidents."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177139",
+        "status": "ACCESSIBLE",
+        "detail": "Full text read and 3 incidents extracted; first reporting from local sources; no cross-source corroboration available within bounded review."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 19 16:46 Gaza City, Zeitoun, and Khan Younis incidents already recorded in preceding watches.",
+      "Anadolu November 19 three-reported-death item overlaps already documented casualty incidents.",
+      "WAFA November 20 one-in-four female-headed households repeats UN Women's September 8, 2026 baseline; not a newly dated event.",
+      "WAFA's claim of roughly 200 temporary learning sites affected by earlier flooding could not be traced to a newly published primary UN dataset in bounded review; withheld pending independent verification.",
+      "November 17 WFP/IOM winter, crossings, displacement and funding warning predates this window.",
+      "Search results dated November 20 in 2023-2025 excluded as year-collision and recycled reporting.",
+      "No new verifiable Gaza medical evacuation, detention/hostage, crossing, food/water, or ceasefire change found."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+      "status": "READ_VERIFIED",
+      "predecessor_status": "DEGRADED",
+      "findings_count": 0
+    },
+    "limitations": [
+      "WHO Eastern Mediterranean still returned HTTP 502; WHO global was available. Condition previously documented.",
+      "Three newly recorded casualty reports are from WAFA only; no independent confirmation in the bounded search results.",
+      "Search indexing may lag; absence of findings in other miss classes does not mean absence of incidents."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

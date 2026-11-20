@@ -1,0 +1,176 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T124626-0800-20261120T204830680Z",
+  "scheduled_for": "2026-11-20T12:44:51-08:00",
+  "started_at": "2026-11-20T12:46:26-08:00",
+  "completed_at": "2026-11-20T20:48:30.680Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T19:45:23.220Z",
+    "end": "2026-11-20T20:48:30.680Z",
+    "previous_run_completed_at": "2026-11-20T19:45:23.220Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T114356-0800-20261120T194523220Z.json",
+    "basis": "Supplementary discovery relative to most recent verified ledger run; the article's hour-specific publication or revision time could not be verified. Retrospective discoveries distinguished from changes definitely occurring in this one-hour window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261120-deir-al-balah-aljazeera-two-killed-versus-wafa-one",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza",
+      "title": "Israeli drone attacks kill seven Palestinians in central Gaza",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_datetime_local": null,
+      "event_date": "2026-11-20",
+      "event_datetime": null,
+      "location": "Near entrance to Deir al-Balah, central Gaza Strip",
+      "affected_population_or_system": "Palestinians killed in Israeli drone strike; a possibly revised count of two where prior WAFA report named one death; not additional confirmed deaths",
+      "exact_supporting_passage": "Two Palestinians were also killed when an Israeli drone struck civilians",
+      "source_type": "Established international news outlet reporting casualty account from Gaza",
+      "classification": "follow-up",
+      "confidence": "MEDIUM",
+      "finding_summary": "Al Jazeera reports two killed near Deir al-Balah on November 20, whereas predecessor WAFA reporting named one killed, Firas Aqel, in Deir al-Balah. Likely overlapping incident, but exact event matching and whether this is a casualty revision or different incident remain unverified. Do not add two to the earlier one; AP's prior six-person daily aggregate and Al Jazeera's seven-person aggregate also differ by one.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T19:45:23.220Z",
+        "observation_window_end": "2026-11-20T20:48:30.680Z",
+        "timezone": "America/Los_Angeles",
+        "search_priority": "OCHA OPT and WHO first, 12 additional targeted searches; searched for new traceable items and retrospective misses",
+        "publication_clock_time_verified": false,
+        "production_collector_duplicate_status": null,
+        "discovery_type": "Newly located established-source account conflicting with earlier casualty figure",
+        "predecessor_finding_id": "gaza-20261120-deir-al-balah-displaced-firas-aqel-killed-wafa177153",
+        "predecessor_source_url": "https://english.wafa.ps/Pages/Details/177153",
+        "previous_reported_deir_al_balah_fatalities": 1,
+        "new_reported_deir_al_balah_fatalities": 2,
+        "same_incident_confirmed": false,
+        "additional_fatalities_confirmed": false,
+        "reporting_discrepancy_requires_reconciliation": true,
+        "other_agencies": "WAFA November 20 reported Firas Aqel; Associated Press earlier reported one death in Deir al-Balah. Al Jazeera reports two; its article's exact revision time is not verified."
+      }
+    },
+    {
+      "finding_id": "gaza-20261120-alshujaiyya-khanyounis-demolition-operations-aljazeera",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza",
+      "title": "Israeli drone attacks kill seven Palestinians in central Gaza",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "publication_datetime_local": null,
+      "event_date": "2026-11-20",
+      "event_datetime": null,
+      "location": "Al-Shuja'iyya, eastern Gaza City; east of Khan Younis near the Yellow Line",
+      "affected_population_or_system": "Residential buildings and civilian infrastructure in areas near Israeli-controlled military line; number of buildings affected and direct displacement impact unknown",
+      "exact_supporting_passage": "It also carried out three large-scale demolitions near the “Yellow Line”",
+      "source_type": "Established international news outlet reporting military demolition activity",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "finding_summary": "Al Jazeera reports Israeli military demolitions using explosive-laden drones in Al-Shuja'iyya and three large-scale demolition operations east of Khan Younis on Friday November 20. No count of demolished structures, injuries, or forced displacement was established; the number three refers to operations, not confirmed buildings.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-20T19:45:23.220Z",
+        "observation_window_end": "2026-11-20T20:48:30.680Z",
+        "timezone": "America/Los_Angeles",
+        "search_priority": "OCHA OPT and WHO first, 12 additional targeted searches; searched for new traceable items and retrospective misses",
+        "publication_clock_time_verified": false,
+        "production_collector_duplicate_status": null,
+        "discovery_type": "Newly surfaced reporting of documented infrastructure destruction in two Gaza locations",
+        "independent_corrobation_confirmed": false,
+        "exact_buildings_destroyed": null,
+        "reported_demolition_operations_east_of_khan_younis": 3,
+        "reports_residential_structures_broadly": true,
+        "civilian_casualties_in_demolitions_verified": null,
+        "note": "Al Jazeera's reporting links military demolition operations to continued destruction of buildings and homes near the Yellow Line. Neither additional civilian impact details nor independent geolocation was verified."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall, not the primary production collector or publisher.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "20 November situation report (reporting 10–16 November) and updates index directly checked; no newly released post-predecessor Gaza report; earlier watch already recorded selected healthcare/market/flood findings."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "WHO occupied Palestinian territory emergency overview checked; no new within-window health/ambulance/fuel/medical evacuation operational change verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Direct regional page fetch timed out. Region had previously returned HTTP 502; continuing known WHO EMRO access failure, not a material new degradation. WHO global and OCHA usable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" Gaza \"PM\" killed injured after 20:00",
+      "site:english.wafa.ps/Pages/LastNews Gaza November 20 2026 latest 21:00 22:00 Jerusalem",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza \"Friday\" killed injured evening",
+      "Gaza November 20 2026 Friday evening 21:00 22:00 Jerusalem civilian casualties strike AP Reuters Anadolu",
+      "site:un.org \"20 November 2026\" Gaza humanitarian briefing aid trucks hospitals shelter ceasefire",
+      "site:who.int \"20 November 2026\" Gaza ambulance hospital medical evacuation fuel health",
+      "\"20 November 2026\" \"Deir al-Balah\" \"two\" \"killed\" \"drone\" entrance 1",
+      "\"20 Nov 2026\" \"Khan Younis\" \"three\" \"demolitions\" yellow line drones",
+      "site:palestinercs.org \"20 November 2026\" Gaza ambulances medical access killed injured",
+      "site:unicef.org \"20 November 2026\" Gaza children water shelters healthcare school",
+      "site:wfp.org \"20 November 2026\" Gaza food aid market trucks crossings November",
+      "Gaza 20 November 2026 Rafah Kerem Shalom aid fuel medical evacuations WHO UNRWA latest ceasefire negotiation"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza",
+        "status": "ACCESSIBLE",
+        "detail": "Direct article states two killed in Deir al-Balah and demolition operations in Al-Shuja'iyya/east Khan Younis. Publication date only; exact time not shown."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Index and Deir al-Balah report reviewed for casualty comparison; new items after 19:45 Jerusalem mostly West Bank/diplomatic and excluded."
+      },
+      {
+        "publisher": "Associated Press",
+        "url": "https://apnews.com/article/16c39c487a23b53b73c5eabb7f0fd57a",
+        "status": "SEARCH_RESULT_AND_PREDECESSOR_LEDGER",
+        "detail": "Predecessor identified AP total six across Nuseirat, Deir al-Balah, Bureij; no new independent verified update this check."
+      }
+    ],
+    "excluded_candidates": [
+      "Bureij four dead, Nuseirat one killed, Al-Maghazi five injured, Al-Sabra four injured, Deir al-Balah one killed WAFA baseline, all previously recorded; not counted as distinct strikes.",
+      "Al Jazeera reported aggregate seven versus prior AP six; only potentially changed Deir al-Balah component recorded, not a separate aggregate finding.",
+      "AI-assisted GazaNews.live item echoes Deir al-Balah two deaths without independently source-verified support; not used as primary evidence.",
+      "UNICEF World Children's Day launch and Italy partnership are program/advocacy announcements, not verified material delivery or access changes this hour.",
+      "OCHA retrospective November 10–16 healthcare, shelter, aid, access, food and water metrics already examined by preceding watches.",
+      "West Bank-only incidents, older conflict reports, opinions and unsupported social claims excluded."
+    ],
+    "search_failures": [
+      "WHO EMRO direct regional page timeout (previously known access limitation)",
+      "Some agency pages were index-only; WHO global and OCHA accessible, coverage remained useful."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T114356-0800-20261120T194523220Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED"
+    },
+    "limitations": [
+      "Neither Al Jazeera's exact article publication/revision clock time nor all incident times could be independently verified.",
+      "Deir al-Balah casualty counts differ by source; findings must not be counted additively until incident matching and hospital-source reporting are reconciled.",
+      "Al Jazeera demolitions were not independently corroborated or quantified as a building count; report only what the source established.",
+      "Production collector state not inspected; no decision made about production deduplication or publishing."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

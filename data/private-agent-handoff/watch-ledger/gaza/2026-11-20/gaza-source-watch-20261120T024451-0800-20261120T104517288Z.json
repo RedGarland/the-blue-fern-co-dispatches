@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T024451-0800-20261120T104517288Z",
+  "scheduled_for": "2026-11-20T02:44:51-08:00",
+  "started_at": "2026-11-20T02:41:17-08:00",
+  "completed_at": "2026-11-20T10:45:17.288Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T01:49:52.161-08:00",
+    "end": "2026-11-20T10:45:17.288Z",
+    "previous_run_completed_at": "2026-11-20T09:49:52.161Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T014451-0800-20261120T094628Z.json",
+    "basis": "Supplementary late-recall scan since prior verified completed run; retrospective developments qualify only when a distinct newly available finding or material quantified follow-up, without counting prior incidents again."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261120-november-flood-learning-sites-200-un-briefing-wafa",
+      "category": "civilian_infrastructure_damage_displacement_education",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177141",
+      "title": "One-quarter of Gaza households headed by women face mounting humanitarian needs, UN warns",
+      "publisher": "WAFA Palestinian News & Information Agency (reporting UN Deputy Spokesperson Farhan Haq's 19 November briefing)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_period_start": "2026-11-01",
+      "event_period_end": "2026-11-19",
+      "location": "Gaza Strip",
+      "affected_population_system": "Children dependent on temporary learning sites; displaced households relying on emergency education services",
+      "source_type": "Established regional news agency's attributed report of a United Nations spokesperson's briefing; UN original not accessible in this check",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "incident_summary": "A November 20 WAFA report of UN Deputy Spokesperson Farhan Haq's November 19 briefing states that flash flooding earlier in November damaged approximately 200 temporary learning sites, close to one-third of operating educational facilities in Gaza. This is retrospective and provides a newer damage figure for education infrastructure, not an incident during the observation hour.",
+      "exact_supporting_passage": "flash floods caused by rainfall earlier this month damaged around 200 temporary learning sites across Gaza",
+      "discovery_context": {
+        "observation_window_start": "2026-11-20T01:49:52.161-08:00",
+        "observation_date": "2026-11-20",
+        "method": "Targeted WAFA search followed by full primary-agency article read; compared with OCHA OPT 13 November report and prior verified watch heartbeat",
+        "novelty_basis": "Preceding heartbeat logged crossing figures only. WAFA/UN briefing's approximately 200 damaged temporary learning sites adds a distinct quantified infrastructure-damage follow-up to OCHA 13 November's statement that over 100 learning spaces became inaccessible; the two measures differ and are not additive.",
+        "source_publication_local": "2026-11-20 10:02 AM (WAFA website; timezone not explicitly verified)",
+        "underlying_un_briefing_date": "2026-11-19",
+        "corroboration": "WAFA attributes its account to named UN Deputy Spokesperson Farhan Haq. Original UN press briefing blocked by anti-bot/JavaScript; independently verifying the exact 200 figure was not possible.",
+        "caution": "Do not treat as newly damaged during November 20, double count the earlier OCHA learning-space disruption, or infer that all 200 sites ceased operating."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary watch only, with primary Gaza production collection/publishing authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Direct official update index still lists 19 November West Bank snapshot, 16 November Gaza access/movement, and 13 November Gaza humanitarian situation report. No new dated Gaza report shown."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Direct crisis page checked; no fresh dated Gaza hospital, ambulance, medical-evacuation, fuel or functioning capacity change surfaced."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "HTTP_502",
+        "detail": "Direct check returned HTTP 502; previously documented recurring failure, not new material degradation."
+      }
+    ],
+    "official_first_targeted_queries": [
+      "site:ochaopt.org Gaza November 20 2026 humanitarian situation report 19 20 November",
+      "site:who.int Gaza November 20 2026 WHO health situation evacuation hospitals"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"20/November/2026\" Gaza killed wounded Friday latest",
+      "site:aa.com.tr/en/middle-east/ \"November 20, 2026\" Gaza killed wounded humanitarian",
+      "site:reuters.com/world/middle-east/ \"November 20, 2026\" Gaza Israel truce Palestinians",
+      "site:apnews.com/article/ \"Nov. 20, 2026\" Gaza humanitarian ceasefire strikes",
+      "site:palestinercs.org Gaza \"20 November 2026\" ambulance patients medical evacuation",
+      "site:unrwa.org \"20 November 2026\" Gaza flood shelters displacement",
+      "site:unicef.org \"20 November 2026\" Gaza children hospital water displacement",
+      "site:wfp.org \"20 November 2026\" Gaza food trucks access",
+      "site:msf.org \"20 November 2026\" Gaza hospitals transport fuel evacuations",
+      "site:pchrgaza.org \"20 November 2026\" killed wounded Gaza",
+      "Gaza November 20 2026 Friday newly reported deaths injuries Rafah Nuseirat Al Sabra after 10 am local",
+      "Gaza November 20 2026 crossing hospitals medical evacuations ceasefire negotiation Gaza last hour"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Recent Gaza strike report 09:46 Palestine-local (Nuseirat, Al-Sabra, Al-Daraj) already in preceding watch; separate 10:02 report contains UN-sourced temporary-learning-site damage figure."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-as-israel-continues-to-violate-gaza-ceasefire/4131821",
+        "status": "ACCESSIBLE",
+        "detail": "Named Nuseirat victim Diab Issa Radi, 60, is already covered by predecessor watch; not an additional death."
+      },
+      {
+        "publisher": "UN Secretariat",
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "status": "BOT_GATE",
+        "detail": "Anti-bot JavaScript gate prevented direct verification of November 19 briefing; WAFA named UN Deputy Spokesperson and statement."
+      },
+      {
+        "publisher": "UNICEF State of Palestine",
+        "url": "https://www.unicef.org/sop/press-releases/children-claim-their-right-play-gaza-world-childrens-day",
+        "status": "DISABLED_ERROR",
+        "detail": "Dated November 20 release indexed with children’s play-space access data; full page inaccessible and campaign-wide background not counted as new infrastructure incident."
+      },
+      {
+        "publisher": "Research article redirect",
+        "url": "https://doi.org/10.1186/s42506-026-00214-5",
+        "status": "NOT_ACCESSIBLE",
+        "detail": "November 20 third-party research recap examines WHO medical evacuations ending September 29, 2025; not a newly occurring medical-evacuation capacity change; original redirect unavailable."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 20 09:46 Gaza drone strike incident(s) are fully covered by preceding November 20 watch; no duplicate.",
+      "Anadolu's named 60-year-old Nuseirat victim confirms an existing casualty event, not a new death.",
+      "WHO older evacuation/capacity figures and news-index year collisions excluded.",
+      "UNICEF November 20 Back to Play campaign statistics lack a dated incident/change within the requested high-value categories.",
+      "WAFA's one-quarter women-headed-households statistic describes structural vulnerability without a new event; not separately counted.",
+      "Medical evacuations research summarized November 20 examines historical period ending September 2025, so excluded as a new system change.",
+      "Uncorroborated military operation claims, recycled ceasefire statements, and prior November 18-19 tank operation excluded."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T014451-0800-20261120T094628Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "findings",
+      "previous_findings_count": 2
+    },
+    "limitations": [
+      "WHO Eastern Mediterranean's longstanding 502 remains; WHO global page accessible.",
+      "UN original briefing is bot-gated; newest temporary-learning-site count is attributed secondhand through WAFA and classified medium confidence.",
+      "Source's event date for the temporary-site damage is approximate (early November), not known to the day.",
+      "12 additional searches were completed; indexes can lag and absence of results does not prove absence of events."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

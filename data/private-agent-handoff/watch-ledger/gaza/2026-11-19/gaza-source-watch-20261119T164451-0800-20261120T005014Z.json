@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T164451-0800-20261120T005014Z",
+  "scheduled_for": "2026-11-19T16:44:51-08:00",
+  "started_at": "2026-11-19T16:49:21-08:00",
+  "completed_at": "2026-11-19T16:50:14-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T15:45:59-08:00",
+    "end": "2026-11-19T16:50:14-08:00",
+    "previous_run_completed_at": "2026-11-19T15:45:59-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T154451-0800-20261119T234559691Z.json",
+    "basis": "Latest authenticated predecessor heartbeat read from ops/watch-ledger. Dated earlier reports treated as possible late recall only if distinct, traceable, and not previously recorded. Gaza/Palestine local source clocks distinguished from America/Los_Angeles observation dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; not primary Gaza collector/publisher. No production/publishing, approvals or schedule actions.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "First targeted search and direct current updates index. November 19 update is West Bank-only; latest Gaza access item November 16 and latest humanitarian report November 13. No new Gaza-specific item indexed for window."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Second targeted search and direct global emergency page; most recent listed speech November 17; no new dated November 19 Gaza health/evacuation/capacity update verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "HTTP_502",
+        "detail": "Direct page returned HTTP 502, same longstanding documented source failure; global WHO fallback accessible."
+      }
+    ],
+    "official_first_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report 19 November 2026 OCHA OPT",
+      "site:who.int Gaza occupied Palestinian territory 19 November 2026 health update OR evacuation OR hospitals"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 19 2026 latest 20 November 2026 civilians killed wounded 23:00 UTC 00:00 UTC",
+      "site:english.wafa.ps/Pages/Details/ Gaza 19/11/2026 evening November 20 2026 killed injury",
+      "site:reuters.com/world/middle-east/ Gaza 19 November 2026 late evening ceasefire casualties displacement",
+      "site:aa.com.tr/en/middle-east/ Gaza 19 November 2026 latest late Thursday night civilian",
+      "site:apnews.com/article/ Gaza November 19 2026 Thursday latest strikes killed injured",
+      "site:pchrgaza.org 19 November 2026 OR 20 November 2026 Gaza latest investigation killed",
+      "site:unrwa.org/newsroom OR site:unrwa.org/news-reports Gaza November 19 2026 updated water camps shelter",
+      "site:wfp.org Gaza November 19 2026 food kitchen distribution aid",
+      "site:unicef.org Gaza November 19 2026 children shelter floods water",
+      "site:msf.org Gaza November 19 2026 hospital clinic medicines fuel health",
+      "site:palestinercs.org November 19 2026 Gaza ambulance emergency transport",
+      "Gaza November 19 2026 evening 20 November 2026 crossings ceasefire negotiation hostages displacement aid 2026"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza casualty article dated November 19 16:46 Palestine time refers to known Gaza City and Khan Younis cases; later items on index concerned West Bank/diplomacy. No distinct new Gaza incident."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "Situation Report #239 shows November 19 publication date, but accessible page contained only title and date; no substantive report passages available to verify new changes. Not promoted as a finding."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/israel-kills-11-palestinians-in-gaza-and-escalates-home-demolitions-and-forced-displacement-of-residents-in-northern-al-nuseirat/",
+        "status": "ACCESS_RESTRICTED",
+        "detail": "Direct article fetch returned DisabledError this run; prior authenticated watch had read this same November 19 report and recorded distinct incidents; no unverified new content inferred."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "status": "ACCESSIBLE",
+        "detail": "Joint IOM/WFP press release dated November 17; not newly published within this observation window."
+      }
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T154451-0800-20261119T234559691Z.json",
+      "status": "READ_VERIFIED",
+      "findings_count": 0,
+      "predecessor_status": "DEGRADED"
+    },
+    "excluded_candidates": [
+      "WAFA November 19 16:46 Palestine-time Gaza casualties already recorded in earlier supplementary watch; no duplicate findings.",
+      "PCHR November 19 investigation and earlier-November named casualties already recorded in preceding watch chain.",
+      "UNRWA Situation Report #239 index provides dated title but not the underlying report; cannot validate any new claim.",
+      "WFP/IOM November 17 statement, earlier OCHA reports, and undated rolling UNICEF/MSF/WFP pages are not independently dated new developments during this window.",
+      "Other targeted results were historical, duplicates or outside Gaza; no unsourced or unverified claims promoted."
+    ],
+    "limitations": [
+      "WHO EMRO HTTP 502 persists, so DEGRADED rather than SUCCESS; no material new degradation versus preceding heartbeat.",
+      "PCHR direct fetch restricted and UNRWA #239 body unavailable; useful cross-source coverage remained via OCHA, WHO Global, WAFA, WFP and other indexed results.",
+      "Search indexing and publication latency may hide developments; no exhaustive-coverage claim."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false
+  }
+}

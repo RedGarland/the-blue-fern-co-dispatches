@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T064622-0800-20261120T144901392Z",
+  "scheduled_for": "2026-11-20T06:44:51-08:00",
+  "started_at": "2026-11-20T06:46:22-08:00",
+  "completed_at": "2026-11-20T06:49:01.392-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T05:51:10.425-08:00",
+    "end": "2026-11-20T06:49:01.392-08:00",
+    "previous_run_completed_at": "2026-11-20T13:51:10.425Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T054832-0800-20261120T135110421Z.json",
+    "basis": "Newly traceable qualifying developments since the prior completed watch, distinguishing historical event dates from new source discoveries. Supplementary recall only."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 20 latest entry addresses West Bank olive harvesters; newest Gaza situation report is retrospective Nov 18 title, with conflicting Nov 13 index metadata. No newly released Gaza event observed."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current general health emergency overview; no newly timed Nov 20 Gaza hospital, ambulance, fuel, evacuation or service functionality development verified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "ACCESS_ERROR_502",
+        "detail": "Known recurring WHO EMRO Bad Gateway limitation; WHO global fallback accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 20 2026 latest Friday Reuters killed displaced aid 16:00 Jerusalem",
+      "Gaza November 20 2026 AP News casualties strikes civilians flood aid",
+      "site:unrwa.org/newsroom/official-statements Gaza 20 November 2026 displacement shelter funding access",
+      "site:who.int Gaza 20 November 2026 hospital medical evacuations fuel health",
+      "site:unicef.org Gaza 20 November 2026 water sanitation flood casualties",
+      "site:wfp.org Gaza November 20 2026 trucks food distributions crossing",
+      "site:news.un.org/en/story/2026/11 Gaza November 20 2026 humanitarian aid casualties displacement",
+      "site:palestinercs.org 20 November 2026 Gaza ambulance medics hospitals",
+      "Gaza Friday November 20 2026 16:00 Jerusalem fresh attack wounded displacement BBC Al Jazeera",
+      "Gaza 20 November 2026 Rafah crossing medical evacuation patients WHO Nasser",
+      "Gaza Nov 20 2026 ceasefire negotiations hostages detainees new agreement deal",
+      "site:aa.com.tr/en/middle-east/ Gaza 20 Nov 2026 Thursday Friday children wounded new"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Newest news item at 15:05 Jerusalem local time; last Gaza injury item at 14:34 already recorded in immediate predecessor."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177141",
+        "status": "ACCESSIBLE",
+        "detail": "10:02 Jerusalem article cites UN Women and around 200 flood-damaged learning sites. Both pre-date prior watch; the learning site item was previously logged; no newly timed event."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177139",
+        "status": "ACCESSIBLE",
+        "detail": "09:46 Jerusalem article recounts Nuseirat fatality, Al-Sabra injuries and Al-Daraj injuries, all previously recorded."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-as-israel-continues-to-violate-gaza-ceasefire/4131821",
+        "status": "ACCESSIBLE_SEARCH_RESULT",
+        "detail": "Describes previously logged Nuseirat fatality; not counted a second time."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza-specific listed update dated Nov 10; nothing independently new this window."
+      },
+      {
+        "publisher": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "status": "ACCESSIBLE",
+        "detail": "Undated rolling figures about reduced rations, hot meals and access; novelty or first-publication date not established, so excluded."
+      }
+    ],
+    "excluded_candidates": [
+      "Prior 05:51 heartbeat already logged five injured and displacement at eastern Al-Maghazi, and prior Nuseirat, Al-Sabra, Al-Daraj attacks; no duplicate findings.",
+      "WAFA 10:02 Nov 20 UN briefing article repeats about 200 damaged temporary education sites previously logged and includes undated demographics; no distinct new event.",
+      "Anadolu Nov 20 report of one elderly man killed in Nuseirat describes previously logged fatality, not an additional death.",
+      "Anadolu/foreign ministry cumulative children killed estimate is not an independently verified new incident or change during this window.",
+      "WFP rolling emergency update contains no independently verified timestamp for cuts/reductions; do not present as new since the previous check.",
+      "Older hospital, flood, medical-evacuation and ceasefire context and 2025 search false positives excluded."
+    ],
+    "search_failures": [
+      "WHO regional EMRO 502 (known, recurring)",
+      "UN News site search blocked by robots.txt; established humanitarian and news fallbacks remained accessible"
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T054832-0800-20261120T135110421Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "findings",
+      "previous_run_completed_at": "2026-11-20T13:51:10.425Z"
+    },
+    "limitations": [
+      "Regional WHO EMRO source unavailable (previously documented); WHO global available.",
+      "Some targeted searches returned stale or irrelevant indexed results; no distinct corroborated new development.",
+      "UN News indexing blocked; OCHA and UN-linked reporting available through other sources."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T134849-0800-hourly11",
+  "scheduled_for": "2026-11-20T13:44:51-08:00",
+  "started_at": "2026-11-20T13:48:49-08:00",
+  "completed_at": "2026-11-20T21:49:53.817Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T20:48:30.680Z",
+    "end": "2026-11-20T21:49:53.817Z",
+    "previous_run_completed_at": "2026-11-20T20:48:30.680Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T124626-0800-20261120T204830680Z.json",
+    "basis": "Compare newly discoverable, traceable Gaza developments with the prior verified watch ledger. Times are observation boundaries, not unverified event/publication timestamps. Retrospective information reviewed for nonduplicates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; not the primary daily publisher/collector.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Homepage and November 20 Humanitarian Situation Report (10-16 November reporting period) inspected; report contents overlap previously examined or recorded retrospective developments; no independently verified new change in this window.",
+        "supporting_url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026"
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct oPt regional page fetch returned HTTP 502; repeat of known previously documented problem, with no new material degradation."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official emergency overview and current index checked. No new independently verified medical/evacuation/fuel/hospital operation change within the interval."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 20 2026 latest 21:00 UTC 22:00 UTC killings civilians airstrikes Friday evening",
+      "site:english.wafa.ps/Pages/Details/ Gaza November 20 2026 Friday 21:00 22:00 killed injured tonight",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 20 2026 late Friday evening strikes killed injured",
+      "site:apnews.com/article/ Gaza November 20 2026 latest Friday evening casualties ceasefire aid",
+      "site:ochaopt.org 20 November 2026 Gaza latest update aid crossing shelters medical humanitarian 21:00",
+      "site:un.org 20 November 2026 Gaza humanitarian briefing hospital displacement aid civilians Friday",
+      "site:english.wafa.ps/Pages/Details/ 20/November/2026 Gaza 11 PM Jerusalem casualties Al-Bureij Nuseirat",
+      "site:palestinercs.org 20 November 2026 Gaza ambulance evacuation injured emergency",
+      "site:who.int 20 November 2026 Gaza medical evacuation hospital function fuel operation",
+      "site:unicef.org 20 November 2026 Gaza water sanitation children flooding access",
+      "20 November 2026 Gaza Kerem Shalom Rafah crossing aid fuel trucks UNRWA WFP late Friday",
+      "Reuters Gaza November 20 2026 evening ceasefire airstrike civilians hostages negotiations"
+    ],
+    "other_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza casualty item shown at 19:26 Jerusalem time, preceding the previous watch; newer items at 21:32 or 22:33 concern advocacy/West Bank, not new qualifying Gaza developments."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+        "status": "PARTIAL_ACCESS_SEARCH_EXCERPT",
+        "detail": "November 20 report and its evolving headline reviewed. Nuseirat death, tent injuries and Maghazi injuries already known; seven-death cumulative reporting overlaps previous Al Jazeera daily total, not an independently verified separate casualty event. Direct article body partially rendered."
+      }
+    ],
+    "excluded_candidates": [
+      "Al-Bureij four fatal casualties already captured in prior AP follow-up; do not add earlier WAFA two.",
+      "Deir al-Balah differing one-versus-two death reports recorded as unresolved follow-up in predecessor; no newly verified reconciliation.",
+      "Al-Shuja'iyya and eastern Khan Younis demolition activity recorded in predecessor.",
+      "Nuseirat death and tent injuries, Maghazi five injuries, Al-Sabra four injuries previously recorded; same incidents not counted anew.",
+      "Anadolu updated seven-death/thirteen-injury headline and partial body do not establish a distinct additional event.",
+      "OCHA November 20 report retrospective November 10-16 aid, shelter, medical evacuation, health and market metrics previously reviewed; no fresh qualifying change this hour.",
+      "Older-dated search returns, West Bank-only events, unsupported claims, general advocacy and opinion excluded."
+    ],
+    "coverage_limitations": [
+      "WHO Eastern Mediterranean direct page inaccessible; global WHO and OCHA were accessible, giving useful alternative coverage.",
+      "Some search engine results were older despite recency filtering; direct WAFA and OCHA indexes supplemented freshness checks.",
+      "Many articles do not expose reliable exact publication/revision timestamps. Nonverified hour-specific claims excluded.",
+      "The production publisher or collector was not inspected, changed or authorized; production remains authoritative."
+    ],
+    "search_failures": [
+      "WHO EMRO occupied Palestinian territory regional homepage HTTP 502 (previously documented, nonmaterial recurrence)."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T124626-0800-20261120T204830680Z.json",
+      "status": "READ_VERIFIED",
+      "prior_status": "DEGRADED"
+    },
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

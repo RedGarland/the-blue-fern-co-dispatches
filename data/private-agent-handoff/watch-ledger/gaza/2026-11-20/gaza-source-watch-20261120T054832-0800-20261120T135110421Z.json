@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T054832-0800-20261120T135110421Z",
+  "scheduled_for": "2026-11-20T05:44:51-08:00",
+  "started_at": "2026-11-20T05:48:32-08:00",
+  "completed_at": "2026-11-20T05:51:10.425-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T04:42:41-08:00",
+    "end": "2026-11-20T05:51:10.425-08:00",
+    "previous_run_completed_at": "2026-11-20T12:42:41Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T044120-0800-20261120T124241000Z.json",
+    "basis": "Newly traceable qualified information since authenticated predecessor; source event date can precede discovery. Non-primary supplementary recall only."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261120-al-maghazi-shelling-five-injured-displacement",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177150",
+      "title": "Five Palestinians injured in Israeli shelling of central Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20T14:34:00+02:00",
+      "event_date": "2026-11-20",
+      "event_time": null,
+      "location": "Eastern Al-Maghazi refugee camp, central Gaza Strip",
+      "affected_population_or_system": "Five Palestinians reportedly injured, several seriously; dozens of families reportedly fled after homes were demolished in the eastern camp area.",
+      "supporting_passage": "Five Palestinians, including several who sustained serious injuries, were wounded on Friday in Israeli artillery shelling east of al-Maghazi refugee camp in central Gaza.",
+      "source_type": "Local Palestinian news agency; correspondent reporting",
+      "classification": "new",
+      "confidence": "MEDIUM",
+      "bounded_discovery_context": {
+        "observed_in_run": "gaza-source-watch-20261120T054832-0800-20261120T135110421Z",
+        "observation_window_start": "2026-11-20T04:42:41-08:00",
+        "discovered_via": "WAFA direct latest-news index and source article; follow-up independent targeted search returned same item",
+        "prior_ledger_status": "READ_VERIFIED",
+        "distinct_from": "Previously logged Nov 19 Al-Daraj injury incident and Nov 20 Nuseirat and Al-Sabra incidents; Nov 19 Maghazi home-demolition reporting is earlier military-operation context, not a second new finding.",
+        "independent_corroboration": "NOT_OBTAINED",
+        "reporting_local_time_note": "WAFA publication 14:34 on Nov 20 local time; indexing/first observation after preceding watch.",
+        "aggregation_warning": "Do not add separately to cumulative casualty figures without production reconciliation."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary source recall only; primary publisher and production remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked before targeted searches. Nov 20 newest index entry is West Bank olive harvesters, not Gaza. The 18 Nov Gaza Humanitarian Situation Report was available but displayed a contradictory Nov 13 page date; retrospective Nov 10–16 findings not promoted as new."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked before targeted searches. No Nov 20 new health, hospital capacity, medical evacuation or ambulance update."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/palestine/index.html",
+        "status": "ACCESS_ERROR",
+        "detail": "Direct regional WHO page inaccessible, continuing known limitation from previous heartbeat; global WHO fallback accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org/content/humanitarian-situation-report-18-november-2026 OCHA report published November 2026 Gaza Nasser medical evacs",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"20/November/2026\" Friday killed injured 15:00",
+      "site:reuters.com/world/middle-east/ Gaza November 20 2026 casualties hospital aid ceasefire",
+      "site:apnews.com/article/ Gaza November 20 2026 attack civilians floods aid",
+      "site:unrwa.org November 20 2026 Gaza health shelter flood displacement access",
+      "site:who.int Gaza November 20 2026 hospitals medical evacuation functionality attack",
+      "Gaza al-Maghazi east five wounded shelling November 20 2026 families displaced 14:34",
+      "Gaza 20 November 2026 afternoon military shelling Khan Younis humanitarian impact medical",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza Friday 5 wounded shelling",
+      "site:palestinercs.org 20 November 2026 Gaza ambulance paramedics rescue attack",
+      "site:unicef.org Gaza 20 November 2026 water sanitation flood tents",
+      "site:wfp.org Gaza November 20 2026 food access meals distributions crossings"
+    ],
+    "direct_source_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "Index now lists 14:34 local report of five injured east Al-Maghazi; article directly accessible."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177150",
+        "status": "ACCESSIBLE",
+        "detail": "Correspondent reports five wounded and dozens of families fleeing eastern Al-Maghazi amid shelling and demolitions; single-source, medium confidence."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/resources/reports",
+        "status": "ACCESSIBLE_INDEX_ONLY",
+        "detail": "Latest situation report #239 remains dated November 19; not newly released this hour."
+      },
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "detail": "Reporting period Nov 10–16 with contradictory publication label Nov 13, therefore not treated as newly published Nov 20; older Nasser Medical Complex harm, medical evacuations, WASH and food constraints excluded from hourly new findings."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-army-blows-up-palestinian-homes-in-central-gaza-amid-continued-ceasefire-violations-/4130077",
+        "status": "ACCESSIBLE",
+        "detail": "Nov 19 account of demolition east Al-Maghazi is prior operation context, does not independently corroborate Nov 20 five injuries."
+      }
+    ],
+    "excluded_candidates": [
+      "Previous Nov 20 Nuseirat fatality, Al-Sabra injuries, and Nov 19 Al-Daraj five injuries already logged; not duplicated.",
+      "Previous Nov 20 OCHA/UN-attributed damage to ~200 education sites already logged; not duplicated.",
+      "Older Nov 6–12 crossing and patient figures and prior retrospective casualty reports already logged; not duplicated.",
+      "Nov 19 Anadolu reporting demolitions east Maghazi provides earlier context, not a separately counted new impact.",
+      "OCHA Nov 18 title with Nov 13 page metadata and Nov 10–16 reporting period not promoted as new incident; verification of source issue date and production novelty is unavailable.",
+      "Undated WFP emergency figures and Nov 17 WFP-IOM winter release not claimed as newly occurring.",
+      "WHO, UNRWA, AP, Reuters, UNICEF and PRCS searches yielded no other verified distinct Nov 20 development within the bounded check."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T044120-0800-20261120T124241000Z.json",
+      "status": "READ_VERIFIED",
+      "previous_status": "DEGRADED",
+      "previous_outcome": "no_findings",
+      "previous_run_completed_at": "2026-11-20T12:42:41Z"
+    },
+    "limitations": [
+      "WHO EMRO remains inaccessible; longstanding 502/inaccessibility, WHO global substitute accessible.",
+      "WAFA incident is single-source and uncorroborated independently; confidence medium.",
+      "Source indexing lags can cause an item timestamp earlier than previous heartbeat to first be discovered now."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

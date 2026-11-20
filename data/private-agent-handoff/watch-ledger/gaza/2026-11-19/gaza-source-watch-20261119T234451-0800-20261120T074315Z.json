@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261119T234451-0800-20261120T074315Z",
+  "scheduled_for": "2026-11-19T23:44:51-08:00",
+  "started_at": "2026-11-19T23:40:49-08:00",
+  "completed_at": "2026-11-20T07:43:15.293Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-19",
+    "start": "2026-11-19T22:47:49.971-08:00",
+    "end": "2026-11-20T07:43:15.293Z",
+    "previous_run_completed_at": "2026-11-20T06:47:49.971Z",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+    "basis": "Bounded delta since previous completed hourly watch, with late-recall screening of attributable reports. Times are Los Angeles local; reports published on 20 November Palestine local time were inspected where indexed."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Primary Gaza publisher and collector remain authoritative.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Official updates listing reviewed first. Latest listing dated 19 Nov is West Bank-only; Gaza access and movement 16 Nov and Gaza humanitarian situation report 13 Nov. OCHA homepage direct request timed out, updates accessible."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Official conflict/health emergency page checked first; no newly dated change to Gaza hospital capacity, medical evacuation, fuel or health services identified."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct regional endpoint returned 502, a documented recurring limitation. WHO global site available as fallback."
+      }
+    ],
+    "official_first_targeted_queries": [
+      "site:ochaopt.org Gaza November 19 2026 humanitarian situation report latest",
+      "site:who.int Gaza November 19 2026 emergency health medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 20 2026 November 19 overnight civilian killed injured Reuters AP AFP ceasefire",
+      "site:english.wafa.ps/Pages/Details/ \"20/November/2026\" Gaza civilians injuries",
+      "site:aa.com.tr/en/middle-east Gaza Nov 20 2026 killed wounded artillery",
+      "site:pchrgaza.org Gaza \"20 November 2026\" Nuseirat Jabalia civilian incidents",
+      "site:reuters.com/world/middle-east/ Gaza November 20 2026 aid crossings military civilians",
+      "site:apnews.com/article Gaza November 19 2026 November 20 aid ceasefire humanitarian",
+      "site:unrwa.org/newsroom Gaza November 19 2026 November 20 2026 access shelters displaced",
+      "site:wfp.org Gaza November 19 2026 November 20 food aid convoy trucks supplies",
+      "site:unicef.org Gaza November 19 2026 November 20 water health child displacement",
+      "site:msf.org Gaza November 19 2026 November 20 hospital supplies ambulances evacuation",
+      "site:palestinercs.org Gaza November 19 2026 November 20 ambulance medics",
+      "Gaza Rafah medical evacuation hospital fuel 20 November 2026 hostage ceasefire talks IOM UN aid"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "20 November 08:43 and 09:24 Palestine-local latest entries concerned West Bank, outside Gaza scope. Latest Gaza casualty article remains 19 November 16:46 Palestine-local and was already documented."
+      },
+      {
+        "publisher": "PCHR",
+        "url": "https://pchrgaza.org/",
+        "status": "ACCESSIBLE",
+        "detail": "Latest Gaza update 19 November describing 16–18 November civilian casualty incidents and northern al-Nuseirat operations, recorded by previous watches."
+      },
+      {
+        "publisher": "PRCS",
+        "url": "https://www.palestinercs.org/en",
+        "status": "ACCESSIBLE",
+        "detail": "Latest news dated 10 November; no newly dated emergency/ambulance or health system change."
+      },
+      {
+        "publisher": "UNRWA",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "status": "PARTIAL",
+        "detail": "Report heading and page framework accessible, but detailed report text unavailable, consistent with prior checks."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 19 November reported Gaza casualties and Al-Nuseirat family displacement; prior ledger already marked those as covered.",
+      "PCHR 19 November retrospective casualty events from 16–18 November were recovered in earlier watches; excluded as duplicates.",
+      "WAFA 20 November early morning items concerned incidents in the West Bank, not Gaza; excluded for scope.",
+      "Reuters 17 November IOM winter hypothermia warning and earlier humanitarian reporting were previously known; no new operational change established.",
+      "Search results repeatedly surfaced 2025 or older reports due to date collisions; excluded.",
+      "No new attributable Gaza medical evacuation, fuel, crossing, food/water, detention/hostage, ceasefire, or civilian-impact military operation updates were verified."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-19/gaza-source-watch-20261119T224451-0800-20261120T064749Z.json",
+      "status": "READ_VERIFIED",
+      "predecessor_status": "DEGRADED",
+      "findings_count": 0
+    },
+    "limitations": [
+      "WHO Eastern Mediterranean direct endpoint returns HTTP 502, recurring and not a newly material failure.",
+      "OCHA homepage timed out, but current OCHA updates were accessible.",
+      "UNRWA report #239 detailed body not retrievable, previously documented.",
+      "Search indexing and document access may lag; zero verified findings does not establish that no event occurred."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

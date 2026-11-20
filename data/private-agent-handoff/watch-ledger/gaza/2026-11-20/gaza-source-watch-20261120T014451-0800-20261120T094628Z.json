@@ -1,0 +1,185 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T014451-0800-20261120T094628Z",
+  "scheduled_for": "2026-11-20T01:44:51-08:00",
+  "started_at": "2026-11-20T01:46:28-08:00",
+  "completed_at": "2026-11-20T09:49:52.161Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T00:50:33.287-08:00",
+    "end": "2026-11-20T09:49:52.161Z",
+    "previous_run_completed_at": "2026-11-20T00:50:33.287-08:00",
+    "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T004451-0800-20261120T085033287Z.json",
+    "basis": "Bounded recall since preceding completed watch. Late-discovered historical reporting is eligible if traceable, new to ledger and source/event dates are distinguished."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.nextcenturyfoundation.org/gaza-information-index-20-november-2026/",
+      "title": "Gaza Information Index 20 November 2026 — NCF Exclusive: Gaza Crossings Authority Weekly Report",
+      "publisher": "Next Century Foundation (quoting Gaza Crossings and Borders Authority weekly bulletin)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_period_start": "2026-11-06",
+      "event_period_end": "2026-11-12",
+      "source_type": "NGO publication reproducing an official Gaza Crossings and Borders Authority weekly bulletin obtained directly by NCF's Gaza lead; underlying official bulletin not independently retrieved",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window_start": "2026-11-20T00:50:33.287-08:00",
+        "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T004451-0800-20261120T085033287Z.json",
+        "discovery_method": "Bounded supplemental targeted search returned the NCF report dated November 20, 2026; complete source opened and its bulletins/caveats inspected",
+        "novelty_basis": "The Nov 6–12 official-bulletin figures were not in the preceding heartbeat's findings; retrospective data publication, not a newly occurring Nov 20 crossing event",
+        "corroboration": "NCF reports obtaining the original bulletin directly from the Director of the Gaza Crossings and Borders Authority; original bulletin and independent UN/COGAT cross-check not available",
+        "caution": "NCF explicitly labels this data single-source and not independently cross-verified by an international body; do not confuse source publication date with the historical measurement week"
+      },
+      "finding_id": "gaza-20261106-12-crossing-aid-fuel-decline-ncf20261120",
+      "category": "aid_access_crossings_food_fuel",
+      "location": "Kerem Shalom goods crossing, Gaza Strip",
+      "affected_population_system": "Civilians reliant on humanitarian aid, food, fuel, shelter and medical supplies entering Gaza",
+      "incident_summary": "Newly surfaced Gaza-side crossing bulletin records 239 aid trucks (down from 305 the preceding week, -22%), 33 fuel tankers (down from 36) and 746 commercial-goods trucks, totaling 1,018 entries through Kerem Shalom during November 6–12. Kerem Shalom was open for goods five days, while Zikim and Kissufim were reported closed all seven days. This is a retrospective weekly access finding, not a change during the observation hour.",
+      "exact_supporting_passage": "aid trucks fell 22% (305 to 239)",
+      "data": {
+        "aid_trucks": 239,
+        "previous_week_aid_trucks": 305,
+        "aid_truck_week_on_week_pct_change": -22,
+        "fuel_trucks": 33,
+        "previous_week_fuel_trucks": 36,
+        "commercial_trucks": 746,
+        "total_trucks": 1018,
+        "kerem_shalom_goods_open_days": 5,
+        "zikim_goods_open_days": 0,
+        "kissufim_goods_open_days": 0
+      }
+    },
+    {
+      "canonical_source_url": "https://www.nextcenturyfoundation.org/gaza-information-index-20-november-2026/",
+      "title": "Gaza Information Index 20 November 2026 — NCF Exclusive: Gaza Crossings Authority Weekly Report",
+      "publisher": "Next Century Foundation (quoting Gaza Crossings and Borders Authority weekly bulletin)",
+      "source_date": "2026-11-20",
+      "publication_date": "2026-11-20",
+      "event_date": null,
+      "event_period_start": "2026-11-06",
+      "event_period_end": "2026-11-12",
+      "source_type": "NGO publication reproducing an official Gaza Crossings and Borders Authority weekly bulletin obtained directly by NCF's Gaza lead; underlying official bulletin not independently retrieved",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window_start": "2026-11-20T00:50:33.287-08:00",
+        "previous_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T004451-0800-20261120T085033287Z.json",
+        "discovery_method": "Bounded supplemental targeted search returned the NCF report dated November 20, 2026; complete source opened and its bulletins/caveats inspected",
+        "novelty_basis": "The Nov 6–12 official-bulletin figures were not in the preceding heartbeat's findings; retrospective data publication, not a newly occurring Nov 20 crossing event",
+        "corroboration": "NCF reports obtaining the original bulletin directly from the Director of the Gaza Crossings and Borders Authority; original bulletin and independent UN/COGAT cross-check not available",
+        "caution": "NCF explicitly labels this data single-source and not independently cross-verified by an international body; do not confuse source publication date with the historical measurement week"
+      },
+      "finding_id": "gaza-20261106-12-crossings-patient-passenger-movement-ncf20261120",
+      "category": "crossings_medical_evacuations_patient_transport",
+      "location": "Rafah, Kerem Shalom passenger crossings, Gaza Strip",
+      "affected_population_system": "Palestinian patients, companions and other people seeking movement out of or back into Gaza",
+      "incident_summary": "The Gaza-side bulletin newly made available via NCF reports 212 departures from Gaza (versus 295 a week earlier) and 159 returns (versus 242), with Rafah passenger crossing open 3 of 7 days. Its passenger category breakdown lists 96 patients, 113 companions and 3 evacuees; the report also labels three departures 'medical evacuations' without fully explaining the relationship to the 96 patient category. Avoid describing only three patients as evacuated. Retrospective November 6–12 data.",
+      "exact_supporting_passage": "212 people left Gaza, down from 295 last week.",
+      "data": {
+        "departures": 212,
+        "previous_week_departures": 295,
+        "returns": 159,
+        "previous_week_returns": 242,
+        "listed_patient_departures": 96,
+        "listed_companion_departures": 113,
+        "listed_evacuations": 3,
+        "rafah_open_days": 3,
+        "classification_caveat": "The categories patients/companions/evacuees and the phrase medical evacuations are reported without sufficient definition for finer medical evacuation conclusions"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; Gaza production collection/publishing remains authoritative; this run performs no production mutation.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "November 19 West Bank monthly snapshot most recent listed; Gaza access/movement November 16, Gaza humanitarian situation November 13; no newly issued Gaza update in direct listing."
+      },
+      {
+        "publisher": "WHO Global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Gaza crisis page directly opened; no new dated medical-evacuation, hospital, fuel or functioning-capacity update since preceding check."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "HTTP_502",
+        "detail": "Persisting previously documented HTTP 502. Global WHO fallback was accessible; not a newly material failure."
+      }
+    ],
+    "official_first_targeted_queries": [
+      "site:ochaopt.org Gaza \"20 November 2026\" latest humanitarian situation update",
+      "site:who.int Gaza \"20 November 2026\" hospitals medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"20/November/2026\" wounded killed displacement",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 20, 2026\" civilians wounded ceasefire",
+      "site:reuters.com Gaza November 20 2026 hospital strike ceasefire aid fatalities",
+      "site:apnews.com/article/ Gaza November 20 2026 strikes deaths aid crossings",
+      "site:palestinercs.org Gaza 20 November 2026 ambulance hospitals medical evacuation casualties",
+      "site:unrwa.org Gaza November 20 2026 displaced shelters rain water humanitarian",
+      "site:unicef.org Gaza \"20 November 2026\" children water school shelter",
+      "site:wfp.org Gaza \"20 November 2026\" aid food trucks",
+      "site:msf.org Gaza \"20 November 2026\" hospital fuel ambulances medical",
+      "site:pchrgaza.org Gaza \"20 November 2026\" killed wounded restrictions",
+      "Gaza November 20 2026 new deaths wounded drone strikes Gaza City Khan Younis latest Friday",
+      "Gaza November 20 2026 Rafah crossing hostages ceasefire medical evacuation aid humanitarian"
+    ],
+    "supplementary_direct_checks": [
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "status": "ACCESSIBLE",
+        "detail": "No newer Gaza incident article than WAFA's November 20 09:46 Palestine local article already recorded in preceding heartbeat."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-as-israel-continues-to-violate-gaza-ceasefire/4131821",
+        "status": "ACCESSIBLE",
+        "detail": "Names 60-year-old Diab Issa Radi and quotes Al-Awda Hospital medical source for the Nuseirat death previously logged; not a second fatality."
+      },
+      {
+        "publisher": "Next Century Foundation",
+        "url": "https://www.nextcenturyfoundation.org/gaza-information-index-20-november-2026/",
+        "status": "ACCESSIBLE",
+        "detail": "Newly discovered detailed crossings-authority November 6–12 weekly data. Explicit caveats about sole Gaza-side source and no independent cross-verification."
+      }
+    ],
+    "excluded_candidates": [
+      "Anadolu November 20 named victim Diab Issa Radi in Nuseirat New Camp overlaps the Nuseirat killing already logged, not an additional fatality.",
+      "Anadolu mentions Israeli fire toward homes and displacement tents along Al-Tina Street; no verified casualties, damaged structure or displacement consequence given, so no separate qualifying civilian-impact finding.",
+      "WAFA November 20 Gaza casualty report already logged by predecessor, not duplicated.",
+      "NCF roundup of November 10–19 incidents otherwise retells established events and was not counted as new incidents.",
+      "Search results for Gaza in November 2023–2025 excluded as year collisions; no fresh independently verified WHO health-system, detention, hostage or ceasefire agreement changes found."
+    ],
+    "predecessor_ledger": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T004451-0800-20261120T085033287Z.json",
+      "status": "READ_VERIFIED",
+      "predecessor_status": "DEGRADED",
+      "predecessor_findings_count": 3
+    },
+    "limitations": [
+      "WHO Eastern Mediterranean HTTP 502 persists; WHO global coverage remains available.",
+      "Gaza crossings bulletin was reported as obtained directly by NCF but its original PDF/official record was not independently retrieved; medium confidence, bounded single-source attribution.",
+      "The NCF passenger categories are not fully defined, especially three 'medical evacuations' alongside 96 listed patients.",
+      "Search indexes may lag or miss certain pages; no finding in a category does not prove no real incident occurred."
+    ],
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

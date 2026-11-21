@@ -1,0 +1,205 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T234357-0800-20261121T074523712Z",
+  "scheduled_for": "2026-11-20T23:44:51-08:00",
+  "started_at": "2026-11-20T23:43:57-08:00",
+  "completed_at": "2026-11-21T07:45:23.712Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T17:48:49.060-08:00",
+    "end": "2026-11-21T07:45:23.712Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T174743-0800-20261121T014849060Z.json",
+    "basis": "Latest authenticated predecessor that could be read, completed at 17:48:49 PST. The immediately preceding hourly heartbeat could not be independently enumerated through the available repository interface, so a conservative wider recall was used. Latest qualifying WAFA report was published at 23:08 PST, after the previous scheduled check. Publication and event timestamps are not conflated."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-wafa-177161-jabalia-displacement-camps-2-shot",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177161",
+      "title": "Seven Palestinians injured in Israeli gunfire and airstrikes across Gaza",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21T09:08:00+02:00",
+      "event_date": "2026-11-21",
+      "source_type": "Palestinian public news agency reporting information attributed to medical sources; single-source, independent corroboration not established",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-21T07:45:23.712Z",
+        "observed_date_america_los_angeles": "2026-11-20",
+        "publication_date_america_los_angeles": "2026-11-20T23:08:00-08:00",
+        "observation_window_start": "2026-11-20T17:48:49.060-08:00",
+        "first_discovered_in_this_watch": true,
+        "source_url": "https://english.wafa.ps/Pages/Details/177161",
+        "independent_corroboration": "Not established by bounded targeted checks.",
+        "overlap_check": "Not among known preceding November 20 casualty reports in Bureij, Deir al-Balah, Nuseirat, Maghazi, or Al-Sabra. Additional intervening watch files since 17:48 could not be enumerated."
+      },
+      "location": "Displacement camps, Jabalia, northern Gaza Strip",
+      "affected_population_or_system": "Two displaced Palestinians injured by gunfire",
+      "exact_supporting_passage": "Medical sources reported that two Palestinians were shot by Israeli forces in displacement camps in the town of Jabalia, north of the Strip.",
+      "summary": "WAFA reports two displaced Palestinians shot in Jabalia displacement camps on Saturday morning."
+    },
+    {
+      "finding_id": "gaza-20261121-wafa-177161-al-mawasi-tents-woman-child",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177161",
+      "title": "Seven Palestinians injured in Israeli gunfire and airstrikes across Gaza",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21T09:08:00+02:00",
+      "event_date": "2026-11-21",
+      "source_type": "Palestinian public news agency reporting information attributed to medical sources; single-source, independent corroboration not established",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-21T07:45:23.712Z",
+        "observed_date_america_los_angeles": "2026-11-20",
+        "publication_date_america_los_angeles": "2026-11-20T23:08:00-08:00",
+        "observation_window_start": "2026-11-20T17:48:49.060-08:00",
+        "first_discovered_in_this_watch": true,
+        "source_url": "https://english.wafa.ps/Pages/Details/177161",
+        "independent_corroboration": "Not established by bounded targeted checks.",
+        "overlap_check": "Not among known preceding November 20 casualty reports in Bureij, Deir al-Balah, Nuseirat, Maghazi, or Al-Sabra. Additional intervening watch files since 17:48 could not be enumerated."
+      },
+      "location": "Al-Mawasi area, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "A woman and a child injured in displacement tents",
+      "exact_supporting_passage": "A woman and a child were also wounded by Israeli gunfire after tanks opened heavy fire toward displacement tents in the Al-Mawasi area of Khan Younis, in southern Gaza.",
+      "summary": "WAFA reports a woman and child wounded as tank gunfire targeted displaced people's tents in Al-Mawasi."
+    },
+    {
+      "finding_id": "gaza-20261121-wafa-177161-south-al-mawasi-airstrike-3-wounded",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177161",
+      "title": "Seven Palestinians injured in Israeli gunfire and airstrikes across Gaza",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21T09:08:00+02:00",
+      "event_date": "2026-11-21",
+      "source_type": "Palestinian public news agency reporting information attributed to medical sources; single-source, independent corroboration not established",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_at": "2026-11-21T07:45:23.712Z",
+        "observed_date_america_los_angeles": "2026-11-20",
+        "publication_date_america_los_angeles": "2026-11-20T23:08:00-08:00",
+        "observation_window_start": "2026-11-20T17:48:49.060-08:00",
+        "first_discovered_in_this_watch": true,
+        "source_url": "https://english.wafa.ps/Pages/Details/177161",
+        "independent_corroboration": "Not established by bounded targeted checks.",
+        "overlap_check": "Not among known preceding November 20 casualty reports in Bureij, Deir al-Balah, Nuseirat, Maghazi, or Al-Sabra. Additional intervening watch files since 17:48 could not be enumerated."
+      },
+      "location": "South of Al-Mawasi, Khan Younis, southern Gaza Strip",
+      "affected_population_or_system": "Three Palestinians injured by airstrike; one critically injured",
+      "exact_supporting_passage": "Meanwhile, three Palestinians were injured, one of them critically, in an Israeli airstrike targeting an area south of Al-Mawasi in Khan Younis.",
+      "summary": "WAFA reports three injured, one critically, by a separate airstrike south of Al-Mawasi."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; primary Gaza production collector remains authoritative. No production or scheduling actions.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest OCHA entries dated 20 November; 18 November situation report was published on 20 November and documents earlier period, already reviewed by preceding watches."
+      },
+      {
+        "source": "OCHA OPT 18 November humanitarian situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "Retrospective 10–16 November indicators, Nasser Medical Complex damage, evacuations and markets excluded as already previously recorded."
+      },
+      {
+        "source": "WHO global conflict-in-Israel-and-oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza health-services, medical-evacuation, ambulance or fuel delta in this observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Known repeated HTTP 502 Bad Gateway; global WHO alternative usable."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 21 2026 early morning Saturday civilian killed injured overnight Friday strikes",
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza killed injured Friday night",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 21, 2026\" November 20 strikes casualties displaced",
+      "site:apnews.com/article Gaza Nov 21 2026 civilian deaths Israel ceasefire",
+      "Gaza November 21 2026 Jabalia tents Mawasi seven injured tank fire airstrike reports",
+      "site:reuters.com \"November 21, 2026\" Gaza Jabalia Mawasi casualties",
+      "site:palestinercs.org Gaza Jabalia Mawasi November 21 2026 ambulance wounded",
+      "site:unrwa.org OR site:unicef.org OR site:wfp.org Gaza 20 November 21 November 2026 water food displacement flood",
+      "November 21 2026 Gaza hospitals health ambulance medical evacuation fuel functional capacity WHO health cluster",
+      "November 20 21 2026 Gaza Rafah Kerem Shalom crossing humanitarian aid fuel transport disruptions UN",
+      "November 21 2026 Gaza ceasefire talks hostages detainees negotiation concrete changes Saturday",
+      "site:aljazeera.com/news/2026/11/21 Gaza civilian wounded Jabalia Mawasi tents morning attacks"
+    ],
+    "sources_examined": [
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177161",
+        "note": "21 November 09:08 Palestine time / 20 November 23:08 PST. Seven injured in three geographically separable incidents. Counts 2+2+3=7, not seven additional per finding."
+      },
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "note": "No post-20 November dated humanitarian operational update."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "note": "Accessible, no newly dated in-window operational change."
+      },
+      {
+        "source": "UNICEF State of Palestine appeal",
+        "url": "https://www.unicef.org/appeals/state-of-palestine",
+        "note": "September 2026 revision/background; not new."
+      },
+      {
+        "source": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza",
+        "note": "November 20 Bureij, Deir al-Balah and demolitions already covered, not new."
+      }
+    ],
+    "excluded_candidates": [
+      "Nov 20 Bureij four reported fatalities, Deir al-Balah one/two discrepancy, Nuseirat, Maghazi and Al-Sabra casualties, and Shuja'iyya/Khan Younis demolitions previously logged.",
+      "OCHA 20 Nov report largely concerns Nov 10–16 and previously recovered medical evacuations, orthopedic equipment and market constraints.",
+      "Older/retrospective UNICEF and UNRWA data, analysis and advocacy without a new observed change.",
+      "November 20 Gaza commercial entry figures derived from an authority bulletin via a third-party index: did not meet independent verification threshold within this watch.",
+      "Opinion, social-only claims, unreconciled aggregates and duplicates excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "coverage_limitations": [
+      "WHO EMRO not accessible; known degraded condition, not a new material failure.",
+      "No independent confirmation for WAFA's three distinct Saturday-morning injury reports in targeted sources. Reporter cites medical sources; medium confidence.",
+      "WAFA uses local article time 09:08 November 21. Event time within Saturday morning not independently bounded more tightly.",
+      "No API endpoint for listing all immediate predecessor branch files was available; authenticated November 20 17:48 heartbeat used conservatively. Do not interpret wider window as proof of no intervening checks.",
+      "Supplementary scope does not inspect or claim the production Gaza collector has or has not published these incidents."
+    ],
+    "new_developments": 3,
+    "total_people_injured_reported": 7,
+    "material_new_degradation": false,
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T174743-0800-20261121T014849060Z.json",
+      "read_verified": true,
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

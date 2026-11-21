@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T134528-0800-20261121T214645935Z",
+  "scheduled_for": "2026-11-21T13:44:51-08:00",
+  "started_at": "2026-11-21T13:45:28-08:00",
+  "completed_at": "2026-11-21T13:46:45.935-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T12:44:23-08:00",
+    "end": "2026-11-21T13:46:45.935-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T124300-0800-20261121T204423Z.json",
+    "basis": "Prior heartbeat read with authenticated GitHub fetch. OCHA OPT and WHO directly checked first, then exactly 12 targeted searches. Recovered a changed injury estimate in an updated same-day Anadolu article; exact update time is not supplied, so do not claim it was published within the hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-anadolu-14-wounded-update-al-maslakh-followup",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/4-palestinians-killed-14-others-wounded-in-israeli-ceasefire-violations-across-gaza/4133171",
+      "title": "4 Palestinians killed, 14 others wounded in Israeli ceasefire violations across Gaza",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": null,
+      "publication_datetime": null,
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Gaza Strip; reported injury locations include Jabalia, Al-Kanisa near Khan Younis, Al-Maslakh south of Khan Younis, and Al-Mawasi west of Khan Younis",
+      "affected_population_system": "Anadolu reports 14 Palestinians wounded in Saturday attacks, including a child and a woman. Medical sources attribute 8 injuries to a drone strike near Al-Maslakh and 2 serious injuries to a drone strike at Al-Mawasi; additional Jabalia and Al-Kanisa injuries are described. Earlier WAFA reporting counted 7 injuries in northern/southern Gaza, and some incident descriptions overlap. Four fatalities were already recorded and are not new.",
+      "exact_supporting_passage": "Four Palestinians were killed and 14 others, including a child and a woman, were wounded in Israeli attacks across the Gaza Strip on Saturday, according to medical sources.",
+      "source_type": "Established news agency, citing unnamed hospital medical sources",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Targeted Anadolu source search #5 of 12, then opened full Anadolu article directly",
+        "observation_window_start": "2026-11-21T12:44:23-08:00",
+        "publication_time_basis": "Anadolu page states 21 November 2026 and 'Update: 21 November 2026' but no clock time",
+        "published_within_window": null,
+        "first_recovered_in_this_watch": true,
+        "comparison_to_prior": "WAFA's 09:08 Gaza-local report gave seven wounded from Jabalia and Khan Younis; a previous watch inspected an Anadolu six-injury report. This updated Anadolu account gives fourteen, but overlapping event descriptions prohibit adding seven or eight new individuals or claiming a precise increase. New information is the revised agency-level reported tally and specifically eight in Al-Maslakh.",
+        "relevant_miss_classes": [
+          "civilian casualties",
+          "military operations with documented civilian impact",
+          "hospital admissions/medical transport"
+        ],
+        "caveats": "Updated count has no independently corroborated casualty roster or timestamp. Distinctness of individual cases from earlier seven is unresolved. Do not add fourteen to previously counted injuries; no additional deaths. Attributed reports, not independent verification of attacks."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza daily publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT news and updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza humanitarian situation report posted 20 Nov 2026 (covers 18 Nov); no new 21 Nov Gaza humanitarian situation report in page listing."
+      },
+      {
+        "source": "WHO global Israel/oPt situation",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new 21 Nov item on hospital functioning, fuel, ambulance operations, medical evacuation, or capacity listed."
+      },
+      {
+        "source": "WHO EMRO oPt emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Recurring 502 Bad Gateway on direct fetch; known prior failure; global WHO checked as fallback."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza Saturday evening Beit Lahia wounded killed airstrike",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Saturday latest noon PST civilians hospital aid airstrike",
+      "site:apnews.com/article/ Gaza November 21 2026 Saturday afternoon injuries ceasefire relief",
+      "site:aljazeera.com/news/2026/11/21/ Gaza Saturday afternoon latest strike victims civilians",
+      "site:aa.com.tr/en/middle-east/ Gaza November 21 2026 Saturday evening injured displaced hospital",
+      "site:palestinercs.org OR site:ifrc.org November 21 2026 Gaza ambulance medical transport patients fuel",
+      "site:un.org OR site:unrwa.org Gaza 21 November 2026 Saturday ceasefire humanitarian shelters winter aid distribution",
+      "site:unicef.org OR site:iom.int Gaza November 21 2026 Saturday water wastewater displacement shelter winter",
+      "site:wfp.org OR site:logcluster.org Gaza 21 November 2026 food aid trucks supplies kitchens",
+      "Rafah Kerem Shalom Gaza November 21 2026 crossing fuel medical evacuation trucks Saturday",
+      "Gaza ceasefire hostages detention prisoner release negotiations November 21 2026 Saturday update",
+      "Gaza November 21 2026 Saturday afternoon evening after 21:42 local injuries killed hospital Israeli attacks WAFA"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza item 21 Nov 21:42 Gaza time, Beit Lahia woman injured already in predecessor ledger; no later 21 Nov Gaza-specific item."
+      },
+      {
+        "source": "WAFA early casualties",
+        "url": "https://english.wafa.ps/Pages/Details/177161",
+        "result": "21 Nov 09:08 Gaza time: seven wounded, including two Jabalia, woman and child Al-Mawasi, three southern Al-Mawasi; earlier watch covered this."
+      },
+      {
+        "source": "Anadolu 21 Nov updated casualty report",
+        "url": "https://www.aa.com.tr/en/middle-east/4-palestinians-killed-14-others-wounded-in-israeli-ceasefire-violations-across-gaza/4133171",
+        "result": "Direct page confirms four fatalities and 14 wounded. Reports eight Al-Maslakh strike injuries; date-only update, no clock time; revised tally recorded as a follow-up rather than new additive casualties."
+      },
+      {
+        "source": "Reuters Tel al-Hawa",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Report at 05:53 PST about previously recorded three deaths, WCK denial and food vehicle, no newly dated revision."
+      },
+      {
+        "source": "Al Jazeera 21 Nov",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "result": "Prior four fatalities, Al-Mawasi injuries and WCK denial; no new standalone event."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA Beit Lahia woman wounded at 21:42 Gaza local already logged in 12:44 PST predecessor heartbeat.",
+      "Tel al-Hawa vehicle three deaths and food/WCK detail, Jabalia/Halawa death, Nuseirat youth injury, and AP funeral names were all previously recorded. No additional fatalities counted.",
+      "Anadolu's 14 injured figure is a revised same-day count with likely overlap with previously reported seven; not fourteen newly wounded people.",
+      "OCHA, WFP, IOM and UNICEF reports describe earlier flooding, winter shelter constraints, and generalized humanitarian conditions; not fresh changes.",
+      "Older/year-mismatched reports on December 2025 crossing flows, 2024 medical evacuations, 2023 hostage news were excluded.",
+      "No new verifiable crossing/fuel/water/medical evacuation/hospital function, detention/hostage or ceasefire negotiation change located."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO remains unavailable as on previous runs, so DEGRADED rather than FAILED; OCHA and WHO global readable.",
+      "Anadolu's revision carries only a date and cannot be timed to the hourly window; discovery is within this watch, event occurred on the observation date.",
+      "Twelve searches are bounded recall, not exhaustive; unknown and overlapping casualties not counted twice."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

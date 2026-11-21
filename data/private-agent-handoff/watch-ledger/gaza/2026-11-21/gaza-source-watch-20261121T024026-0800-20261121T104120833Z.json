@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T024026-0800-20261121T104120833Z",
+  "scheduled_for": "2026-11-21T02:44:51-08:00",
+  "started_at": "2026-11-21T02:40:26-08:00",
+  "completed_at": "2026-11-21T10:41:20.833Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T01:50:03.349-08:00",
+    "end": "2026-11-21T02:41:20.835-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T014907-0800-20261121T095003349Z.json",
+    "basis": "Authenticated GitHub readback of latest prior branch ledger heartbeat. Source reporting checked for newly discoverable, independently traceable developments in window and prior events deduplicated. Reporting dates interpreted in America/Los_Angeles; Gaza-local publication times adjusted where known."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall; production collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report shown dated 18 November, posted 20 November. No newer Gaza report found in observation window."
+      },
+      {
+        "source": "OCHA OPT situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "Report published 20 November, primarily covers 10–16 November; previously known retrospective impacts, no distinct in-window update."
+      },
+      {
+        "source": "WHO global occupied Palestinian territory emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No dated new in-window Gaza hospital, ambulance, fuel, evacuation, functioning capacity or other medical access change on portal."
+      },
+      {
+        "source": "WHO EMRO OPT portal",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Direct check returned Bad Gateway; same unresolved failure as predecessor, WHO global alternative accessible."
+      }
+    ],
+    "initial_official_targeted_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza killed injured 2026",
+      "site:aa.com.tr/en/middle-east Gaza November 21 2026 Palestinians killed injured ceasefire",
+      "site:apnews.com/article Gaza Saturday November 21 2026 civilians killed injured Israel",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 airstrikes Palestinians aid ceasefire",
+      "site:aljazeera.com/news/2026/11/21 Gaza attack killed injured hospital tanks displacement",
+      "Gaza November 21 2026 Saturday morning 12pm 1pm Gaza new casualties Jabalia Khan Younis",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 21 2026 ambulance emergency medical transport",
+      "site:unrwa.org OR site:unicef.org Gaza 21 November 2026 displaced shelter water access",
+      "site:wfp.org OR site:logcluster.org Gaza November 21 2026 aid food trucks Kerem Shalom",
+      "site:who.int OR site:healthcluster.who.int Gaza November 21 2026 hospital fuel medical evacuations capacity",
+      "Gaza Rafah Kerem Shalom crossing fuel access humanitarian aid November 21 2026 latest",
+      "Gaza November 21 2026 detained hostages ceasefire negotiations humanitarian civilians new operations"
+    ],
+    "sources_examined": [
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177161",
+        "note": "Published 21 November 09:08 Gaza-local, 20 November 23:08 PST. Three distinct incidents totaling seven injuries were recorded in prior 23:45 PST watch; not repeated."
+      },
+      {
+        "source": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza",
+        "note": "20 November Bureij/Nuseirat/Deir al-Balah strikes and eastern Gaza demolitions already in prior watch findings."
+      },
+      {
+        "source": "WFP and IOM",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "note": "Winterization and crossing-access warning dated 17 November; no new in-window operational changes."
+      },
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "note": "No newer Gaza update than 20 November."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "note": "No newly dated health update in the watch period."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 21 November 09:08 Gaza-local report of seven wounded in Jabalia and Al-Mawasi: fully recorded before this observation window.",
+      "Al Jazeera 20 November Bureij, Nuseirat, Deir al-Balah casualty reports and Shuja'iyya/Khan Younis demolitions: previously recovered.",
+      "OCHA 20 November Gaza report: 10–16 November retrospective; not an in-window new development.",
+      "Reuters 18–19 November Nuseirat raid/displacement: earlier event, not newly published in window.",
+      "WFP/IOM November winter-aid shortages and WHO older references: previously published, no new change.",
+      "Unrelated West Bank items, undated content, outdated search hits and unsupported claims excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "coverage_limitations": [
+      "WHO EMRO direct access still unavailable but WHO global portal and OCHA OPT accessible; status DEGRADED rather than FAILED, no newly material degradation.",
+      "Search indexing, time-zone differences and reporting lag may delay discovery of incidents after the last checked pages.",
+      "GitHub ops/watch-ledger predecessor validated; primary production collector and unpublished artifacts not inspected.",
+      "Runtime invocation occurred before the nominal 02:44:51 PST recurrence; scheduled_for records nominal schedule while started_at records actual invocation clock."
+    ],
+    "new_developments": 0,
+    "material_new_degradation": false,
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T014907-0800-20261121T095003349Z.json",
+      "read_verified": true,
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

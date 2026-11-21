@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T034549-0800-20261121T114549Z",
+  "scheduled_for": "2026-11-21T03:44:51-08:00",
+  "started_at": "2026-11-21T03:45:49-08:00",
+  "completed_at": "2026-11-21T11:47:13.229Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T02:41:20.833-08:00",
+    "end": "2026-11-21T11:47:13.229Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T024026-0800-20261121T104120833Z.json",
+    "basis": "Authenticated read of preceding 02:41:20.833 PST heartbeat. New reporting searched after this time; earlier reports excluded or treated only as contextual prior-window material. Gaza-local source times interpreted as UTC+02:00; America/Los_Angeles is UTC-08:00 on observation date."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-tel-al-hawa-vehicle-airstrike-3-killed-wafa-177167",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177167",
+      "title": "Three Palestinians killed in Israeli airstrike on vehicle in Gaza City",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21T13:03:00+02:00",
+      "publication_date_los_angeles": "2026-11-21T03:03:00-08:00",
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Tel al-Hawa neighborhood, southwest Gaza City, Gaza Strip",
+      "affected_population_system": "Three Palestinians reportedly killed and several people injured in a strike on a vehicle; individual civilian/combatant status not independently verified.",
+      "exact_supporting_passage": "Three Palestinians were killed and several others injured on Saturday afternoon when Israeli warplanes bombed a vehicle",
+      "source_type": "Palestinian official news agency, single-source casualty report",
+      "classification": "new",
+      "confidence": "medium",
+      "independent_corroboration": null,
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA homepage latest-news listing followed to article (not surfaced by targeted search).",
+        "observed_after": "2026-11-21T02:41:20.833-08:00",
+        "publication_within_window": true,
+        "relevant_miss_classes": [
+          "civilian casualties / persons killed and injured",
+          "military operations with reported human impact"
+        ],
+        "caveats": "WAFA does not name victims or specify exact injury count or victim status; no independently corroborating report located during bounded watch. Do not merge with the 21 November morning seven-injury incidents or add older Gaza totals to this incident."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall; production collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT homepage and updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian situation report dated 18 Nov, posted 20 Nov; no newly posted Gaza bulletin in this watch window."
+      },
+      {
+        "source": "WHO global emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated in-window hospital, ambulance, fuel, medical evacuation, or functioning-capacity changes."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory portal",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Bad Gateway, repeated limitation from preceding heartbeat; WHO global alternative checked."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"21/November/2026\" killed injured 11:00 12:00 13:00",
+      "site:aa.com.tr/en/middle-east/ Gaza November 21 2026 Saturday killed injured",
+      "site:apnews.com/article/gaza November 21 2026 Israel strike ceasefire Palestinians casualties",
+      "site:reuters.com/world/middle-east Gaza November 21 2026 killed injured aid Israeli strike Saturday",
+      "site:aljazeera.com/news/2026/11/21 Gaza killed injured Jabalia Khan Younis hospital",
+      "Gaza November 21 2026 afternoon latest civilian casualties ceasefire violation Palestinian civilians 13:00",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 21 2026 ambulance injured hospital rescue",
+      "site:unrwa.org OR site:unicef.org Gaza \"21 November 2026\" shelter water sanitation displaced",
+      "site:wfp.org OR site:logcluster.org Gaza \"21 November 2026\" aid food trucks crossings",
+      "site:who.int OR site:healthcluster.who.int Gaza November 21 2026 hospital medical evacuation fuel capacity",
+      "Gaza Kerem Shalom Rafah crossing November 21 2026 humanitarian aid fuel ambulance ceasefire",
+      "Gaza November 21 2026 Israel Hamas ceasefire talks hostage detainee evacuation demolition destroyed displaced"
+    ],
+    "sources_examined": [
+      {
+        "source": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "note": "Direct examination revealed new 13:03 Gaza-local article and a 12:09 Gaza-local daily casualty aggregate."
+      },
+      {
+        "source": "WAFA latest new Gaza City incident",
+        "url": "https://english.wafa.ps/Pages/Details/177167",
+        "note": "Newly reported strike 13:03 Gaza time / 03:03 PST, after prior heartbeat completion."
+      },
+      {
+        "source": "WAFA Gaza death toll update",
+        "url": "https://english.wafa.ps/Pages/Details/177165",
+        "note": "Published 12:09 Gaza-local / 02:09 PST, before predecessor completion; retrospective 24-hour health-authority totals, not counted as new watch-window finding."
+      },
+      {
+        "source": "Al Jazeera Palestine index",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "note": "Latest visible Gaza items dated 20 November, no separate 21 November incident confirmation."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 21 November 12:09 Gaza-local: 9 fatalities and 55 wounded received in previous 24 hours, cumulative death toll 74,736; published before prior 02:41 PST heartbeat. Separate retrospective update not counted for the present window.",
+      "WAFA 21 November 09:08 Gaza-local seven injuries across Jabalia and al-Mawasi: already recorded in older heartbeats, excluded as duplicate.",
+      "Al Jazeera 20 November central-Gaza fatal strikes and demolition reports: previously recorded.",
+      "AP November 2026 Nasser Hospital strike from preceding week: older event, not a new in-window development.",
+      "Unrelated West Bank reports, aged search matches, allegations without traceable sourcing and stale aid/crossing data excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "coverage_limitations": [
+      "WHO EMRO oPt unavailable, a known persistent limitation; WHO global and OCHA OPT accessible, therefore DEGRADED not FAILED.",
+      "New WAFA article was found by direct homepage inspection after targeted searches returned old/nonmatching articles, illustrating search-index lag.",
+      "New vehicle strike single-sourced in this window; exact injury count, victims' identities and civilian status unverified.",
+      "Primary production collector and unpublished draft state not inspected; deduplication based on preceding watch ledger and source/article identity."
+    ],
+    "new_developments": 1,
+    "material_new_degradation": false,
+    "prior_heartbeat_read_verified": true,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

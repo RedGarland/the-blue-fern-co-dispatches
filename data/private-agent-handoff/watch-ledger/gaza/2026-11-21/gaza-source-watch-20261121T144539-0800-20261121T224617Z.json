@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T144539-0800-20261121T224617Z",
+  "scheduled_for": "2026-11-21T14:44:51-08:00",
+  "started_at": "2026-11-21T14:45:39-08:00",
+  "completed_at": "2026-11-21T14:46:17-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T13:46:45.935-08:00",
+    "end": "2026-11-21T14:46:17-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T134528-0800-20261121T214645935Z.json",
+    "basis": "Prior hourly heartbeat read through authenticated GitHub connector. OCHA OPT and WHO checked first, followed by exactly twelve bounded targeted web searches. Source/event dates were checked; results overlapping predecessor ledger excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production daily Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Home page's newest Gaza-specific humanitarian situation report listed as Humanitarian Situation Report | 18 November 2026, posted 20 November; no newly listed Gaza situation report for 21 November. Other November material was older than observation window."
+      },
+      {
+        "source": "WHO official global site",
+        "url": "https://www.who.int/",
+        "status": "SEARCH_ACCESSIBLE",
+        "result": "Site-restricted WHO search surfaced historical 2026 and older material but no verified Gaza emergency/health system event published in the observation hour; attempted WHO crisis URL returned 404."
+      },
+      {
+        "source": "WHO Eastern Mediterranean regional office",
+        "url": "https://www.emro.who.int/",
+        "status": "TIMEOUT",
+        "result": "Direct regional office access timed out; WHO primary-site search used as partial fallback. Recurring regional access issue, so coverage DEGRADED."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 21 2026 Saturday evening latest 22:00 23:00 injured killed strike reported",
+      "site:english.wafa.ps November 21 2026 Gaza wounded killed 22:00 23:00",
+      "site:reuters.com Gaza November 21 2026 latest food vehicle Gaza strike killed wounded afternoon",
+      "site:apnews.com November 21 2026 Gaza casualty Saturday humanitarian latest",
+      "site:aljazeera.com/news/liveblog/2026/11/21 Gaza November 21 latest killed injured",
+      "site:aa.com.tr/en/middle-east Gaza Nov 21 2026 Saturday evening injured",
+      "Gaza 21 November 2026 22:30 Gaza local ambulance hospital casualty artillery overnight Saturday new",
+      "site:unrwa.org Gaza November 21 2026 food aid water 21 November",
+      "site:unicef.org Gaza November 21 2026 health water access",
+      "site:reliefweb.int Gaza 21 November 2026 access displacement food WHO hospitals",
+      "site:middleeasteye.net Gaza November 21 2026 latest strikes wounded Saturday",
+      "Gaza Nov 21 2026 Rafah crossing medical evacuation aid trucks ceasefire negotiations hostages updates Saturday evening"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/",
+        "result": "As retrieved, latest Gaza-specific November 21 listing was the Beit Lahia woman wounded at 21:42 Gaza time; previously logged in earlier heartbeat. The site had no later Gaza-specific event in visible latest-news list."
+      },
+      {
+        "source": "Anadolu updated same-day casualty roundup",
+        "url": "https://aa.com.tr/en/middle-east/4-palestinians-killed-14-others-wounded-in-israeli-ceasefire-violations-across-gaza/4133171",
+        "result": "Four fatalities and 14 wounded already covered in predecessor hourly ledger; no further verifiable revision dated or timed to new window."
+      },
+      {
+        "source": "Reuters Israel/Hamas topic",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Tel al-Hawa vehicle strike and disputed World Central Kitchen association already recorded; no further verified casualty/humanitarian development in available topic listing."
+      },
+      {
+        "source": "OCHA 18 November humanitarian situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "result": "Earlier reporting period (10–16 November), excluded from observation-hour findings."
+      }
+    ],
+    "excluded_candidates": [
+      "Anadolu report on four Gaza deaths and 14 injuries: already recorded in prior hour, no verified increment.",
+      "WAFA Beit Lahia wounded woman, Nuseirat youth injury, Jabalia/Halawa death, Tel al-Hawa three fatalities and food vehicle details: previously recorded; no additional casualties counted.",
+      "OCHA flood/winter shelter and UNICEF/UNRWA aggregate needs or system functionality reports: outside latest observation hour or undated updates, no fresh specific event.",
+      "Archived 2023–2025 articles and unrelated West Bank news, excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO regional office",
+        "url": "https://www.emro.who.int/",
+        "error": "Timeout fetching",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO global crisis landing page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "error": "HTTP 404; alternate WHO site search provided limited fallback",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional site unavailable, consistent with recurring previously documented WHO regional issues; available OCHA and established reporting permitted bounded recall but incomplete regional WHO coverage.",
+      "Search results can lag publication and may omit same-hour reports; no source proves exhaustive absence of developments.",
+      "Observation window is discovery-oriented; event dates are not treated as proof of same-hour publication."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,196 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-21-002",
+    "title": "Three Palestinians killed in Israeli airstrike on vehicle in Gaza City",
+    "summary": "WAFA reports three Palestinians were killed and others injured in an Israeli strike on a vehicle in Tel al-Hawa, southwest of Gaza City, on November 21. Both outlets reported the strike; WAFA also reported injuries in that incident.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 81,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-11-21-001"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 10,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-21-manual-001",
+      "gaza-2026-11-21-manual-002"
+    ],
+    "source_ids": [
+      "gaza-2026-11-21-manual-001",
+      "gaza-2026-11-21-manual-002"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+      "https://english.wafa.ps/Pages/Details/177167"
+    ],
+    "publisher_names": [
+      "Al Jazeera",
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-21-manual-002",
+        "title": "Israeli attacks on Gaza kill at least four Palestinians",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera reports at least three people were killed in an Israeli strike on a van delivering food to displaced people in Tel al-Hawa, Gaza City, on November 21. Its report also covers a separate fatal shooting in Jabalia, not included in this summary.",
+        "published_at": "2026-11-21",
+        "modified_at": null,
+        "event_date_precision": "day",
+        "event_date_basis": "Publisher article explicitly described Saturday\u2019s reported strike; publication and observation metadata not used to infer date.",
+        "event_date": "2026-11-21",
+        "location": "Tel al-Hawa, Gaza City",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      },
+      {
+        "source_record_id": "gaza-2026-11-21-manual-001",
+        "title": "Three Palestinians killed in Israeli airstrike on vehicle in Gaza City",
+        "url": "https://english.wafa.ps/Pages/Details/177167",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reports three Palestinians were killed and others injured in an Israeli strike on a vehicle in Tel al-Hawa, southwest of Gaza City, on November 21.",
+        "published_at": "2026-11-21",
+        "modified_at": null,
+        "event_date_precision": "day",
+        "event_date_basis": "Publisher article explicitly described Saturday\u2019s reported strike; publication and observation metadata not used to infer date.",
+        "event_date": "2026-11-21",
+        "location": "Tel al-Hawa, Gaza City",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-21T18:54:42.117540+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "jabalia",
+      "palestin"
+    ],
+    "top_story_relevance_score": 81,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Tel al-Hawa, Gaza City",
+    "event_date": "2026-11-21",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": [],
+    "event_key": "gaza_tel_al_hawa_vehicle_strike_2026-11-21"
+  },
+  {
+    "story_id": "gaza-story-2026-11-21-001",
+    "title": "Three Palestinians killed in Israeli airstrike on vehicle in Gaza City",
+    "summary": "WAFA reports three Palestinians were killed and others injured in an Israeli strike on a vehicle in Tel al-Hawa, southwest of Gaza City, on November 21.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 10,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-21-manual-001"
+    ],
+    "source_ids": [
+      "gaza-2026-11-21-manual-001"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/177167"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-21-manual-001",
+        "title": "Three Palestinians killed in Israeli airstrike on vehicle in Gaza City",
+        "url": "https://english.wafa.ps/Pages/Details/177167",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reports three Palestinians were killed and others injured in an Israeli strike on a vehicle in Tel al-Hawa, southwest of Gaza City, on November 21.",
+        "published_at": "2026-11-21",
+        "modified_at": null,
+        "event_date_precision": "day",
+        "event_date_basis": "Publisher article explicitly described Saturday\u2019s reported strike; publication and observation metadata not used to infer date.",
+        "event_date": "2026-11-21",
+        "location": "Tel al-Hawa, Gaza City",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-21T18:54:42.117540+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Tel al-Hawa, Gaza City",
+    "event_date": "2026-11-21",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-11-21-002",
+    "prior_edition_date": "2026-11-21",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "same_event_tel_al_hawa_vehicle_strike"
+    ]
+  }
+]

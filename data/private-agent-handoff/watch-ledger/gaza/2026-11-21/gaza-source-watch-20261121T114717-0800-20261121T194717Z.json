@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T114717-0800-20261121T194717Z",
+  "scheduled_for": "2026-11-21T11:44:51-08:00",
+  "started_at": "2026-11-21T11:45:39-08:00",
+  "completed_at": "2026-11-21T11:47:17-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T10:45:05.142-08:00",
+    "end": "2026-11-21T11:47:17-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T104352-0800-20261121T184505142Z.json",
+    "basis": "Direct authenticated GitHub readback of predecessor heartbeat and branch head before search. Previous watch completed 10:45:05 PST; search checks covered newly published/verified developments since that time. OCHA OPT and WHO were searched and opened first, then exactly twelve additional targeted searches. All dates in America/Los_Angeles."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production daily Gaza publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT Updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest listed Gaza situation report published 20 November 2026 (report dated 18 November). No newly published report dated 21 November in observation hour."
+      },
+      {
+        "source": "WHO occupied Palestinian territory emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global WHO portal accessible with no newly dated in-window Gaza evacuation, health-facility functioning, fuel, or emergency response announcement."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct 502 Bad Gateway; recurring limitation already present in previous hourly watch; not new material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza killed wounded evening 9 PM",
+      "site:reuters.com/world/middle-east/ Gaza Nov 21 2026 late Saturday airstrikes aid ceasefire civilian casualties",
+      "site:apnews.com/article/ Gaza November 21 2026 new casualties aid access late Saturday",
+      "site:aljazeera.com/news/2026/11/21/ Gaza Saturday night Israeli strike Nov 21 casualties displaced",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza evening death attack hospital",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 21 2026 ambulances paramedics hospital evacuation",
+      "site:un.org OR site:unrwa.org \"21 November 2026\" Gaza new shelter aid access weekend",
+      "site:unicef.org OR site:iom.int \"21 November 2026\" Gaza water displaced tents restrictions",
+      "site:wfp.org OR site:logcluster.org \"21 November 2026\" Gaza food distribution trucks flour supplies",
+      "Rafah Kerem Shalom crossing Gaza November 21 2026 evening aid trucks fuel patient evacuation",
+      "Israel Hamas Gaza ceasefire hostage detainees negotiations Nov 21 2026 Saturday evening new",
+      "Gaza November 21 2026 20:30 21:00 local Israeli attack deaths injuries ambulances evening"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Most recent Gaza-specific article 21 Nov at 18:05 Gaza time (08:05 PST), Nuseirat youth injury already logged. Latest overall article 20:33 Gaza time (10:33 PST) concerned West Bank and preceded observation window end."
+      },
+      {
+        "source": "Reuters 21 Nov truck strike report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Published November 21 at 13:53 UTC (05:53 PST), before predecessor heartbeat. Coverage includes previously recorded three deaths, food rations, WCK denial and Israeli military attribution; statement that driver previously worked for WCK and Israel's Islamic Jihad allegation lack verified new in-hour publication/update timestamp, so not counted as new finding."
+      },
+      {
+        "source": "Associated Press November 21 regional dispatch",
+        "url": "https://apnews.com/article/mideast-iran-gaza-israel-november-21-2026-29159a6f3365ff447c0ccbd1d7260f75",
+        "result": "Three deaths in Gaza food vehicle strike and funeral identities already covered; no new casualty incident demonstrated."
+      },
+      {
+        "source": "Al Jazeera November 21 Gaza report",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "result": "Jabalia fatality, Tel al-Hawa three fatalities and Al-Mawasi injuries overlap preceding ledger; no new casualty count."
+      },
+      {
+        "source": "RTE November 21 Gaza report",
+        "url": "https://www.rte.ie/news/world/2026/1121/1600131-israeli-strikes-gaza/",
+        "result": "Search excerpt repeated existing four reported deaths. Direct source returned 403; no verifiable distinct in-window detail."
+      }
+    ],
+    "excluded_candidates": [
+      "Earlier WAFA Nuseirat youth injury, three Tel al-Hawa deaths, Jabalia/Halawa fatality and Al-Mawasi injuries were recorded in previous hourly heartbeats; not added again.",
+      "Reuters WCK affiliation denial, food-vehicle details and AP funeral identities previously recorded. Reuters 05:53 PST publication precedes this window; no verified in-hour change in its text.",
+      "Reports on flood-affected tents, IOM tent restrictions, WFP food supply and November crossings data were published or refer to events before the current observation window; they are not qualifying new developments.",
+      "No new source-grounded Gaza medical evacuation, hospital functioning, ambulance, fuel, water, access, detention/hostage or ceasefire negotiation change was verified within bounded checks.",
+      "2023 OCHA November 21 fuel-truck data and other year-mismatched/older search results were rejected."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "RTE reporting",
+        "url": "https://www.rte.ie/news/world/2026/1121/1600131-israeli-strikes-gaza/",
+        "error": "HTTP 403 Forbidden on direct read; search snippet available, nonunique earlier report",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO direct site still unavailable (known recurrent HTTP 502), though OCHA, WHO global and established reporting remained accessible; status DEGRADED, not FAILED.",
+      "RTE source could not be opened; its search result repeated prior events; no material new loss of useful coverage.",
+      "Bounded watch is not exhaustive. Exact publish/update time unverified for some already-reported Reuters/AP details; these were excluded rather than being incorrectly reported as in-hour new developments."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

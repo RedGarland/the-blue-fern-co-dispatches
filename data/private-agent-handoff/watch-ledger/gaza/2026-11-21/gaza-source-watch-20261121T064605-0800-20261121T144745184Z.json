@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T064605-0800-20261121T144745184Z",
+  "scheduled_for": "2026-11-21T06:44:51-08:00",
+  "started_at": "2026-11-21T06:46:05-08:00",
+  "completed_at": "2026-11-21T06:47:45.184-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T05:46:02-08:00",
+    "end": "2026-11-21T06:47:45.184-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T054358-0800-20261121T134602880Z.json",
+    "basis": "Authenticated GitHub directory listing confirmed the 05:46:02 PST heartbeat was the most recent predecessor; publication timestamp for the new Reuters follow-up is 2026-11-21T13:53:00Z (05:53 PST), within this watch window. Historical events and duplicates excluded."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-tel-al-hawa-wck-logo-food-vehicle-reuters-followup",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+      "title": "Israeli strike kills three in vehicle distributing aid in Gaza, witnesses say",
+      "publisher": "Reuters",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": "13:53:00Z",
+      "publication_datetime": "2026-11-21T13:53:00Z",
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Tel al-Hawa, Gaza City, Gaza Strip",
+      "affected_population_system": "Food distribution to children/displaced persons potentially affected: a vehicle hit by an Israeli strike contained packaged food, prepared rice meals, and papers bearing the World Central Kitchen logo. Reuters eyewitness reported it was about to distribute food and drink to children. Three fatalities are the same strike already recorded, NOT three new deaths. WCK's role and any program-level interruption remain unconfirmed.",
+      "exact_supporting_passage": "The vehicle appeared to be carrying packaged foodstuffs, and papers inside carried the logo of World Central Kitchen",
+      "source_type": "Established international news agency; reporter observation and identified eyewitness, with Israeli military response",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Fourth of six initial targeted searches (Reuters), then direct Reuters article read; 12 targeted searches in total",
+        "observed_after": "2026-11-21T05:46:02-08:00",
+        "published_within_window": true,
+        "publication_time_basis": "Reuters page explicitly dated 21 November 2026 at 1:53 PM UTC, or 5:53 AM PST",
+        "prior_overlap": "Earlier WAFA casualty report and AFP caption carried by Al Jazeera already logged the same three fatalities and food-rations transport. Reuters adds direct witness evidence of WCK-branded materials and impending distribution to children; no additional casualties counted.",
+        "relevant_miss_classes": [
+          "food access",
+          "aid distribution vehicle affected by military operation",
+          "civilian casualties follow-up"
+        ],
+        "israeli_military_response": "Israeli military said its target was several militant operatives in the area, without providing details about the vehicle or why it was hit.",
+        "caveats": "World Central Kitchen did not respond by Reuters publication time; branded documents do not establish that vehicle or victims worked for WCK. Exact incident time, identities, quantities of food lost and impact on distribution routes are not established. No independent proof of distribution organization ownership."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; production primary publisher/collector remains authoritative, no publication, approvals, schedule changes or automation management.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT home and 18 November humanitarian situation report",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report covers 10–16 November and was posted 20 November; no newly posted Gaza incident report within observation window."
+      },
+      {
+        "source": "WHO global emergency occupied Palestinian territory",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Page accessible; no dated in-window update for healthcare, medical evacuation or capacity."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Known recurrent 502 Bad Gateway; not a newly material source failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza killed injured latest afternoon",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza killed wounded aid Saturday afternoon",
+      "site:aljazeera.com/news/2026/11/21/ Gaza latest Saturday Israeli attacks casualties wounded",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Israeli strike ceasefire Palestinians killed Saturday",
+      "site:apnews.com/article/ Gaza November 21 2026 Israeli strikes casualties aid ceasefire Saturday",
+      "site:un.org/unispal OR site:ochaopt.org Gaza \"21 November 2026\" humanitarian access displacement",
+      "site:palestinercs.org OR site:ifrc.org Gaza \"21 November 2026\" ambulances wounded hospital emergency medical",
+      "site:unicef.org OR site:unrwa.org Gaza November 21 2026 flooding shelter water displacement Saturday",
+      "site:wfp.org OR site:worldcentralkitchen.org Gaza November 21 2026 food delivery strike World Central Kitchen",
+      "site:who.int OR site:healthcluster.who.int Gaza 21 November 2026 healthcare evacuation fuel functioning capacity",
+      "Gaza Rafah Kerem Shalom November 21 2026 crossing aid medical evacuations fuel access",
+      "Gaza November 21 2026 Israeli operations hostages detainees ceasefire negotiations civilians Saturday latest"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "Reuters new report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "New 13:53 UTC publication confirms WCK logo on documents, food in struck vehicle and eyewitness account of imminent child food/drink distribution. Incident/fatalities were already logged."
+      },
+      {
+        "source": "WAFA latest site-linked report",
+        "url": "https://english.wafa.ps/Pages/Details/177167",
+        "result": "13:03 Gaza-local report of three deaths in Tel al-Hawa already in older heartbeat; not re-added."
+      },
+      {
+        "source": "World Central Kitchen official news",
+        "url": "https://wck.org/news/",
+        "result": "Latest displayed news dated 20 November, no incident confirmation; cannot assert WCK operated the vehicle."
+      },
+      {
+        "source": "UNICEF State of Palestine press centre",
+        "url": "https://www.unicef.org/sop/press-centre",
+        "result": "Latest press releases dated 20 November; no new in-window child protection or access change."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA Tel al-Hawa three fatalities already logged, Reuters provides a new attributable food-distribution detail only.",
+      "Al Jazeera/AFP food-ration vehicle caption already logged in predecessor; Reuters independent WCK-logo/children-distribution detail is narrower new follow-up.",
+      "Earlier Jabalia camp fatality and seven wounded in Jabalia/Al Mawasi already recorded; not repeated.",
+      "OCHA 20 November report refers to older 10–16 November humanitarian data; earlier Reuters/AP reports on Nasser Hospital strike, ground movement and other casualties excluded.",
+      "No newly verified in-window change to hospital functionality, medical evacuation, cross-border access, water, fuel, hostages/detention or ceasefire terms."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO regional source remains unavailable, but WHO global and OCHA OPT accessible, so DEGRADED rather than FAILED.",
+      "WCK logo evidence does not prove WCK employee casualties or ownership; Reuters says WCK had not commented.",
+      "Only one independently time-verified published follow-up; no additional deaths counted."
+    ]
+  }
+}

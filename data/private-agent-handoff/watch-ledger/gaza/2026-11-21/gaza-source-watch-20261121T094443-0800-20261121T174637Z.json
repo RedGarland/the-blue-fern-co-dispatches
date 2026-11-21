@@ -1,0 +1,140 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T094443-0800-20261121T174637Z",
+  "scheduled_for": "2026-11-21T09:44:51-08:00",
+  "started_at": "2026-11-21T09:44:43-08:00",
+  "completed_at": "2026-11-21T17:46:37.054Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T08:48:14.980-08:00",
+    "end": "2026-11-21T17:46:37.054Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T084630-0800-20261121T164630Z.json",
+    "basis": "Authenticated GitHub predecessor readback; recall window starts at its 08:48:14.980 PST completion. OCHA OPT and WHO checked first, then exactly 12 targeted searches. One AP photo-caption identification detail was recovered for the previously recorded three-death Gaza City airstrike; date of article publication and when the caption first appeared not independently verified, so recorded as newly recovered follow-up, not proven in-hour publication."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-gaza-city-airstrike-three-funeral-identities-ap-followup",
+      "canonical_source_url": "https://apnews.com/article/mideast-iran-gaza-israel-november-21-2026-29159a6f3365ff447c0ccbd1d7260f75",
+      "title": "AP photo captions identify three men mourned after Gaza City airstrike",
+      "publisher": "Associated Press",
+      "source_date": "2026-11-21",
+      "publication_date": null,
+      "publication_time": null,
+      "publication_datetime": null,
+      "event_date": null,
+      "funeral_date": "2026-11-21",
+      "event_time": null,
+      "location": "Gaza City, Gaza Strip (joint funeral); Tel al-Hawa vehicle strike discussed in same article but identities not explicitly linked to vehicle occupants",
+      "affected_population_system": "AP photographs identify Khaled Naem, Mustafa Refa’i, and Ahmad al-Sawafiri as three men mourned at a joint funeral after they were killed in an Israeli airstrike. The same report describes a three-fatality food-carrying vehicle strike in Tel al-Hawa. The photo caption does not itself explicitly state that these were occupants of that specific vehicle. No additional fatalities counted.",
+      "exact_supporting_passage": "Mourners grieve over the bodies of Khaled Naem, Mustafa Refa’i and Ahmad al-Sawafiri, who were killed in an Israeli airstrike",
+      "source_type": "Established international wire agency; original on-scene photographs and captions credited to AP photographer Yousef Al Zanoun",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Fifth of 12 targeted searches located Associated Press article; direct original article read and photo caption check",
+        "observed_after": "2026-11-21T08:48:14.980-08:00",
+        "published_within_window": null,
+        "publication_time_basis": "AP article and photographs identify events as Saturday 21 November 2026, but no independently verified publication/last-update timestamp; this is a newly recovered detail, not confirmed in-hour publication.",
+        "prior_overlap": "Three deaths in Tel al-Hawa food vehicle strike already recorded and subsequent food distribution/WCK affiliation follow-ups recorded; prior watch heartbeats did not name these three men. Do not count three additional deaths.",
+        "relevant_miss_classes": [
+          "casualty identities",
+          "military operations with documented civilian impact"
+        ],
+        "caveats": "Caption verifies names and Gaza City funeral, but not definitively the exact Tel al-Hawa vehicle occupants, civilian/militant status, or death time. No independent second-source identity corroboration. AP separately quotes Shifa Hospital director confirming three deaths, but does not explicitly connect named mourners to the truck."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza publisher/collector remains authoritative. No publication, approval, schedule changes, merge, or automation disable.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates and homepage",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report listed 20 November (report dated 18 November); no 21 November in-window OCHA update."
+      },
+      {
+        "source": "WHO global occupied Palestinian territory emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO emergency page accessible; no newly dated in-window health-system capacity or medical evacuation update."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Known recurring Bad Gateway; previously documented and not a newly material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza killed wounded after 06:00 PM",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza Israeli attack killed wounded evening",
+      "site:aljazeera.com/news/2026/11/21/ Gaza 2026 Saturday evening ceasefire strikes killed injuries aid",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Saturday afternoon WCK Israeli strikes aid ceasefire",
+      "site:apnews.com/article/ November 21 2026 Gaza Israel violence aid hostage Saturday",
+      "site:un.org OR site:ochaopt.org \"21 November 2026\" Gaza humanitarian casualties access clinics",
+      "site:palestinercs.org OR site:ifrc.org Gaza \"21 November 2026\" ambulance hospital injured clinic",
+      "site:unicef.org OR site:unrwa.org Gaza \"21 November 2026\" water tents displacement aid",
+      "site:wfp.org OR site:logcluster.org OR site:iom.int Gaza \"21 November 2026\" food access shelter crossings",
+      "site:who.int OR site:healthcluster.who.int \"21 November 2026\" Gaza hospital medical evacuation fuel health",
+      "Rafah Kerem Shalom November 21 2026 crossing Gaza aid patients fuel restrictions Saturday evening",
+      "Gaza 21 November 2026 19:00 Gaza local new Palestinians killed wounded Israeli operations latest"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza-specific report posted 18:05 Gaza time (08:05 PST), before current observation window; no subsequent dated Gaza-specific article displayed."
+      },
+      {
+        "source": "AP 21 November Middle East report and photo captions",
+        "url": "https://apnews.com/article/mideast-iran-gaza-israel-november-21-2026-29159a6f3365ff447c0ccbd1d7260f75",
+        "result": "AP funeral photo captions named three men killed by an Israeli airstrike; same article reported food truck strike with three deaths per Shifa Hospital director; association of names with vehicle occupants not explicit."
+      },
+      {
+        "source": "Al Jazeera 21 November report",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "result": "Three Tel al-Hawa fatalities, one Jabalia/ Halawa fatality and Al-Mawasi injuries; prior watch already recorded matching casualty events; three Al-Mawasi bicycle-related injuries may overlap earlier three-injury incident, not additive."
+      },
+      {
+        "source": "The Guardian displaced families feature",
+        "url": "https://www.theguardian.com/world/2026/nov/21/displaced-families-gaza-winter-misery",
+        "result": "Feature published 21 Nov 06:00 CET, i.e. 20 Nov 21:00 PST, predating watch; quotes older rain and shelter conditions, not new in-window event."
+      }
+    ],
+    "excluded_candidates": [
+      "Previous Nuseirat youth injury, seven earlier Jabalia/Al-Mawasi injuries, Jabalia camp death and Tel al-Hawa three fatalities are duplicates.",
+      "WCK denial of affiliation, AFP food ration van caption and Reuters WCK-logo observation logged in prior hours.",
+      "AP references three deaths and Shifa Hospital director but not new deaths; new element is recovered named funeral photo captions only.",
+      "Al Jazeera references three injured in Al-Mawasi electric bicycle attack; likely overlap with prior three injuries south Al-Mawasi and no verified distinct location/time, so not counted separately.",
+      "OCHA and WHO updates are older; Guardian flooding feature dated before window; no new medical capacity, crossing, evacuation, ceasefire, water, or fuel change verified.",
+      "Search-result summaries attributing more specific militant affiliation than original AP text were not adopted; original AP simply says Israeli military claimed militants in area."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO unavailable (persistent known 502), while WHO global, OCHA and major reporting accessible; DEGRADED, not FAILED.",
+      "AP caption report has no verified publication clock time or independent evidence that the detail appeared in this hour; this is bounded newly recovered source context.",
+      "Article/photo context does not explicitly name the vehicle occupants; casualty count unchanged.",
+      "A maximum of twelve additional targeted searches was observed; no claim of exhaustive recall."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

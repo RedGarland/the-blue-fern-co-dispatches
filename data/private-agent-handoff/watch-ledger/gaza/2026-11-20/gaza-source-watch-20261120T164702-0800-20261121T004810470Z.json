@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T164702-0800-20261121T004810470Z",
+  "scheduled_for": "2026-11-20T16:44:51-08:00",
+  "started_at": "2026-11-20T16:47:02-08:00",
+  "completed_at": "2026-11-21T00:48:10.470Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T15:51:34.946-08:00",
+    "end": "2026-11-21T00:48:10.470Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T154927-0800-20261120T235134946Z.json",
+    "basis": "Bounded check since the most recent heartbeat, whose completed_at and zero findings were confirmed via GitHub authenticated branch readback. Retrospective reports were screened for missed developments, but prior-day incidents and previously recorded events were excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only. Primary Gaza collector and publisher remain authoritative and unchanged.",
+    "source_priority": "Checked OCHA OPT and WHO first; then 12 additional targeted searches, primary/official humanitarian and established reporting preferred.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Directly checked November 20 updates index and Humanitarian Situation Report | 18 November 2026 (publication Nov 20, events principally Nov 10–16). No new within-window operational change identified."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Current WHO emergency overview checked; no newly dated health-function, fuel, ambulance or medical-evacuation development in the window."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "detail": "Direct regional source timed out, as on prior hourly watches; no new material degradation. WHO global was accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 21 2026 overnight shelling injured killed Saturday early Gaza hospitals 20 November Friday evening",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"20/November/2026\" \"PM\" killed wounded",
+      "site:aa.com.tr/en/middle-east/ \"Nov 20, 2026\" Gaza Friday late killed injured shelter",
+      "site:un.org OR site:unnews.un.org Gaza \"20 November 2026\" humanitarian Friday late updated aid hospitals crossings",
+      "site:who.int Gaza \"20 November 2026\" OR \"21 November 2026\" patients evacuation fuel ambulances",
+      "site:palestinercs.org OR site:msf.org Gaza \"20 November 2026\" ambulance hospital medical fuel evacuation",
+      "Gaza 20 November 2026 21 November 2026 aid trucks fuel Kerem Shalom Rafah crossing new closure reopening UN OCHA",
+      "Gaza 21 Nov 2026 overnight civilians displaced shelling rain flooding Friday November 20 2026 Reuters AP",
+      "Gaza 20 Nov 2026 evening November 21 ceasefire negotiation hostages detainees Israeli Palestinian new development",
+      "November 20 2026 Israeli incursion Bureij Nuseirat thousands displaced shelters Gaza Salah al Din Reuters AP",
+      "site:aljazeera.com/news/2026/11/20/ Gaza \"displaced\" incursion Bureij Nuseirat",
+      "Gaza November 21 2026 latest after midnight local 2am military strikes civilians medical crossings"
+    ],
+    "source_observations": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "note": "Nov 20 dated publication details 10–16 Nov casualties, healthcare and medevacs, humanitarian trucks, food/market access and storm damage; examined against earlier Nov 20 ledgers, no fresh distinct change."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "note": "Latest-news index reviewed; Gaza-specific Bureij and Deir al-Balah items from Nov 20 had already been recorded. Later articles dealt mainly with West Bank incidents or advocacy."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/7-palestinians-killed-at-least-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+        "note": "Seven killed and at least thirteen injured in overlapping Nov 20 incidents: four Bureij, two Deir al-Balah, one Nuseirat, plus Maghazi and Sabra injuries and Shuja'iyya/Khan Younis demolitions. No verified additional distinct impact after prior watch."
+      },
+      {
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/11/19/palestinians-in-gaza-face-new-displacement-after-israeli-army-operation",
+        "note": "About 6,000 displaced around Nuseirat/Bureij as part of Nov 18 ground operation, already reported Nov 19 and not a fresh within-window event."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israeli-military-begins-new-thrust-gaza-kills-three-people-2026-11-18/",
+        "note": "Nov 18 operation corroborated retrospectively, not a new Nov 20 incident."
+      },
+      {
+        "publisher": "UN Secretariat",
+        "url": "https://www.un.org/sg/fr/node/401528",
+        "note": "Nov 20 noon briefing appeared in search, direct fetch gave HTTP 403, so no unsupported detail was extracted."
+      }
+    ],
+    "excluded_candidates": [
+      "Bureij four fatalities, Deir al-Balah two-versus-one casualty discrepancy, Nuseirat killing and displaced-tent injuries, Maghazi and Sabra injuries, Shuja'iyya and Khan Younis demolitions already logged in earlier Nov 20 watch heartbeats.",
+      "Nov 18 Nuseirat/Bureij ground operation, closure and reopening of Salah al-Din road and reported ~6,000 people displaced were reported Nov 18–19; no new within-window change.",
+      "UN/OCHA Nov 20 release included historical Nov 10–16 humanitarian data; no newly verified delta since predecessor.",
+      "Ceasefire and crossing search results either repeated earlier reports, were older 2023–2025 date collisions, or lacked direct corroboration.",
+      "Opinion, unverified social material, duplicative headline aggregates, advocacy with no changed operating condition, and West Bank-only events excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "Timeout",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO legacy URL",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-occupied-Palestinian-territory",
+        "error": "HTTP 404; corrected URL successfully accessed",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN Secretariat noon briefing",
+        "url": "https://www.un.org/sg/fr/node/401528",
+        "error": "HTTP 403 on direct page fetch; search excerpt available",
+        "material_new_degradation": false
+      }
+    ],
+    "material_new_degradation": false,
+    "coverage_limitations": [
+      "WHO regional page and one UN Secretariat briefing page were unavailable; OCHA OPT, WHO global, WAFA, Anadolu and other sources remained usable.",
+      "Article timestamp ambiguity and overlapping casualty aggregates prevent claims of additional fatalities or new within-hour events.",
+      "No inspection, editing, publishing, or approval of primary production; this watch does not assert that production has or has not collected any event."
+    ],
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T154927-0800-20261120T235134946Z.json",
+      "read_verified": true,
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

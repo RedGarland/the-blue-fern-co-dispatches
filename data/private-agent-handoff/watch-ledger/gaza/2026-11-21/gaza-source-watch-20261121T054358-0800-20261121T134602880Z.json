@@ -1,0 +1,169 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T054358-0800-20261121T134602880Z",
+  "scheduled_for": "2026-11-21T05:44:51-08:00",
+  "started_at": "2026-11-21T05:43:58-08:00",
+  "completed_at": "2026-11-21T05:46:02-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T04:44:40.593-08:00",
+    "end": "2026-11-21T05:46:02-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T044325-0800-20261121T124440593Z.json",
+    "basis": "Last prior ledger identified by authenticated GitHub directory listing and readback. Searches ran after that heartbeat; publication times unavailable for the newly recovered Al Jazeera report, so discovery after predecessor is supported but in-hour publication/event timing is not proven. Gaza reports dated 21 Nov; observation boundaries PST."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-jabalia-halawa-shooting-one-killed-aljazeera",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+      "title": "Israeli attacks on Gaza kill at least four Palestinians",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": null,
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Halawa displacement camp, east of Jabalia refugee camp, northern Gaza Strip",
+      "affected_population_system": "One Palestinian man reportedly killed by Israeli gunfire at a displacement camp; civilian/combatant status not independently established.",
+      "exact_supporting_passage": "a Palestinian man was killed by Israeli gunfire",
+      "source_type": "Established international news reporting; single-source killing report",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Fourth of twelve targeted web searches, then direct source read",
+        "observed_after": "2026-11-21T04:44:40.593-08:00",
+        "published_within_window": null,
+        "first_seen_during_watch": true,
+        "prior_overlap": "Earlier WAFA report described two people injured at Jabalia-area displacement camps, not this distinct reported fatality; do not combine as one incident or assume timestamps.",
+        "relevant_miss_classes": [
+          "civilian casualties",
+          "displacement-site security",
+          "military operations with documented civilian impact"
+        ],
+        "caveats": "Exact publication hour, time of shooting, victim identity, military/civilian status and independent corroboration unavailable; dated Nov 21, newly recovered since prior watch, not proven to have happened or been published during this hour."
+      }
+    },
+    {
+      "finding_id": "gaza-20261121-tel-al-hawa-food-rations-van-afp-followup",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+      "title": "AFP image caption links fatal Tel al-Hawa vehicle strike to food-ration transport",
+      "publisher": "Al Jazeera (AFP photograph/caption)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": null,
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Al-Sina'a Street, Tel al-Hawa, western Gaza City, Gaza Strip",
+      "affected_population_system": "Vehicle reportedly carrying food rations for displaced people; this is the same Tel al-Hawa strike with three fatalities already recorded in previous heartbeat, not additional deaths. Whether delivery was disrupted beyond loss of the vehicle is unknown.",
+      "exact_supporting_passage": "transporting food rations to displaced people",
+      "source_type": "AFP news photo caption carried by established news publisher",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Al Jazeera 21 Nov report identified during targeted search; AFP-caption source evidence, not independent incident count",
+        "observed_after": "2026-11-21T04:44:40.593-08:00",
+        "published_within_window": null,
+        "prior_overlap": "Links to prior gaza-20261121-tel-al-hawa-vehicle-airstrike-3-killed-wafa-177167 finding, not a new three-fatality incident.",
+        "relevant_miss_classes": [
+          "food access",
+          "aid/delivery vehicle affected by military operation",
+          "civilian casualties follow-up"
+        ],
+        "caveats": "AFP visual caption describes van transporting food rations; ownership/aid agency, food quantity, and operational impact unconfirmed; no double count of casualties."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall; production remains authoritative. No publish, approve, schedule, or task-management actions.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates/homepage",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian situation report 18 Nov, posted 20 Nov; no newly dated update in the observation window."
+      },
+      {
+        "source": "WHO global occupied Palestinian territory emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Accessible; emergency update listings predate current hour, no fresh healthcare-system change documented."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway; previously documented persistent limitation, not a new material failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza Saturday November 21 2026 15:00 afternoon latest Israeli strike casualties Palestinians",
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza \"03:\"",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza killed wounded Israeli",
+      "site:aljazeera.com/news/2026/11/21 Gaza Palestinians casualties ceasefire Saturday",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Palestinians Israeli strike aid",
+      "site:apnews.com/article/ Gaza November 21 2026 killed injured civilians ceasefire",
+      "site:palestinercs.org OR site:ifrc.org Gaza \"21 November 2026\" ambulance hospital wounded",
+      "site:unrwa.org OR site:unicef.org Gaza November 21 2026 shelter water displaced humanitarian",
+      "site:wfp.org OR site:logcluster.org Gaza November 21 2026 food aid crossing delivery fuel",
+      "site:who.int OR site:healthcluster.who.int Gaza November 21 2026 medical evacuation hospital operations capacity",
+      "Gaza Rafah Kerem Shalom crossings November 21 2026 aid patients restrictions reopened",
+      "Gaza November 21 2026 Jabalia Halawa displacement camp Palestinian man killed gunfire aid food vehicle ceasefire negotiations detainees"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza casualty story at 13:03 Gaza-local (03:03 PST), previously logged; 15:17 Gaza-local GCC statement was diplomatic reaction, not qualifying material event."
+      },
+      {
+        "source": "Al Jazeera 21 Nov report",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "result": "Newly recovered Jabalia camp death alongside repeat of 3 Tel al-Hawa deaths; AFP image caption identifies vehicle carrying food rations."
+      },
+      {
+        "source": "Middle East Monitor 21 Nov reporting from Anadolu",
+        "url": "https://www.middleeastmonitor.com/20261121-6-palestinians-wounded-in-israeli-ceasefire-violations-across-gaza/",
+        "result": "Six injuries in north and south, overlapping prior seven-injury WAFA incidents with nonidentical estimates; no safe additive count; older Khan Younis demolitions included."
+      },
+      {
+        "source": "The National 21 Nov report",
+        "url": "https://www.thenationalnews.com/news/mena/2026/11/21/strikes-kill-nine-in-gaza-as-board-of-peace-adviser-criticises-israel/",
+        "result": "Three on Saturday in Gaza City same earlier WAFA finding; six Friday fatalities and board commentary are earlier/contextual."
+      }
+    ],
+    "excluded_candidates": [
+      "Three Tel al-Hawa deaths: preceding heartbeat already counted; only AFP food-ration transport detail is new as a follow-up.",
+      "Seven WAFA injuries in Jabalia and Al-Mawasi were previously recorded; six injuries in syndicated Anadolu report likely overlap; avoid additive counts or claiming corrected total without verification.",
+      "Previous Friday central Gaza deaths, East Khan Younis demolitions and October/November humanitarian aggregate items were older than prior window.",
+      "GCC condemnation and diplomatic commentary not operational ceasefire changes; West Bank incident articles not part of Gaza dispatch.",
+      "No in-hour primary-source report confirming new healthcare-capacity, evacuation, crossing, fuel or water-service changes."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Al Jazeera date verified as 21 Nov but publication clock time not exposed; new discoveries cannot be proven events or articles first appearing within hour.",
+      "Single source for new fatality; no independently confirmed victim status.",
+      "AFP caption substantiates ration-transport association but not quantity delivered, service disruption, or whether vehicle was operated by an aid agency.",
+      "WHO Eastern Mediterranean still inaccessible; OCHA and WHO global as well as other news sources accessible, therefore DEGRADED not FAILED.",
+      "Production collector and draft state not inspected; source and authenticated previous watch ledger deduplication only."
+    ],
+    "new_developments": 2,
+    "material_new_degradation": false,
+    "prior_heartbeat_read_verified": true,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

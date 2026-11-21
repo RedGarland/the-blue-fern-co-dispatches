@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T073954-0800-20261121T154128103Z",
+  "scheduled_for": "2026-11-21T07:44:51-08:00",
+  "started_at": "2026-11-21T07:39:54-08:00",
+  "completed_at": "2026-11-21T15:41:28.103Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T06:47:45.184-08:00",
+    "end": "2026-11-21T15:41:28.103Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T064605-0800-20261121T144745184Z.json",
+    "basis": "Authenticated retrieval of preceding 06:47:45.184 PST heartbeat. The runtime invoked this check at 07:39:54 PST, earlier than the 07:44:51 PST nominal hourly slot; scheduled_for records that nominal slot, while started_at and search_window reflect actual observation. No confirmed newly published/in-window material event, and historical or previously logged items excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall; authoritative daily production/collector untouched. No publication, approval, schedule mutation or automation management.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza humanitarian situation report listed November 20, covering conditions to November 18; no new report published in observed interval."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Bad Gateway, previously documented persistent source failure; this run did not introduce a materially new degradation."
+      },
+      {
+        "source": "WHO global Israel and occupied Palestinian territory emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Accessible overview and health-response page with no new timestamped health, evacuation, fuel or facility-capacity change published within observation window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"21/November/2026\" killed wounded 21 Saturday afternoon",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 21, 2026\" killed wounded aid Israeli strikes",
+      "site:aljazeera.com/news/2026/11/21/ Gaza latest airstrikes fatalities November 21 evening",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Saturday latest Israeli attacks aid vehicle ceasefire",
+      "site:apnews.com/article/ Gaza November 21 2026 strikes aid ceasefire latest",
+      "site:un.org OR site:ochaopt.org \"21 November 2026\" Gaza aid access hospitals displaced",
+      "site:palestinercs.org OR site:ifrc.org Gaza \"21 November 2026\" ambulance rescue medical transports casualties",
+      "site:unicef.org OR site:unrwa.org \"21 November 2026\" Gaza tents flooding displacement water food",
+      "site:wfp.org OR site:wck.org \"21 November 2026\" Gaza food distribution vehicle incident",
+      "site:who.int OR site:healthcluster.who.int Gaza \"21 November 2026\" hospital capacity fuel medical evacuation health",
+      "Gaza Rafah Kerem Shalom November 21 2026 crossing aid medical evacuations fuel access update",
+      "Gaza November 21 2026 hostages detainees ceasefire negotiations Israeli military operations civilian toll latest"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza incident article dated November 21 at 13:03 Gaza time (03:03 PST), before predecessor; other later displayed item at 15:17 Gaza time was condemnation without new documented civilian/humanitarian impact."
+      },
+      {
+        "source": "WAFA central Gaza airstrike article",
+        "url": "https://english.wafa.ps/Pages/Details/177154",
+        "result": "Two deaths at Bureij previously reported November 20 at 19:26 Gaza time, outside the hourly observation interval."
+      },
+      {
+        "source": "Reuters Gaza aid vehicle article",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "WCK-logo/food distribution follow-up already logged in predecessor heartbeat at 06:47:45 PST; not re-added."
+      },
+      {
+        "source": "Al Jazeera candidate liveblog direct read",
+        "url": "https://www.aljazeera.com/news/liveblog/2026/11/21/israel-gaza-war-live",
+        "result": "Direct page inaccessible via retrieval tool; targeted search returned no new verified in-window material event."
+      }
+    ],
+    "excluded_candidates": [
+      "Reuters food-distribution vehicle and three Tel al-Hawa deaths already covered in prior two heartbeats; no repeated casualties.",
+      "WAFA November 21 seven injuries across Jabalia and Al-Mawasi and Jabalia camp fatality logged in earlier heartbeats.",
+      "WAFA November 20 two Bureij camp fatalities published before this observation window.",
+      "OCHA latest situation report and November 18 Board of Peace ceasefire concerns precede the observation window.",
+      "Search results on prior hospital strikes, aid crossings, displacement and humanitarian conditions lack an attributable new in-window update."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Al Jazeera direct liveblog URL",
+        "url": "https://www.aljazeera.com/news/liveblog/2026/11/21/israel-gaza-war-live",
+        "error": "Page unavailable at attempted URL; not established as a current existing liveblog",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO regional reports inaccessible; OCHA and WHO global available, hence DEGRADED rather than FAILED.",
+      "Bounded web search cannot prove absence of unreported events or publication-time-indexing delays.",
+      "GitHub previous heartbeat content verified; no directory-wide enumeration of intervening heartbeats available from current connector call."
+    ]
+  }
+}

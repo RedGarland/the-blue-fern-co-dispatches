@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T084630-0800-20261121T164630Z",
+  "scheduled_for": "2026-11-21T08:44:51-08:00",
+  "started_at": "2026-11-21T08:46:30-08:00",
+  "completed_at": "2026-11-21T16:48:14.980Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T07:41:28.103-08:00",
+    "end": "2026-11-21T16:48:14.980Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T073954-0800-20261121T154128103Z.json",
+    "basis": "Authenticated GitHub directory listing and read of 07:41:28 PST predecessor; OCHA OPT and WHO checked first, followed by exactly 12 targeted web searches. Dates/times use PST for observation. WAFA article publication at 18:05 Gaza local (08:05 PST) is inside the interval. Reuters WCK clarification is new against prior watch content, but updated passage's timestamp is not verifiable."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-nuseirat-al-daawa-drone-injury-wafa-177171",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177171",
+      "title": "Palestinian youth wounded by Israeli drone fire in central Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": "18:05:00+02:00",
+      "publication_datetime": "2026-11-21T18:05:00+02:00",
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Al-Daawa area, northeast of Nuseirat refugee camp, central Gaza Strip",
+      "affected_population_system": "One Palestinian youth reportedly wounded by Israeli drone gunfire and transported to hospital, according to a medical source. Distinct from earlier Jabalia and Al-Mawasi injuries and the Tel al-Hawa vehicle strike.",
+      "exact_supporting_passage": "A medical source reported that the youth was brought to hospital after being directly shot by an Israeli drone in the al-Daawa area, northeast of the camp.",
+      "source_type": "Palestinian official news agency reporting a medical source",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA homepage check after official-first OCHA and WHO and 12 targeted searches; then opened WAFA article",
+        "observed_after": "2026-11-21T07:41:28.103-08:00",
+        "published_within_window": true,
+        "publication_time_basis": "WAFA page 21/November/2026 06:05 PM, Gaza local UTC+02:00, equivalent 08:05 PST",
+        "relevant_miss_classes": [
+          "civilian injury",
+          "military operation with civilian impact",
+          "healthcare transport"
+        ],
+        "prior_overlap": "Predecessor contains no Nuseirat/al-Daawa drone-injury report; earlier seven injuries concern Jabalia and Al-Mawasi, not this location.",
+        "caveats": "Single medical-source account relayed by WAFA; identity, age, condition, exact injury time and independent corroboration unavailable. Do not infer a death or hospital capacity change."
+      }
+    },
+    {
+      "finding_id": "gaza-20261121-tel-al-hawa-world-central-kitchen-denies-affiliation-reuters-followup",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+      "title": "World Central Kitchen says Gaza food-carrying vehicle struck in Tel al-Hawa was not affiliated with it",
+      "publisher": "Reuters, quoting World Central Kitchen",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": null,
+      "publication_datetime": null,
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Tel al-Hawa, Gaza City, Gaza Strip",
+      "affected_population_system": "World Central Kitchen explicitly denied affiliation with the food-carrying vehicle struck in the already recorded incident. This corrects the possible inference of WCK involvement from branded papers seen in the vehicle. The three fatalities are previously counted; no additional deaths or confirmed WCK-staff casualties.",
+      "exact_supporting_passage": "World Central Kitchen, an aid organisation that distributes food in the Gaza Strip, said, however, that the vehicle was not affiliated with it.",
+      "source_type": "Established international wire agency directly attributing organization response to World Central Kitchen",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "discovered_via": "Reuters article revisited during targeted search and direct opening; new attributed response not present in 06:47 and 07:41 predecessor context",
+        "observed_after": "2026-11-21T07:41:28.103-08:00",
+        "published_within_window": null,
+        "publication_time_basis": "Reuters original publication 2026-11-21 13:53 UTC (05:53 PST); its later article update includes the WCK denial but has no verifiable update timestamp ('Updated ago'). It cannot be proven that WCK responded during this hour.",
+        "relevant_miss_classes": [
+          "aid distribution",
+          "food access",
+          "source correction/attribution",
+          "military operation with civilian impact"
+        ],
+        "prior_overlap": "Same Tel al-Hawa three-fatality vehicle strike; prior 06:47 watch reported WCK-branded papers and no response from WCK. This finding supersedes any suggestion of actual WCK affiliation without adding casualty counts.",
+        "caveats": "Denial of WCK affiliation does not disprove presence of food, branded papers or witness account of intended distribution. Does not independently establish another organization's ownership, the victims' roles, or a program-wide disruption."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. Primary daily publisher/collector production remains authoritative; no publication, approval, schedule mutation or automation disable.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed 20 Nov 2026 Gaza situation report with earlier reporting-period conditions; no newly posted Gaza bulletin during observation window."
+      },
+      {
+        "source": "WHO global oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview accessible; no timestamped in-window updates to hospitals, ambulance transport, fuel or medical evacuations."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Bad Gateway persisted; source limitation already documented in preceding watches, not a newly material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza killed injured afternoon evening",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 21, 2026\" Palestinians Israeli wounded killed aid",
+      "site:aljazeera.com/news/2026/11/21 Gaza Israeli strikes afternoon Saturday death toll humanitarian",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Saturday latest airstrike ceasefire hospitals food",
+      "site:apnews.com/article/ Gaza November 21 2026 Saturday Israel strikes humanitarian",
+      "site:un.org OR site:ochaopt.org Gaza \"21 November 2026\" humanitarian access crossing displacement",
+      "site:palestinercs.org OR site:ifrc.org Gaza \"21 November 2026\" ambulance patient hospital medical",
+      "site:unicef.org OR site:unrwa.org Gaza \"21 November 2026\" water aid children displacement",
+      "site:wfp.org OR site:wck.org \"21 November 2026\" Gaza food distribution aid incident",
+      "site:who.int OR site:healthcluster.who.int Gaza \"21 November 2026\" fuel medical evacuation functioning hospital",
+      "Rafah Kerem Shalom Gaza 21 November 2026 crossing humanitarian trucks evacuation Saturday latest",
+      "Gaza Nov 21 2026 after 1600 Gaza time killed injured hostages ceasefire negotiations Israeli operations"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/",
+        "result": "New article posted at 18:05 Gaza local on one youth wounded in Nuseirat; other recent items relate to West Bank arrests or pre-window Gaza incidents and diplomatic condemnation."
+      },
+      {
+        "source": "WAFA Nuseirat report",
+        "url": "https://english.wafa.ps/Pages/Details/177171",
+        "result": "Medical source confirms one reported drone-gunfire injury and hospital admission; time of news posting inside window."
+      },
+      {
+        "source": "Reuters Tel al-Hawa aid-vehicle report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Now explicitly reports World Central Kitchen denial of vehicle affiliation; modification time undisclosed. Prior fatality count and food observation remain the same."
+      },
+      {
+        "source": "World Central Kitchen news index",
+        "url": "https://wck.org/news/",
+        "result": "No standalone official 21 Nov statement displayed in the news index; WCK denial attributed by Reuters, not independently dated."
+      }
+    ],
+    "excluded_candidates": [
+      "Earlier three Tel al-Hawa vehicle-strike deaths, Jabalia camp fatality, seven injuries in Jabalia/Al-Mawasi, prior Bureij deaths: duplicates, not additive.",
+      "WAFA 21 Nov Gaza aggregate death toll article before current window; not a new independently documented incident.",
+      "OCHA situation report and prior WHO materials predate current observation window.",
+      "West Bank news, commentary/condemnations and historical reports excluded.",
+      "No verifiable in-window changes to medical-evacuation capacity, hospital function, crossings, fuel, water or ceasefire terms."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO remains inaccessible (known persistent 502); OCHA and WHO global plus established news sources remain accessible, so DEGRADED rather than FAILED.",
+      "Reuters update time for WCK denial not independently timestamped; treated as newly recovered clarification, not a proven in-hour publication.",
+      "Single-source WAFA medical-source report is traceable but independently uncorroborated.",
+      "No extra targeted searches beyond the 12 recorded; no claim of exhaustive detection."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

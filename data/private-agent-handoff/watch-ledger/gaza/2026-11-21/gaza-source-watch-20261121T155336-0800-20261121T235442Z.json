@@ -1,0 +1,117 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T155336-0800-20261121T235442Z",
+  "scheduled_for": "2026-11-21T15:44:51-08:00",
+  "started_at": "2026-11-21T15:53:36-08:00",
+  "completed_at": "2026-11-21T15:54:42-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T14:46:17-08:00",
+    "end": "2026-11-21T15:54:42-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T144539-0800-20261121T224617Z.json",
+    "basis": "Last completed hourly heartbeat read through authenticated GitHub connector. OCHA OPT and WHO primary pages inspected first, then 12 distinct targeted web searches. Discovery-oriented window, not an assertion that all events occurred within the hour."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza situation report was Humanitarian Situation Report | 18 November 2026, posted 20 November; no newer Gaza situation report listed at check."
+      },
+      {
+        "source": "WHO global oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Page accessible; latest Gaza-specific items dated prior to the observation hour, no newly listed time-specific change in hospital operation, ambulance access, fuel, supplies or medical evacuations."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct access returned 502 Bad Gateway. Known recurring source failure; WHO global page provides limited fallback."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps \"21/November/2026\" Gaza 23:00 22:00 killed wounded",
+      "site:english.wafa.ps \"22/November/2026\" Gaza dawn attack shelling wounded killed",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Saturday late evening Gaza civilians aid violence",
+      "site:apnews.com/article/ Gaza November 21 2026 latest injured hospital strike",
+      "site:aljazeera.com/news/liveblog/2026/11/21 Gaza updates late Saturday evening",
+      "site:aa.com.tr/en/middle-east/ Gaza November 22 2026 Sunday 01:00 02:00 casualties ceasefire",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 21 2026 ambulance wounded emergency access",
+      "site:unrwa.org OR site:un.org Gaza November 21 2026 22 2026 tents food shelter access",
+      "site:unicef.org OR site:wfp.org Gaza November 21 22 2026 water malnutrition aid interruption",
+      "site:reliefweb.int Gaza 21 November 2026 22 November hospital fuel medical evacuation update",
+      "Gaza November 21 November 22 2026 Rafah Kerem Shalom crossing humanitarian trucks fuel medical patients",
+      "Gaza November 21 22 2026 ceasefire talks hostages detainees release new strike injured civilians"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Page headed 22 November locally but newest visible Gaza-specific report still 21 November 21:42 Gaza time, the Beit Lahia woman wounded; already logged by 12:44 PST predecessor. No newer Gaza injury report visible."
+      },
+      {
+        "source": "Reuters Gaza truck strike",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Three men killed, food vehicle and World Central Kitchen denial already logged earlier; no separately verified same-hour change."
+      },
+      {
+        "source": "AP Middle East roundup",
+        "url": "https://apnews.com/article/mideast-iran-gaza-israel-november-21-2026-29159a6f3365ff447c0ccbd1d7260f75",
+        "result": "Reiterates existing Tel al-Hawa deaths and Israeli military allegation, not a separate verified incident. Publication-time change not verified."
+      },
+      {
+        "source": "Al Jazeera November 21 Gaza report",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "result": "Reports same four Saturday fatalities and prior flooding/aid context, no new hourly development."
+      },
+      {
+        "source": "Anadolu prior updated casualty tally",
+        "url": "https://www.aa.com.tr/en/middle-east/4-palestinians-killed-14-others-wounded-in-israeli-ceasefire-violations-across-gaza/4133171",
+        "result": "Direct page fetch unavailable in this run; prior authenticated heartbeat had already logged its Saturday four-fatality and fourteen-injury revised count, so no incremental finding claimed."
+      }
+    ],
+    "excluded_candidates": [
+      "November 21 Tel al-Hawa food truck strike killed three; reported food distribution context, WCK denial, and AP funeral captions all previously logged.",
+      "Jabalia/Halawa fatality and previously reported injuries in Nuseirat, Beit Lahia, Khan Younis/Al-Mawasi and Al-Maslakh already logged, including updated count of 14 Saturday injuries; no double-counting.",
+      "WAFA morning Gaza Health Ministry cumulative/24-hour tallies dated before observation window; earlier entries not newly published.",
+      "OCHA, WHO, UNICEF, UNRWA and WFP historical/aggregate flood, shelter, health and food reports predate watch window; November 2023 and 2025 November 21 headlines excluded.",
+      "No new source-supported same-hour evacuation, crossing, food/water, fuel, functioning capacity, detention/hostage or negotiation development found in bounded search."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean regional reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Anadolu article direct view",
+        "url": "https://www.aa.com.tr/en/middle-east/4-palestinians-killed-14-others-wounded-in-israeli-ceasefire-violations-across-gaza/4133171",
+        "error": "Direct web open unavailable; prior official ledger provided known content",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO remains inaccessible, consistent with the prior heartbeat's documented WHO regional outage; classification DEGRADED rather than FAILED.",
+      "Web indexing and source publication can lag, and 12 searches do not demonstrate the absence of developments.",
+      "Reporting dates versus event dates are distinguished; recycled same-day casualty totals are not counted as new individuals."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

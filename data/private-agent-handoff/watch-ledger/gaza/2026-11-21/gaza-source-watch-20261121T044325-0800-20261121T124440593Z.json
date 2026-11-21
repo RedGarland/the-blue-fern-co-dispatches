@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T044325-0800-20261121T124440593Z",
+  "scheduled_for": "2026-11-21T04:44:51-08:00",
+  "started_at": "2026-11-21T04:43:25-08:00",
+  "completed_at": "2026-11-21T04:44:40.593-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T03:47:13.229-08:00",
+    "end": "2026-11-21T04:44:40.593-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T034549-0800-20261121T114549Z.json",
+    "basis": "Prior authenticated watch heartbeat completed at 2026-11-21T11:47:13.229Z (03:47:13.229 PST). Only subsequently published or newly verifiable developments qualify; previously observed item 177167 excluded. Search/index timestamps are not treated as publication timestamps."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; production collector/publisher is authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian situation report 18 November, posted 20 November; no new in-window update."
+      },
+      {
+        "source": "WHO global Israel and occupied Palestinian territory emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated in-window health-system, fuel, ambulance or medical-evacuation developments."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt portal",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway, the same known limitation seen in previous watches; WHO global fallback accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 21 2026 14:00 killed wounded strike Saturday afternoon",
+      "site:aa.com.tr/en/middle-east/ Gaza November 21 2026 Palestinians killed injured Israeli Saturday",
+      "site:aljazeera.com/news/2026/11/21 Gaza ceasefire attacks casualties aid hospitals",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 Palestinians strike aid",
+      "site:apnews.com/article/ Gaza November 21 2026 civilian killed injured Saturday ceasefire",
+      "site:palestinercs.org Gaza 21 November 2026 ambulance emergency injured hospital",
+      "site:unicef.org OR site:unrwa.org Gaza 21 November 2026 water displaced shelter aid",
+      "site:wfp.org OR site:logcluster.org Gaza 21 November 2026 food crossings trucks access",
+      "site:who.int OR site:healthcluster.who.int Gaza 21 November 2026 hospital patients evacuation fuel health service",
+      "Gaza Rafah Kerem Shalom crossing 21 November 2026 reopening aid medical evac restrictions",
+      "Gaza 21 November 2026 Saturday ceasefire negotiations hostages detainees Israeli operations civilian impact",
+      "site:english.wafa.ps/Pages/Details/ 21/November/2026 Gaza 02:00 PM injured killed hospital"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest visible Gaza item 21 Nov 13:03 Gaza time (03:03 PST), already in prior heartbeat; newer 14:12 Gaza-time item concerns the West Bank, excluded."
+      },
+      {
+        "source": "WAFA earlier Gaza vehicle strike",
+        "url": "https://english.wafa.ps/Pages/Details/177167",
+        "result": "The three reported deaths in Tel al-Hawa were recorded by prior heartbeat; not counted again."
+      },
+      {
+        "source": "OCHA Gaza weekly situation report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "result": "Published 20 Nov and covers 10-16 Nov; older than present observation window."
+      },
+      {
+        "source": "Al Jazeera Gaza 20 Nov attacks",
+        "url": "https://www.aljazeera.com/news/2026/11/20/israeli-drone-attacks-kill-seven-palestinians-in-central-gaza",
+        "result": "Prior-window casualty and demolition incidents; duplicate."
+      },
+      {
+        "source": "Anadolu 20 Nov attacks",
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+        "result": "20 Nov date, earlier incidents; not new."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA 21 Nov 13:03 Gaza time Tel al-Hawa airstrike: already in prior watch finding gaza-20261121-tel-al-hawa-vehicle-airstrike-3-killed-wafa-177167.",
+      "WAFA 21 Nov 12:09 Gaza-time retrospective Gaza casualties: older publication than predecessor.",
+      "WAFA 21 Nov 09:08 Gaza-time seven injuries in Jabalia and Al-Mawasi: earlier ledger findings.",
+      "20 Nov Anadolu and Al Jazeera casualties/demolitions; 18 Nov OCHA situation report; older Reuters/AP background; historical UNRWA reports including similarly titled November 21 reports from prior years.",
+      "21 Nov 14:12 Gaza-time WAFA Beit-area assault: West Bank, outside Gaza dispatch."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO regional website remains unavailable, but WHO global/OCHA OPT and 12 targeted searches gave useful coverage; mark DEGRADED, not FAILED.",
+      "Search-engine indexing may delay same-hour reports; this is not proof no incidents occurred.",
+      "No production collector or draft state inspected; comparison is against authenticated preceding ledger and source identities."
+    ],
+    "new_developments": 0,
+    "material_new_degradation": false,
+    "prior_heartbeat_read_verified": true,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

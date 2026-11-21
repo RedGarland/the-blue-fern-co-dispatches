@@ -1,0 +1,169 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-20-001",
+    "title": "Palestinian killed, several others injured in Israeli strikes across Gaza",
+    "summary": "WAFA reported, citing local sources, that an Israeli drone strike in the New Camp area near Nuseirat killed one person on Friday. The report separately described injuries in Sabra and from a late-Thursday incident; those separate incidents are not merged into the Nuseirat fatality.",
+    "category": "civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 63,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-20-wafa-177139"
+    ],
+    "source_ids": [
+      "gaza-2026-11-20-wafa-177139"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/177139"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-20-wafa-177139",
+        "title": "Palestinian killed, several others injured in Israeli strikes across Gaza",
+        "url": "https://english.wafa.ps/Pages/Details/177139",
+        "publisher": "WAFA",
+        "summary_or_snippet": "WAFA reported, citing local sources, that an Israeli drone strike in the New Camp area near Nuseirat killed one person on Friday. The report separately described injuries in Sabra and from a late-Thursday incident; those separate incidents are not merged into the Nuseirat fatality.",
+        "published_at": "2026-11-20",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "editorial_label": "Anadolu Agency was consulted privately but is not included as an ingested record for this edition because reporting independence for the shared Nuseirat incident was not established.",
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "civilian_harm",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-21T02:00:30.153540+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 63,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "civilian_harm",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-20-002",
+    "title": "Italy and UN agencies partner to strengthen integrated services for children and young people across the Gaza Strip",
+    "summary": "UNICEF reported that an official Jerusalem launch on Nov. 20 announced a EUR 10 million, 18-month Gaza child-services programme. UNICEF said existing activity at four centres is already serving over 10,000 school-age children; more than 28,500 is a targeted reach across the named groups, not achieved reach. The programme had already begun, so this is not described as a new start.",
+    "category": "humanitarian_conditions",
+    "story_scope": "core_gaza",
+    "score": 37,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 8,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-20-unicef-integrated-services"
+    ],
+    "source_ids": [
+      "gaza-2026-11-20-unicef-integrated-services"
+    ],
+    "source_urls": [
+      "https://www.unicef.org/sop/press-releases/italy-and-un-agencies-partner-strengthen-integrated-services-children-and-young"
+    ],
+    "publisher_names": [
+      "UNICEF"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-20-unicef-integrated-services",
+        "title": "Italy and UN agencies partner to strengthen integrated services for children and young people across the Gaza Strip",
+        "url": "https://www.unicef.org/sop/press-releases/italy-and-un-agencies-partner-strengthen-integrated-services-children-and-young",
+        "publisher": "UNICEF",
+        "summary_or_snippet": "UNICEF reported that an official Jerusalem launch on Nov. 20 announced a EUR 10 million, 18-month Gaza child-services programme. UNICEF said existing activity at four centres is already serving over 10,000 school-age children; more than 28,500 is a targeted reach across the named groups, not achieved reach. The programme had already begun, so this is not described as a new start.",
+        "published_at": "2026-11-20",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian_conditions",
+        "attribution": "UNICEF",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-21T02:00:30.153540+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 37,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian_conditions",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "UNICEF",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

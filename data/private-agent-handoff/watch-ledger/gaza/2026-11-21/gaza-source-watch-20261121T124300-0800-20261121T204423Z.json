@@ -1,0 +1,149 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T124300-0800-20261121T204423Z",
+  "scheduled_for": "2026-11-21T12:44:51-08:00",
+  "started_at": "2026-11-21T12:43:00-08:00",
+  "completed_at": "2026-11-21T12:44:23-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T11:47:17-08:00",
+    "end": "2026-11-21T12:44:23-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T114717-0800-20261121T194717Z.json",
+    "basis": "Verified previous heartbeat via authenticated GitHub read and listed November 21 ledger. Direct checks of OCHA OPT and WHO preceded exactly 12 additional targeted searches. Discovery includes late-indexed WAFA reporting published five minutes before prior heartbeat but absent from its source check; treated as newly recovered, not as first published within the hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-beit-lahia-woman-gunshot-injury-wafa-177175",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177175",
+      "title": "Palestinian woman wounded by Israeli gunfire in northern Gaza",
+      "publisher": "Palestine News and Information Agency (WAFA)",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time": "21:42:00+02:00",
+      "publication_datetime": "2026-11-21T21:42:00+02:00",
+      "event_date": "2026-11-21",
+      "event_time": null,
+      "location": "Beit Lahia, northern Gaza Strip",
+      "affected_population_system": "One Palestinian woman wounded by Israeli forces' gunfire, according to WAFA. No identity, injury severity or hospital information stated. Distinct from earlier injuries in Jabalia, Al-Mawasi and Nuseirat.",
+      "exact_supporting_passage": "A Palestinian woman was wounded by Israeli forces' gunfire in the town of Beit Lahia, north of the Gaza Strip, on Saturday evening.",
+      "source_type": "Palestinian official news agency; direct local reporting; no separately named source",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA latest-news page after OCHA/WHO first checks and twelve targeted web searches; opened the article directly",
+        "observation_window_start": "2026-11-21T11:47:17-08:00",
+        "publication_time_basis": "WAFA dated 21/November/2026 09:42 PM Gaza local, equivalent to November 21 11:42 AM PST.",
+        "published_within_window": false,
+        "first_recovered_in_this_watch": true,
+        "source_visibility": "Prior 11:47 watch's WAFA LastNews check listed 20:33 Gaza-time article as latest and missed this 21:42 article, likely indexing/crawl latency; this newly observed direct report was not in predecessor ledger.",
+        "prior_overlap": "Earlier daily entries covered two Jabalia injuries, Al-Mawasi injuries, Nuseirat youth injury, and four fatalities in Tel al-Hawa/Jabalia, but not a Beit Lahia woman wounded that evening.",
+        "relevant_miss_classes": [
+          "civilian casualties",
+          "military operations with documented civilian impact"
+        ],
+        "caveats": "A single-source report; no independent corroboration, exact shooting time, identity, severity, or medical transport confirmed. Do not infer that the earlier four recorded deaths changed."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; daily Gaza production publisher/collector remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT Updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report listed 20 Nov 2026 (report dated 18 Nov); no new Gaza report published 21 Nov in observed window."
+      },
+      {
+        "source": "WHO global conflict-in-Israel-and-oPt page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new in-window report for Gaza health systems or medical evacuations visible."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct source HTTP 502 Bad Gateway; recurring known coverage limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza late evening killed wounded vehicle bombardment",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 afternoon Saturday civilian death strike humanitarian aid",
+      "site:apnews.com/article/ Gaza Nov 21 2026 evening ceasefire attacks casualties displaced",
+      "site:aljazeera.com/news/2026/11/21/ Gaza November 21 late Saturday injuries ceasefire",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza civilian wounded medical evacuation late",
+      "site:palestinercs.org OR site:ifrc.org Gaza 21 November 2026 ambulances health fuel medical evacuation",
+      "site:un.org OR site:unrwa.org Gaza November 21 2026 Saturday displaced shelter crossing UN aid",
+      "site:unicef.org OR site:iom.int Gaza November 21 2026 water sanitation displacement tents",
+      "site:wfp.org OR site:logcluster.org Gaza November 21 2026 food distribution trucks aid shortages 2026",
+      "Rafah Kerem Shalom Gaza 21 November 2026 new fuel medical patients border crossing late",
+      "Israel Hamas Gaza ceasefire negotiations hostages prisoners November 21 2026 Saturday evening latest development",
+      "Gaza November 21 2026 Saturday night 22:00 local Israeli strikes civilian injured killed November 21 evening WAFA"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Direct listing now includes a 21:42 Gaza-time report of a Beit Lahia woman wounded, not seen in previous watch's check."
+      },
+      {
+        "source": "WAFA 21:42 report",
+        "url": "https://english.wafa.ps/Pages/Details/177175",
+        "result": "Specific injury verified by opening source; other four fatalities repeated from older reports."
+      },
+      {
+        "source": "Al Jazeera 21 Nov article",
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "result": "Tel al-Hawa three fatalities, Halawa/Jabalia one fatality, Al-Mawasi injuries and WCK clarification are previously logged; no new tally."
+      },
+      {
+        "source": "Guardian 21 Nov winter/shelter feature",
+        "url": "https://www.theguardian.com/world/2026/nov/21/displaced-families-gaza-winter-misery",
+        "result": "Published 00:00 EST (21:00 PST preceding day), modified 00:08 EST. Cites earlier storms, shelter damage, aid shortages, troop movement; not new this hour."
+      },
+      {
+        "source": "Reuters 21 Nov Tel al-Hawa report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Same earlier three deaths and World Central Kitchen denial. No separately timed new update."
+      },
+      {
+        "source": "WFP/IOM winter joint statement",
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "result": "Dated 17 November 2026; contextual, not a new hourly development."
+      }
+    ],
+    "excluded_candidates": [
+      "The 21 Nov Tel al-Hawa vehicle strike (three dead), Jabalia/Halawa fatality, seven early injuries, Nuseirat youth injury, WCK denial and funeral identifications have been recorded in prior heartbeats; no additional deaths or follow-up repeated.",
+      "Al Jazeera's summary and WAFA cumulative casualty totals are updates to already documented reports, not separately counted casualties.",
+      "The Guardian 21 Nov feature first published 20 Nov PST and older WFP/IOM/UN situation reports describe previously observed humanitarian restrictions and flood effects.",
+      "A search-result article dated Nov 21 2026 reproduces 2023 hostage-exchange events, and another discusses a 2025 Ramadan truce as if current; rejected as recycled/misdated.",
+      "No new traceable in-hour health capacity, fuel, ambulance, medical evacuation, crossing, water, hostage/detention or ceasefire change verified in bounded coverage."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO situation reports unavailable, as in previous hourly checks; global WHO and OCHA remained accessible. DEGRADED, not FAILED; no new material failure.",
+      "WAFA Beit Lahia injury article timestamp precedes prior heartbeat close by five minutes but was absent in that prior watch's direct listing, hence late-discovered; do not claim published during observation window.",
+      "Twelve bounded targeted searches are not exhaustive; no false inference from untimed articles or source snippets."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

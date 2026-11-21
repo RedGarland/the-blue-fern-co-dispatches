@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261120T184332-0800-20261121T024332077Z",
+  "scheduled_for": "2026-11-20T18:44:51-08:00",
+  "started_at": "2026-11-20T18:42:38-08:00",
+  "completed_at": "2026-11-21T02:43:32.077Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-20",
+    "start": "2026-11-20T17:48:49.060-08:00",
+    "end": "2026-11-21T02:43:32.077Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T174743-0800-20261121T014849060Z.json",
+    "basis": "Latest preceding hourly heartbeat read and verified on ops/watch-ledger (completed 17:48:49.060 PST). Searched for newly documented Gaza impacts since then, with cautious retrospective review and explicit de-duplication. Latest reporting sites can show source-local or ambiguous publication clock times; do not infer within-hour novelty without supporting evidence."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza collector/publisher remains authoritative and unchanged.",
+    "official_first_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "detail": "Checked updates index directly. Most recent Gaza-specific situation publication was dated 20 Nov (Humanitarian Situation Report | 18 November 2026), mainly retrospective 10–16 Nov; no subsequent newly dated Gaza operational change in this window."
+      },
+      {
+        "publisher": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "detail": "Checked current WHO emergency page directly; no newly dated within-window healthcare capacity, fuel, ambulances, medical evacuation, or crossings changes."
+      },
+      {
+        "publisher": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "detail": "Direct page returned 502 Bad Gateway, consistent with documented previous hourly runs. WHO global remained accessible; not new material degradation."
+      }
+    ],
+    "initial_official_search_count": 2,
+    "initial_official_queries": [
+      "site:ochaopt.org Gaza humanitarian situation report 20 November 2026 latest update",
+      "site:who.int Gaza occupied Palestinian territory 20 November 2026 health update medical evacuations"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 21 2026 Saturday early hours Israeli strikes civilians killed wounded Bureij Nuseirat",
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" Gaza shelling injury killed",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 21 2026 dawn 20 November 2026 late",
+      "site:apnews.com Gaza November 20 2026 Friday evening November 21 2026 ceasefire civilian",
+      "site:reuters.com/world/middle-east/ Gaza November 20 2026 late evening November 21 2026 civilian aid ceasefire",
+      "site:un.org OR site:unnews.un.org Gaza \"20 November 2026\" hospital aid crossing new",
+      "site:english.wafa.ps/Pages/LastNews Gaza 21 November 2026 latest",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza ceasefire casualties",
+      "Gaza November 21 2026 04:00 local morning attacks Nuseirat Bureij people killed displaced",
+      "November 20 2026 late Gaza WHO MSF PRCS hospital ambulance fuel medical evacuation operations",
+      "Gaza 21 November 2026 Rafah Kerem Shalom crossing aid trucks WFP UNRWA water situation",
+      "Gaza November 20 2026 late ceasefire talks hostages detention negotiations Israel Hamas fresh reports"
+    ],
+    "source_observations": [
+      {
+        "publisher": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "note": "Index listed no Gaza-specific item newer than the 20 Nov publication; 18 Nov report covers 10–16 Nov and was examined in earlier heartbeats."
+      },
+      {
+        "publisher": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "note": "Current global overview accessible; newest linked speeches from 17 Nov and other older publications, with no newly dated emergency operations change."
+      },
+      {
+        "publisher": "WAFA",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "note": "Latest visible Gaza-specific news was Bureij two reported killed (19:26 Palestine local) and Deir al-Balah casualty (17:02), plus Maghazi five injured at 14:34; these were recorded by earlier Nov 20 watches. Subsequent visible stories were West Bank events or an Arab League appeal, not operational aid changes."
+      },
+      {
+        "publisher": "AP",
+        "url": "https://apnews.com/article/saudi-yemen-war-iran-iraq-november-20-2026-16c39c487a23b53b73c5eabb7f0fd57a",
+        "note": "Rolling 20 Nov summary identified six killed in Nuseirat (one), Deir al-Balah (one), and Bureij (four), overlapping previous watches; no distinct new event or additional casualties established."
+      },
+      {
+        "publisher": "Anadolu",
+        "url": "https://www.aa.com.tr/en/middle-east/7-palestinians-killed-at-least-13-injured-in-israeli-attacks-across-gaza-despite-ceasefire/4131821",
+        "note": "20 Nov aggregate seven killed and at least thirteen injured across previously logged events. Different six/seven aggregates may reflect disputed Deir al-Balah count, not additive fatalities."
+      },
+      {
+        "publisher": "Palestine Red Crescent via Saba syndication",
+        "url": "https://saba.ye/en/news3838866.htm",
+        "note": "Published Nov 20 00:47 +03:00 reporting 25 patients and 31 companions medically evacuated Thursday Nov 19; predates prior hourly checkpoint, not a new within-window operation; direct PRCS corroboration not established."
+      },
+      {
+        "publisher": "Reuters",
+        "url": "https://www.reuters.com/world/middle-east/israel-says-it-concludes-gaza-tank-raid-2026-11-19/",
+        "note": "Nov 19 return after central Gaza incursion and reported ~6,000 displaced is retrospective; no new Nov 20 17:48–18:43 PST displacement established."
+      }
+    ],
+    "excluded_candidates": [
+      "Bureij four killed, Deir al-Balah conflicting one/two death count, Nuseirat one killed, and Maghazi/Sabra/Nuseirat displaced-tent injuries: previously recorded incidents; AP/Anadolu totals not additive.",
+      "Shuja'iyya and Khan Younis demolitions and Nov 18–19 Nuseirat/Bureij incursion/displacement: already recorded.",
+      "OCHA 20 Nov humanitarian report with 10–16 Nov evacuation, capacity and aid figures: previously available/recorded retrospectively.",
+      "PRCS-reported Nov 19 medical evacuation of 25 patients and 31 companions via Rafah: published before predecessor; not a within-window change.",
+      "Older 2023/2025 date-collision and misleading republished old ceasefire/hostage stories, unverified rolling feeds and unsupported social material, analysis/opinion, and West Bank-only developments."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "coverage_limitations": [
+      "WHO Eastern Mediterranean direct page failed (known recurring failure); OCHA, WHO global, WAFA, AP, Anadolu and Reuters reporting remained usable.",
+      "Source timestamps not always available in consistent time zones. No verification of within-hour changes beyond reachable publications; searches do not guarantee complete detection.",
+      "No access to primary publisher state was used or implied; this watch does not assert production capture status."
+    ],
+    "material_new_degradation": false,
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T174743-0800-20261121T014849060Z.json",
+      "read_verified": true,
+      "status": "DEGRADED",
+      "outcome": "no_findings"
+    },
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

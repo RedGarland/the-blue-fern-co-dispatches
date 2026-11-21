@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T004605-0800-20261121T084723622Z",
+  "scheduled_for": "2026-11-21T00:44:51-08:00",
+  "started_at": "2026-11-21T00:46:05-08:00",
+  "completed_at": "2026-11-21T08:47:23.622Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-20T23:45:23.712-08:00",
+    "end": "2026-11-21T00:47:23.622-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T234357-0800-20261121T074523712Z.json",
+    "basis": "Authenticated predecessor heartbeat completed at 2026-11-20 23:45:23.712 PST; this run began after scheduled 00:44:51 PST. Search is bounded by the prior read-verified heartbeat, with a modest retrospective margin for publication-time ambiguity. Event dates and discovery dates are not conflated."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall; Gaza production collector and publication remain authoritative and unchanged.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed update is dated 20 November 2026; no newer Gaza operational report found in the observation window."
+      },
+      {
+        "source": "OCHA OPT situation report published 20 November 2026",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "Report covers 10–16 November and previously recovered casualty, healthcare, markets, medical evacuation, cargo and other humanitarian indicators. No in-window delta."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza hospital, evacuation, ambulance, fuel, or healthcare service change within observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Known repeated Bad Gateway on direct open; unchanged from prior heartbeat; WHO global accessible instead."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 21 2026 10am Saturday civilians killed wounded Jabalia Khan Younis overnight",
+      "site:english.wafa.ps/Pages/Details/ \"21/November/2026\" \"Gaza\" \"injured\"",
+      "site:aa.com.tr/en/middle-east/ \"Nov 21, 2026\" Gaza killed injured",
+      "site:apnews.com/article/ Gaza November 21 2026 Saturday Israeli strikes civilian casualties",
+      "site:reuters.com/world/middle-east/ Gaza November 21 2026 ceasefire strikes humanitarian",
+      "Gaza Jabalia al Mawasi seven injured November 21 2026 followup verified medical sources",
+      "site:palestinercs.org \"21 November 2026\" Gaza ambulances injured medical",
+      "site:unrwa.org OR site:unicef.org OR site:wfp.org Gaza 21 November 2026 water food shelter operations",
+      "site:who.int OR site:healthcluster.who.int Gaza November 21 2026 hospital evacuation fuel healthcare services",
+      "Gaza Rafah Kerem Shalom crossing aid fuel movements Saturday November 21 2026 official",
+      "Gaza November 21 2026 hostage detainees ceasefire talks breakthrough negotiations Saturday",
+      "site:aljazeera.com/news/2026/11/21 Gaza Palestine ceasefire strikes tents civilians"
+    ],
+    "sources_examined": [
+      {
+        "source": "WAFA",
+        "url": "https://english.wafa.ps/Pages/Details/177161",
+        "note": "Seven reported injuries in three incidents (Jabalia and two in/near Al-Mawasi); published 21 November 09:08 Gaza local (20 November 23:08 PST), already present as three findings in prior authenticated heartbeat, not new."
+      },
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "note": "No newly dated Gaza OPT update since preceding check."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "note": "No in-window dated Gaza health operations update."
+      },
+      {
+        "source": "WFP",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "note": "General status page; no verifiable newly published in-window operational change."
+      },
+      {
+        "source": "UNRWA",
+        "url": "https://www.unrwa.org/sites/default/files/content/resources/unrwa_gaza_sitrep_238_4november_2026_eng.pdf",
+        "note": "Document updated October 21–November 3; outside observation window and excluded."
+      }
+    ],
+    "excluded_candidates": [
+      "WAFA November 21 09:08 Gaza local seven-injured report, comprising Jabalia shooting, Al-Mawasi tent shooting and south-of-Al-Mawasi strike: already recorded in direct predecessor heartbeat; not repeated.",
+      "November 20 Maghazi casualties/displacement, Bureij and Deir al-Balah fatalities and other incidents: already recorded earlier.",
+      "OCHA November 20 report (10–16 November operational events) and UNRWA earlier reports are historical, previously covered or not newly changing.",
+      "Search results dated 2023–2025, including similarly dated November 21 reports, discarded; unrelated geography, opinion and unsourced claims excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "coverage_limitations": [
+      "WHO EMRO repeatedly unavailable; this condition is known, not a new material degradation, and global WHO remained accessible.",
+      "Search indexing and source publication delays mean no confirmed findings is not proof no event occurred.",
+      "No direct production publisher inventory was inspected: deduplication is against read-verified watch predecessor and known earlier watch findings, without making claims about production."
+    ],
+    "new_developments": 0,
+    "material_new_degradation": false,
+    "previous_heartbeat": {
+      "path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-20/gaza-source-watch-20261120T234357-0800-20261121T074523712Z.json",
+      "read_verified": true,
+      "status": "DEGRADED",
+      "outcome": "findings"
+    },
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

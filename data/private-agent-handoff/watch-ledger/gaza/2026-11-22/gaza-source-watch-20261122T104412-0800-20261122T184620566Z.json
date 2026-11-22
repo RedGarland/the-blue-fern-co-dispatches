@@ -1,0 +1,190 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T104412-0800-20261122T184620566Z",
+  "scheduled_for": "2026-11-22T10:44:51-08:00",
+  "started_at": "2026-11-22T10:44:12-08:00",
+  "completed_at": "2026-11-22T10:46:20.566-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T09:47:13.946-08:00",
+    "end": "2026-11-22T10:46:20.566-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T094551-0800-20261122T174713Z.json",
+    "basis": "Verified preceding heartbeat on ops/watch-ledger, then bounded recall; discovery date distinguished from publication and event dates; older reports checked for deduplication."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261122-wafa-jabalia-evening-fatality-177195",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177195",
+      "title": "Palestinian killed by Israeli gunfire in Jabalia north of Gaza",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": "19:27",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": "2026-11-22",
+      "event_time_local": null,
+      "location": "Jabalia, northern Gaza Strip",
+      "affected_population_system": "One Palestinian reportedly killed by Israeli gunfire; civilian status and identity not independently verified",
+      "exact_supporting_passage": "A Palestinian was killed on Sunday evening by Israeli occupation forces' gunfire in Jabalia, north of the Gaza Strip.",
+      "source_type": "established_news_agency",
+      "classification": "new",
+      "confidence": "medium",
+      "summary": "WAFA's 19:27 Gaza-local report identifies a 22 November Jabalia fatality not included as a location-specific finding in the latest ledger. A 21 November Jabalia fatality was already ledgered and must not be conflated. WAFA also repeats the previously logged Deir al-Balah death, which is excluded.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-22T09:47:13.946-08:00",
+        "first_verified_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": false,
+        "novelty_scope": "Newly recovered 22 November location-specific death; publication occurred about 20 minutes before prior watch closed, but prior ledger did not report it.",
+        "duplicate_handling": "Not added to health ministry cumulative totals; possible relation to separately reported Jabalia wounded group remains unconfirmed; distinct from 21 Nov Jabalia death.",
+        "direct_source_read": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261122-anadolu-bir-al-naaja-three-injured-4133706",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+      "title": "Israeli attacks kill 3 Gazans, injure 4 in latest ceasefire violation",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": null,
+      "publication_timezone": null,
+      "event_date": "2026-11-22",
+      "event_time_local": null,
+      "location": "Bir al-Naaja, west of Jabalia, northern Gaza Strip",
+      "affected_population_system": "Three people reportedly wounded by an Israeli drone strike, one seriously; civilian group",
+      "exact_supporting_passage": "In northern Gaza, an Israeli drone struck a group of civilians in Bir al-Naaja, west of Jabalia, injuring three people, one of them seriously.",
+      "source_type": "established_news_agency_reporting_medical_sources",
+      "classification": "new",
+      "confidence": "medium",
+      "summary": "Anadolu's 22 November article provides a location-specific account of three people injured in a drone strike west of Jabalia, including one serious injury. The same article's Deir al-Balah fatality, Khan Younis child injury, and prior al-Mawasi deaths were already recorded and are excluded.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-22T09:47:13.946-08:00",
+        "first_verified_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": null,
+        "novelty_scope": "Newly recovered specific injury incident; exact publication clock time unavailable.",
+        "duplicate_handling": "Do not add article's aggregate three deaths/four injuries to prior totals; unknown whether the reported Jabalia wounded group overlaps WAFA's 22 November Jabalia fatality event.",
+        "direct_source_read": true
+      }
+    },
+    {
+      "finding_id": "gaza-20261122-aljazeera-insulin-children-hospitalization",
+      "canonical_source_url": "https://www.aljazeera.com/features/2026/11/22/children-in-besieged-gaza-struggle-to-find-life-saving-insulin-for-diabetes",
+      "title": "Children in besieged Gaza struggle to find life-saving insulin for diabetes",
+      "publisher": "Al Jazeera English",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": null,
+      "publication_timezone": null,
+      "event_date": null,
+      "event_time_local": null,
+      "location": "Gaza City and Jabalia, Gaza Strip",
+      "affected_population_system": "Children with type 1 diabetes; access to insulin, blood-glucose monitoring strips, cold-chain storage, and emergency hospital care",
+      "exact_supporting_passage": "Janna was recently admitted to hospital for eight days, malnourished and dehydrated",
+      "source_type": "established_news_outlet_firsthand_family_and_local_organization_interviews",
+      "classification": "follow_up",
+      "confidence": "medium",
+      "summary": "New 22 November firsthand reporting documents families struggling to secure insulin and glucose testing strips; it describes one child's ICU admission during the prior week and another child's eight-day hospitalization, with a local diabetes organization reporting that it represents about 800 children. This adds specific patient-level effects to previously established medicine shortages; no newly verified systemwide stock total or event-hour timing.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-22T09:47:13.946-08:00",
+        "first_verified_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": null,
+        "novelty_scope": "Newly surfaced detailed patient-impact reporting, not a newly established onset of insulin scarcity.",
+        "duplicate_handling": "Contextual follow-up to OCHA's pre-existing shortage reports; no hospital admissions added to daily casualty statistics.",
+        "direct_source_read": true
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza daily collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT site:ochaopt.org",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest indexed update 20 Nov 2026, report on 18 Nov. No new 22 Nov operational update."
+      },
+      {
+        "source": "WHO global Gaza/Israel-oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global emergency page accessible, no verified new 22 Nov operational update."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway. Recurrent region-site failure also documented in previous watches."
+      }
+    ],
+    "initial_official_site_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza Sunday 19:00 20:00 21:00 killed injured",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 22, 2026\" Sunday evening killed ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Palestinians humanitarian ceasefire latest",
+      "site:apnews.com/article/ Gaza November 22 2026 strikes civilians aid hostages ceasefire",
+      "site:aljazeera.com/news/2026/11/22/ Gaza Sunday latest killings displacement shelter",
+      "site:un.org OR site:ochaopt.org Gaza 22 November 2026 aid access crossings displacement latest",
+      "site:who.int OR site:emro.who.int Gaza \"22 November 2026\" medical evacuation hospital operating",
+      "site:unicef.org OR site:unrwa.org Gaza \"22 November 2026\" water displaced health",
+      "site:wfp.org OR site:reliefweb.int Gaza \"22 November 2026\" food trucks crossing",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 22 2026 ambulance evacuation patients",
+      "Gaza 22 November 2026 WAFA news Palestinian killed wounded Sunday 20:00 21:00",
+      "Gaza 22 November 2026 ceasefire negotiations hostage release military strike civilians Sunday night"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA LastNews",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "22 Nov 19:27 Gaza-local Jabalia death, separately confirmed via full article. West Bank-only 20:27 update excluded."
+      },
+      {
+        "source": "Anadolu Middle East front",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "22 Nov latest Gaza article inspected; isolated new Jabalia injury detail from previously ledgered casualties."
+      },
+      {
+        "source": "Al Jazeera Palestine front",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "22 Nov firsthand diabetes/insulin access feature; distinct details from older generic reports."
+      },
+      {
+        "source": "Palestinian Red Crescent",
+        "url": "https://www.palestinercs.org/",
+        "result": "Current website accessed; prominent news entries dated 2 Nov or older; no new operational update."
+      }
+    ],
+    "exclusions": [
+      "Anadolu article's three-death daily narrative includes already logged Deir al-Balah death and earlier Khan Younis/al-Mawasi casualties. Do not add its aggregate count to previously logged numbers.",
+      "WAFA 22 Nov report repeats Deir al-Balah death and ministry cumulative 74,742; excluded as duplicates.",
+      "Jabalia death reported for 21 Nov in a prior watch is distinct from the 22 Nov Jabalia report, but event linkage to 22 Nov Jabalia wounded group is unconfirmed.",
+      "Earlier Tel al-Hawa food aid vehicle strike, mediation request, Maghazi home demolition estimate, Rafah patient evacuation, sewage plant/pit statistics, hospital textiles and meningitis warnings excluded as duplicates.",
+      "West Bank-only developments, old 2023-2025 search results, opinion, recycled claims, and unsupported material excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional site failed with known HTTP 502; WHO global and OCHA accessible, other high-value sources covered.",
+      "A report being newly recovered does not establish that its described event happened within this hourly observation interval.",
+      "No independent incident-by-incident verification for WAFA/Anadolu casualty reports; do not infer additive casualty counts.",
+      "Search indexing timing may lag publication, including WAFA's 19:27 Gaza-local report, which predates the previous heartbeat closing time."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T094551-0800-20261122T174713Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T224355-0800-20261122T064432Z",
+  "scheduled_for": "2026-11-21T22:44:51-08:00",
+  "started_at": "2026-11-21T22:43:55-08:00",
+  "completed_at": "2026-11-21T22:44:32-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T21:47:35.363-08:00",
+    "end": "2026-11-21T22:44:32-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T214646-0800-20261122T054735367Z.json",
+    "basis": "Observation interval begins at prior verified completed heartbeat. Official OCHA OPT and WHO were checked first, followed by exactly 12 additional targeted searches. Discovery window is not proof of source publication or incident time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall only; primary production collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT Updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza-specific humanitarian situation report listed November 20, dated November 18; no new Gaza report in window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Direct fetch returned 502 Bad Gateway; same recurring upstream access issue as previous watch."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global emergency overview available; no interval-specific new change to Gaza medical capacity, evacuation, fuel or ambulance service."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Gaza emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct request returned 502 Bad Gateway; recurrent regional access issue."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details 22 November 2026 Gaza morning Sunday Israeli fire killed wounded",
+      "site:reuters.com/world/middle-east Gaza November 22 2026 Sunday early morning civilian ceasefire",
+      "site:apnews.com/article Gaza November 22 2026 Sunday medical officials",
+      "site:aljazeera.com/news/2026/11/22 Gaza November 22 2026 early Sunday hospital deaths",
+      "site:aa.com.tr/en/middle-east/ Gaza Nov 22 2026 morning killed injured ceasefire",
+      "site:unrwa.org OR site:un.org Gaza November 22 2026 aid shelter displacement winter",
+      "site:english.wafa.ps \"22/November/2026\" \"GAZA\" \"Occupation\" killed injured",
+      "site:palestinercs.org OR site:ifrc.org November 22 2026 Gaza medical evacuation ambulance patients fuel",
+      "site:unicef.org OR site:wfp.org 22 November 2026 Gaza aid distribution food water restrictions",
+      "Gaza Sunday November 22 2026 morning 8 am new Israeli fire deaths wounded hospital report",
+      "Gaza November 22 2026 Rafah Kerem Shalom crossing truck entry medical evacuation transport operational update",
+      "Gaza November 22 2026 ceasefire talks Qatar Egypt mediators hostages detainees reported agreement"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest new entry dated 22 Nov 08:31 Gaza time concerns Illinois bond investment activists, unrelated to Gaza civilian-impact operational developments. Most recent Gaza casualty entry dated Nov 21 21:42 Gaza time concerns Beit Lahia woman wounded; previously captured."
+      },
+      {
+        "source": "Reuters Israel/Hamas topic",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Latest Gaza report remains Nov 21 vehicle strike with three fatalities and food-vehicle/WCK clarification, already logged."
+      }
+    ],
+    "excluded_candidates": [
+      "November 21 Tel al-Hawa strike, three fatalities, food-carrying vehicle allegations and WCK denial previously captured. No additional deaths counted.",
+      "November 21 Beit Lahia woman injured and Nuseirat youth injury, Jabalia death, Khan Younis Saturday injury aggregate previously captured.",
+      "November 22 Hamas ceasefire mediators meeting request already captured; no confirmed subsequent actual meeting or response.",
+      "OCHA Nov 18 report posted Nov 20, UN/WFP/IOM winter conditions reports Nov 16–18, Nasser Hospital strike Nov 11–12, and Gaza Nuseirat raid Nov 19 are outside this observation interval.",
+      "Search results indexed historical 2025 dates, August/September/October 2026 or undated third-party compilations; none promoted.",
+      "No verified new qualifying crossings, displacement, food/water access, hospital/ambulance/transport/fuel/medical evacuation, detention/hostages, ceasefire change or military action affecting civilians within bounded recovery checks."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO Eastern Mediterranean situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Persistent WHO regional 502 limits official-source completeness; WHO global and OCHA accessible, so DEGRADED not FAILED.",
+      "Strict 12 targeted searches and search-index latency cannot rule out later-discoverable updates.",
+      "Nominal scheduled_for timestamp is later than runtime start because this run was launched shortly before the hourly schedule mark; both timestamps are preserved."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

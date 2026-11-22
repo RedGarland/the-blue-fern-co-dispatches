@@ -1,0 +1,168 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T073957-0800-20261122T154202Z",
+  "scheduled_for": "2026-11-22T07:44:51-08:00",
+  "started_at": "2026-11-22T07:39:57-08:00",
+  "completed_at": "2026-11-22T07:42:02.548-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T06:45:38-08:00",
+    "end": "2026-11-22T07:42:02.548-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T064333-0800-20261122T144538Z.json",
+    "basis": "Prior authenticated GitHub heartbeat and older watch-ledger entries compared. Events and source publication dates distinguished from first recovery; previous recorded aggregate tallies not recomputed."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-jabalia-halawa-saturday-fourth-fatality-afp-almanassa",
+      "canonical_source_url": "https://almanassa.com/en/news/35065",
+      "title": "Israeli strike hits Gaza food truck, killing three workers",
+      "publisher": "Al Manassa (on-the-ground original reporting); corroborating AFP report syndicated by Dawn",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": null,
+      "publication_timezone": null,
+      "event_date": "2026-11-21",
+      "location": "Halawa displacement camp / Jabalia al-Balad area, northern Gaza Strip; exact location not independently reconciled across reports",
+      "affected_population_system": "One Palestinian man reported killed by Israeli fire; reported fourth victim in Saturday's Gaza-wide four-fatality figure; civilian status and identity unverified",
+      "exact_supporting_passage": "In northern Gaza, Israeli troops shot dead a fourth Palestinian at the Halawa displacement camp in Jabalia.",
+      "source_type": "established_original_reporting_citing_Gaza_Health_Ministry_source_and_corresponding_AFP_report_citing_Gaza_Civil_Defence_and_Al_Shifa_Hospital",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "summary": "A newly recovered location-specific detail of the previously known November 21 four-fatality toll: Al Manassa places the fourth death at Halawa displacement camp in Jabalia; AFP syndication via Dawn says a man was killed in Jabalia al-Balad and Al-Shifa Hospital received the body. This is not a newly occurred death during the watch hour and must not be added to prior daily totals. Exact geographic co-reference and independent identity verification remain unavailable.",
+      "corroborating_source_url": "https://www.dawn.com/news/2046198",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": false,
+        "novelty_scope": "Previously unledgered source-specific location and hospital confirmation for an already-known aggregate; not an additional death",
+        "prior_heartbeat_comparison": "Prior 06:45:38 PST heartbeat recorded Deir al-Balah fatality, Khan Younis child injury and Rafah medical evacuation, without the earlier Saturday Jabalia fatality detail; earlier same-date and prior-date watch ledgers checked for overlaps.",
+        "support_check": "On-site articles were blocked by DisabledError on direct open, but independently indexed Al Manassa and AFP-syndicated Dawn news text supported the report. Source's original medical record not obtained.",
+        "duplicate_handling": "One fourth Saturday fatality already part of reported four deaths; not summed with Tel al-Hawa vehicle-strike three or the 22 Nov Health Ministry 24-hour and cumulative figures."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza daily collector/publisher authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed update 20 Nov 2026, humanitarian situation report covering 18 Nov; no fresh 22 Nov Gaza operational bulletin."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview accessible; latest visible newsroom content predates 22 Nov, no new current-hour service capacity/medical evacuation report."
+      },
+      {
+        "source": "WHO EMRO occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Regional page returned HTTP 502, recurrent limitation."
+      },
+      {
+        "source": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "result": "Regional news page still inaccessible, recurrent limitation."
+      },
+      {
+        "source": "WHO alternative first-checked emergency URL",
+        "url": "https://www.who.int/emergencies/situations/situation-in-occupied-palestinian-territory",
+        "status": "HTTP_404",
+        "result": "Noncanonical URL; canonical WHO global emergency URL checked successfully."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza \"17:\" killed injured destroyed",
+      "site:aa.com.tr/en/middle-east/ \"Nov 22, 2026\" Gaza killed wounded children aid Sunday latest",
+      "site:aljazeera.com/news/2026/11/22/ Gaza latest 22 November Sunday afternoon casualties operations",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Sunday casualties ceasefire Israel strike",
+      "site:wafa.ps/Pages/Details/ 22/11/2026 غزة مساء الأحد 22 نوفمبر 2026 شهيد إصابة قصف",
+      "site:unrwa.org OR site:unicef.org \"22 November 2026\" \"Gaza\" water shelter disease aid",
+      "site:wfp.org OR site:un.org \"22 November 2026\" \"Gaza\" food crossing access distribution",
+      "site:palestinercs.org OR site:ifrc.org \"22 November 2026\" Gaza emergency ambulance patients evacuated Rafah",
+      "\"November 22, 2026\" Gaza 17:00 18:00 local killed wounded drone Israeli shelling latest Sunday",
+      "\"22 November 2026\" Gaza Rafah Kerem Shalom fuel medical evacuation aid crossing 17:00",
+      "\"22 November 2026\" Gaza ceasefire negotiators Hamas hostages detainees agreement Sunday afternoon",
+      "\"22 November 2026\" Gaza hospital service suspended ambulance fuel medical textiles meningitis patients late Sunday"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA English latest index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza news at 16:08 Gaza local about Deir al-Balah death and Khan Younis child injury already in prior heartbeat."
+      },
+      {
+        "source": "Gaza Health Ministry public bulletin",
+        "url": "https://t.me/s/mohmediagaza",
+        "result": "Existing 22 Nov bulletin: 4 newly killed, 2 recovered bodies and 33 injured; medical textiles, meningitis and older updates covered in prior entries."
+      },
+      {
+        "source": "Palestinian Red Crescent official site",
+        "url": "https://www.palestinercs.org/",
+        "result": "Homepage reached; most recent featured news item dated 2 Nov 2026."
+      },
+      {
+        "source": "Al Manassa original report",
+        "url": "https://almanassa.com/en/news/35065",
+        "result": "Indexed report published 22 Nov described a fourth death at Halawa camp in Jabalia; direct open blocked, search-indexed text available."
+      },
+      {
+        "source": "AFP syndicated report, Dawn",
+        "url": "https://www.dawn.com/news/2046198",
+        "result": "Indexed AFP story dated 22 Nov independently described the Jabalia al-Balad death and Al-Shifa Hospital receipt of the victim's body; direct open blocked."
+      }
+    ],
+    "exclusions": [
+      "Existing 22 Nov Deir al-Balah drone fatality, Khan Younis child injury and 23 patient/23 companion Rafah evacuation: prior watch entries.",
+      "Earlier 21 Nov Tel al-Hawa food-van strike three deaths, Saturday total of four deaths and 22 Nov Gaza Health Ministry 4 new/2 recovered deaths and 33 wounded: repeated totals. Current Jabalia detail is a follow-up only, not a new additional fatality.",
+      "Previously recorded medical textiles depletion, meningitis warning, sewage treatment deficits, Maghazi 500-home demolition estimate, ceasefire mediator request and recovered remains: duplicates.",
+      "Automatically generated GazaNews.live reports concerning dialysis transport suspension, crossing operations, WHO supply trucks, cooking gas trucks and evacuation protests could not be corroborated with named official or established reporting and were excluded.",
+      "Gaza Health Ministry report of 6,745 October births does not establish a new high-value access, functioning-capacity or acute healthcare disruption change in the hourly scope.",
+      "West Bank-only events, historical news, opinion, unsourced claims and stale material excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "Timeout",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://almanassa.com/en/news/35065",
+        "error": "DisabledError on direct article open; indexed report accessible",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.dawn.com/news/2046198",
+        "error": "DisabledError on direct article open; indexed report accessible",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO regional health source remains unavailable, so overall DEGRADED; no newly material access failure observed.",
+      "Article direct fetch blocked for the follow-up, but indexed first-hand/AFP texts available; no separately accessible victim records.",
+      "Recovered information concerns a known November 21 fatality within a previously recorded aggregate, not a new casualty in the hourly search window; index lag prevents exhaustive hourly certainty.",
+      "Exactly 12 additional targeted search queries completed."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T064333-0800-20261122T144538Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

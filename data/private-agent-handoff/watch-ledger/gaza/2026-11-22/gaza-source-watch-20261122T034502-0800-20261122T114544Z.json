@@ -1,0 +1,108 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T034502-0800-20261122T114544Z",
+  "scheduled_for": "2026-11-22T03:44:51-08:00",
+  "started_at": "2026-11-22T03:45:02-08:00",
+  "completed_at": "2026-11-22T03:45:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T02:48:17.846-08:00",
+    "end": "2026-11-22T03:45:44-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T024626-0800-20261122T104817Z.json",
+    "basis": "Prior authenticated heartbeat completion through current observation; prior findings checked for duplicate reporting. Publication and event dates may precede discovery."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; daily Gaza publisher/collector is authoritative. No production writes.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed OCHA update dated 20 November 2026 (situation report covering 18 Nov); no new Gaza situation or access report within window."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza health, medical evacuation or hospital-capacity update in this window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt regional page",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Direct request failed with 502 Bad Gateway; known limitation."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Direct request failed with 502 Bad Gateway; known limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza killed injured hospital latest",
+      "site:aa.com.tr/en/middle-east/ \"Nov 22, 2026\" Gaza civilians ceasefire aid injuries",
+      "site:reuters.com/world/middle-east/ Gaza Sunday November 22 2026 death aid crossing ceasefire",
+      "site:apnews.com/article/ Gaza November 22 2026 Sunday strikes hospital injured",
+      "site:aljazeera.com/news/2026/11/22/ Gaza injuries hospital displacement demolitions aid",
+      "site:unrwa.org OR site:unicef.org Gaza November 22 2026 shelter water displaced",
+      "site:wfp.org OR site:un.org \"Gaza\" \"22 November 2026\" food fuel entry Kerem Shalom",
+      "site:palestinercs.org OR site:ifrc.org \"Gaza\" \"22 November 2026\" ambulance evacuation clinic hospital",
+      "\"Gaza\" \"22 November 2026\" \"Rafah\" \"Kerem Shalom\" trucks border crossing opening",
+      "\"Gaza\" \"22 November 2026\" ceasefire mediators talks hostages detainees release",
+      "\"Gaza\" \"22 November 2026\" hospital generator fuel medical supplies medical evacuation November",
+      "Gaza Sunday 22 November 2026 new injuries killed displacement aid health 22 Nov 2026"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza item on index remains 22 November 11:42 Gaza-local daily death/injury aggregate already recorded in prior run."
+      },
+      {
+        "source": "Gaza Ministry of Health official public channel",
+        "url": "https://t.me/s/mohmediagaza",
+        "result": "Latest visible 22 Nov medical fabric shortage, meningitis warning, and hospital-received casualty aggregate are already in prior authenticated heartbeat. October birth-rate statistics not a new high-value operational disruption."
+      }
+    ],
+    "exclusions": [
+      "Prior 22 Nov Gaza Ministry of Health medical textiles exhaustion, meningitis warning and four-new/two-recovered deaths plus 33 injuries already recorded; no duplicate findings.",
+      "22 Nov Al-Mawasi two deaths, 21 Nov Tel al-Hawa food vehicle deaths/WCK clarification, Khan Younis injuries, Beit Lahia injury and Maghazi demolition estimate already recorded in earlier ledger.",
+      "22 Nov Al Jazeera coverage of Maghazi >500 destroyed housing units and displacement protest is previously documented, not new.",
+      "22 Nov Anadolu story about Hamas request for urgent talks repeats previously recorded ceasefire follow-up.",
+      "A 22 Nov 12:22 Gaza-local claim of entry of WHO medical and gas trucks at Kerem Shalom from Gazanews.live lacked primary/credible independent corroboration and was excluded.",
+      "Older items, recycled casualty totals, opinion, unverified social claims and West Bank-only incidents excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional site remains inaccessible but WHO global and OCHA OPT accessible, so status DEGRADED, not FAILED.",
+      "Search-index lag and publication-time ambiguity mean no-findings is bounded to available source disclosures, not proof of no events.",
+      "No confirmed new qualifying high-value development since prior heartbeat; twelve targeted additional searches performed."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T024626-0800-20261122T104817Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

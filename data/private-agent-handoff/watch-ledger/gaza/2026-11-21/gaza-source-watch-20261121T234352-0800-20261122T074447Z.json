@@ -1,0 +1,140 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T234352-0800-20261122T074447Z",
+  "scheduled_for": "2026-11-21T23:44:51-08:00",
+  "started_at": "2026-11-21T23:43:52-08:00",
+  "completed_at": "2026-11-21T23:44:47-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T22:44:32-08:00",
+    "end": "2026-11-21T23:44:47-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T224355-0800-20261122T064432Z.json",
+    "basis": "Window begins at last verified watch completion. A WAFA report timestamped 08:44 Gaza local time was absent from the prior check; publication minute overlaps start boundary, so discovery is newly confirmed but publication after the prior check cannot be established to the second."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-wafa-177178-20261122-al-mawasi-2-succumbed",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177178",
+      "title": "Two Palestinians succumb to wounds from Israeli attack on Khan Younis",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": "08:44",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": "2026-11-22",
+      "event_time": null,
+      "location": "al-Mawasi, west of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Two Palestinians wounded by an Israeli airstrike, subsequently reported dead; civilian/combatant status not independently established",
+      "exact_supporting_passage": "Two Palestinians succumbed to their wounds on Sunday morning after being injured in an Israeli airstrike",
+      "source_type": "official Palestinian news agency citing Gaza medical developments; independent corroboration unavailable",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "observed_during_run_at": "2026-11-21T23:44:47-08:00",
+        "search_window_start": "2026-11-21T22:44:32-08:00",
+        "search_window_end": "2026-11-21T23:44:47-08:00",
+        "recovery_method": "WAFA latest-news direct-source check following official-first OCHA OPT/WHO checks and bounded searches",
+        "source_url": "https://english.wafa.ps/Pages/Details/177178",
+        "corroboration": "Not independently corroborated in this bounded run",
+        "prior_watch_comparison": "Prior verified watch recorded WAFA latest at 08:31 Gaza time; this 08:44 item was absent then",
+        "duplicate_avoidance": "Deaths are linked to wounds sustained in an early-Sunday al-Mawasi strike; do not count as additional injuries or assume this is Saturday's earlier al-Mawasi injury incident without evidence.",
+        "temporal_caveat": "Publication minute 08:44 Gaza corresponds approximately to 22:44 PST, overlapping prior watch completion minute; not proof of publication after previous completion."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Primary Gaza publisher/collector remains authoritative; no publication or approval performed.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian situation report published November 20 (report dated November 18); no new interval-specific update."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway; persistent previously known WHO regional access failure."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Accessible, but no verified new within-window change to healthcare operational capacity, evacuations, transport, fuel or ambulances."
+      },
+      {
+        "source": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway; recurring access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details \"22/November/2026\" Gaza wounded killed morning",
+      "site:reuters.com/world/middle-east/ gaza November 22 2026 Sunday overnight strikes ceasefire civilians",
+      "site:apnews.com/article/ gaza November 22 2026 Sunday early Sunday casualties",
+      "site:aljazeera.com/news/2026/11/22 Gaza Israeli strike Palestinian killed injured",
+      "site:aa.com.tr/en/middle-east/ Gaza November 22 2026 Sunday morning ceasefire deaths",
+      "site:un.org OR site:ochaopt.org Gaza November 22 2026 humanitarian access displacement",
+      "site:who.int OR site:emro.who.int Gaza November 22 2026 hospitals medical evacuations ambulance fuel",
+      "site:unicef.org OR site:wfp.org Gaza 22 November 2026 food water aid conditions",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 22 2026 medical emergency ambulance",
+      "Gaza November 22 2026 morning Rafah Kerem Shalom crossing trucks aid access Sunday",
+      "Gaza November 22 2026 Hamas Israel ceasefire mediators negotiations hostages detainees update",
+      "Gaza November 22 2026 early morning Jabalia Khan Younis Nuseirat Beit Lahia injured killed"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New 22 Nov 08:44 Gaza-time al-Mawasi report recovered; Nov 22 08:54 West Bank vehicle arson excluded as outside Gaza geographic scope."
+      },
+      {
+        "source": "Reuters Israel/Hamas",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Most recent Gaza story remains Nov 21 Tel al-Hawa vehicle strike and WCK denial; already recorded."
+      }
+    ],
+    "excluded_candidates": [
+      "Earlier Saturday Tel al-Hawa vehicle strike, three deaths, food-distribution status and World Central Kitchen denial already documented; not recounted.",
+      "Earlier Saturday Jabalia fatality, Beit Lahia woman injured, Nuseirat youth injured, and Khan Younis injury aggregates already captured.",
+      "Previously recorded Hamas request for ceasefire mediator meeting; no new confirmed meeting, response, or implementation change.",
+      "WAFA reports Israeli tanks still firing northwest of Rafah; no separately verified new civilian impact in this item, so not promoted as separate finding.",
+      "Earlier OCHA, WHO, UN winter and food/water reports and third-party undated reports excluded as not demonstrated new during this check.",
+      "West Bank developments excluded as outside Gaza scope."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional 502 reduces coverage completeness, while OCHA and WHO global remain readable; DEGRADED rather than FAILED.",
+      "Search indexing and 12-search ceiling cannot eliminate risk of delayed discovery.",
+      "WAFA report provides no names, independently confirmed combatant/civilian status, or exact incident time; two deaths are reported, not independently verified.",
+      "Scheduled hour is later than run startup; timestamps retain actual known execution times."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

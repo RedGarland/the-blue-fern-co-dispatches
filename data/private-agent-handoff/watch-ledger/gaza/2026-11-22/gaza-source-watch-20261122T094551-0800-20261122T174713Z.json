@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T094551-0800-20261122T174713Z",
+  "scheduled_for": "2026-11-22T09:44:51-08:00",
+  "started_at": "2026-11-22T09:45:51-08:00",
+  "completed_at": "2026-11-22T09:47:13.946-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T08:48:44.258-08:00",
+    "end": "2026-11-22T09:47:13.946-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T084712-0800-20261122T164844258Z.json",
+    "basis": "Previous heartbeat authenticated and read from ops/watch-ledger; source publication/event time distinguished from discovery time; older reports consulted for deduplication."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary Gaza daily collector/publisher is authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage newest OCHA humanitarian situation report dated 20 Nov 2026; no current-hour Gaza report."
+      },
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated 20 Nov 2026 covering 18 Nov; no new 22 Nov update."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO global emergency overview and regional-news links accessible; no new dated 22 Nov operational bulletin visible."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "HTTP 502 Bad Gateway; recurrent regional access limitation also documented in the preceding heartbeat."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza 18:00 19:00 20:00 killed injured Sunday",
+      "site:aa.com.tr/en/middle-east/ \"Nov 22, 2026\" Gaza Sunday deaths strikes casualties",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Israel civilian casualties ceasefire Sunday",
+      "site:apnews.com/article/ Gaza November 22 2026 civilians aid ceasefire",
+      "site:aljazeera.com/news/2026/11/22/ Gaza new casualties Sunday evening November 22",
+      "site:un.org OR site:ochaopt.org Gaza 22 November 2026 aid access displacement crossings",
+      "site:who.int OR site:emro.who.int Gaza November 22 2026 hospital patients evacuation service disruption",
+      "site:unicef.org OR site:unrwa.org Gaza 22 November 2026 water sanitation shelter displacement",
+      "site:wfp.org OR site:reliefweb.int Gaza 22 November 2026 food insecurity aid delivery crossing",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 22 2026 ambulance evacuation fuel emergency",
+      "site:english.wafa.ps Gaza \"22/November/2026\" \"evening\" 20:00",
+      "Gaza November 22 2026 Hamas Israel ceasefire negotiations hostages detention military operations civilians latest"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest visible updates dated 22 Nov at 17:34 Gaza local time concern West Bank; latest Gaza 16:08 report of Deir al-Balah death and Khan Younis child injury was previously ledgered."
+      },
+      {
+        "source": "Al Jazeera Palestine news",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza story on 22 Nov concerns displaced protest/demolitions, previously ledgered; 21 Nov food aid vehicle killings previously ledgered."
+      },
+      {
+        "source": "Anadolu Middle East news",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Visible Gaza reporting repeats 21 Nov casualty and humanitarian worker strike stories already known; no new qualifying Gaza incident verified."
+      },
+      {
+        "source": "Palestinian Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Site accessible; featured news latest dated 2 Nov 2026; no fresh Gaza rescue or patient movement update."
+      },
+      {
+        "source": "WFP Palestine emergency overview",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Current-looking summary of food access, ration cuts, WFP operations and Kerem Shalom logistics lacks verified source update timestamp within window; not treated as newly observed change."
+      }
+    ],
+    "exclusions": [
+      "WAFA 22 Nov Deir al-Balah fatality and Khan Younis child injury previously recorded at 06:45 watch.",
+      "Previously recorded 22 Nov Ministry of Health casualty bulletin, medical textiles shortage, meningitis warning, Water Authority sewage statistics, Maghazi demolition estimate, and Rafah 23-patient/23-companion evacuation.",
+      "Earlier Tel al-Hawa food aid vehicle fatalities, 21 Nov Jabalia follow-up, al-Mawasi deaths and Hamas mediator-meeting request are duplicates.",
+      "West Bank-only reports, undated/live webpages without verified new publication dates, old OCHA/WFP data, opinion and uncorroborated social claims excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional endpoint inaccessible, as in prior documented runs; WHO global site remains accessible; overall coverage retained.",
+      "Some search results are stale or sparsely indexed; no verified new finding is not evidence that no event occurred."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T084712-0800-20261122T164844258Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

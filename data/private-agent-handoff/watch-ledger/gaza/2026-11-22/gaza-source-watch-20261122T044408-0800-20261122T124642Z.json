@@ -1,0 +1,161 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T044408-0800-20261122T124642Z",
+  "scheduled_for": "2026-11-22T04:44:51-08:00",
+  "started_at": "2026-11-22T04:44:08-08:00",
+  "completed_at": "2026-11-22T04:46:42-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T03:45:44-08:00",
+    "end": "2026-11-22T04:46:42-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T034502-0800-20261122T114544Z.json",
+    "basis": "Authenticated prior completed heartbeat through current observation. Discoveries are compared to prior findings; publication dates and event dates are not assumed to equal discovery time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261122-wafa-sewage-wash-capacity-177186",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177186",
+      "title": "Gaza's makeshift sewage pits pose growing threat to health, environment and groundwater",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": "13:39",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": null,
+      "location": "Gaza Strip; displacement sites including Gaza City, Al-Mawasi/Khan Younis, central and northern Gaza",
+      "affected_population_system": "Displaced families; sewage treatment and pumping capacity; groundwater and water access; residents exposed to unlined cesspits",
+      "summary": "Newly recovered WAFA feature attributes to the Palestinian Water Authority a Gaza-wide estimate of 55,000 m³/day of untreated wastewater (about 40,000 into the sea, 15,000 through pits/leaks into the surrounding environment), five main treatment plants not operating, only 18 of 74 wastewater pumping stations partly functional and over 320,000 soakaway pits. Displaced residents also describe sewage pooling, contaminated water and health/safety hazards. These are newly surfaced quantified operating-capacity details, not proof that the deterioration happened in this hour; the agency does not give the authority figures' original measurement date.",
+      "exact_supporting_passage": "The authority said all five main wastewater treatment plants had ceased operating, while only 18 of the Strip's 74 pumping stations were functioning partially.",
+      "source_type": "established_public_news_agency_feature_citing_named_public_authority",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "source_verification": "WAFA article accessed directly and dated 22 Nov 2026, 13:39 Gaza-local; the underlying Water Authority report/date and individual statistics were not independently corroborated.",
+      "bounded_discovery_context": {
+        "discovered_during_run": true,
+        "publication_before_window_start": true,
+        "first_seen_in_this_watch": true,
+        "prior_heartbeat_comparison": "The 03:45 PST previous WAFA index inspection had latest Gaza news at 11:42 Gaza-local; the 13:39 feature was not then present in the captured index. The prior run already covered a separate meningitis/water-sanitation warning, but did not document the newly recovered quantitative pumping/cesspit capacity.",
+        "novelty_scope": "newly recovered quantification and first-hand accounts; no verified brand-new damage or newly occurring event",
+        "duplicate_handling": "No new casualties counted; meningitis warning treated as already known rather than an independent new finding."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; production Gaza publisher/collector authoritative. No production writes.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest index entry dated 20 Nov 2026; its 18 Nov situation report has earlier WASH, flooding, health and access issues but no newly dated Gaza operational report during the observation window."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza health, hospital-capacity or evacuation item in the observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt regional page",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "result": "Direct open timed out. The regional site has been inaccessible in recent checks (previously HTTP 502)."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "result": "Direct open timed out. Continuing historical WHO regional access limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza Khan Younis wounded killed strikes",
+      "site:aa.com.tr/en/middle-east/ \"Nov 22, 2026\" Gaza injuries aid civilians ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Sunday strikes ceasefire aid crossing",
+      "site:apnews.com/article/ Gaza November 22 2026 Sunday civilians strikes hospital",
+      "site:aljazeera.com/news/2026/11/22/ Gaza attacks tents deaths hospital aid",
+      "site:unrwa.org OR site:unicef.org Gaza November 22 2026 water shelter health displaced",
+      "site:wfp.org OR site:un.org \"Gaza\" \"22 November 2026\" food trucks access fuel",
+      "site:palestinercs.org OR site:ifrc.org Gaza \"22 November 2026\" ambulance evacuation",
+      "\"Gaza\" \"22 November 2026\" \"Rafah\" \"Kerem Shalom\" crossing trucks",
+      "\"Gaza\" \"22 November 2026\" ceasefire negotiation mediator hostage detainee",
+      "\"Gaza\" \"22 November 2026\" hospital medical textiles meningitis oxygen fuel evacuation update",
+      "Gaza today Sunday November 22 2026 14:00 Jerusalem time military strikes casualties humanitarian"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Newly surfaced 13:39 Gaza-local feature examined directly; all other current Gaza headlines were already documented."
+      },
+      {
+        "source": "Gaza Ministry of Health official public channel",
+        "url": "https://t.me/s/mohmediagaza",
+        "result": "22 Nov meningitis warning, medical fabric exhaustion and daily casualty report previously covered; no distinct new qualified update observed."
+      },
+      {
+        "source": "OCHA 18 Nov Gaza humanitarian report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "result": "Existing sewage/flooding/health risks verified as background; newly recovered quantified Water Authority details were not seen in prior run summary."
+      },
+      {
+        "source": "Palestine Red Crescent candidate latest-news route",
+        "url": "https://www.palestinercs.org/en/Article/Latest-News",
+        "result": "Direct route inaccessible; unable to confirm unaffiliated report of 46 patient evacuations."
+      },
+      {
+        "source": "UNRWA home",
+        "url": "https://www.unrwa.org/",
+        "result": "Direct route returned HTTP 403; search-indexed older situation report did not qualify as a new finding."
+      }
+    ],
+    "exclusions": [
+      "Prior 22 Nov medical textiles depletion, meningitis warning, 74,742 cumulative death toll and 24-hour 4 newly killed/2 recovered bodies/33 injured: duplicates.",
+      "Earlier Al-Mawasi two deaths, Tal al-Hawa vehicle strike, Maghazi demolitions, Hamas ceasefire mediation request, and Beit Lahia injury: previously recorded.",
+      "Auto-generated GazaNews.live story claiming 46 medical evacuations through Rafah lacks traceable primary PRCS or established confirmation; excluded.",
+      "Auto-generated GazaNews.live claim of UNRWA bacterial/viral meningitis uptick without primary source treated as uncorroborated and overlapping prior meningitis warning.",
+      "Older OCHA/UNRWA situation reports, West Bank-only incidents, generic commentary, and recycled casualty reports excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "TIMEOUT",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "TIMEOUT",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.unrwa.org/",
+        "error": "HTTP 403",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.palestinercs.org/en/Article/Latest-News",
+        "error": "UNAVAILABLE_URL",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional sources inaccessible, but WHO global and OCHA accessible; degraded rather than failed.",
+      "Water Authority numerical estimates attributed by WAFA are not an independently verified new operational change and have no source measurement date.",
+      "Index lag can make the newly recovered feature's publication predate observation start; novelty is in source coverage, not newly occurring physical event.",
+      "Search window bounded to disclosed, indexable sources and exactly 12 additional targeted searches."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T034502-0800-20261122T114544Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

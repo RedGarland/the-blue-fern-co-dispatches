@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T114242-0800-20261122T194425133Z",
+  "scheduled_for": "2026-11-22T11:44:51-08:00",
+  "started_at": "2026-11-22T11:42:42-08:00",
+  "completed_at": "2026-11-22T11:44:25.133-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T10:46:20.566-08:00",
+    "end": "2026-11-22T11:44:25.133-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T104412-0800-20261122T184620566Z.json",
+    "basis": "Verified prior heartbeat on ops/watch-ledger; bounded recall for new events or high-value previously missed dated reports, distinguishing source publication and event date from discovery time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261121-anadolu-shelter-350000-families-55010",
+      "canonical_source_url": "https://www.aa.com.tr/en/info/infographic/55010",
+      "title": "350,000 families in Gaza battle for shelter as winter sets in",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-21",
+      "publication_date": "2026-11-21",
+      "publication_time_local": null,
+      "publication_timezone": null,
+      "event_date": null,
+      "event_time_local": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Displaced households and winter shelter: ministry figures indicate 350,000 families needing shelter, more than one million displaced people in tents, 200,000 tents needing replacement, 7,500 families facing flooding risk and 2,500 families needing immediate relocation.",
+      "exact_supporting_passage": "350,000 families in Gaza urgently need shelter as winter sets in, Gaza's Public Works and Housing Ministry says",
+      "source_type": "established_news_agency_infographic_attributing_figures_to_gaza_public_works_and_housing_ministry",
+      "classification": "follow_up",
+      "confidence": "medium",
+      "summary": "Anadolu's 21 November infographic attributes updated quantitative shelter-risk and relocation estimates to Gaza's Public Works and Housing Ministry. The figures are a newly recovered operational detail, not verified displacement or damage newly occurring during this watch hour; original assessment and measurement dates were not provided.",
+      "bounded_discovery_context": {
+        "observation_window_start": "2026-11-22T10:46:20.566-08:00",
+        "first_verified_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": false,
+        "novelty_scope": "Newly recovered specific shelter/relocation risk estimates from a dated agency infographic; not an hour-new event or official new OCHA estimate.",
+        "duplicate_handling": "Older reports of shelter damage, tents, flooding and overall displacement already exist; do not add these ministry estimates to other displacement totals, or treat the 2,500 families as already relocated.",
+        "direct_source_read": true,
+        "original_ministry_statement_accessed": false,
+        "independent_verification": false
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only. Production daily Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed OCHA humanitarian situation report is dated 20 Nov 2026 (reporting title 18 Nov); no 22 Nov report seen."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza operational report for 22 Nov seen on WHO global situation page."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt news",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "result": "Regional news page returned Bad Gateway. This matches previously logged access failure."
+      }
+    ],
+    "initial_official_site_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza \"21:\" killed wounded Sunday",
+      "site:aa.com.tr/en/middle-east Gaza \"Nov 22, 2026\" evening hospital strike ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Sunday killed humanitarian ceasefire latest",
+      "site:apnews.com/article/ Gaza November 22 2026 November 22 latest military strikes civilians crossing",
+      "site:aljazeera.com/news/2026/11/22/ Gaza Sunday evening casualties latest humanitarian 22 November",
+      "site:un.org OR site:ochaopt.org Gaza \"22 November 2026\" aid shelter crossing update",
+      "site:unicef.org OR site:unrwa.org Gaza \"22 November 2026\" health water displacement",
+      "site:wfp.org OR site:reliefweb.int Gaza \"22 November 2026\" food aid access trucks",
+      "site:palestinercs.org OR site:ifrc.org \"22 November 2026\" Gaza ambulance patients medical evacuation",
+      "Gaza ministry health \"22 November 2026\" \"evening\" emergency health hospital closure transport fuel",
+      "Gaza Rafah Kerem Shalom crossings humanitarian convoy 22 November 2026 new restrictions Sunday",
+      "Gaza ceasefire negotiations Hamas Israel hostage remains mediators 22 November 2026 Sunday afternoon evening"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA last news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "As of this observation, Gaza-specific latest entry was Jabalia fatality published 19:27 Gaza-local, already logged in previous heartbeat. Later listed entries addressed West Bank and were excluded."
+      },
+      {
+        "source": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Checked contemporary Gaza dispatch (previously logged casualty details) and its featured 21 Nov shelter infographic; only new-to-watch operational shelter estimates retained."
+      },
+      {
+        "source": "Palestinian Red Crescent",
+        "url": "https://www.palestinercs.org/",
+        "result": "Public feed checked; no new 22 Nov operational post surfaced."
+      },
+      {
+        "source": "AP 22 November regional news",
+        "url": "https://apnews.com/article/mideast-houthis-west-bank-november-22-2026-8d1680a23d592667db1ce1969b55b4f2",
+        "result": "No newly verified high-value Gaza event found."
+      }
+    ],
+    "exclusions": [
+      "WAFA 22 Nov Jabalia death, Deir al-Balah fatality, al-Mawasi deaths, 12-year-old child wounded, Bir al-Naaja injuries, cumulative MoH statistics, and diabetes insulin detail already in prior ledger.",
+      "Anadolu Nov 22 story's three deaths and four injuries are overlapping previously recorded day-specific incidents; al-Maslakh detail and general coastal firing/demolition lack a demonstrated separate post-cutoff change.",
+      "Earlier Civil Defence 129 recovered remains and 233 people missing, Maghazi demolitions, sewage damage, meningitis warning, and medical evacuations predate watch and/or have prior documentation.",
+      "Older Reuters/AP items, West Bank-only news, unsupported claims, and editorial/opinion excluded.",
+      "21 Nov Anadolu infographic's 350,000-family estimate retained only as a dated, source-attributed supplementary follow-up. No evidence those families were newly displaced this hour."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional site remained inaccessible; global WHO and OCHA checked normally.",
+      "Shelter figures have named ministry attribution via Anadolu but no primary assessment document or independent verification; original data-collection date unknown.",
+      "Search results may lag publication; the observation interval does not establish the event date for newly recovered older reports."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T104412-0800-20261122T184620566Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

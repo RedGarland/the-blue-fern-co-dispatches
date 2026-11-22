@@ -1,0 +1,218 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T064333-0800-20261122T144538Z",
+  "scheduled_for": "2026-11-22T06:44:51-08:00",
+  "started_at": "2026-11-22T06:43:33-08:00",
+  "completed_at": "2026-11-22T06:45:38-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T05:46:45-08:00",
+    "end": "2026-11-22T06:45:38-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T054448-0800-20261122T134645Z.json",
+    "basis": "Read prior authenticated completed watch on ops/watch-ledger. Search and source dates distinguished from event and discovery times; prior excluded items reconsidered only with new traceable verification."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261122-wafa-deir-al-balah-drone-fatality-177190",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177190",
+      "title": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": "16:08",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": "2026-11-22",
+      "source_type": "established_news_agency_reporting_hospital_and_local_medical_sources",
+      "classification": "new",
+      "confidence": "medium",
+      "location": "East of Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "One Palestinian man killed; civilian status not independently established; group targeted by Israeli drone fire",
+      "summary": "WAFA reported at 16:08 Gaza-local that medical sources at Al-Aqsa Martyrs Hospital received at least one body after Israeli drone fire targeted a group east of Deir al-Balah. One reported fatality, not added to a separate daily cumulative tally.",
+      "exact_supporting_passage": "A Palestinian man was killed by Israeli fire east of Deir al-Balah",
+      "source_verification": "Direct WAFA article read; attribution to Al-Aqsa Martyrs Hospital medical sources; no independent corroboration or victim identity.",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": true,
+        "prior_heartbeat_comparison": "Prior watch completed 05:46:45 PST (~15:46 Gaza); 16:08 Gaza WAFA article had not appeared.",
+        "novelty_scope": "Newly reported location-specific fatality, not an additional count on top of the day's health-ministry bulletin.",
+        "duplicate_handling": "Check against later casualty totals; not summed into existing 24-hour statistics."
+      }
+    },
+    {
+      "finding_id": "gaza-20261122-wafa-khan-younis-al-sikka-child-injury-177190",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177190",
+      "title": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah",
+      "publisher": "WAFA (Palestine News and Information Agency)",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": "16:08",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": "2026-11-22",
+      "source_type": "established_news_agency_reporting_hospital_and_local_medical_sources",
+      "classification": "new",
+      "confidence": "medium",
+      "location": "Al-Sikka area, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One child wounded in back by Israeli army fire; injury severity and identity unknown",
+      "summary": "The same WAFA dispatch separately reported a child wounded in the back in al-Sikka, Khan Younis. Distinct event from the Deir al-Balah death in the same article.",
+      "exact_supporting_passage": "a child was wounded in the back by Israeli army fire",
+      "source_verification": "Direct WAFA article read; no additional identifying or clinical details and no independent corroboration.",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "publication_after_prior_watch_cutoff": true,
+        "prior_heartbeat_comparison": "The 16:08 Gaza article is later than prior watch cutoff; child injury not present in previous watch.",
+        "novelty_scope": "Newly recovered child injury in a separate named locality.",
+        "duplicate_handling": "Not automatically counted in earlier Khan Younis/al-Mawasi casualty reports; avoid numerical aggregation pending deduplication."
+      }
+    },
+    {
+      "finding_id": "gaza-20261122-wafa-prcs-rafah-23-patients-23-companions-248512",
+      "canonical_source_url": "https://french.wafa.ps/Pages/Details/248512",
+      "title": "Le Croissant-Rouge : 46 patients et accompagnateurs évacués pour recevoir des soins à l’étranger via le point de passage de Rafah",
+      "publisher": "WAFA French (Palestine News and Information Agency), citing Palestinian Red Crescent Society",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": "14:35",
+      "publication_timezone": "Asia/Gaza",
+      "event_date": "2026-11-22",
+      "location": "Al-Mawasi field hospital, Gaza Strip; Rafah crossing; outbound medical transfers",
+      "affected_population_system": "23 patients requiring treatment abroad and 23 accompanying persons; medical evacuation and transport logistics",
+      "summary": "French WAFA reports Palestinian Red Crescent teams assisted evacuation of 23 patients and 23 accompanying people via Rafah with WHO coordination, preparing patients and providing medical and humanitarian support at its Al-Mawasi field hospital. Total 46 PERSONS, not 46 patients. Published 14:35 Gaza-local, before observation start but newly corroborated after prior watch rejected an untraceable automated 46-patients claim.",
+      "exact_supporting_passage": "23 patients et de 23 accompagnateurs vers l’étranger, via le point de passage de Rafah",
+      "source_type": "established_news_agency_report_attributing_operational_details_to_PRCS",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "source_verification": "Search-indexed full WAFA French article body and dated metadata available. Direct article open returned DisabledError; PRCS website accessible but its front-page news did not yet corroborate this operation; WHO EMRO unavailable.",
+      "bounded_discovery_context": {
+        "first_seen_in_this_watch": true,
+        "publication_before_window_start": true,
+        "prior_heartbeat_comparison": "Prior 05:46:45 PST ledger explicitly excluded automated GazaNews.live claim of '46 patients' evacuated for lack of traceable primary/established reporting. Newly located French WAFA provides attributable statement and corrects count to 23 patients plus 23 companions.",
+        "novelty_scope": "Newly corroborated medical evacuation report, not verified as a new operation during the last hour.",
+        "duplicate_handling": "One evacuation of 23 patients and 23 companions; do not count all 46 as patients or add to unrelated evacuation reports."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only. Gaza production publisher/collector remains authoritative; no production writes.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest index item 20 Nov 2026 (18 Nov humanitarian report); no newer Gaza operational update."
+      },
+      {
+        "source": "WHO global oPt emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No dated 22 Nov Gaza health, hospital capacity, or medical evacuation update; most recent related WHO global items older."
+      },
+      {
+        "source": "WHO Eastern Mediterranean website",
+        "url": "https://www.emro.who.int/",
+        "status": "HTTP_502",
+        "result": "Access failure recurring from previous checks; not newly degraded."
+      },
+      {
+        "source": "WHO EMRO oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "result": "Regional oPt page inaccessible; recurring failure."
+      },
+      {
+        "source": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "result": "Regional Palestine news inaccessible; recurring failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ November 22 2026 Gaza Sunday latest 15:00 16:00 injury killed",
+      "site:aa.com.tr/en/middle-east/ \"November 22, 2026\" Gaza killed injured hospital aid latest",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 strikes civilians ceasefire aid",
+      "site:apnews.com/article/ November 22 2026 Gaza Palestinians killed wounded ceasefire",
+      "site:aljazeera.com/news/2026/11/22/ Gaza Sunday Israeli attacks casualties aid infrastructure",
+      "site:unicef.org OR site:unrwa.org \"22 November 2026\" Gaza water sanitation children food",
+      "site:wfp.org OR site:un.org \"22 November 2026\" Gaza food access aid trucks crossing",
+      "site:ifrc.org OR site:palestinercs.org \"22 November 2026\" Gaza ambulances hospitals medevac",
+      "\"22 November 2026\" \"Deir al-Balah\" \"killed\" \"Khan Younis\" \"child\" Israeli gunfire drone",
+      "\"22 November 2026\" Gaza Rafah Kerem Shalom fuel medical evacuation ambulances operating hospitals",
+      "\"22 November 2026\" Gaza hostages ceasefire mediators negotiations detention Sunday",
+      "\"22 November 2026\" Gaza new displacement shelter infrastructure water sanitation destroyed housing after 15:00"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA English latest news and article",
+        "url": "https://english.wafa.ps/Pages/Details/177190",
+        "result": "16:08 Gaza-local article directly verified, reporting Deir al-Balah fatality and Khan Younis child injury."
+      },
+      {
+        "source": "WAFA French medical evacuation article",
+        "url": "https://french.wafa.ps/Pages/Details/248512",
+        "result": "Full article text recovered from fresh indexed search result; 23 patients plus 23 companions via Rafah coordinated with WHO; direct article retrieval blocked."
+      },
+      {
+        "source": "Palestinian Red Crescent website",
+        "url": "https://www.palestinercs.org/",
+        "result": "Homepage accessible; latest front-page item 2 Nov 2026, not verification of 22 Nov transfers."
+      },
+      {
+        "source": "Gaza Ministry of Health public channel",
+        "url": "https://t.me/s/mohmediagaza",
+        "result": "Earlier daily casualty data and alerts already in prior ledgers; no distinct new update found."
+      },
+      {
+        "source": "Al Jazeera 22 Nov report",
+        "url": "https://www.aljazeera.com/amp/news/2026/11/22/displaced-palestinians-protest-as-israeli-air-strikes-continue-in-gaza",
+        "result": "Previously covered Maghazi 500-unit losses, 21 Nov protests and central-Gaza 129-remains /233 missing recovery operation; not current-hour events."
+      }
+    ],
+    "exclusions": [
+      "Existing Nov 22 74,742 cumulative death toll, 4 newly killed/2 recovered/33 injured in prior daily health bulletin, medical textiles shortage, meningitis warning and sewage infrastructure figures: duplicates.",
+      "Prior WAFA Al-Mawasi two deaths, Nov 21 Tel al-Hawa three fatalities and Hamas mediator meeting request: duplicates.",
+      "Maghazi 500 homes destroyed, Nuseirat/Zawayda/Deir al-Balah Civil Defence 129 remains and 233 reported missing are previously reported or multiday recovery operations, not fresh hourly incidents.",
+      "AI-assisted GazaNews.live claims about Kerem Shalom WHO supply trucks, hundreds leaving, and Al-Shifa protests lack corroboration from named primary/established sources; excluded.",
+      "Historical UN OCHA shelter and relief details, West Bank-only events and stale Reuters/AP items excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/",
+        "error": "HTTP_502",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "TIMEOUT",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "TIMEOUT",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://french.wafa.ps/Pages/Details/248512",
+        "error": "DisabledError on direct open; search-indexed article text available",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO regional access remains inaccessible; usable OCHA, WHO global, WAFA and local reporting supported a degraded-but-productive watch.",
+      "WAFA 16:08 incident reports have no independent corroboration, names, or verification of civilian status.",
+      "The 14:35 Gaza-local PRCS medical evacuation reporting predates this watch but is newly corroborated against an unverified earlier claim; direct WAFA French fetch blocked.",
+      "Index lag and publication times limit hour-level completeness; exactly 12 additional targeted searches completed."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T054448-0800-20261122T134645Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

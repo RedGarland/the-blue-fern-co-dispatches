@@ -1,0 +1,170 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T024626-0800-20261122T104817Z",
+  "scheduled_for": "2026-11-22T02:44:51-08:00",
+  "started_at": "2026-11-22T02:46:26-08:00",
+  "completed_at": "2026-11-22T02:48:17.846-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T01:49:17.340-08:00",
+    "end": "2026-11-22T02:48:17.846-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T014757-0800-20261122T094917340Z.json",
+    "basis": "Window anchored to the prior authenticated heartbeat completion. Findings are newly recovered disclosures or updates, not necessarily events occurring within the hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261122-moh-medical-textiles-exhaustion",
+      "canonical_source_url": "https://t.me/MOHMediaGaza/7736",
+      "title": "Gaza Health Ministry warns medical textiles and clothing are exhausted, threatening surgery and hospital operations",
+      "publisher": "Palestinian Ministry of Health – Gaza",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time": null,
+      "event_date": null,
+      "location": "Gaza Strip",
+      "affected_population_or_system": "Hospitals, surgical patients, inpatient and admission departments, medical staff",
+      "supporting_passage_exact": "النفاد التام للأقمشة الطبية والملبوسات في مخازن الوزارة وكافة المرافق الصحية والمستشفيات",
+      "passage_language": "ar",
+      "source_type": "primary_official_health_authority",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": "New-to-watch 22 Nov ministry warning recovered by direct official-channel review after prior 01:49 PST ledger; ministry states supplies are exhausted at facilities and surgical/inpatient services risk stoppage. High confidence in ministry statement; independent stock audit and exact onset time not verified."
+    },
+    {
+      "finding_id": "gaza-20261122-moh-meningitis-water-sanitation-alert",
+      "canonical_source_url": "https://t.me/MOHMediaGaza/7741",
+      "corroborating_source_url": "https://t.me/MOHMediaGaza/7743",
+      "title": "Gaza Health Ministry warns of unusual increase in meningitis cases amid damaged water and sanitation systems",
+      "publisher": "Palestinian Ministry of Health – Gaza",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time": null,
+      "event_date": null,
+      "location": "Multiple areas of Gaza Strip (specific districts not stated)",
+      "affected_population_or_system": "Children, vulnerable people, water/sanitation systems, public health and clinical services",
+      "supporting_passage_exact": "unusual seasonal rise in the number of cases of meningitis, especially viral meningitis.",
+      "passage_language": "en",
+      "source_type": "primary_official_health_authority",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": "New-to-watch 22 Nov official epidemiological warning; English ministry post and Arabic notice directly checked. No case count, laboratory confirmation, confirmed transmission route or WHO verification provided. Ministry links a rise to damaged sewer/treatment and potential water contamination; do not label as independently verified outbreak or assert a specific pathogen."
+    },
+    {
+      "finding_id": "gaza-20261122-moh-24hour-casualty-update-4new2recovered33injured",
+      "canonical_source_url": "https://t.me/MOHMediaGaza/7744",
+      "corroborating_source_url": "https://english.wafa.ps/Pages/Details/177183",
+      "title": "Gaza Health Ministry updates hospital-received casualties: 4 newly killed, 2 recovered dead, and 33 wounded over 24 hours",
+      "publisher": "Palestinian Ministry of Health – Gaza; WAFA",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time": null,
+      "event_date": null,
+      "location": "Gaza Strip (individual incident sites not specified)",
+      "affected_population_or_system": "People killed or injured; Gaza hospitals and ambulance/rescue services",
+      "supporting_passage_exact": "6 شهداء (4 شهداء جدد، 2 شهيد انتشال) و33 مصابًا.",
+      "passage_language": "ar",
+      "source_type": "primary_official_health_authority_with_state_news_followup",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": "New-to-watch ministry 24-hour aggregate, supported by WAFA's 11:42 Gaza-time 22 Nov report. Overall cumulative totals updated to 74,742 killed and 176,227 injured; since Oct 2025 ceasefire 1,675 killed and 6,095 injured. This is NOT six newly killed, NOT four or six additional deaths beyond previously recorded incident reports, and injuries may overlap earlier individual reports. Two recovered bodies are not newly killed. Ministry's cumulative recovered tally remains 851, so aggregation/reconciliation remains unverified."
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production collector/publisher is authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest listed update remains 20 Nov situation report for 18 Nov; no current-hour operational release."
+      },
+      {
+        "source": "WHO global conflict portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly posted dated Gaza hospital, evacuation, capacity or fuel change in this observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Direct fetch failed, longstanding issue."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Gaza emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct fetch failed, longstanding issue."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"22/November/2026\" \"Gaza\" injured killed hospital",
+      "site:aa.com.tr/en/middle-east/ Gaza 22 November 2026 Sunday killed wounded aid ceasefire",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Sunday strikes ceasefire deaths crossing",
+      "site:apnews.com/article/ Gaza November 22 2026 Sunday airstrike civilian wounded",
+      "site:aljazeera.com/news/2026/11/22 Gaza Sunday hospital killed wounded demolition aid",
+      "site:unrwa.org OR site:unicef.org Gaza November 22 2026 flooding shelter water food displaced",
+      "site:wfp.org OR site:un.org \"Gaza\" \"22 November 2026\" food fuel crossing delivery",
+      "site:palestinercs.org OR site:ifrc.org \"Gaza\" \"22 November 2026\" ambulance medical evacuation hospital",
+      "\"Gaza\" \"22 November 2026\" \"hospital\" \"evacuation\" \"fuel\" latest",
+      "\"Gaza\" \"22 November 2026\" \"Rafah\" \"Kerem Shalom\" trucks crossings",
+      "\"Gaza\" \"22 November 2026\" ceasefire mediators hostages detention talks new November 22",
+      "\"Gaza\" \"22 November 2026\" six dead 33 injured health ministry 24 hours"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New 11:42 Gaza-local 22 Nov health ministry total; prior previous watch reported newest as 08:44, so recovered as a follow-up rather than asserting event occurred after prior check."
+      },
+      {
+        "source": "Gaza Ministry of Health public official channel",
+        "url": "https://t.me/s/mohmediagaza",
+        "result": "Located ministry 22 Nov medical-textile supply warning, meningitis / water sanitation warning, and updated 24-hour hospital-received casualty statistics; canonical post URLs resolved and confirmed."
+      },
+      {
+        "source": "WAFA 21 Nov prior death toll",
+        "url": "https://english.wafa.ps/Pages/Details/177165",
+        "result": "Prior totals 74,736 deaths and 176,194 injured, serving as comparator not additive counts."
+      }
+    ],
+    "exclusions": [
+      "Earlier 21 Nov Tel al-Hawa food-vehicle strike, WCK non-affiliation, named funeral subjects and subsequent mediation request: already documented.",
+      "22 Nov Al-Mawasi two deaths from wounds: already documented; may overlap in current ministry totals and not counted again.",
+      "Earlier Maghazi >500 housing-unit loss estimate: previous watch recorded.",
+      "An AI-assisted unsourced crossing-status item published 22 Nov was rejected; no independently authenticated crossing change.",
+      "Older medical attacks and uncorroborated social posts excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional pages inaccessible; OCHA and WHO global were accessible, so overall status DEGRADED rather than FAILED.",
+      "Source publication date verified for three new-to-watch items; exact minute of official-channel posting and incident timing not verified.",
+      "Gaza ministry epidemiological and stocks claims are attributed to the ministry; independent verification unavailable.",
+      "Twelve targeted search queries only; indexed reporting may lag; casualty aggregates overlap individual incidents and should not be summed."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T014757-0800-20261122T094917340Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

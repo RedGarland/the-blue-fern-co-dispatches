@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T154809-0800-20261122T234914Z",
+  "scheduled_for": "2026-11-22T15:44:51-08:00",
+  "started_at": "2026-11-22T15:48:09-08:00",
+  "completed_at": "2026-11-22T15:49:14.410-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T14:47:51.561-08:00",
+    "end": "2026-11-22T15:49:14.410-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T144644-0800-20261122T224751561Z.json",
+    "basis": "Start is the prior verified GitHub watch cutoff; end is this run's completion. A report newly indexed or retrieved is not necessarily a new event during the observation window."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; the authoritative daily Gaza production collector/publisher was not modified.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Home and updates listing checked. Latest Gaza humanitarian situation report is 18 November 2026 (published 20 November); no 22 November Gaza update listed."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway, matching previously recorded regional-site outage."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-opt",
+        "status": "ACCESSIBLE",
+        "result": "Overview checked; no verifiable new 22 November operational update."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza \"22 November 2026\" humanitarian situation report aid crossings casualties",
+      "site:who.int Gaza \"22 November 2026\" hospitals medical evacuation health"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"22/November/2026\" killed injured afternoon November 22",
+      "site:aa.com.tr/en/middle-east/ Gaza November 22 2026 latest 23:00 casualties ceasefire",
+      "Gaza November 22 2026 latest civilian deaths wounds Israeli gunfire AFP Reuters November 22 evening",
+      "site:unicef.org/sop Gaza November 22 2026 water child displacement aid",
+      "site:unrwa.org Gaza 22 November 2026 displacement shelter food water",
+      "site:wfp.org Gaza November 22 2026 aid crossings food trucks access",
+      "Gaza 22 November 2026 latest hospital ambulance medical evacuation Rafah WHO Palestinian Red Crescent",
+      "Gaza November 22 2026 new crossing Kerem Shalom Rafah aid access trucks fuel UN OCHA",
+      "site:aljazeera.com/news/2026/11/22 Gaza 22 November killed wounded displacement negotiations",
+      "site:reliefweb.int Gaza November 22 2026 site:reliefweb.int/en/report health water shelter emergency",
+      "site:icrc.org Gaza November 22 2026 medical aid detainees hostages",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza Rafah wounded displaced"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA English latest-news index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest visibly dated Gaza-specific dispatch is 22 November 19:27 Gaza local time Jabalia fatality, already captured in prior watch. Newer visible posts are West Bank or political."
+      },
+      {
+        "source": "Anadolu November 22 casualty roundup",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "result": "Reported Deir al-Balah fatality, Al-Mawasi/Al-Maslakh deaths from earlier injuries, Al-Sikka child injury, and Bir al-Naaja injuries overlap earlier ledger items. General shelling of tent areas, demolitions and naval fire had no independently verifiable new civilian outcome."
+      },
+      {
+        "source": "Al Jazeera November 22 Gaza report",
+        "url": "https://www.aljazeera.com/news/2026/11/22/displaced-palestinians-protest-as-israeli-air-strikes-continue-in-gaza",
+        "result": "Maghazi 500 housing units, 350,000-family shelter figure and central Gaza Civil Defence 129 remains / 233 missing already previously recovered; no distinct post-cutoff change."
+      },
+      {
+        "source": "Palestine Red Crescent evacuation attributed report",
+        "url": "https://palsawa.com/en/palestinian-news/2026/11/22/23-gaza-patients-and-companions-evacuated-via-rafah-crossing-with-who-coordination",
+        "result": "23 patients and 23 companions evacuated earlier 22 November via Rafah, already included in prior follow-up; not counted again."
+      }
+    ],
+    "exclusions": [
+      "WAFA Jabalia and Deir al-Balah deaths, Al-Mawasi/Al-Maslakh fatalities, child shot in Al-Sikka and Bir al-Naaja injuries were previously captured or part of overlapping casualty roundups; no additive casualty count.",
+      "Medical evacuations via Rafah (23 patients and 23 companions) and Gaza medical-supply shortages were documented by earlier watches.",
+      "Maghazi destroyed homes, Civil Defence recovery of 129 remains / 233 still missing, sewage infrastructure and flood/shelter risk estimates are previously logged; no fresh operational change identified.",
+      "Earlier OCHA/WHO/UNICEF/UNRWA/WFP and ICRC background reports are not newly qualifying 22 November developments.",
+      "Unverified social reporting, unsourced claims, opinion, unrelated West Bank incidents and generic military actions without distinct documented civilian impact excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO Eastern Mediterranean regional access remains unavailable; OCHA OPT, WHO global, WAFA, Palestinian Red Crescent-attributed reporting, established agencies and direct reporting remained accessible.",
+      "Search indexing may lag events and many reports omit an exact publication timestamp; findings require a distinct verified development rather than merely newly resurfaced existing reports."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true
+  }
+}

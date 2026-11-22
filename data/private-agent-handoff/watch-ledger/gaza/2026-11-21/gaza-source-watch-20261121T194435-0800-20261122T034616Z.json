@@ -1,0 +1,150 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T194435-0800-20261122T034616Z",
+  "scheduled_for": "2026-11-21T19:44:51-08:00",
+  "started_at": "2026-11-21T19:44:35-08:00",
+  "completed_at": "2026-11-21T19:46:16.699-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T18:42:14.115-08:00",
+    "end": "2026-11-21T19:46:16.699-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T184048-0800-20261122T024214115Z.json",
+    "basis": "Directly retrieved prior completed watch-ledger heartbeat from GitHub; OCHA OPT and WHO official source checks performed first, followed by exactly 12 additional targeted searches. Observation window reflects discovery rather than a verified event-time range."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261122-hamas-emergency-mediator-meeting-request-tel-al-hawa-followup",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/hamas-seeks-emergency-talks-after-israeli-strike-killed-3-gaza-aid-workers/4133296",
+      "title": "Hamas seeks emergency talks after Israeli strike killed 3 Gaza aid workers",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time": null,
+      "publication_datetime": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip; request addressed to ceasefire mediators and guarantors; triggering previously reported strike in Tel al-Hawa, southwest Gaza City",
+      "affected_population_system": "Ceasefire mediation and humanitarian protection for displaced civilians and food-distribution workers. Hamas reportedly requested an urgent meeting of mediators and guarantors following the already documented November 21 food-vehicle strike. This does not establish that any meeting was held or accepted, or that the three dead had independently verified charity affiliations. No additional casualties counted.",
+      "exact_supporting_passage": "Hamas requested an urgent meeting of ceasefire mediators and guarantors in the Gaza Strip",
+      "source_type": "Established news agency reporting a statement/request attributed to Hamas",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Additional targeted source search #6 (Anadolu Nov 22 report) and full direct article read; corroboration search #7 found no distinct independent meeting confirmation",
+        "observation_window_start": "2026-11-21T18:42:14.115-08:00",
+        "publication_time_basis": "Anadolu article lists 22 November 2026 as both publication and update date; no time of day available",
+        "published_within_window": null,
+        "first_recovered_in_this_watch": true,
+        "comparison_to_prior": "Predecessor hourly heartbeat recorded no new negotiation activity. It and earlier heartbeats already documented the November 21 Tel al-Hawa food vehicle strike, three fatalities, and the World Central Kitchen denial of affiliation. The reported new action is an urgent meeting request, not another strike or a verified resumption of negotiations.",
+        "relevant_miss_classes": [
+          "ceasefire/negotiation changes",
+          "aid access",
+          "military operations with documented civilian impact"
+        ],
+        "caveats": "Single named news agency report; independent corroboration and exact timing of the Hamas request absent. The source describes a requested meeting, not a completed or scheduled mediator meeting. Source's characterization of three victims as soup kitchen workers is attributed, not treated as independently established."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. Production daily collector and publisher are authoritative; no publication, approval or schedule changes.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza humanitarian situation report listed as 18 November 2026 report posted 20 November. No later OCHA Gaza report identified in window."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global emergency page retrieved; no new Gaza-specific hospital operating capacity, ambulance, fuel or medical evacuation development dated within watch interval."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct fetch returned HTTP 502 Bad Gateway; recurring failure present in predecessor heartbeat."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "result": "Direct fetch timed out; WHO global fallback accessible; recurrent source impairment."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza injured killed Sunday dawn",
+      "site:english.wafa.ps/Pages/LastNews 22 November 2026 Gaza 05:00 Sunday",
+      "site:reuters.com/world/middle-east/ Gaza Sunday November 22 2026 Israeli strike civilians ceasefire",
+      "site:apnews.com/article/ Gaza November 22 2026 Sunday casualties aid ceasefire",
+      "site:aljazeera.com/news/2026/11/22 Gaza dawn civilians killed injured ambulance",
+      "site:aa.com.tr/en/middle-east/ Gaza 22 November 2026 wounded killed Israeli",
+      "\"Hamas\" \"urgent meeting\" mediators \"November 22, 2026\" Gaza strike",
+      "Gaza 22 November 2026 Sunday 5 am injured killed airstrike food ambulance",
+      "site:palestinercs.org OR site:ifrc.org Gaza 22 November 2026 ambulance hospital medical evacuation fuel disruption",
+      "site:unrwa.org OR site:un.org Gaza November 21 22 2026 newly displaced shelter relief winter",
+      "site:unicef.org OR site:wfp.org Gaza November 22 2026 water food aid access change",
+      "Gaza 22 November 2026 Rafah Kerem Shalom crossings food medical evacuations ceasefire hostages new developments"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Newest visible Gaza item Beit Lahia Palestinian woman injured Nov 21 21:42 Gaza local, already recorded; no 22 November Gaza incident on displayed list."
+      },
+      {
+        "source": "Reuters Gaza topic",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Latest listed Tel al-Hawa food vehicle strike and WCK denial were already recorded; no separate event."
+      },
+      {
+        "source": "Anadolu Nov 22 meeting request",
+        "url": "https://www.aa.com.tr/en/middle-east/hamas-seeks-emergency-talks-after-israeli-strike-killed-3-gaza-aid-workers/4133296",
+        "result": "Newly recovered Hamas urgent-mediator-meeting request after known food vehicle strike; article dated Nov 22 without clock time."
+      },
+      {
+        "source": "AFP as published by Dawn Nov 22",
+        "url": "https://www.dawn.com/news/2046198/israeli-fire-kills-four-more-in-gaza",
+        "result": "Four Saturday deaths refer to known Tel al-Hawa three and Jabalia one; no new deaths counted. Friday Bureij victims reported as earlier incident."
+      }
+    ],
+    "excluded_candidates": [
+      "AFP/Dawn's November 22 four deaths repeat the previously logged three Tel al-Hawa fatalities and one Jabalia fatality; not additional people.",
+      "Earlier WAFA Beit Lahia/Nuseirat injuries and Anadolu fourteen wounded November 21 aggregate were previously logged; no increment or double count.",
+      "OCHA Nov 20 posting and older WHO/UN/UNICEF/WFP humanitarian reports and 2025/2024 matching-calendar-date reports excluded as recycled.",
+      "No newly verified same-hour crossing, aid volume, shelter, water supply, hospital functioning, transport/fuel, medical evacuation, hostage or detainee shift found in bounded search."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO oPt emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "Timeout fetching",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional retrieval degraded in the same way as prior checks; the accessible WHO global page is a partial fallback. No new material source regression.",
+      "Anadolu Nov 22 publication date can be verified, but the request's event time and publication hour cannot. Newness is relative to previous ledger discovery, not confirmed occurrence within this hour.",
+      "Search engine indexing and source timestamps can lag; the bounded 12 searches cannot establish the absence of other developments."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

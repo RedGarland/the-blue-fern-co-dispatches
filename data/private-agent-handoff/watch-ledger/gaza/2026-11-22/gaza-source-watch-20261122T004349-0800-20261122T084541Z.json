@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T004349-0800-20261122T084541Z",
+  "scheduled_for": "2026-11-22T00:44:51-08:00",
+  "started_at": "2026-11-22T00:43:49-08:00",
+  "completed_at": "2026-11-22T00:45:41.008-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-21T23:44:47-08:00",
+    "end": "2026-11-22T00:45:41.008-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T234352-0800-20261122T074447Z.json",
+    "basis": "New-to-watch developments searched since last verified heartbeat completion (2026-11-21 23:44:47 PST). A 2026-11-22 dated report includes developments from 21 November and a cumulative less-than-one-month housing loss; exact publication and incident timestamps were unavailable, so events are not asserted to have occurred within the observation hour."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-aljazeera-20261122-maghazi-over-500-homes",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/22/displaced-palestinians-protest-as-israeli-air-strikes-continue-in-gaza",
+      "title": "Displaced Palestinians protest as Israeli air strikes continue in Gaza",
+      "publisher": "Al Jazeera (reporting by Al Jazeera Staff and Anadolu)",
+      "source_date": "2026-11-22",
+      "publication_date": "2026-11-22",
+      "publication_time_local": null,
+      "publication_timezone": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Maghazi municipality, Deir el-Balah governorate, central Gaza; displaced protesters near the Yellow Line",
+      "affected_population_system": "More than 500 reported destroyed housing units within less than one month, affecting residential infrastructure and displaced residents near the Yellow Line; no separately verified displaced-household count",
+      "exact_supporting_passage": "“More than 500 housing units have been destroyed in less than a month,” said Mohammed Musleh, mayor of Deir-el Balah’s Maghazi municipality, told Al Jazeera.",
+      "source_type": "Established media outlet reporting a named local municipal official's on-the-record allegation; not independently corroborated",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "discovered_at": "2026-11-22T00:45:41.008-08:00",
+        "observation_start": "2026-11-21T23:44:47-08:00",
+        "observation_end": "2026-11-22T00:45:41.008-08:00",
+        "search_method": "Targeted Al Jazeera 22 November 2026 search (5th of 12 additional searches); report directly opened and read",
+        "unique_change": "First traceable specific local-council figure of over 500 housing units destroyed over a sub-month period in Maghazi surfaced in this bounded watch; same report describes a Saturday protest by hundreds of displaced Palestinians against continuing destruction near the Yellow Line.",
+        "prior_watch_comparison": "Last verified ledger reported two deaths from injuries near al-Mawasi and did not record the Maghazi housing-loss figure or protest. This does not establish that the underlying destruction or the article was first published after the prior heartbeat.",
+        "verification_caveat": "The 500 figure is attributed to the Maghazi municipal mayor, without a reviewed original municipal dataset, precise unit-by-unit geolocation or independent confirmation. 21 Nov protest and cumulative destruction should not be mistaken for 22 Nov new strikes or counted as additional casualties.",
+        "bounded_scope": "Displacement and infrastructure damage; primary Gaza collection remains authoritative; no promotion to production."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only, not the primary daily publisher or collector. No publication, approvals, schedule edits, or disabling.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed update on 20 Nov 2026 is the 18 Nov humanitarian situation report; none new in observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Direct fetch failed 502 Bad Gateway; pre-existing failure."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new verified window-specific operational change in health facilities, medical evacuations, ambulances, fuel or transport."
+      },
+      {
+        "source": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct fetch failed 502 Bad Gateway; pre-existing failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details \"22/November/2026\" Gaza killed injured 10:00",
+      "site:apnews.com Gaza November 22 2026 Sunday casualties strike Khan Younis",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Sunday airstrikes casualties ceasefire",
+      "site:aa.com.tr/en/middle-east/ Gaza November 22 2026 Israeli strike Sunday morning injured killed",
+      "site:aljazeera.com/news/2026/11/22 Gaza killed injured aid ceasefire",
+      "site:un.org OR site:ochaopt.org November 22 2026 Gaza aid displaced humanitarian update",
+      "site:who.int OR site:emro.who.int Gaza November 22 2026 health hospital ambulance evacuation",
+      "site:wfp.org OR site:unicef.org Gaza November 22 2026 food water access",
+      "\"Mohammed Musleh\" \"500\" Maghazi demolished homes November 22 2026 Gaza",
+      "site:palestinercs.org OR site:ifrc.org Gaza November 22 2026 ambulance fuel medical",
+      "Gaza November 22 2026 Rafah Kerem Shalom crossings aid trucks fuel medical evacuations Sunday",
+      "Gaza November 22 2026 ceasefire Hamas mediators hostages Israeli troops operations civilian impact"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "No new Gaza item after its 22 Nov 08:44 Gaza-time report of two Khan Younis wound-related deaths; already recorded in preceding heartbeat. 08:54, 09:37 and 10:06 reports were West Bank events, excluded."
+      },
+      {
+        "source": "Reuters Israel/Hamas",
+        "url": "https://www.reuters.com/world/israel-hamas/",
+        "result": "Latest relevant item still the 21 November Tel al-Hawa food vehicle strike; duplicate."
+      },
+      {
+        "source": "Al Jazeera 22 Nov article",
+        "url": "https://www.aljazeera.com/news/2026/11/22/displaced-palestinians-protest-as-israeli-air-strikes-continue-in-gaza",
+        "result": "Municipal mayor reported >500 housing units destroyed in less than a month; hundreds of displaced protested on Saturday. Newly recovered municipal quantified damage; exact publish time unavailable."
+      }
+    ],
+    "excluded_candidates": [
+      "Al Jazeera's report that 129 human remains were recovered and 233 people reported missing beneath rubble in central Gaza is dated to Saturday and may overlap existing Civil Defence recovery reporting; unverified newness and no new casualty count promoted.",
+      "Saturday's Tel al-Hawa strike killing three and WCK affiliation denial already recorded.",
+      "Previous Beit Lahia, Nuseirat, Jabalia, Khan Younis casualties and Sunday al-Mawasi wound-related deaths already covered; no additional deaths/injuries counted.",
+      "Anadolu's Nov 22 Hamas urgent mediator-meeting request was reported in a previous heartbeat; no verified new meeting or outcome.",
+      "Al Jazeera 48-hour cumulative counts of 9 killed, 55 wounded since recent reporting are aggregated older incidents, not additional new casualties.",
+      "No new independently attributable specific change to WHO/OCHA health operations, aid crossing access, fuel, or medical evacuations found."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional access remains degraded while WHO global and OCHA updates are accessible; DEGRADED, not FAILED; no newly material failure.",
+      "The 12-targeted-search ceiling and indexing lag limit completeness.",
+      "Housing-unit loss figure is attributed to named local municipal official and not independently audited; publication time unknown.",
+      "Occurrence of housing destruction cannot be proven inside this hourly interval; classified as a newly surfaced traceable detail, not a new same-hour incident.",
+      "Scheduled hour is slightly after run startup; actual timestamps preserved."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

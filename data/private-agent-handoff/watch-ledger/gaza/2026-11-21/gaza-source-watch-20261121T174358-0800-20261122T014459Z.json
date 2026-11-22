@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261121T174358-0800-20261122T014459Z",
+  "scheduled_for": "2026-11-21T17:44:51-08:00",
+  "started_at": "2026-11-21T17:43:58-08:00",
+  "completed_at": "2026-11-21T17:44:59.405-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-21",
+    "start": "2026-11-21T16:45:10.588-08:00",
+    "end": "2026-11-21T17:44:59.405-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-21/gaza-source-watch-20261121T164354-0800-20261122T004454Z.json",
+    "basis": "Latest completed durable hourly heartbeat read from ops/watch-ledger via authenticated GitHub connector. OCHA OPT and WHO directly checked first; 12 additional targeted searches. Window is discovery-oriented, not a claim every event occurred during it."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only. Authoritative daily collector/publisher unchanged.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT homepage and updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Most recent listed Gaza-specific item is Humanitarian Situation Report | 18 November 2026, posted 20 November. No new Gaza update listed during observation window."
+      },
+      {
+        "source": "WHO EMRO oPt regional page",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Direct page failed HTTP 502 Bad Gateway; known recurring WHO regional access limitation."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global emergency page accessible as fallback; no verified newly timed hospital, transport, fuel, functioning capacity or medical-evacuation development within observation window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza wounded killed dawn",
+      "site:reuters.com/world/middle-east/ \"November 22, 2026\" Gaza Israel ceasefire civilians",
+      "site:apnews.com/article/ Gaza November 22 2026 killed wounded Sunday",
+      "site:aljazeera.com/news/2026/11/22 Gaza early Sunday November 22 airstrikes casualties",
+      "site:aa.com.tr/en/middle-east/ Gaza November 22 2026 killed wounded Sunday",
+      "Gaza November 22 2026 03:00 dawn November 21 17:00 PST ambulance civilians killed injured",
+      "site:palestinercs.org OR site:ifrc.org Gaza 21 22 November 2026 ambulance access hospital medical evac",
+      "site:unrwa.org OR site:un.org Gaza November 21 22 2026 shelter displacement distribution crossings",
+      "site:unicef.org OR site:wfp.org Gaza November 21 22 2026 water aid food fuel deliveries",
+      "site:who.int OR site:reliefweb.int Gaza November 21 22 2026 hospitals functioning capacity evacuation medical supplies",
+      "Gaza Rafah Kerem Shalom November 21 22 2026 crossings trucks reopened closed aid",
+      "Gaza ceasefire negotiations hostage release prisoner detention civilian November 21 22 2026 update"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza-specific listed report remains wounded woman in Beit Lahia at 21:42 Gaza local Nov 21, previously logged. No newer Gaza report on visible page."
+      },
+      {
+        "source": "Reuters Tel al-Hawa truck strike",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Existing three deaths, aid-vehicle details, WCK denial and competing military allegation previously logged; no new independently timed change."
+      },
+      {
+        "source": "OCHA OPT update index",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Latest dated Gaza item November 20 posting, outside window."
+      },
+      {
+        "source": "WHO global oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible. No newly dated operational hospital or medical evacuation update identified."
+      }
+    ],
+    "excluded_candidates": [
+      "Tel al-Hawa vehicle strike and three deaths, food distribution detail, World Central Kitchen non-affiliation, named funeral attendees, Jabalia fatality, Nuseirat youth and Beit Lahia woman injuries were already in preceding watch ledger entries.",
+      "Anadolu previously reported November 21 total of four killed and fourteen injured; no distinct subsequent verified increase. Avoid double counting overlapping same-day totals.",
+      "Reports about November 20 attacks, November 17 ceasefire status and November 2026 winter shelter hardship, crossings and health system constraints all predate this observation hour.",
+      "Search results from 2023, 2024 and 2025 with matching November 21–22 calendar days excluded; undated or automatically generated reports and unverified claims not promoted.",
+      "No newly source-verified change in crossings, aid delivery, food/water, hospital operations, medical evacuation, ambulance access, fuel, displacement, detention/hostages, negotiations or military civilian impact surfaced."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Regional WHO retrieval remains degraded, consistent with preceding hourly heartbeats, despite accessible WHO global fallback.",
+      "Web indexing, source updates and exact publication times can lag; zero results do not establish absence of developments.",
+      "Search date and content dates were checked to exclude recycled and non-hourly reports."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

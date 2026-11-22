@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T144644-0800-20261122T224751561Z",
+  "scheduled_for": "2026-11-22T14:44:51-08:00",
+  "started_at": "2026-11-22T14:46:44-08:00",
+  "completed_at": "2026-11-22T14:47:51.561-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T13:49:36.460-08:00",
+    "end": "2026-11-22T14:47:51.561-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T134841-0800-20261122T214841Z.json",
+    "basis": "The prior watch cutoff was verified from the authenticated GitHub heartbeat. This is a supplementary recall window; source publication time, report discovery time, and incident time are not treated as equivalent."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; the daily production collector/publisher is authoritative. No publishing, approvals, schedule, automation settings or permissions changed.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT homepage and updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest OCHA Gaza humanitarian situation report listed as 18 November (published 20 November); no newer Gaza update listed on 22 November. Homepage checked."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Bad Gateway; recurring limitation also seen in prior watch."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO overview accessible without a verifiable new operational update during the observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt news",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "result": "Same regional HTTP 502 failure."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza humanitarian situation report November 22 2026 latest",
+      "site:who.int Gaza occupied Palestinian territory emergency health November 22 2026"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza 22:00 23:00 2026",
+      "site:aa.com.tr/en/middle-east/ Gaza November 22 2026 killed injured latest afternoon",
+      "Gaza 22 November 2026 Israeli strikes latest casualties 22 Nov AFP Reuters AP afternoon",
+      "site:unicef.org Gaza November 22 2026 displaced children water shelter",
+      "site:unrwa.org Gaza 22 November 2026 situation response shelters",
+      "site:wfp.org Palestine Gaza November 22 2026 crossings aid food new",
+      "Gaza November 22 2026 22:00 GMT 23:00 GMT new hospital casualties Reuters AFP",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"22/November/2026\" killed wounded",
+      "site:aljazeera.com/news/2026/11/22 Gaza 22 November 2026 ceasefire civilian impact",
+      "site:palestinercs.org Gaza 22 Nov 2026 evacuation ambulance patient transport",
+      "site:icrc.org Gaza 22 November 2026 detained hostages crossing",
+      "site:reliefweb.int Gaza 22 November 2026 humanitarian update water displacement health"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA English news homepage",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza-specific dispatch in the visible news feed is the Jabalia fatality at 19:27 Gaza time on 22 November (09:27 PST), already captured in an earlier watch. Newer listed items through 22:09 Gaza time are West Bank or political reports."
+      },
+      {
+        "source": "UNICEF State of Palestine press centre",
+        "url": "https://www.unicef.org/sop/press-centre",
+        "result": "Latest releases are dated 20 November 2026, no 22 November qualifying update."
+      },
+      {
+        "source": "UNRWA latest reports listing",
+        "url": "https://www.unrwa.org/resources/reports",
+        "result": "Recent result is from 19 November 2026; no uniquely identifiable newer update in bounded discovery."
+      },
+      {
+        "source": "WFP Palestine emergency overview",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Current food access/crossing and assistance shortages described without demonstrated fresh event or attributable publication time for this watch."
+      }
+    ],
+    "exclusions": [
+      "Previously recorded Jabalia and Deir al-Balah fatalities, Khan Younis child injury, Bir al-Naaja injuries, Rafah medical evacuations and other November 22 casualty wrap reporting.",
+      "Previously captured medical textiles, meningitis, diabetes supplies, sanitation plant/pump figures, shelter and flooding estimates.",
+      "Older OCHA, WHO, UNICEF, UNRWA and WFP background updates without a distinct newly verified change.",
+      "Generic military/ceasefire claims, uncorroborated social claims, unrelated West Bank incidents, and duplicate aggregations."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/opt/news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional site remains inaccessible, but WHO global, OCHA OPT, WAFA, UNICEF, UNRWA, WFP and established reporting provided useful supplementary coverage.",
+      "Search indexing and time-of-publication visibility are incomplete; no positive item was promoted without evidence of a distinct report/development."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false
+  }
+}

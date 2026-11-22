@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T134841-0800-20261122T214841Z",
+  "scheduled_for": "2026-11-22T13:44:51-08:00",
+  "started_at": "2026-11-22T13:48:41-08:00",
+  "completed_at": "2026-11-22T13:49:36.460-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T12:47:36-08:00",
+    "end": "2026-11-22T13:49:36.460-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T124626-0800-20261122T204626Z.json",
+    "basis": "Previous heartbeat confirmed by authenticated GitHub readback; bounded supplementary recall after last observation cutoff plus checks for important newly recovered reports, separated from event dates."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only. The primary Gaza publisher/collector remains authoritative. No approvals, publications, schedule or automation settings modified.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage lists most recent Gaza Humanitarian Situation Report published 20 November (titled 18 November 2026), with no 22 November update."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/palestine/",
+        "status": "HTTP_502",
+        "result": "Bad Gateway, previously documented in prior hourly watches."
+      },
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report still published 20 November; impact snapshot 19 November."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global overview accessible; no new 22 November operational update visible."
+      },
+      {
+        "source": "WHO EMRO regional news",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "result": "Same known Bad Gateway regional failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 22 2026 humanitarian update 21 22",
+      "site:who.int Gaza November 22 2026 medical evacuation hospitals health November 22",
+      "site:unicef.org Gaza 22 November 2026 water children aid updates",
+      "site:unrwa.org Gaza November 22 2026 displacement shelter update",
+      "site:icrc.org OR site:palestinercs.org Gaza 22 November 2026 ambulance evacuation",
+      "site:wfp.org Gaza November 22 2026 food access crossings aid",
+      "Gaza November 22 2026 22:00 23:00 local killed wounded Jabalia Khan Yunis WAFA site:english.wafa.ps",
+      "Gaza 22 November 2026 21:00 casualties airstrike displaced site:aa.com.tr",
+      "Gaza November 22 2026 latest ceasefire civilian casualties humanitarian aid Reuters AP",
+      "Gaza Nov 22 2026 latest military operation yellow line civilians killed Sunday Al Jazeera",
+      "Gaza Rafah crossing medical evacuations 22 November 2026 latest WHO Red Crescent",
+      "Gaza November 22 2026 13:00 PST 21:00 GMT ambulance hospital fuel water food displacement news"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA homepage/latest feed",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza-specific WAFA entry 22 November at 19:27 Gaza time (09:27 PST), reporting Jabalia death logged in previous watch. Later entries through 22:09 local concern West Bank; no fresh Gaza report."
+      },
+      {
+        "source": "WAFA 19:27 Jabalia casualty dispatch",
+        "url": "https://english.wafa.ps/Pages/Details/177195",
+        "result": "Jabalia death and earlier Deir al-Balah death were already recorded before this run; not recounted."
+      },
+      {
+        "source": "Anadolu 22 November casualty wrap",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "result": "Deir al-Balah, Al-Mawasi and Al-Maslakh fatalities, Al-Sikka child wound and Bir al-Naaja injuries overlap earlier watches; dated 22 Nov with no clock time to establish post-cutoff publication. Generic account of demolitions east of Yellow Line lacks distinct verifiable time, count, or location beyond existing recorded operations."
+      },
+      {
+        "source": "WFP Palestine emergency",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Current overview reviewed; lacks demonstrable new change in the observation hour."
+      }
+    ],
+    "exclusions": [
+      "Previously recorded WAFA Jabalia and Deir al-Balah deaths, Khan Younis wounds, Al-Mawasi injuries, Bir al-Naaja casualties, Rafah patient and companion evacuation, health supplies, diabetes and meningitis warnings, sewage and shelter estimates, and ceasefire/Yellow Line incidents.",
+      "Older official releases and reporting that match Gaza topic but predate this window.",
+      "Undated or date-only developments without sufficient evidence that they are distinct from previously recorded events.",
+      "West Bank-only reports and general political commentary without verified new ceasefire implementation changes."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional direct access remains unavailable, but OCHA OPT and WHO global pages, WAFA, Anadolu, UN agencies and established reporting were usable.",
+      "Article date alone cannot establish novelty in this hourly observation window; no separate qualifying report was sufficiently verified.",
+      "A degraded status records incomplete WHO regional coverage, not a new material failure."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false
+  }
+}

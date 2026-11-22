@@ -1,0 +1,124 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T084712-0800-20261122T164844258Z",
+  "scheduled_for": "2026-11-22T08:44:51-08:00",
+  "started_at": "2026-11-22T08:47:12-08:00",
+  "completed_at": "2026-11-22T08:48:44.258-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T07:42:02.548-08:00",
+    "end": "2026-11-22T08:48:44.258-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T073957-0800-20261122T154202Z.json",
+    "basis": "Bounded since prior GitHub-verified watch completion, with earlier source publications checked only to distinguish genuine follow-ups from duplicates. Dates of events distinguished from discovery date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; primary daily Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Newest listed Gaza humanitarian situation report published 20 Nov 2026 and covering 10–16 Nov; no fresh 22 Nov OCHA update."
+      },
+      {
+        "source": "WHO global occupied Palestinian territory emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO current emergency overview available; no new 22 Nov health-capacity or evacuation operational bulletin visible."
+      },
+      {
+        "source": "WHO EMRO OPT",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Recurrent WHO regional endpoint 502 Bad Gateway; not new material degradation."
+      },
+      {
+        "source": "WHO EMRO Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Recurrent WHO regional news endpoint 502 Bad Gateway; not new material degradation."
+      }
+    ],
+    "initial_official_targeted_searches": [
+      "site:ochaopt.org Gaza humanitarian situation update 22 November 2026 casualties displacement crossings November 22",
+      "site:who.int Gaza health emergency medical evacuation hospital November 22 2026 WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza \"18:\" OR \"19:\" killed injured Sunday",
+      "site:aa.com.tr/en/middle-east/ \"Nov 22, 2026\" Gaza 2026 Sunday casualties crossing strikes afternoon",
+      "site:aljazeera.com/news/2026/11/22 Gaza latest Sunday evening 22 November injuries displaced ambulance",
+      "site:reuters.com/world/middle-east/ Gaza November 22 2026 Sunday ceasefire strike aid hostages",
+      "site:unrwa.org OR site:unicef.org \"22 November 2026\" Gaza rain shelter water children aid",
+      "site:wfp.org OR site:un.org \"22 November 2026\" Gaza food access crossing supplies convoy",
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" \"06:\" \"PM\" Gaza killed injured Israeli 2026",
+      "site:wafa.ps/Pages/Details/ \"22/11/2026\" غزة مساء اليوم الأحد شهيد جريح قصف",
+      "site:palestinercs.org OR site:ifrc.org Gaza 22 November 2026 ambulance medical evacuation Rafah today",
+      "site:ochaopt.org OR site:un.org Gaza Sunday 22 November 2026 aid crossing Rafah Kerem Shalom new",
+      "\"November 22, 2026\" Gaza 6 pm \"killed\" \"wounded\" civilian Sunday drone",
+      "\"22 November 2026\" Gaza hospital medical evacuation WHO fuel ceasefire Sunday latest afternoon"
+    ],
+    "direct_source_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest indexed site items at 17:34 Gaza time on 22 Nov concern West Bank; latest Gaza item at 16:08 Gaza time reports the Deir al-Balah fatality and Khan Younis injury already in prior watch."
+      },
+      {
+        "source": "Gaza Health Ministry official Telegram feed",
+        "url": "https://t.me/s/mohmediagaza",
+        "result": "Latest displayed 22 Nov ministerial bulletin 4 newly killed plus 2 recovered, 33 injuries, cumulative 74,742 fatalities; textile supplies and meningitis warning all previously recorded."
+      },
+      {
+        "source": "Palestinian Red Crescent Society",
+        "url": "https://www.palestinercs.org/",
+        "result": "Homepage recent news dated 2 Nov; no new current-window Gaza ambulance/medical evacuation update verified."
+      },
+      {
+        "source": "Reuters Gaza food vehicle account",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "21 Nov strike with three deaths occurred before window and was previously ledgered; no new deaths in current observation."
+      },
+      {
+        "source": "WAFA sewage report",
+        "url": "https://english.wafa.ps/Pages/Details/177186",
+        "result": "22 Nov water and sanitation reporting previously ledgered in earlier watch."
+      }
+    ],
+    "exclusions": [
+      "All new search results covering Saturday's Tel al-Hawa food vehicle strike, two al-Mawasi wound deaths, 22 Nov Deir al-Balah death, Khan Younis child injury and 21 Nov Jabalia death were previously ledgered.",
+      "Gaza Health Ministry 22 Nov casualty update, medical textile depletion, meningitis risk and sewage pumping/treatment damage already recorded; do not add counts.",
+      "Previously recorded 23 patients and 23 companions evacuated through Rafah, Maghazi housing destruction, ceasefire mediator request and food-access constraints excluded.",
+      "West Bank-only stories, dated November 2025 and older, opinion and unsupported claims excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO EMRO inaccessible as in previous watches; resulting status DEGRADED, but no new material loss of coverage.",
+      "Search indexing and direct official site publishing latency mean absence of findings is not confirmation that no events occurred."
+    ],
+    "prior_heartbeat_read_verified": true,
+    "prior_heartbeat_run_id": "gaza-source-watch-20261122T073957-0800-20261122T154202Z",
+    "material_new_degradation": false,
+    "production_changed": false,
+    "publication_or_approval_actions": false,
+    "schedule_changed": false,
+    "task_disabled": false
+  }
+}

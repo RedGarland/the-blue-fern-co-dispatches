@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T124626-0800-20261122T204626Z",
+  "scheduled_for": "2026-11-22T12:44:51-08:00",
+  "started_at": "2026-11-22T12:46:26-08:00",
+  "completed_at": "2026-11-22T12:47:36-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T11:44:25.133-08:00",
+    "end": "2026-11-22T12:47:36-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T114242-0800-20261122T194425133Z.json",
+    "basis": "Verified prior 11:44 PST heartbeat on ops/watch-ledger; supplementary recall of post-cutoff developments or previously unrecorded important traceable reports, with separate source/event/discovery timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production daily Gaza publisher/collector remains authoritative. No approvals, publication, schedule or automation settings modified.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest visible humanitarian situation report listed 20 November (titled 18 November 2026); no newly published 22 November Gaza operational situation report."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global emergency overview accessible, no fresh 22 November Gaza operational update visible."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt regional news",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "result": "Bad Gateway, repeat of known limitation in prior heartbeat."
+      }
+    ],
+    "initial_official_site_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"22/November/2026\" Gaza \"22:\" killed injured",
+      "site:aa.com.tr/en/middle-east/ \"Nov 22, 2026\" Gaza killed wounded Sunday night",
+      "site:reuters.com/world/middle-east/ Gaza Nov 22 2026 ceasefire civilians health aid Sunday",
+      "site:apnews.com/article/ Gaza \"November 22, 2026\" casualties humanitarian Sunday",
+      "site:aljazeera.com/news/2026/11/22 Gaza latest casualties hospital November 22",
+      "site:un.org OR site:unrwa.org Gaza 22 November 2026 emergency aid water fuel displacement",
+      "site:unicef.org OR site:wfp.org Gaza 22 November 2026 food water children shelter new update",
+      "site:palestinercs.org OR site:ifrc.org \"22 November 2026\" Gaza ambulance medevac operations",
+      "site:reliefweb.int/report/occupied-palestinian-territory 22 Nov 2026 Gaza fuel health facilities crossings",
+      "Gaza November 22 2026 Sunday night medical evacuation Rafah 22 crossing fuel trucks November 22",
+      "Gaza ceasefire negotiation hostages Hamas Israel Qatar Egypt mediators November 22 2026 evening changes",
+      "Gaza November 22 2026 late Sunday drone strike overnight 9pm 10pm wounded killed hospital al-Shifa"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA last news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Last Gaza-specific item remained 19:27 Gaza local / 09:27 PST Jabalia fatality, recorded in prior ledger. Newer entries were West Bank-only; excluded."
+      },
+      {
+        "source": "Anadolu Middle East feed",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Checked 22 November casualty wrap and ceasefire mediator request; casualties and associated food-delivery strike had been logged earlier; no new separate casualty verified."
+      },
+      {
+        "source": "Anadolu casualty wrap",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "result": "Details about Deir al-Balah, Al-Mawasi, Khan Younis and Bir al-Naaja overlap prior watches. Aggregate since-ceasefire totals differ between articles and were not accepted as separately verified post-cutoff change."
+      },
+      {
+        "source": "Anadolu Hamas mediator request",
+        "url": "https://www.aa.com.tr/en/middle-east/hamas-seeks-emergency-talks-after-israeli-strike-killed-3-gaza-aid-workers/4133296",
+        "result": "Call for urgent mediator meeting after prior recorded soup-kitchen vehicle strike; dated 22 Nov without publication clock time. No confirmed new talks, mediator acceptance, or ceasefire implementation change; excluded as political request rather than substantive negotiation development."
+      },
+      {
+        "source": "Al Jazeera 22 Nov",
+        "url": "https://www.aljazeera.com/news/2026/11/22/displaced-palestinians-protest-as-israeli-air-strikes-continue-in-gaza",
+        "result": "Contains previously logged Maghazi demolition and shelter estimates, casualties and Civil Defence recoveries. No new post-cutoff development."
+      },
+      {
+        "source": "Palestine Red Crescent homepage",
+        "url": "https://www.palestinercs.org/",
+        "result": "Homepage feed did not show a new 22 Nov operational report. Previously logged 23 patients plus 23 companions evacuated via Rafah remained unchanged."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Jabalia death, Deir al-Balah death, Al-Mawasi deaths, Al-Sikka child wound, Bir al-Naaja injuries, the soup-kitchen van strike, hospital supply and meningitis warnings, Civil Defence recovery work, sewage and shelter assessments, Rafah medical evacuation, and aggregate casualty reports.",
+      "Older official OCHA and WHO releases and older Reuters/AP/Al Jazeera items despite matching day and month; West Bank-only reports.",
+      "Hamas' repeated call for urgent mediator action is a documented statement but there is no confirmed new meeting/decision or ceasefire change; not treated as a qualifying negotiation development.",
+      "Conflicting secondary since-ceasefire casualty totals not accepted as independently verified new incident or increase."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://palsawa.com/en/palestinian-news/2026/11/22/23-gaza-patients-and-companions-evacuated-via-rafah-crossing-with-who-coordination",
+        "error": "Direct retrieval disabled; indexed excerpt available. Preexisting medevac finding not recounted.",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional page unavailable, but WHO global, OCHA, WAFA, Anadolu, Al Jazeera and PRCS channels provided useful alternative coverage.",
+      "Source timestamps for certain 22 November articles are not exposed; publication date alone cannot establish a report's novelty within this hourly window.",
+      "No source establishes a distinct, qualifying new development since the verified prior heartbeat; known WHO failure not a new material degradation."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false
+  }
+}

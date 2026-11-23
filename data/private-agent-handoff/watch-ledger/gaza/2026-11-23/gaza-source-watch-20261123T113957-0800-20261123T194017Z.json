@@ -1,0 +1,109 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T113957-0800-20261123T194017Z",
+  "scheduled_for": "2026-11-23T11:44:51-08:00",
+  "started_at": "2026-11-23T11:39:57-08:00",
+  "completed_at": "2026-11-23T11:40:17-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T10:42:22.170-08:00",
+    "end": "2026-11-23T11:40:17-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T103956-0800-20261123T184222170Z.json",
+    "basis": "Authenticated prior heartbeat completion to current search cutoff; deduplication against prior heartbeat exclusions and earlier watch reports."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, posted November 20; no new listed Gaza update."
+      },
+      {
+        "source": "WHO global conflict portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza health change in latest news list."
+      },
+      {
+        "source": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "TIMEOUT",
+        "result": "Fetch timeout; regional access limitation previously documented."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps Gaza \"23/November/2026\" latest evening killed injured",
+      "Gaza November 23 2026 latest Reuters AP civilian strike aid evening",
+      "site:aa.com.tr Gaza November 23 2026 latest casualty strike",
+      "Gaza November 23 2026 hospital ambulance medical evacuation fuel WHO PRCS",
+      "Gaza November 23 2026 aid crossing displacement shelter food water UN WFP UNICEF",
+      "Gaza November 23 2026 ceasefire negotiations hostages detainees Rafah latest",
+      "site:aljazeera.com Gaza November 23 2026 latest live updates",
+      "Gaza November 23 2026 ICRC UNRWA humanitarian aid access water infrastructure",
+      "Gaza November 23 2026 after 20:30 Gaza time WAFA Palestinian injured killed aid late Monday",
+      "Gaza November 23 2026 humanitarian update UN News MSF medical winter November 23",
+      "Gaza November 23 2026 Palestinian Rafah crossing EU mission interior minister new head",
+      "Gaza November 23 2026 latest Gaza tonight Palestinian news 21:00"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza-related item 20:32 local; no qualifying new incident after prior cutoff."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest index 21:13 local; latest Gaza item 20:17 local, with later stories unrelated to Gaza."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Gaza lead-poisoning, casualty and contamination stories duplicate earlier watches."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177241",
+        "result": "Egyptian president restated ceasefire and phase-two requirements at joint press conference; 20:32 local (10:32 PST), before cutoff; no new agreement or implementation change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177232",
+        "result": "Rafah border assistance coordination meeting published 15:58 local; no opening, closure or throughput change reported."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177225",
+        "result": "IFRC warning about winter shelter and aid constraints published 13:31 local; no newly dated displacement, death or capacity change identified in report."
+      },
+      {
+        "url": "https://www.jpost.com/israel-news/defense-news/article-915749",
+        "result": "Search surfaced as current but article explicitly published and updated November 22; outside interval."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Oxfam environmental assessment and November 23 casualties, including UNRWA employee, Gaza City vehicle strike and revised death toll, Bureij injury, Jabalia injuries, lead poisoning and Asdaa injury.",
+      "Egyptian ceasefire appeal and Rafah coordination meeting: no actual negotiation or crossing operational change established.",
+      "Older reports, unrelated West Bank developments, repeated general humanitarian conditions and search hits without a qualifying dated development."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "error": "Fetch timeout (tool reports 400 timeout fetching)",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Search results sparse; direct WAFA Arabic/English and Anadolu indexes supplemented them. Bounded recall cannot establish absence of all events.",
+      "WHO global and OCHA remained accessible; regional WHO limitation persists."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

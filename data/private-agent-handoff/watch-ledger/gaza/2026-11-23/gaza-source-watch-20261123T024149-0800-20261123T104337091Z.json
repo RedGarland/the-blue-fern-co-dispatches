@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T024149-0800-20261123T104337091Z",
+  "scheduled_for": "2026-11-23T02:44:51-08:00",
+  "started_at": "2026-11-23T02:41:49-08:00",
+  "completed_at": "2026-11-23T10:43:37.091Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T01:43:56.169-08:00",
+    "end": "2026-11-23T10:43:37.091Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T014141-0800-20261123T094356169Z.json",
+    "basis": "Prior watch's authenticated completion timestamp to present check; newly indexed or discovered reports distinguish publication timing from event timing"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-wafa-177219-jabalia-al-tawba-drone-injuries",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177219",
+      "title": "Injuries reported after Israeli shelling of Jabalia refugee camp",
+      "publisher": "WAFA",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": "2026-11-23T12:00:00+02:00",
+      "event_date": "2026-11-23",
+      "location": "Near Al-Tawba Mosque, Jabalia refugee camp, northern Gaza Strip",
+      "affected_population_system": "Several Palestinians reportedly injured after drone strike, with at least one person critically injured; casualties transported to hospital",
+      "exact_supporting_passage": "Several Palestinians were injured on Monday after Israeli shelling of Jabalia refugee camp.",
+      "source_type": "Official Palestinian news agency report citing medical sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA latest-news index; canonical English article; followed by targeted cross-checks",
+        "discovered_during_run": "2026-11-23",
+        "within_search_window": true,
+        "publication_relative_to_prior_watch": "WAFA English posting at 12:00 PM Gaza time (02:00 AM PST), after prior watch completed 01:43:56 PST; WAFA Arabic version was posted 11:10 AM Gaza time (01:10 AM PST), within previous watch but not logged, establishing newly recovered coverage",
+        "novelty": "Newly documented 23 November Jabalia Al-Tawba Mosque drone-strike injuries; distinct from 21–22 November Jabalia deaths and gunfire injuries already logged",
+        "counts": "Several injured; one critical; exact casualty count not specified",
+        "corroboration": "WAFA Arabic article (api.wafa.ps) and French version recount the same agency story; Al-Hayat al-Jadida and Hala News repeat WAFA, not independent verification",
+        "evidence_scope": "Medical-source report, not independently confirmed by WHO, OCHA, Reuters, or AP in bounded interval"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary Gaza production publisher/collector remains authoritative",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest displayed humanitarian situation report 18 November, posted 20 November; no newly dated Gaza update"
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "result": "Direct regional portal fetch timed out; recurring regional access issue"
+      },
+      {
+        "source": "WHO global conflict/oPt emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global fallback accessible; no newly timestamped incident update identified"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza \"23 November 2026\" \"medical\" \"water\" \"shelter\"",
+      "site:who.int Gaza \"23 November 2026\" medical evacuation hospital crossing",
+      "site:unicef.org Gaza \"23 November 2026\" aid water children displacement",
+      "site:unrwa.org Gaza \"23 November 2026\" crossings shelter food health",
+      "Gaza November 23 2026 Monday civilians killed wounded Jabalia Khan Younis Israeli fire latest",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"23/November/2026\" \"killed\" \"wounded\"",
+      "site:aa.com.tr/en/middle-east Gaza November 23 2026 killed wounded attacks displaced",
+      "Gaza November 23 2026 Rafah Kerem Shalom medical evacuation fuel ambulances hospitals latest",
+      "Gaza Jabalia Al Tawba Mosque November 23 2026 drone several wounded critical condition",
+      "Gaza November 23 2026 Asdaa Al Mawasi gunfire injured foot homes demolished Gaza city",
+      "Gaza 23 November 2026 humanitarian water sewage flooding food hospital aid access UN OCHA PRCS",
+      "Gaza November 23 2026 ceasefire crossing Rafah hostages detainees negotiations Reuters AFP AP"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New Jabalia Al-Tawba Mosque drone-strike injuries posting, 23 Nov 12:00 Gaza time; canonical article opened"
+      },
+      {
+        "source": "WAFA original Arabic",
+        "url": "https://api.wafa.ps/news/2026/11/23/%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D8%A8%D8%B9%D8%AF-%D9%82%D8%B5%D9%81-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%85%D8%AE%D9%8A%D9%85-%D8%AC%D8%A8%D8%A7%D9%84%D9%8A%D8%A7",
+        "result": "Arabic item stamped 23 Nov 11:10 Gaza-local; earliest observed variant"
+      },
+      {
+        "source": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "No independently established newer Gaza incident found"
+      },
+      {
+        "source": "WHO global oPt",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Accessible fallback; older material only"
+      },
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "No later situation update visible"
+      }
+    ],
+    "exclusions": [
+      "The 22 November Jabalia fatality, prior Bir al-Naaja injuries, reported lead-poisoning fatality and shelter estimates were already logged",
+      "A separate 23 November account of an injury near the Asdaa intersection and home demolitions from PIC lacked corroboration by a preferred independent or official source within bounded searches and was not promoted",
+      "Prior OCHA flooding, WASH, shelter, and medevac statistics and 18 November ceasefire negotiations were not counted as new",
+      "Republished historical hostage-swap article falsely dated 23 Nov 2026 excluded; West Bank-only incidents, recycled and undated claims excluded"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "Fetch timeout (regional portal unavailable for this check)",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional portal inaccessible this run; WHO global fallback and OCHA checked, so partial coverage preserved",
+      "No independent confirmation of exact injured total or Israeli response for Jabalia drone incident; event time not stated",
+      "WAFA Arabic version predates prior cutoff while English version postdates it; treated as newly reported/recovered rather than claiming strike occurred in the observation interval",
+      "Search indexing may lag; absence of a finding in other categories is not evidence of no incidents"
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

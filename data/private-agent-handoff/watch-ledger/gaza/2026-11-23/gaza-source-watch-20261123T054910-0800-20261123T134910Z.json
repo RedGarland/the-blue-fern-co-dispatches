@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T054910-0800-20261123T134910Z",
+  "scheduled_for": "2026-11-23T05:44:51-08:00",
+  "started_at": "2026-11-23T05:49:10-08:00",
+  "completed_at": "2026-11-23T05:51:59.700-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T04:50:54-08:00",
+    "end": "2026-11-23T05:51:59.700-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T044816-0800-20261123T125054158Z.json",
+    "basis": "From verified preceding hourly watch completion to this run. Discovery may retrieve articles published shortly before the preceding run completed; event and publication times are not assumed equal to discovery time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-wafa-al-awda-bureij-woman-injured-nuseirat-rooftop",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177230",
+      "title": "Woman injured by Israeli fire in Gaza's Bureij refuee camp; rooftop targeted in Nuseirat",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": "2026-11-23T12:49:00Z",
+      "event_date": "2026-11-23",
+      "location": "Near the entrance to Al-Bureij refugee camp, central Gaza; separately rooftop of a house in nearby Nuseirat refugee camp",
+      "affected_population_system": "One Palestinian woman with a reported Israeli gunshot injury received by Al-Awda Medical Complex in Nuseirat; a rooftop in Nuseirat reportedly targeted separately, with no verified injuries or extent of property damage there",
+      "exact_supporting_passage": "Medical sources at Al-Awda Medical Complex in Nuseirat reported receiving a woman injured by Israeli fire",
+      "source_type": "Palestinian national news agency directly attributing injury to medical sources at Al-Awda Medical Complex; separate reported targeting of rooftop not independently verified",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct read of WAFA latest-news index, canonical English report and Arabic-language counterpart after official-first checks; additional search confirmed identical report",
+        "novelty": "Previously unlogged 23 Nov injury in central Gaza; distinct from prior recorded 23 Nov Jabalia worker death, Jabalia mosque injuries, Khan Younis injury and 19 Nov Bureij-related casualty",
+        "publication_relative_to_prior_watch": "WAFA English publication 14:49 local Gaza time (=04:49 PST), roughly 1 minute 54 seconds before previous watch completed at 04:50:54 PST; newly recovered rather than first published inside the current observation interval",
+        "event_time": null,
+        "corroboration": "WAFA attributes casualty to medical sources at Al-Awda Medical Complex; same-agency Arabic article published at 14:43 Gaza local time; no independent second outlet verified",
+        "deduplication": "Do not add to the 23 Nov Ministry of Health daily aggregate (4 fatalities, 7 injured) without confirmed non-overlap. Different geographic incident from prior Jabalia or Khan Younis reports.",
+        "caution": "The report establishes one medically received wound according to WAFA; no named patient, severity, exact incident time, independent Israeli statement, or verified injury from separate Nuseirat rooftop targeting."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall watch only; primary Gaza collector/publisher remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Official updates list most recent Gaza humanitarian situation report dated 18 Nov (posted 20 Nov); no newly listed 23 Nov update."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Direct regional situation-report portal returned Bad Gateway, consistent with prior hourly watches."
+      },
+      {
+        "source": "WHO global conflict in Israel and the occupied Palestinian territory",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Official global emergency overview accessible; latest regional links old, no new 23 Nov health update identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:unicef.org Gaza \"23 November 2026\" hospital children water aid casualties",
+      "site:unrwa.org \"23 November 2026\" Gaza water services attack staff",
+      "site:palestinercs.org Gaza November 23 2026 ambulance hospital aid medical evacuation",
+      "site:wfp.org Gaza 23 November 2026 food aid crossing access hunger",
+      "site:reuters.com/world/middle-east/ Gaza November 23 2026 strike UNRWA displacement aid ceasefire",
+      "site:apnews.com Gaza November 23 2026 ceasefire strike civilian dead hospital aid",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" \"Bureij\" \"Nuseirat\" woman injured",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 23, 2026\" \"Bureij\" strikes hospital",
+      "site:news.un.org Gaza 23 November 2026 displacement health aid medical evacuation",
+      "site:who.int Gaza November 23 2026 new report patients hospital evacuation",
+      "Gaza November 23 2026 Bureij refugee camp woman shot Nuseirat rooftop 14:49 news",
+      "Gaza November 23 2026 Rafah crossing ceasefire hostages detainees medical evacuation UN 1300 UTC"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Found newly recoverable 23 Nov 14:49 Gaza-time Bureij injury and rooftop targeting report; 13:31 IFRC statement lacked distinct verified new service or casualty change."
+      },
+      {
+        "source": "WAFA original Arabic report",
+        "url": "https://www.wafa.ps/news/2026/11/23/%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%B3%D9%8A%D8%AF%D8%A9-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%81%D9%8A-%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%AC-%D9%88%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81",
+        "result": "Same-agency first-language report dated 23 Nov 14:43 Gaza time, confirms report text; not independent corroboration."
+      },
+      {
+        "source": "Reuters current dated Gaza coverage",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "result": "23 Nov UNRWA staff fatality near water well already captured in preceding heartbeat; not repeated."
+      },
+      {
+        "source": "WFP Palestine emergency",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Aid, food and crossings context, but no verifiably new within-hour dated operational change."
+      },
+      {
+        "source": "PRCS reports",
+        "url": "https://www.palestinercs.org/en/Category/22/reports",
+        "result": "No new dated qualifying incident found."
+      }
+    ],
+    "exclusions": [
+      "Reuters 23 Nov death of UNRWA water-service worker Adel Al-Helo and three injuries near Jabalia water well already logged preceding watch",
+      "WAFA 23 Nov Gaza Ministry of Health hospital daily aggregate four fatalities and seven injured, cumulative 74,746 and 176,234, already logged preceding watch",
+      "Previously logged 23 Nov Jabalia Al-Tawba Mosque injuries, Khan Younis gunshot injury, lead-poisoning death and Oxfam/CEOBS contamination assessment",
+      "WAFA's reported targeting of a Nuseirat rooftop has no documented casualty, established property damage or service change; held only as context, not separate positive finding",
+      "IFRC spokesperson on winter shelter crisis repeats known flood and access conditions without a new quantified operational or casualty development",
+      "19 Nov reports of Bureij displacement/central Gaza military operation are outside current observation window",
+      "Old WHO publications and OCHA reports, older wire reports, West Bank-only events, opinion and weakly sourced social claims excluded"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News targeted search",
+        "url": "https://news.un.org/",
+        "error": "robots.txt blocked access for targeted search",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional portal inaccessible; WHO global overview and OCHA official sources remained accessible. UN News targeted search blocked by robots.txt.",
+      "WAFA account independently uncorroborated; finding is a sourced medical-attribution report, not forensic determination of responsible fire.",
+      "WAFA's 14:49 Gaza local publication is 04:49 Pacific and narrowly predates prior watch completion; this is a missed item recovered now, not a new event in the last hour.",
+      "Search results can lag publication; do not infer event time from indexing time."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

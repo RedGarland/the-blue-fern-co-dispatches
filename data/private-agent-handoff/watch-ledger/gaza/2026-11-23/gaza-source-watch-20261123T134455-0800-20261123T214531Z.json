@@ -1,0 +1,181 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T134455-0800-20261123T214531Z",
+  "scheduled_for": "2026-11-23T13:44:51-08:00",
+  "started_at": "2026-11-23T13:44:55-08:00",
+  "completed_at": "2026-11-23T13:45:31-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T12:42:27-08:00",
+    "end": "2026-11-23T13:45:31-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T124145-0800-20261123T204227Z.json",
+    "basis": "Authenticated prior completion through current source-review cutoff."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177243",
+      "title": "Palestinian killed, several others injured in Israeli airstrike on Gaza City",
+      "publisher": "WAFA",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_time_local": "2026-11-23T23:03:00+02:00",
+      "publication_time_pacific": "2026-11-23T13:03:00-08:00",
+      "event_date": "2026-11-23",
+      "event_time": null,
+      "source_type": "Palestinian news agency; correspondent reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261123-al-karama-evening-casualties-wafa",
+      "location": "Al-Karama neighborhood, northwest Gaza City",
+      "affected_population_system": "Palestinians killed or injured; one reported dead, several injured, civilian status not independently established.",
+      "exact_supporting_passage": "killing one Palestinian and injuring several others",
+      "bounded_discovery_context": {
+        "observed_between": "2026-11-23T12:42:27-08:00 / 2026-11-23T13:45:31-08:00",
+        "discovery": "Direct WAFA English homepage, then article dated November 23 at 11:03 PM Gaza local time.",
+        "new_information": "Distinct evening casualty report in Al-Karama, not earlier western Gaza City vehicle strike near Ansar Roundabout.",
+        "deduplication": "Compared with authenticated preceding heartbeat and prior conversation watch outcomes; no matching evening Al-Karama report.",
+        "caveats": "Single source; precise event time, identities, and independent corroboration unavailable."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177243",
+      "title": "Palestinian killed, several others injured in Israeli airstrike on Gaza City",
+      "publisher": "WAFA",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_time_local": "2026-11-23T23:03:00+02:00",
+      "publication_time_pacific": "2026-11-23T13:03:00-08:00",
+      "event_date": "2026-11-23",
+      "event_time": null,
+      "source_type": "Palestinian news agency; correspondent reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261123-beit-lahia-evening-injuries-wafa",
+      "location": "Beit Lahia, northern Gaza Strip",
+      "affected_population_system": "Two Palestinians reported injured; civilian status not independently established.",
+      "exact_supporting_passage": "two Palestinians were injured by Israeli forces' gunfire west of Beit Lahia",
+      "bounded_discovery_context": {
+        "observed_between": "2026-11-23T12:42:27-08:00 / 2026-11-23T13:45:31-08:00",
+        "discovery": "Same WAFA article, separate incident in Beit Lahia.",
+        "new_information": "Two additional reported injuries distinct from previously logged Jabalia, Bureij and Khan Younis reports.",
+        "deduplication": "Compared with authenticated preceding heartbeat and prior conversation watch outcomes; no matching Beit Lahia report.",
+        "caveats": "Single source; precise event time, identities and independent corroboration unavailable. Do not infer overlap with cumulative medical totals."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report November 18, posted November 20; no new listed Gaza update."
+      },
+      {
+        "source": "WHO global conflict portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza news update."
+      },
+      {
+        "source": "WHO EMRO emergency reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Persistent regional access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 23 2026 latest casualties Gaza City Khan Younis WAFA Anadolu Reuters",
+      "Gaza November 23 2026 humanitarian aid crossings displacement UN OCHA UNRWA",
+      "Gaza November 23 2026 hospital ambulance medical evacuation fuel WHO MSF",
+      "Gaza November 23 2026 food water sanitation UNICEF WFP ICRC",
+      "Gaza November 23 2026 ceasefire negotiations Rafah hostages detainees Reuters AP",
+      "Gaza November 23 2026 infrastructure demolition military civilian injuries evening Palestine",
+      "Gaza after:2026-11-22 before:2026-11-24 latest news November 23 site:english.wafa.ps",
+      "Gaza after:2026-11-22 before:2026-11-24 November 23 site:aa.com.tr",
+      "Gaza after:2026-11-22 before:2026-11-24 November 23 site:aljazeera.com",
+      "Gaza after:2026-11-22 before:2026-11-24 November 23 humanitarian site:reliefweb.int",
+      "Gaza after:2026-11-22 before:2026-11-24 November 23 site:reuters.com",
+      "Gaza after:2026-11-22 before:2026-11-24 November 23 UN humanitarian briefing Gaza"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "New 23:03 Gaza local article found; two separate casualty incidents."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; returned older headlines."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; prior prison report and earlier casualties."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; previously logged contamination and older reports."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports",
+        "result": "Accessible; no new qualifying update established from returned content."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible; no new qualifying update established from returned content."
+      },
+      {
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "result": "Anti-bot challenge."
+      },
+      {
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403."
+      }
+    ],
+    "exclusions": [
+      "Earlier Jabalia UNRWA worker death, west Gaza City vehicle strike, Bureij injury, lead poisoning and Oxfam assessment previously logged per authenticated prior heartbeat and conversation.",
+      "Earlier Nuseirat roof damage detail appeared in 18:15 Gaza local WAFA article already reviewed in previous runs; outside current window and no new update established.",
+      "Older insulin article dated November 22; outside current window.",
+      "General ceasefire statements, no operational change established."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "error": "Anti-bot challenge",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Al Jazeera canonical casualty article",
+        "error": "Inaccessible; AMP text available",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Search results included stale reports; direct WAFA index supplied new findings.",
+      "Prior heartbeat fetched and prior conversation outcomes compared; full historical ledger not re-read on this run.",
+      "No production comparison performed; absence of other findings is not evidence of absence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T064508-0800-20261123T144508Z",
+  "scheduled_for": "2026-11-23T06:44:51-08:00",
+  "started_at": "2026-11-23T06:45:08-08:00",
+  "completed_at": "2026-11-23T06:47:55.762-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T05:51:59.700-08:00",
+    "end": "2026-11-23T06:47:55.762-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T054910-0800-20261123T134910Z.json",
+    "basis": "Window begins at verified completion of preceding hourly watch and ends at current observation. Newly discovered reporting is distinguished from event time; older reports and duplicates excluded."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-wafa-al-katiba-west-gaza-city-vehicle-two-killed",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177233",
+      "title": "Two Palestinians killed, several injured in Israeli airstrike west of Gaza City",
+      "publisher": "WAFA (Palestinian News and Information Agency)",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": "2026-11-23T14:11:00Z",
+      "event_date": "2026-11-23",
+      "event_timestamp": null,
+      "location": "Al-Katiba area, west of Gaza City, Gaza Strip",
+      "affected_population_system": "WAFA reports two Palestinian civilians killed and several others injured when an Israeli airstrike hit a vehicle; exact number of injuries, identities, medical verification and further damage unconfirmed",
+      "exact_supporting_passage": "Local sources said Israeli warplanes struck a vehicle in the area, killing two civilians and injuring several others, according to a preliminary toll.",
+      "source_type": "Palestinian national news agency attributing preliminary casualty account to local sources; no independent medical or second-outlet confirmation in this bounded watch",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA English latest-news index after official-first checks and 12 targeted searches, followed by direct read of canonical article",
+        "novelty": "Article published 23 Nov at 16:11 local Gaza time (06:11 PST), after preceding watch completed 05:51:59 PST. Vehicle strike in Al-Katiba not recorded in preceding authenticated heartbeat.",
+        "publication_relative_to_prior_watch": "Published about 19 minutes after preceding watch completion; strike's actual clock time not independently established",
+        "event_time": null,
+        "corroboration": "Only WAFA preliminary local-source account verified in this pass; no independent medical confirmation or Israeli response verified",
+        "deduplication": "Distinct named Al-Katiba vehicle location and two-death preliminary tally from prior Jabalia UNRWA water-well worker strike, Jabalia mosque injuries, Khan Younis foot injury, Bureij woman injury, and Gaza medical-source 24-hour aggregate. Potential overlap with other city vehicle strikes cannot be ruled out; do not sum to hospital aggregate without verification.",
+        "caution": "WAFA says two civilians killed and several injured; victim status, exact count, and responsibility have not been independently corroborated. Source time is publication, not verified event time."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary production Gaza collector/publisher is authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Direct index lists latest humanitarian situation report dated 18 Nov, posted 20 Nov 2026; no new 23 Nov update listed. Initial direct root homepage timed out but updates index and OCHA report accessible."
+      },
+      {
+        "source": "WHO global Israel and occupied Palestinian territory emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Official health emergency overview and resources available, no newly dated 23 Nov Gaza operational or health bulletin identified."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Regional portal returned Bad Gateway; recurring limitation also documented by preceding watches."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:unicef.org Gaza \"23 November 2026\" children water shelter health 2026",
+      "site:unrwa.org Gaza \"23 November 2026\" Jabalia staff water food displacement",
+      "site:palestinercs.org Gaza \"23 November 2026\" ambulance hospital emergency",
+      "site:wfp.org Gaza \"23 November 2026\" food aid crossings humanitarian",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza killed injured 16:00",
+      "site:reuters.com/world/middle-east/ Gaza \"November 23, 2026\" after 13:30 GMT civilians aid ceasefire",
+      "site:apnews.com/article/ Gaza November 23 2026 wounded hostage humanitarian aid",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 23, 2026\" 16:00 casualties humanitarian",
+      "site:news.un.org Gaza \"23 November 2026\" health displacement aid humanitarian",
+      "site:icrc.org Gaza \"23 November 2026\" hospitals ambulances detainees aid",
+      "Gaza November 23 2026 Rafah Kerem Shalom crossing aid medical evacuations border latest 14:00 UTC",
+      "Gaza \"23 November 2026\" Israeli strikes casualties ceasefire negotiations hospital Monday latest Reuters Anadolu"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest-news index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "New 23 Nov 16:11 Gaza-time Al-Katiba vehicle strike report found and opened; 15:58 Rafah EU mission coordination discussion without confirmed change in crossing access."
+      },
+      {
+        "source": "WAFA canonical Al-Katiba report",
+        "url": "https://english.wafa.ps/Pages/Details/177233",
+        "result": "Reports two killed and several injured in Al-Katiba vehicle strike, attributed to local sources; preliminary figures."
+      },
+      {
+        "source": "Anadolu Middle East feed",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "23 Nov lead poisoning, Jabalia worker killing and Khan Younis injury reports already covered by earlier watches; no additional independent new within-window development in feed."
+      },
+      {
+        "source": "WFP Palestine emergency",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "No new within-window dated access, aid-volume or food-service operational change established."
+      },
+      {
+        "source": "Palestine Red Crescent general reports",
+        "url": "https://www.palestinercs.org/en/Category/22/reports",
+        "result": "No new dated 23 Nov operational incident identified from reports index."
+      }
+    ],
+    "exclusions": [
+      "Previously logged WAFA 23 Nov woman shot at Al-Bureij and rooftop targeting in Nuseirat (05:51 watch); WAFA Al-Katiba report repeats this context and is not a second finding.",
+      "Reuters 23 Nov named UNRWA worker Adel Al-Helo killed near Jabalia water well, previously logged.",
+      "WAFA Gaza hospital daily aggregate 4 fatalities and 7 wounded and cumulative 74,746/176,234 previously logged. It may overlap incident reports; do not add casualty counts.",
+      "23 Nov Jabalia Al-Tawba injuries, Khan Younis gunshot wound, Gaza lead-poisoning death and Oxfam/CEOBS contamination risk assessment previously logged.",
+      "Earlier Gaza City Tel al-Hawa aid vehicle strike with three deaths reported for 21-22 Nov was not treated as same incident or counted anew; Al-Katiba overlap requires future verification.",
+      "WAFA 23 Nov new EUBAM Rafah chief meeting discusses coordination but reports no verified crossing open/closure, passenger flow, or evacuation-capacity change.",
+      "WAFA 23 Nov international medical organization characterization of winter conditions repeats previously known damage/access challenges without a new quantified impact.",
+      "Older AP and Reuters reporting, West Bank-only reports, opinions, unsupported claims and other nonqualifying search hits excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean regional portal",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News targeted search",
+        "url": "https://news.un.org/",
+        "error": "robots.txt blocked automated retrieval",
+        "material_new_degradation": false
+      },
+      {
+        "source": "OCHA homepage initial open",
+        "url": "https://www.ochaopt.org/",
+        "error": "timeout; subsequently accessed official /updates successfully",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional portal remained inaccessible, but official WHO global and OCHA sources plus established reporting remained available.",
+      "WAFA Al-Katiba report rests on preliminary local-source claims; independent medics/secondary coverage absent in this bounded search.",
+      "Search indexing lag may hide newer publications; event times should not be inferred from article publication time."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

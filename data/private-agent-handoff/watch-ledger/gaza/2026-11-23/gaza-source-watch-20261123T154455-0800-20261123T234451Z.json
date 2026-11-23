@@ -1,0 +1,158 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T154455-0800-20261123T234451Z",
+  "scheduled_for": "2026-11-23T15:44:51-08:00",
+  "started_at": "2026-11-23T15:44:55-08:00",
+  "completed_at": "2026-11-23T15:45:45-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T14:45:22-08:00",
+    "end": "2026-11-23T15:45:45-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T144453-0800-20261123T224522Z.json",
+    "basis": "Authenticated prior heartbeat completion through current source-review cutoff."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report November 18, published November 20; no new listed update."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza report on emergency page."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Persistent regional access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 23 2026 latest casualties injured killed WAFA Gaza Monday evening",
+      "Gaza November 23 2026 humanitarian aid crossings displacement food water fuel",
+      "Gaza November 23 2026 hospital ambulance medical evacuation healthcare WHO PRCS",
+      "Gaza November 23 2026 ceasefire negotiations hostages detention Rafah crossing Reuters AP",
+      "Gaza November 23 2026 UN briefing humanitarian Gaza UNICEF UNRWA WFP",
+      "Gaza November 23 2026 Gaza military operations civilian impact Al Jazeera Anadolu Middle East Eye",
+      "Gaza after:2026-11-22 site:english.wafa.ps",
+      "Gaza after:2026-11-22 site:aljazeera.com",
+      "Gaza after:2026-11-22 site:aa.com.tr",
+      "Gaza after:2026-11-22 site:reuters.com OR site:apnews.com",
+      "Gaza after:2026-11-22 site:reliefweb.int OR site:un.org OR site:unicef.org",
+      "Gaza after:2026-11-22 site:icrc.org OR site:palestinercs.org OR site:msf.org OR site:unrwa.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza casualty article already logged."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "No new Gaza headline identified."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza casualty article repeats UNRWA worker and western Gaza City vehicle incidents."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "No new qualifying Gaza report identified."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Previously blocked page now accessible with publication date November 19; report body not exposed by retrieved page."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible index."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible country page."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible country page."
+      },
+      {
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "result": "Anti-bot challenge."
+      },
+      {
+        "url": "https://www.wfp.org/news",
+        "result": "403 Forbidden."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/23/israeli-drone-strike-kills-unrwa-worker-in-gaza",
+        "reason": "UNRWA worker and vehicle strike both already recorded; repeats prior reporting."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177243",
+        "reason": "Al-Karama and Beit Lahia reports already logged."
+      },
+      {
+        "url": "https://pchrgaza.org/israeli-occupion-forces-kill-15-palestinians-in-gaza-and-intensify-incursions-and-destruction-in-the-central-gaza-strip/",
+        "reason": "Search excerpt dated November 23 concerns November 19–22 events; direct retrieval failed, exact publication time and new distinct details not established. Not accepted as fresh finding."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177186",
+        "reason": "November 22 feature on sewage pits, outside observation hour; underlying measurements not newly dated."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177225",
+        "reason": "Earlier winter appeal previously reviewed; no new change established."
+      },
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/23/israel-gaza-destruction-created-toxic-wasteland-oxfam-report",
+        "reason": "Same Oxfam environmental report already recorded."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "error": "Anti-bot challenge",
+        "material_new_degradation": false
+      },
+      {
+        "source": "PCHR article",
+        "error": "DisabledError on direct fetch; search excerpt accessible",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Search results included many stale reports; direct source checks supplemented retrieval.",
+      "Deduplicated against all 15 authenticated November 23 heartbeats; production collection not inspected.",
+      "No qualifying finding verified does not establish absence of developments."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

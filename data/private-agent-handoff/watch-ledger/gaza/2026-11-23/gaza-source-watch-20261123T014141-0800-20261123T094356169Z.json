@@ -1,0 +1,129 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T014141-0800-20261123T094356169Z",
+  "scheduled_for": "2026-11-23T01:44:51-08:00",
+  "started_at": "2026-11-23T01:41:41-08:00",
+  "completed_at": "2026-11-23T09:43:56.169Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T00:44:55-08:00",
+    "end": "2026-11-23T09:43:56.169Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T004356-0800-20261123T084455Z.json",
+    "basis": "Prior heartbeat authenticated readback; time-scoped search for new or newly discovered reports without claiming publication fell inside interval"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-wafa-177208-child-lead-poisoning",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177208",
+      "title": "Gaza child dies from lead poisoning, medical sources confirm",
+      "publisher": "WAFA",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": "2026-11-23T10:38:00+02:00",
+      "event_date": null,
+      "location": "Gaza Strip; exact location not given",
+      "affected_population_system": "One child reported dead from acute lead poisoning; displaced families repairing old batteries in tents; Gaza pediatric toxicology and blood-lead testing capacity",
+      "exact_supporting_passage": "Medical sources in the Gaza Strip announced on Monday the death of a child from acute lead poisoning.",
+      "source_type": "Palestinian official news agency, attributing report to unnamed Gaza medical sources",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct WAFA latest-news index then canonical article; not produced by any of the 12 search queries",
+        "discovered_during_run": "2026-11-23",
+        "within_search_window": false,
+        "preceding_window_publication": true,
+        "publication_relative_to_prior_watch": "Published 10:38 AM Gaza local, equivalent to 12:38 AM PST; 6 minutes 55 seconds before prior heartbeat completion, but absent from prior watch, newly recovered in this check",
+        "novelty": "Previously unlogged Gaza pediatric fatality and medical diagnostic-supply limitation, not a claimed death during this hourly interval",
+        "evidence_scope": "WAFA reports medical sources linking death to battery repairs in displacement settings and alleging inability to test other children for blood lead levels; source is not independently verified",
+        "corroboration": "No independent clinical record or WHO verification located in bounded check"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall only; primary production Gaza publisher and collector authoritative",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest Gaza situation report 18 November, published 20 November; no new report in interval; /updates index independently checked"
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway; recurring known limitation"
+      },
+      {
+        "source": "WHO global oPt emergency portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global alternative accessed; no new timestamped health incident identified"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza \"23 November 2026\" humanitarian update",
+      "site:who.int Gaza November 23 2026 hospital medical evacuation WHO",
+      "site:unicef.org Gaza \"23 November 2026\" water children",
+      "site:unrwa.org Gaza November 23 2026 aid shelter displacement",
+      "Gaza November 23 2026 overnight Monday civilians killed wounded hospital Reuters AP",
+      "Gaza 23 November 2026 early morning deaths injured shelling drone strikes WAFA",
+      "Gaza November 23 2026 Rafah crossing medical evacuation patients WHO PRCS",
+      "Gaza 23 November 2026 ceasefire negotiations hostages crossings aid access",
+      "site:english.wafa.ps \"23/November/2026\" \"Gaza\" wounded",
+      "site:aa.com.tr \"23.11.2026\" Gaza killed hospital",
+      "Gaza 23 November 2026 11am Palestinian time bombing dead wounded healthcare aid",
+      "site:palestine.un.org Gaza November 23 2026 aid crossing hospital displacement"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "23 November 10:38 Gaza-local item identifies one previously unlogged child lead-poisoning fatality; canonical report read directly"
+      },
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Latest Gaza situation report remains 18 November report, posted 20 November"
+      },
+      {
+        "source": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "22 November Gaza casualty items already known; 23 November feed contained no newly established Gaza development at check"
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "23 November lead article concerns West Bank, out of scope; prior Gaza medical and aid incidents older"
+      }
+    ],
+    "exclusions": [
+      "Previously logged 21–22 November Gaza fatalities, injured civilians, displaced shelter needs, insulin-access shortages and evacuation details excluded to prevent duplicate counts",
+      "OCHA 18 November report and older UNRWA/UNICEF items are not new for this observation interval",
+      "West Bank-specific incidents excluded; opinion, undated, unsupported and stale 2023–2025 hits excluded"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Fatal lead-poisoning diagnosis and battery ban allegations originate from unnamed medical sources as relayed by WAFA; event date and independent corroboration unavailable",
+      "Publication occurred shortly before prior watch cutoff; this is recovered coverage, not an incident proved to have occurred during the hour",
+      "Search indexing may lag; no inference that all other areas experienced no incidents"
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

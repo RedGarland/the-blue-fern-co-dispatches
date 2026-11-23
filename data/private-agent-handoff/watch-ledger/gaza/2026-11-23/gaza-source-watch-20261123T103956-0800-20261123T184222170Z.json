@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T103956-0800-20261123T184222170Z",
+  "scheduled_for": "2026-11-23T10:44:51-08:00",
+  "started_at": "2026-11-23T10:39:56-08:00",
+  "completed_at": "2026-11-23T10:42:22.170-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T09:51:09.307-08:00",
+    "end": "2026-11-23T10:42:22.170-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T094826-0800-20261123T175109307Z.json",
+    "basis": "Previous verified heartbeat completion through current supplementary watch; earlier logged findings deduplicated by incident and report."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only; primary production remains authoritative. No approval, publication, branch merge, schedule or automation changes.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates and latest humanitarian situation report",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza report is 18 November 2026 report, posted 20 November. No new OCHA Gaza item during the observation window."
+      },
+      {
+        "source": "WHO global conflict in Israel/oPt emergency page",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "WHO crisis overview and links accessible; no newly dated Gaza health/evacuation/ambulance/capacity development within observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Direct WHO regional endpoint returned 502 Bad Gateway; recurrence of documented source issue. Global WHO remained accessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza \"08:00 PM\" OR \"09:00 PM\"",
+      "Reuters Gaza November 23 2026 latest November 23 Israeli airstrike civilians medical aid 18:00 GMT",
+      "site:aa.com.tr/en/middle-east/ Gaza November 23 2026 latest Israeli attack after 18:00 GMT",
+      "site:apnews.com/article/ gaza november 23 2026 ceasefire strike displaced deaths",
+      "site:aljazeera.com/news/2026/11/23/ Gaza Israel latest airstrike killed water aid",
+      "site:unrwa.org OR site:unicef.org Gaza November 23 2026 water wells humanitarian update",
+      "site:icrc.org Gaza November 23 2026 ambulance access wounded detention",
+      "site:palestinercs.org Gaza November 23 2026 ambulances emergency evacuation",
+      "site:wfp.org OR site:ochaopt.org Gaza November 23 2026 aid crossing food supplies fuel",
+      "site:middleeasteye.net/news Gaza 23 November 2026 hospital injured shelling",
+      "Gaza November 23 2026 medical evacuation hospital disruption WHO 20:00 local",
+      "Gaza November 23 2026 ceasefire negotiations hostage detainee crossings Rafah late Monday"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English news index",
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza story shown at 20:07 Gaza time (10:07 PST) describes the Oxfam/CEOBS environmental assessment already recorded in watch earlier today. No distinct newly reported casualty or aid/crossing/capacity change."
+      },
+      {
+        "source": "WAFA 20:07 Gaza-time Oxfam report summary",
+        "url": "https://english.wafa.ps/Pages/Details/177240",
+        "result": "Reprints already logged new assessment. Details on wastewater capacity reflect April 2026 CMWU assessment; not a newly occurring change."
+      },
+      {
+        "source": "Oxfam International 23 November press release",
+        "url": "https://www.oxfam.org/en/press-releases/more-than-99-per-cent-gaza-environmental-contamination-from-israel-military-assault",
+        "result": "Original Oxfam release now directly verified; confirms assessment previously recorded via Anadolu in 03:42 PST watch. Notes 19% sewage pumping stations functional and 30% wastewater network partial capacity are based on April 2026 CMWU data, not current operational change. Risk indicators >99% are mapped potential contamination, not direct sampling across Gaza."
+      },
+      {
+        "source": "Anadolu Middle East index",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "No newly published Gaza-specific qualifying incident verified; existing 350,000-family winter shelter infographic is not demonstrated to be newly released within this interval."
+      },
+      {
+        "source": "Reuters 23 November Gaza casualties article",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "result": "Prior coverage of UNRWA water-well staffer and western Gaza City vehicle strike. Article stamped 12:01 UTC, before window; no materially new update."
+      },
+      {
+        "source": "Oxfam International press index",
+        "url": "https://www.oxfam.org/en/press-releases",
+        "result": "23 November Gaza environmental assessment is latest humanitarian item; duplicate of earlier watch."
+      },
+      {
+        "source": "CEOBS homepage",
+        "url": "https://ceobs.org/",
+        "result": "No current Gaza update surfaced in indexed latest articles; primary Oxfam press release available."
+      },
+      {
+        "source": "UNRWA official statements",
+        "url": "https://www.unrwa.org/newsroom/official-statements",
+        "result": "Direct endpoint returned HTTP 403; Reuters reporting and OCHA official coverage remained accessible."
+      }
+    ],
+    "exclusions": [
+      "Oxfam/CEOBS 23 November contamination assessment previously recorded as gaza-20261123-aa-4134171-oxfam-ceobs-environment-water-contamination-report; WAFA 20:07 Gaza-time story and original Oxfam press release are corroboration of the same report, not an additional finding.",
+      "Oxfam 19% sewer-pumping-functionality / 30% wastewater-network capacity figures explicitly sourced to April 2026 CMWU assessment, not a change during this watch.",
+      "Previously recorded 23 November UNRWA staff death by Jabalia well, western Gaza City vehicle strike and three-fatality revision, Bureij injury, Jabalia injuries, Gaza casualty aggregate, Asdaa injury and lead-poisoning death excluded as duplicates.",
+      "Older OCHA/WHO/WFP/UNRWA updates, old or misdated search hits, West Bank-only news, and undated unverified reporting excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNRWA official statements",
+        "url": "https://www.unrwa.org/newsroom/official-statements",
+        "error": "HTTP 403 Forbidden",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional news portal remained unavailable; WHO global and OCHA OPT were accessible.",
+      "UNRWA official statements direct endpoint denied access; existing UNRWA incident was independently reported by Reuters.",
+      "Twelve targeted searches plus direct source checks are bounded recall, not a guarantee that all releases were indexed immediately.",
+      "Automation invocation occurred before nominal 10:44:51 PDT/PST hourly scheduled slot; coverage ended at actual completion."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

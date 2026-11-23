@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T094826-0800-20261123T175109307Z",
+  "scheduled_for": "2026-11-23T09:44:51-08:00",
+  "started_at": "2026-11-23T09:48:26-08:00",
+  "completed_at": "2026-11-23T09:51:09.307-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T08:50:29-08:00",
+    "end": "2026-11-23T09:51:09.307-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T084831-0800-20261123T165029Z.json",
+    "basis": "Previous authenticated heartbeat completion through this watch; articles are checked for publication versus event time and compared with recorded incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only. Primary daily production remains authoritative. No approval, publication or schedule change.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT home and updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest dated 20 Nov 2026 (18 Nov humanitarian situation report); no new within-window Gaza bulletin. Homepage independently accessible."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview accessible; no new within-hour Gaza healthcare/capacity/evacuation report found."
+      },
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "TIMEOUT",
+        "result": "Direct endpoint timed out; continuing same limitation as prior watch, not a newly material degradation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 23 2026 humanitarian situation new update",
+      "site:who.int Gaza November 23 2026 medical evacuation hospital November",
+      "site:english.wafa.ps/Pages/Details/ 23 November 2026 Gaza 7:00 PM casualties strike hospital",
+      "Reuters Gaza November 23 2026 latest Nov 23 17:00 GMT civilians strike UNRWA",
+      "site:aa.com.tr/en/middle-east Gaza November 23 2026 19:00 civilian aid strike",
+      "site:apnews.com Gaza November 23 2026 latest ceasefire aid hospitals",
+      "site:english.wafa.ps \"23/November/2026\" \"Gaza\" \"08:00 PM\" OR \"07:00 PM\"",
+      "site:unrwa.org OR site:unicef.org Gaza 23 November 2026 water shelter fuel aid",
+      "site:wfp.org OR site:icrc.org Gaza November 23 2026 aid food access crossing medical",
+      "site:palestinercs.org OR site:who.int Gaza 23 November 2026 ambulance evacuation hospital",
+      "Gaza Monday Nov 23 2026 new airstrike Khan Younis Jabalia Gaza City after 19:00 local",
+      "Gaza 23 November 2026 latest negotiations ceasefire Rafah crossing detainees hostages 19 20 local time"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news index",
+        "url": "https://english.wafa.ps/",
+        "result": "Most recent Gaza reporting is 23 Nov 18:15 Gaza time roundup revising western Gaza City vehicle-strike deaths to three; this is the same follow-up recorded in prior watch. Newer 19:12 Gaza item concerns Ramallah, not Gaza."
+      },
+      {
+        "source": "WAFA 18:15 Gaza roundup",
+        "url": "https://english.wafa.ps/Pages/Details/177237",
+        "result": "Repeats previously logged vehicle-strike fatality revision and UNRWA worker death; excluded as duplicates."
+      },
+      {
+        "source": "Anadolu Middle East feed",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Within-day feature on Ofer Prison detainee health concerns refers to West Bank detainees, not new Gaza-specific developments; Nov 21 Gaza shelter infographic is old."
+      },
+      {
+        "source": "Reuters 23 Nov Gaza report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "result": "UNRWA water-well worker death and western Gaza City vehicle attack already recorded in earlier watches."
+      },
+      {
+        "source": "UNRWA situation report #239",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "19 Nov 2026 publication predates observation window; no new release."
+      }
+    ],
+    "exclusions": [
+      "WAFA 18:15 Gaza-time updated three deaths in western Gaza City vehicle strike is already in prior heartbeat; not a new incident.",
+      "UNRWA Jabalia water-well worker death, Bureij injury, Jabalia injuries, Gaza hospital aggregate tallies and Gaza child lead poisoning reported earlier today are already logged.",
+      "Rafah EUBAM leadership-coordination meeting reported 15:58 Gaza time does not document an operational crossing, transit or medical evacuation change and predates window.",
+      "Anadolu article on Ofer Prison concerns detainees from Jericho, East Jerusalem and other West Bank localities; excluded from Gaza-only watch.",
+      "Older OCHA, WHO, UNRWA, WFP and UNICEF updates, West Bank incidents, opinion and uncorroborated claims excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "TimeoutError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional portal inaccessible; WHO global portal and OCHA OPT accessible.",
+      "Search results sometimes surface old articles despite daily date limits; bounded search not exhaustive.",
+      "No evidence of a new high-value Gaza development within observed publication window from the sources checked."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

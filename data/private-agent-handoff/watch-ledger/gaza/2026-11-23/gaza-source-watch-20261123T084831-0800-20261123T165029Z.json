@@ -1,0 +1,127 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T084831-0800-20261123T165029Z",
+  "scheduled_for": "2026-11-23T08:44:51-08:00",
+  "started_at": "2026-11-23T08:48:31-08:00",
+  "completed_at": "2026-11-23T08:50:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T07:43:48.640-08:00",
+    "end": "2026-11-23T08:50:29-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T074132-0800-20261123T154132Z.json",
+    "basis": "Prior authenticated heartbeat completion to current run; publication updates distinguished from the event time. The scheduler DTSTART anchors the scheduled_for field."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-west-gaza-city-vehicle-strike-fatality-toll-3-update",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177237",
+      "title": "Four Palestinians killed, including UNRWA employee, in Israeli attacks across Gaza",
+      "publisher": "Palestinian News and Information Agency (WAFA)",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_time_local": "18:15 (WAFA site display; Gaza local time inferred)",
+      "event_date": "2026-11-23",
+      "event_time": null,
+      "location": "Near Ansar Roundabout, western Gaza City, Gaza Strip; likely same Al-Katiba-area vehicle strike logged previously",
+      "affected_population_system": "People in/around civilian vehicle; previously reported two fatalities and seven injuries; latest report says three vehicle-strike fatalities, others wounded",
+      "exact_supporting_passage": "three Palestinians were killed and several others injured when Israeli aircraft targeted a civilian vehicle near Ansar Roundabout, west of Gaza City.",
+      "source_type": "Established Palestinian news agency; cites local sources",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": "2026-11-23T07:43:48.640-08:00 / 2026-11-23T08:50:29-08:00",
+        "new_information": "Reported vehicle-strike fatality count increased from two to three (+1 relative to prior report). Not a separate strike or four additional deaths.",
+        "prior_report_url": "https://english.wafa.ps/Pages/Details/177233",
+        "prior_report_publication_local": "2026-11-23 16:11 (WAFA display, Gaza local time inferred)",
+        "previous_watch_record": "2026-11-23T07:43:48.640-08:00 prior watch finished with two vehicle deaths already recorded",
+        "corroboration": "Earlier Reuters and WAFA reporting described two deaths; no independent verification of the revised count found within the bounded search.",
+        "caveats": "WAFA local sources not independently verified; avoid conflating with a separate Nov 21 Tel al-Hawa aid-vehicle strike referenced in recent reports."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded Gaza recall only; primary production authoritative; no publishing or approvals.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT homepage and publications",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Newest listed humanitarian situation report 18 Nov, published 20 Nov; no within-hour new Gaza bulletin."
+      },
+      {
+        "source": "WHO global Gaza emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Accessible through WHO navigation; no within-hour operational hospital, medical evacuation, or capacity bulletin in latest displayed items."
+      },
+      {
+        "source": "WHO Eastern Mediterranean / Palestine news",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "status": "HTTP_502",
+        "result": "Regional WHO endpoint returned Bad Gateway, a known continuing limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org \"23 November 2026\" Gaza humanitarian",
+      "site:who.int Gaza \"23 November 2026\" health evacuation",
+      "site:unrwa.org Gaza November 23 2026 water aid staff casualties",
+      "site:unicef.org Gaza November 23 2026 children water displacement",
+      "Gaza Reuters November 23 2026 16:00 GMT 17:00 18:00 casualties humanitarian",
+      "Gaza November 23 2026 November 23 WAFA latest killed injured 17:00 local Gaza",
+      "site:apnews.com Gaza November 23 2026 ceasefire airstrikes crossings",
+      "site:aa.com.tr Gaza 23.11.2026 Palestinian killed wounded aid hospital",
+      "\"November 23, 2026\" \"three\" \"vehicle\" \"Gaza City\" killed Ansar UNRWA",
+      "site:english.wafa.ps \"23/November/2026\" \"Gaza\" \"07:00 PM\" hospital OR crossing",
+      "Gaza 23 November 2026 16:00 UTC 17:00 UTC aid fuel hospital ambulance Rafah",
+      "site:icrc.org OR site:wfp.org OR site:palestinercs.org Gaza November 23 2026 new medical aid access"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest feed and two successive vehicle strike reports",
+        "url": "https://english.wafa.ps/",
+        "result": "18:15 Gaza-time roundup revised fatalities for western Gaza City vehicle strike from two to three; separately repeated already recorded Jabalia UNRWA staff death and Bureij injury."
+      },
+      {
+        "source": "Reuters Monday Gaza report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "result": "Prior independent report described two deaths in separate western Gaza City vehicle strike; not independently updated to three in this bounded search."
+      },
+      {
+        "source": "Anadolu Middle East reporting index",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Displayed earlier logged contamination report and civilian gunfire report; no new within-window Gaza humanitarian operation identified."
+      }
+    ],
+    "exclusions": [
+      "UNRWA water-well worker death in Jabalia and Bureij woman's injury are repeats of prior recorded incidents.",
+      "WAFA now attributes material damage to a house roof in Nuseirat; noted but not a high-value additional finding absent documented service disruption, displacement, or casualties.",
+      "Other media referenced an unrelated Saturday 21 Nov Tel al-Hawa aid-delivery vehicle strike involving three deaths; do not merge this with Monday Al-Katiba/Ansar reporting.",
+      "Older OCHA/WHO reports and older WFP/UNICEF/ICRC releases, West Bank news, and opinion excluded.",
+      "No substantiated within-hour change in crossings, aid, water operations, medical evacuation or hospital functioning capacity."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional access failure repeats prior watches; OCHA and WHO global source remained accessible.",
+      "Updated casualty figure relies on WAFA citing local sources, without an independently confirmed third death.",
+      "Search engine date filtering sometimes surfaced older or unrelated results; bounded 12 searches not exhaustive."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

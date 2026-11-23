@@ -1,0 +1,157 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T034031-0800-20261123T114244600Z",
+  "scheduled_for": "2026-11-23T03:44:51-08:00",
+  "started_at": "2026-11-23T03:40:31-08:00",
+  "completed_at": "2026-11-23T11:42:44.600Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T02:43:37.091-08:00",
+    "end": "2026-11-23T11:42:44.600Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T024149-0800-20261123T104337091Z.json",
+    "basis": "From preceding watch's authenticated completion through this run; new discovery/publication is not an assertion of event-time occurrence"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-aa-4134185-asdaa-khan-younis-gunshot-injury",
+      "canonical_source_url": "https://aa.com.tr/en/middle-east/israeli-fire-injures-palestinian-in-gaza-as-child-dies-of-acute-lead-poisoning/4134185",
+      "title": "Israeli fire injures Palestinian in Gaza as child dies of acute lead poisoning",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": null,
+      "event_date": "2026-11-23",
+      "location": "Asdaa area northwest of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "One Palestinian with a moderate gunshot wound to the foot; treated/reported at Nasser Hospital",
+      "exact_supporting_passage": "A medical source at Nasser Hospital told Anadolu that a Palestinian arrived with a moderate gunshot wound to the foot",
+      "source_type": "Established news agency; own medical-source reporting at Nasser Hospital",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Targeted searches; direct reading of Anadolu canonical story",
+        "novelty": "An Asdaa injury claim was flagged but excluded in prior watch due insufficient support; now independently reported by Anadolu citing Nasser Hospital medical source",
+        "publication_relative_to_prior_watch": "Source displays 23 November date, no verified publication hour; may predate observation window",
+        "event_time": null,
+        "corroboration": "Independent medical-source claim reported by Anadolu; no second confirmation located within bounded watch",
+        "related_prior_exclusion": "Earlier uncorroborated PIC account of injury near Asdaa intersection, excluded by prior watch",
+        "excluded_from_same_article": "Previously logged child lead-poisoning death; non-casualty gunfire/shelling lacked documented new civilian effect"
+      }
+    },
+    {
+      "finding_id": "gaza-20261123-aa-4134171-oxfam-ceobs-environment-water-contamination-report",
+      "canonical_source_url": "https://aa.com.tr/en/middle-east/israeli-attacks-turn-gaza-into-toxic-wasteland-with-over-99-facing-potential-contamination-report/4134171",
+      "title": "Israeli attacks turn Gaza into ‘toxic wasteland,’ with over 99% facing potential contamination: Report",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": null,
+      "event_date": null,
+      "location": "Gaza Strip, particularly Gaza City, Khan Younis, Rafah, Jabalia, Salah al-Din Road; drinking-water risks flagged in North Gaza, Gaza City and Deir al-Balah",
+      "affected_population_system": "Potential contamination affecting soil, air, groundwater and drinking-water safety; indicators mapped over >99% of Gaza, not confirmed chemical sampling of all territory; report says fecal coliform detected in 19% of 79 groundwater wells sampled in July 2026",
+      "exact_supporting_passage": "More than 99% of the Gaza Strip shows indicators of potential environmental contamination from Israeli attacks",
+      "source_type": "Established news agency reporting newly released Oxfam and Conflict and Environment Observatory analysis",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Related story linked from separately retrieved Anadolu article, direct canonical reading",
+        "novelty": "Anadolu reports Oxfam/CEOBS released this environmental and public-health assessment on Monday, 23 November; assessment is new reporting, not a newly occurring pollution event",
+        "event_time": null,
+        "publication_relative_to_prior_watch": "Reported published 23 November, precise hour unverified",
+        "methods_as_reported": "Satellite imagery, remote sensing, scientific and open-source data, with 79 groundwater wells sampled July 2026",
+        "caution": "Over 99% represents indicators of potential exposure, not confirmed measured contamination of 99% of land; 19% of wells applies to 79 sampled, not all Gaza groundwater",
+        "primary_source_verification": "Oxfam International press release index and CEOBS homepage/category directly checked; underlying newly announced report not yet visible in accessible indexes; original document not independently reviewed"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; authoritative Gaza daily production publisher/collector unchanged",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report 18 November, posted 20 November; no newly dated Gaza update"
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Recurring regional portal fetch failure"
+      },
+      {
+        "source": "WHO global oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Fallback accessible; no new incident in posted WHO lists"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza November 23 2026 humanitarian update crossings aid displacement",
+      "site:who.int Gaza November 23 2026 hospital medical evacuation healthcare",
+      "site:unicef.org Gaza November 23 2026 water food shelter children",
+      "site:unrwa.org Gaza November 23 2026 tents flooding displacement food",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza killed wounded injured",
+      "site:aa.com.tr/en/middle-east Gaza \"Nov 23, 2026\" killed wounded airstrikes",
+      "Gaza November 23 2026 Monday 13:00 Gaza time new injuries death November 23 Jabalia Gaza City latest",
+      "Gaza Monday Nov 23 2026 Reuters AP AFP civilian casualties drone strike crossing",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza Palestine",
+      "site:palestinercs.org November 23 2026 ambulance hospital Gaza",
+      "Gaza Nov 23 2026 Rafah medical evacuation aid trucks fuel hospitals capacity November 23",
+      "Gaza Nov 23 2026 ceasefire hostages negotiations detention civilian impact Netanyahu Trump"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza report remains Jabalia Al-Tawba injury already recorded by preceding watch; lead poisoning also prior finding"
+      },
+      {
+        "source": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Direct index plus two Anadolu 23 November articles reviewed"
+      },
+      {
+        "source": "Oxfam press releases",
+        "url": "https://www.oxfam.org/en/press-releases",
+        "result": "New Oxfam/CEOBS assessment not present in accessible latest index"
+      },
+      {
+        "source": "Conflict and Environment Observatory",
+        "url": "https://ceobs.org/countries/occupied-palestinian-territories/",
+        "result": "New assessment not present in accessible country index"
+      }
+    ],
+    "exclusions": [
+      "23 Nov Jabalia Al-Tawba Mosque drone-strike injuries already logged last watch",
+      "23 Nov child lead-poisoning death already logged last watch; repeated in Anadolu's new Asdaa report",
+      "Previously logged 22 Nov casualties and shelter needs excluded",
+      "West Bank-only cases, opinion, undated and irrelevant search results excluded",
+      "Oxfam/CEOBS 99% map estimates not treated as direct chemical measurements nor as proof of newly occurring exposure"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional portal remained unavailable; global WHO fallback and OCHA accessible",
+      "No verified publication hours for the two Anadolu reports; both are newly located reporting, not events verified within this hourly interval",
+      "Oxfam/CEOBS underlying report not independently retrieved; quantitative figures accurately attributed to Anadolu account and authors",
+      "Search indexing lag limits the completeness of a bounded recall watch"
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

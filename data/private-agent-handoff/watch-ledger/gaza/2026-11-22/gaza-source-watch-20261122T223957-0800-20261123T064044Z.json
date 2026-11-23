@@ -1,0 +1,124 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T223957-0800-20261123T064044Z",
+  "scheduled_for": "2026-11-22T22:44:51-08:00",
+  "started_at": "2026-11-22T22:39:57-08:00",
+  "completed_at": "2026-11-22T22:40:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T21:47:09.915-08:00",
+    "end": "2026-11-22T22:40:44-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T214600-0800-20261123T054709Z.json",
+    "basis": "Prior authenticated GitHub heartbeat completion through this watch. Search includes early 23 November Gaza-local reports that fall on 22 November in Los Angeles; newly discovered but older or duplicative reports excluded. Scheduled slot is recorded as the nominal 22:44:51 PST recurrence, although invocation context precedes it."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary bounded recall only; primary daily Gaza publisher/collector and production remain authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Direct index and Gaza reports checked first. Most recent listed humanitarian situation report is 18 November 2026, posted 20 November; no Gaza operational report posted in observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "result": "Direct page access timed out; prior hourly watches reported recurring HTTP 502. Source remains unavailable; not a newly material failure."
+      },
+      {
+        "source": "WHO global Israel/oPt emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Direct WHO overview checked; no newly dated Gaza medical evacuations or healthcare capacity change in this window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 23 2026 early morning Israeli fire casualties wounded Jabalia Khan Younis 22 November late",
+      "site:english.wafa.ps/Pages/Details/ \"November 23, 2026\" Gaza killed wounded",
+      "site:aa.com.tr/en/middle-east \"November 23, 2026\" Gaza killed injured civilians",
+      "site:reuters.com/world/middle-east/ Gaza November 23 2026 aid ceasefire casualties",
+      "site:aljazeera.com/news/2026/11/23/ Gaza Israeli attacks killed displaced aid",
+      "Gaza November 23 2026 hospitals ambulances fuel medicines medical evacuations WHO PRCS",
+      "Gaza November 23 2026 water sewage sanitation pumping electricity damage UNICEF humanitarian update",
+      "site:unrwa.org \"23 November 2026\" Gaza shelter displacement flooding aid access",
+      "site:wfp.org \"23 November 2026\" Gaza food assistance crossings trucks",
+      "Gaza Rafah Kerem Shalom crossing 23 November 2026 patients medical evacuation Red Crescent",
+      "Gaza November 23 2026 ceasefire talks Hamas hostages prisoners detention aid negotiations new",
+      "site:english.wafa.ps \"23/November/2026\" \"GAZA\" Palestinians injured killed homes"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA latest-news feed",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest directly displayed Gaza items are November 22 Jabalia, Deir al-Balah, sewage and casualty reports already recorded. Nov 23 WAFA search results refer to West Bank-only incidents."
+      },
+      {
+        "source": "Al Jazeera Palestine feed",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza topics include previously recorded Nov 22 child diabetes/insulin shortage, housing-demolition protest, and Nov 21 food-aid vehicle strike; no distinct new Gaza event."
+      },
+      {
+        "source": "Anadolu Middle East feed",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Gaza shelter estimates already recorded. No independently date-verified new Gaza incident identified."
+      },
+      {
+        "source": "UNRWA reports index",
+        "url": "https://www.unrwa.org/resources/reports",
+        "result": "No newly dated Gaza operational change observed."
+      }
+    ],
+    "reviewed_sources": [
+      {
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Latest report posted Nov 20; older reporting period, no new window-specific Gaza development."
+      },
+      {
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "WHO global overview gives standing health constraints, without a new dated Gaza change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Gaza incidents listed Nov 22 were recorded by prior watches; Nov 23 WAFA search hit addresses Hebron."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Recent Gaza diabetes and casualty stories already recorded; newer West Bank medical reports excluded."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "No new date-verified Gaza development. Existing Gaza 350,000-families winter shelter needs repeated."
+      }
+    ],
+    "exclusions": [
+      "Nov 21 Gaza food-aid vehicle deaths, Nov 22 Deir al-Balah and Jabalia fatalities and Bir al-Naaja/Al-Sikka injuries already captured; avoid doubling reports.",
+      "Previously recorded Gaza shelter needs, rain/flooding, sewage metrics, medical-supply warnings, meningitis, children's insulin access and Rafah evacuations were not new changes in this window.",
+      "WAFA Nov 23 West Bank checkpoint and raids and Al Jazeera Nov 23 West Bank medics report outside Gaza scope.",
+      "2023–2025 or September 2026 Reuters results that matched calendar dates excluded; unsupported and undated search snippets excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "Direct page timed out (prior watch failure HTTP 502)",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional service remains inaccessible. OCHA OPT, WHO global overview, WAFA, Anadolu, Al Jazeera, UNRWA and index-based targeted searches yielded useful coverage, so this is DEGRADED rather than FAILED.",
+      "Search indexing and source publication delays can conceal events; no finding is not evidence that no incident occurred."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

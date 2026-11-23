@@ -1,0 +1,103 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T234421-0800-20261123T074533Z",
+  "scheduled_for": "2026-11-22T23:44:51-08:00",
+  "started_at": "2026-11-22T23:44:21-08:00",
+  "completed_at": "2026-11-22T23:45:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T22:40:44-08:00",
+    "end": "2026-11-22T23:45:33-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T223957-0800-20261123T064044Z.json",
+    "basis": "From prior heartbeat completion, authenticated readback, through the current run; early 23 November Gaza-local material falls within late 22 November America/Los_Angeles time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary Gaza recall only; daily production collector and publisher remain authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Index still led with the 18 November 2026 humanitarian report, published 20 November. No new Gaza situation report dated within the observation window."
+      },
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Regional site unavailable, consistent with prior hourly checks; known degradation, not newly material."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview accessible, no new time-specific health service, medical evacuation, health facility or ambulance developments in the window."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 23 2026 early morning November 22 late killed injured civilians Israeli strikes ceasefire",
+      "site:english.wafa.ps/Pages/Details/ \"November 23, 2026\" Gaza killed wounded",
+      "site:aa.com.tr/en/middle-east \"Nov 23, 2026\" Gaza attack wounded aid",
+      "site:reuters.com/world/middle-east/ Gaza Nov 22 2026 late ceasefire hostages casualties",
+      "site:aljazeera.com/news/2026/11/23/ Gaza civilians killed displacement aid",
+      "site:un.org/unispal/ 23 November 2026 Gaza humanitarian casualties crossings",
+      "Gaza 23 November 2026 WHO PRCS patients Rafah medical evacuation hospital fuel insulin medicines latest",
+      "Gaza 23 November 2026 UNICEF WFP water sewage food supply crossings aid trucks news",
+      "Gaza 23 November 2026 displacement flooding tents housing families relocated shelters latest",
+      "Gaza 23 November 2026 Kerem Shalom Rafah Zikim crossing reopened closed restrictions",
+      "Gaza 23 November 2026 Hamas Israel negotiations ceasefire hostage prisoner exchanges latest",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza occupation bombardment casualties"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA latest-news index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "23 November items indexed at 08:32 Gaza time were West Bank operations and weather, not new Gaza cases. Gaza items were the already covered 22 November Jabalia, Deir al-Balah and sanitation reports."
+      },
+      {
+        "source": "Al Jazeera Palestine feed",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest 22 November Gaza insulin-access reporting and Gaza airstrike/displacement stories were previously recorded, not new hour-specific developments."
+      },
+      {
+        "source": "Anadolu Middle East feed and casualty wrap",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "result": "22 November casualty aggregation, including al-Mawasi and al-Maslakh deaths, Deir al-Balah death, Khan Younis child injury and Bir al-Naaja injuries, already referenced or excluded in earlier watch receipts."
+      }
+    ],
+    "reviewed_prior_ledger_paths": [
+      "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T104412-0800-20261122T184620566Z.json",
+      "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T114242-0800-20261122T194425133Z.json",
+      "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T144644-0800-20261122T224751561Z.json",
+      "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T223957-0800-20261123T064044Z.json"
+    ],
+    "exclusions": [
+      "Anadolu 22 November wrap's al-Mawasi/al-Maslakh deaths expressly noted as prior known casualties in 11:44 AM watch receipt; no double count.",
+      "Deir al-Balah and Jabalia fatalities and Bir al-Naaja and Al-Sikka injuries already logged; similarly avoid re-counting cumulative Health Ministry totals.",
+      "Existing Gaza insulin care shortages, shelter needs, sewage pumping damage and Rafah evacuations predate this watch and have prior receipts.",
+      "WAFA 23 November West Bank reports, historical Reuters/UN results and undated snippets excluded as outside scope, stale or insufficiently supported."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional site remained unavailable; OCHA OPT, WHO global overview and established reporting provided enough coverage for DEGRADED rather than FAILED.",
+      "New source publication or indexing may lag the watch window; absence of qualifying findings does not establish absence of events."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

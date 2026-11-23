@@ -1,0 +1,159 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T124145-0800-20261123T204227Z",
+  "scheduled_for": "2026-11-23T12:44:51-08:00",
+  "started_at": "2026-11-23T12:41:45-08:00",
+  "completed_at": "2026-11-23T12:42:27-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T11:40:17-08:00",
+    "end": "2026-11-23T12:42:27-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T113957-0800-20261123T194017Z.json",
+    "basis": "Authenticated prior completion to current observed cutoff. Newly recovered same-day material distinguished from verified in-window publication and event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-hearing-aid-battery-access-disruption-aj",
+      "canonical_source_url": "https://www.aljazeera.com/video/newsfeed/2026/11/23/israeli-restrictions-cut-off-vital-hearing-aid-supplies-in-gaza",
+      "title": "Israeli restrictions cut off vital hearing aid supplies in Gaza",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_time_local": null,
+      "event_date": null,
+      "event_time": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "People dependent on hearing aids; audiology and assistive-device supply access. Report describes thousands affected but provides no verified exact count.",
+      "exact_supporting_passage": "Israeli restrictions have left Gaza facing a severe shortage of hearing aid batteries",
+      "source_type": "Established news organization; video report with published textual summary",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": "2026-11-23T11:40:17-08:00 / 2026-11-23T12:42:27-08:00",
+        "discovery": "Direct Al Jazeera Palestine index and linked NewsFeed page following bounded searches.",
+        "new_information": "Distinct assistive-device battery shortage and communication-access impact, not the previously logged lead poisoning related to battery repair.",
+        "deduplication": "All 12 existing November 23 heartbeat files fetched; no hearing-aid, hearing-loss or hearing-battery report matched.",
+        "caveats": "Same-day newly recovered reporting, not proof of onset or first publication within this hour. Exact publication time, shortage onset, quantity, and independent humanitarian or health-system confirmation unavailable."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, posted November 20; no new listed Gaza update."
+      },
+      {
+        "source": "WHO global conflict portal",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza health change in news list."
+      },
+      {
+        "source": "WHO Eastern Mediterranean emergency situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Persistent regional access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 23 2026 latest casualties evening WAFA Gaza City Khan Younis",
+      "Gaza November 23 2026 UN humanitarian briefing aid crossings displacement",
+      "Gaza November 23 2026 WHO hospital medical evacuation ambulance fuel PRCS",
+      "Gaza November 23 2026 UNRWA UNICEF WFP water food aid update",
+      "Gaza November 23 2026 Reuters AP ceasefire hostages detention crossings evening",
+      "Gaza November 23 2026 Al Jazeera Anadolu latest evening attacks displacement",
+      "Gaza November 23 2026 ICRC MSF health hospitals access",
+      "Gaza November 23 2026 COGAT Rafah crossing aid operational update",
+      "Gaza November 23 2026 reliefweb humanitarian infrastructure water sanitation",
+      "Gaza November 23 2026 Palestinian prisoners detention releases hostages latest",
+      "غزة 23 نوفمبر 2026 مساء إصابة شهيد وفا",
+      "Gaza November 23 2026 latest UN press briefing Gaza 23 November 2026"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest index 21:49 Gaza time; latest Gaza-specific news duplicates prior entries."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Index through 22:02 Gaza time; no newly listed qualifying Gaza incident."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Updated casualty/lead poisoning coverage duplicates prior findings; prison report previously excluded."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Recovered hearing-aid battery report; other same-day casualty and contamination reports duplicate ledger."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports",
+        "result": "Accessible newsroom; no additional dated finding established."
+      },
+      {
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "result": "Anti-bot challenge blocked content."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no November 2026 date matched on page."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no November 2026 date matched on page."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible index; no additional qualifying report established from returned content."
+      },
+      {
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403."
+      }
+    ],
+    "exclusions": [
+      "Lead poisoning, Jabalia casualties, UNRWA worker killing, western Gaza City vehicle strike, Bureij injury and Oxfam assessment previously logged; verified against today's ledger.",
+      "IFRC general winter warning and Ofer prison report previously excluded.",
+      "Al Jazeera casualty article repeats prior incidents and cites earlier Saturday protest and housing damage estimate; no distinct in-window damage update established.",
+      "Egyptian ceasefire statement and Rafah coordination meeting do not establish operational change.",
+      "Old September OCHA search result outside window; no relevant result surfaced by the 12-query batch."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "Anti-bot challenge",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Search batch returned sparse and stale results; direct source checks provided useful coverage. Exact per-query result breakdown unavailable.",
+      "WFP and UN briefing coverage not confirmed; absence of other findings is not absence of events.",
+      "No production comparison performed; watch is supplemental and ledger deduplication is not a production-publisher check."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

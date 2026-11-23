@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T184534-0800-20261123T024728Z",
+  "scheduled_for": "2026-11-22T18:44:51-08:00",
+  "started_at": "2026-11-22T18:45:34-08:00",
+  "completed_at": "2026-11-22T18:47:28-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T17:44:51-08:00",
+    "end": "2026-11-22T18:47:28-08:00",
+    "prior_heartbeat_path": null,
+    "basis": "Bounded approximate hourly watch since prior scheduled check at 17:44:51 PST. Exact preceding-run completion and path could not be established through available GitHub file lookup; conservative novelty and duplication filters applied."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall watch only. Primary Gaza daily collector and publisher remain authoritative. No publication, approval, scheduling, permissions or other production effects.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza humanitarian report shown as 18 November (posted 20 November); no newer Gaza-specific operational report identified."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "TIMEOUT",
+        "result": "Regional occupied Palestinian territory landing page timed out, recurring access issue."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt news",
+        "url": "https://www.emro.who.int/opt/news/",
+        "status": "HTTP_502",
+        "result": "Bad Gateway; recurring site failure."
+      },
+      {
+        "source": "WHO global conflict emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "General health-system impacts visible but no time-stamped operational change during the watch window."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza 22 November 2026 humanitarian situation update crossings casualties displacement",
+      "site:who.int Gaza occupied Palestinian territory 22 November 2026 hospitals medical evacuations health"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 22 2026 latest evening casualties strikes Jabalia Khan Younis Deir al Balah",
+      "Gaza 22 November 2026 OCHA UNRWA shelters flooding tents displaced latest",
+      "Gaza 22 November 2026 WHO medical evacuations hospital patients ambulance fuel insulin meningitis",
+      "Gaza 22 November 2026 aid crossing Kerem Shalom Rafah humanitarian trucks restrictions",
+      "Gaza November 22 2026 water sanitation sewage crisis WHO UNICEF drinking water",
+      "Gaza Nov 22 2026 negotiations ceasefire Yellow Line hostages detention civil casualties",
+      "site:reuters.com Gaza November 22 2026 aid vehicle World Central Kitchen strike Saturday killed three",
+      "site:english.wafa.ps \"November 22, 2026\" Gaza evening killed injured",
+      "site:aa.com.tr/en/middle-east November 22 2026 Gaza water health shelter humanitarian casualties Sunday latest",
+      "site:unicef.org Gaza November 22 2026 health water winter relief",
+      "site:who.int Gaza November 22 2026 patients evacuated hospitals medical WHO update",
+      "site:aljazeera.com/news/2026/11/22 Gaza live late Sunday strikes ceasefire aid"
+    ],
+    "reviewed_citations": [
+      {
+        "source": "OCHA OPT 18 November report",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "result": "Prior-period OCHA report, no new hourly event."
+      },
+      {
+        "source": "WHO emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Background; not date-specific."
+      },
+      {
+        "source": "Anadolu 22 Nov casualty round-up",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "result": "Aggregates already captured Deir al-Balah death, Al-Sikka injured child and Bir al-Naaja three injured. Also references earlier wounds in Al Mawasi and Al Maslakh, but does not establish a verified new event/publication time within this hourly window."
+      },
+      {
+        "source": "Reuters 21 Nov Gaza aid-vehicle strike",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-three-vehicle-distributing-aid-gaza-witnesses-say-2026-11-21/",
+        "result": "Reported previous day, not demonstrated to be newly emerging this hour. WCK denied vehicle was affiliated; no fresh operational update established."
+      },
+      {
+        "source": "WAFA English",
+        "url": "https://english.wafa.ps/",
+        "result": "Search surfaced West Bank-only evening reports, excluded as out of scope."
+      }
+    ],
+    "exclusions": [
+      "Previously captured civilian casualty events around Deir al-Balah, Al-Sikka in Khan Younis, Jabalia/Bir al-Naaja; do not add aggregated counts twice.",
+      "Anadolu 22 November summary of three fatalities/four injuries had no verified hourly publication timestamp or independently established new distinct event since prior check.",
+      "Reuters 21 November food-aid vehicle strike, along with World Central Kitchen affiliation clarification, predates watch window and was not verified as new.",
+      "Earlier shelter flooding, sewage, water insecurity, medical-evacuation, healthcare shortage, and ceasefire reports remain background rather than fresh hourly changes.",
+      "Unverified social claims, opinion, unrelated West Bank events, and recycled statements."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "fetch timeout",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.emro.who.int/opt/news/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional pages were inaccessible; WHO global overview and OCHA OPT accessible, supplemented by established reporting.",
+      "Exact immediately preceding heartbeat was not located through connector file lookup; rolling hour based on prior scheduled check and conservative duplicate exclusion.",
+      "Search indexing and publication-hour metadata limited; no item promoted without sufficiently verified novelty."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false
+  }
+}

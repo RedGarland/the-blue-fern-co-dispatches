@@ -1,0 +1,102 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T174508-0800-20261123T014626Z",
+  "scheduled_for": "2026-11-22T17:44:51-08:00",
+  "started_at": "2026-11-22T17:45:08-08:00",
+  "completed_at": "2026-11-22T17:46:26-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T16:41:46.966-08:00",
+    "end": "2026-11-22T17:46:26-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T164045-0800-20261123T004146Z.json",
+    "basis": "Prior verified GitHub heartbeat completion to current search cutoff, in America/Los_Angeles. Publication/event/discovery times kept distinct, and items already logged were excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall watch only; primary Gaza production collector/publisher remains authoritative and unchanged.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Direct homepage and updates index checked first. Latest Gaza Humanitarian Situation Report covers 18 November, published 20 November 2026. No later Gaza situation update in the index."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Direct WHO overview checked first; no separate newly dated 22–23 November hospital, medical evacuation or healthcare capacity change."
+      },
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Direct regional page failed with 502, same known access limitation in earlier watches; news subpage also timed out."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ Gaza \"23/November/2026\" killed injured Rafah Jabalia",
+      "site:aa.com.tr/en/middle-east/ Gaza \"November 23, 2026\" Palestinians killed injured",
+      "site:aljazeera.com/news/2026/11/23/ Gaza latest civilian casualties displacement",
+      "Gaza November 23 2026 overnight Israeli fire civilian deaths AFP Reuters hospital",
+      "site:unrwa.org Gaza November 23 2026 displacement shelter flood supplies",
+      "site:unicef.org Gaza November 23 2026 children water sanitation casualties aid",
+      "site:wfp.org Gaza November 22 23 2026 food assistance access crossing",
+      "site:who.int Gaza November 22 23 2026 hospital fuel evacuation insulin medical",
+      "site:icrc.org Gaza November 23 2026 medical aid detainees hostages",
+      "Gaza Kerem Shalom Rafah crossing 23 November 2026 aid truck fuel access restrictions",
+      "Gaza ceasefire November 23 2026 negotiations hostages military strikes civilian impact",
+      "site:reliefweb.int/en/report/occupied-palestinian-territory Gaza 23 Nov 2026 humanitarian casualties food WASH"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA English latest-news feed",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza-specific item visible remains 22 November at 19:27 Gaza time, Jabalia fatality, already logged. Later dated visible items concern West Bank, not Gaza; 23 November site header is not a new Gaza article."
+      },
+      {
+        "source": "Al Jazeera Palestine news listing",
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Newest dated Gaza reports shown are 22 November children's diabetes supply disruption and displacement protests/demolitions, already logged. 21 November aid-distribution vehicle strike and casualty reports also previously covered."
+      },
+      {
+        "source": "WFP Gaza emergency page",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Current food parcel and meal cuts, crossing restrictions and aid needs appear as ongoing conditions; no independently dated change within this observation window."
+      },
+      {
+        "source": "UNRWA Situation Report #239",
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Published 19 November 2026; not new."
+      }
+    ],
+    "exclusions": [
+      "Previously captured Jabalia and Deir al-Balah fatalities, Bir al-Naaja injuries, earlier food-aid vehicle strike and other overlapping casualty reporting; no additive count.",
+      "Prior Rafah evacuation of 23 patients and 23 companions, hospital textiles and insulin shortages, diabetes and meningitis health warnings; no dated new functional change.",
+      "Already captured Maghazi destruction, central Gaza sewage systems, displaced shelter and flooding estimates; no new post-cutoff displacement or infrastructure incident verified.",
+      "Old agency reports, West Bank-only incidents, undated WFP standing aid cuts, uncorroborated social claims, opinion and unsourced assertions excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway; related Palestine news subpage timeout",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional site inaccessible, but OCHA OPT, global WHO overview, WAFA news feed, Al Jazeera reporting and agency search coverage were available.",
+      "Search indexes can lag early 23 November events; no item classified new merely because of reindexing."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

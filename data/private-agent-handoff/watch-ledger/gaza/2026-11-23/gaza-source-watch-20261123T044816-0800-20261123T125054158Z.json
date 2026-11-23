@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T044816-0800-20261123T125054158Z",
+  "scheduled_for": "2026-11-23T04:44:51-08:00",
+  "started_at": "2026-11-23T04:48:16-08:00",
+  "completed_at": "2026-11-23T04:50:54-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T03:42:44.600-08:00",
+    "end": "2026-11-23T04:50:54-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T034031-0800-20261123T114244600Z.json",
+    "basis": "From the authenticated completion of the preceding hourly watch to this run; includes newly discovered credible reporting published before or during the interval, with event timing not inferred from discovery timing"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261123-reuters-unrwa-waterwell-worker-adel-al-helo-jabalia",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+      "title": "Israeli strike kills worker with UN Palestinian agency in Gaza, agency says",
+      "publisher": "Reuters",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": "2026-11-23T12:01:00Z",
+      "event_date": "2026-11-23",
+      "location": "Street near an UNRWA-operated water well, Jabalia refugee camp, northern Gaza Strip",
+      "affected_population_system": "UNRWA water-service worker Adel Al-Helo killed and three other people wounded by reported Israeli airstrike; UNRWA water well operating nearby; damage to well or interruption of water service not established",
+      "exact_supporting_passage": "Three others were wounded in the strike, they said.",
+      "source_type": "Established international wire agency reporting direct on-record UNRWA spokesperson and local medical sources",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "discovered_via": "11th of 12 targeted search queries, then direct Reuters article read",
+        "novelty": "Reuters reported a distinct 23 November strike resulting in death of an UNRWA water well worker and three wounded, published at 04:01 PST, after previous watch completion 03:42:44 PST",
+        "publication_relative_to_prior_watch": "2026-11-23T04:01:00-08:00 is within this run's observation window",
+        "event_time": null,
+        "corroboration": "UNRWA spokesperson and local health officials quoted or attributed by Reuters; Israeli military response pending at publication",
+        "deduplication": "Distinct reported fatal strike near a water well; prior Jabalia Al-Tawba Mosque injury story described injuries near a mosque, not this named fatality; geographic and temporal overlap cannot be definitively excluded",
+        "caution": "Reuters does not establish the strike directly hit the water well or halted its operations"
+      }
+    },
+    {
+      "finding_id": "gaza-20261123-wafa-moh-gaza-daily-tally-74746-176234",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177223",
+      "title": "Death toll in Gaza rises to 74,746, with 176,234 injuries since the start of the offensive",
+      "publisher": "WAFA (attributing figures to Gaza medical sources)",
+      "source_date": "2026-11-23",
+      "publication_date": "2026-11-23",
+      "publication_timestamp": "2026-11-23T11:31:00Z",
+      "event_date": null,
+      "location": "Gaza Strip (hospitals throughout the territory)",
+      "affected_population_system": "Gaza hospitals reportedly received four fatalities and seven wounded in past 24 hours; cumulative figures 74,746 killed, 176,234 wounded since 7 October 2023; 1,679 fatalities and 6,100 wounded reported since October 2025 ceasefire",
+      "exact_supporting_passage": "Gaza Strip hospitals received four fatalities and seven wounded individuals in the past 24 hours.",
+      "source_type": "Palestinian news agency citing local medical sources; reported aggregate, not independently audited casualty verification",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovered_via": "Direct check of WAFA latest news index and canonical report after 12 bounded targeted queries",
+        "novelty": "Newly recovered dated medical-source daily tally; not included in preceding watch's two logged findings",
+        "publication_relative_to_prior_watch": "Published 03:31 PST on 23 November, approximately 12 minutes before the preceding watch completed; recovery rather than new within-hour publication",
+        "event_time": null,
+        "corroboration": "WAFA attributes figures to Gaza medical sources; no independently retrieved primary Ministry of Health bulletin during this watch",
+        "deduplication": "Aggregate may include people covered in individual reports such as Reuters UNRWA worker death or prior reported Jabalia incidents; never add daily count to individual incident counts",
+        "caution": "Four received fatalities are not verified to be four deaths that occurred during this hour or all from newly occurring attacks"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary Gaza recall only. Primary Gaza collector/publisher is authoritative and remains unchanged.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian situation report dated 18 Nov and posted 20 Nov; no 23 Nov situation report"
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "Repeated Bad Gateway on direct regional portal; longstanding limitation"
+      },
+      {
+        "source": "WHO global Israel and oPt emergency",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global health emergency overview and resources available; no new dated 23 Nov health bulletin identified"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:unicef.org Gaza November 23 2026 water health children shelter displacement",
+      "site:unrwa.org Gaza 23 November 2026 food shelter medical services water",
+      "site:palestinercs.org Gaza 23 November 2026 ambulance attacks hospital urgent",
+      "site:wfp.org Gaza November 23 2026 food aid crossing hunger update",
+      "site:oxfam.org \"Gaza\" \"November 23, 2026\" contamination environment report",
+      "site:ceobs.org Gaza 23 November 2026 toxic contamination 99% wells report",
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza injured killed hospital",
+      "site:aa.com.tr/en/middle-east \"Nov 23, 2026\" Gaza latest casualties food aid ceasefire",
+      "Gaza November 23 2026 health ministry four killed seven injured 74746 176234 hospitals",
+      "Gaza November 23 2026 Reuters AP AFP hospital ambulance medical evacuation Rafah casualties",
+      "Gaza 23 November 2026 crossings aid fuel hospital capacities medical evacuations operational OCHA WHO",
+      "Gaza 23 November 2026 ceasefire hostages prisoners negotiations border crossing civilian military operation new"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest news",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Identified 23 Nov medical-source daily tally, IFRC winter statement, and already known Jabalia Al-Tawba injury report"
+      },
+      {
+        "source": "Reuters report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "result": "Direct canonical report confirms new named UNRWA water-service worker casualty and three wounded; report time 12:01 UTC"
+      },
+      {
+        "source": "Anadolu Middle East",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Featured Oxfam/CEOBS contamination assessment already in prior watch; older shelter figures and irrelevant regional stories"
+      },
+      {
+        "source": "CEOBS OPT",
+        "url": "https://ceobs.org/countries/occupied-palestinian-territories/",
+        "result": "No accessible newly dated 23 November report in country index"
+      },
+      {
+        "source": "Oxfam press releases",
+        "url": "https://www.oxfam.org/en/press-releases",
+        "result": "Last visible press item 19 November; no 23 November contamination release visible"
+      }
+    ],
+    "exclusions": [
+      "Anadolu Oxfam/CEOBS 99%-potential-contamination analysis logged in immediately preceding watch; no second finding",
+      "23 Nov Al-Tawba Mosque, Jabalia drone injury already recorded in earlier watch",
+      "23 Nov acute lead-poisoning death already recorded; exclude repeated story",
+      "IFRC general winterization warning repeats known rain/flooding resource constraints with no quantified newly verified operational change",
+      "22 Nov 23 patients and 23 companions evacuated via Rafah appeared in weaker secondary outlet, with no directly verified primary attribution in this bounded pass; event predates window",
+      "Older Reuters hospital damage, November 2023 OCHA pages appearing in search results, West Bank-only cases, opinion and undated social claims excluded"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean oPt",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional portal remains inaccessible; WHO global overview and OCHA official updates accessible",
+      "Daily reported casualties are administrative aggregates and may overlap incident reporting; do not sum",
+      "Reuters initial report cites UNRWA and medics; Israeli military response not available in first story",
+      "Discovery and publication dates distinguish current reporting from event time; search-index lag can cause delayed recall"
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

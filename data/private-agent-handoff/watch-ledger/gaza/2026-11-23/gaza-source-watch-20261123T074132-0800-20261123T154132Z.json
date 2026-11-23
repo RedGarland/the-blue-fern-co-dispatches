@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T074132-0800-20261123T154132Z",
+  "scheduled_for": "2026-11-23T07:41:32-08:00",
+  "started_at": "2026-11-23T07:41:32-08:00",
+  "completed_at": "2026-11-23T07:43:48.640-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T06:47:55.762-08:00",
+    "end": "2026-11-23T07:43:48.640-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T064508-0800-20261123T144508Z.json",
+    "basis": "Start set to prior authenticated watch completion. Newly discovered reporting distinguished from verified event time; earlier coverage and duplicated incidents excluded."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary recall; production remains authoritative. No publishing, approval, scheduler or production actions taken.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT updates and homepage",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed Gaza humanitarian situation report dated 18 Nov 2026 (published 20 Nov); no new Nov 23 Gaza operational bulletin."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Official overview and emergency resources accessible. No new 23 Nov health-facility, ambulance, evacuation, or operating-capacity development listed."
+      },
+      {
+        "source": "WHO Eastern Mediterranean oPt situation reports",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Regional portal inaccessible (Bad Gateway). Additional EMRO Palestine news page timed out. This repeats known limitation from prior watches."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:ochaopt.org Gaza \"23 November 2026\" displacement aid water crossings",
+      "site:who.int OR site:emro.who.int Gaza \"23 November 2026\" hospital medical evacuation",
+      "site:english.wafa.ps/Pages/Details/ Gaza \"23/November/2026\" 17:00 killed injured",
+      "site:reuters.com Gaza November 23 2026 aid civilian strike latest Monday",
+      "site:apnews.com/article Gaza November 23 2026 ceasefire aid civilians",
+      "site:aa.com.tr/en/middle-east/ Gaza \"Nov 23, 2026\" wounded killed ceasefire",
+      "site:unrwa.org Gaza \"23 November 2026\" water well aid staff services",
+      "site:unicef.org Gaza \"23 November 2026\" water health children",
+      "site:wfp.org Gaza \"23 November 2026\" food trucks humanitarian access",
+      "site:palestinercs.org Gaza \"23 November 2026\" ambulance emergency",
+      "site:icrc.org Gaza \"23 November 2026\" detention hostages medical aid",
+      "Gaza November 23 2026 Rafah Kerem Shalom crossing fuel medical evacuations aid 15:00 UTC"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English latest-news index",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza entry remained Al-Katiba western Gaza City vehicle strike published 16:11 Gaza time, already recorded in prior watch. Later 17:13 and 17:24 news concerned the West Bank."
+      },
+      {
+        "source": "Reuters Gaza Nov 23 report",
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "result": "Reuters reported same previously recorded Jabalia UNRWA water worker death and two fatalities from separate western Gaza City vehicle strike, citing medics. Corroboration improves confidence in prior Al-Katiba report, but no new independent incident or verified publication update timestamp established; not counted again."
+      },
+      {
+        "source": "Anadolu Middle East feed",
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "2026-11-23 contamination assessment previously recorded; infographic about 350,000 families' shelter needs dated Nov 21 (not new); Ofer prison weight-loss report concerned named West Bank detainees, excluded from Gaza-specific watch."
+      },
+      {
+        "source": "Palestine Red Crescent reports index",
+        "url": "https://www.palestinercs.org/en/Category/22/reports",
+        "result": "No new Gaza ambulance or emergency operating-capacity report identified."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Jabalia UNRWA water-well worker death, Al-Katiba vehicle strike, Jabalia Al-Tawba injuries, Khan Younis gunshot wound, Bureij woman injury, and Gaza hospital aggregate excluded as incident duplicates.",
+      "Previously recorded 23 Nov Oxfam/CEOBS environmental contamination assessment and lead-poisoning death excluded as repeats.",
+      "Anadolu 21 Nov shelter infographic predates observation window; no within-window change in shelter numbers verified.",
+      "23 Nov Ofer prison report names West Bank detainees, without verified Gaza detainee-specific change.",
+      "Older AP reports, speculative Rafah crossing coordination (without an operational change), unrelated locations and opinion excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO Eastern Mediterranean",
+        "url": "https://www.emro.who.int/opt/information-resources/situation-reports.html",
+        "error": "HTTP 502 Bad Gateway; Palestine news portal timeout",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Regional WHO coverage remained unavailable, but global WHO and OCHA were accessible; not a new material degradation.",
+      "Search engine returned older or unrelated hits for several date/site queries; within-hour publication indexing may lag.",
+      "Reuters report confirms a previously logged western Gaza City strike but does not provide independently verified update time; do not treat as new incident or double-count fatalities."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

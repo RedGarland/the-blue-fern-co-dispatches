@@ -1,0 +1,105 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261122T164045-0800-20261123T004146Z",
+  "scheduled_for": "2026-11-22T16:44:51-08:00",
+  "started_at": "2026-11-22T16:40:45.000-08:00",
+  "completed_at": "2026-11-22T16:41:46.966-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-22",
+    "start": "2026-11-22T15:49:14.410-08:00",
+    "end": "2026-11-22T16:41:46.966-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-22/gaza-source-watch-20261122T154809-0800-20261122T234914Z.json",
+    "basis": "Previous verified ledger completion through current search cutoff in America/Los_Angeles. Publication time, discovery time and event time are distinguished; items already reported in the ledger are not new incidents."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Bounded supplementary source recall, not the primary Gaza daily publisher/collector.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Direct updates index checked; latest Gaza humanitarian situation report is 18 November 2026, posted 20 November. No 22–23 November Gaza report listed at check time."
+      },
+      {
+        "source": "WHO Eastern Mediterranean occupied Palestinian territory",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "HTTP_502",
+        "result": "502 Bad Gateway; same documented regional-site access failure as prior hourly watches."
+      },
+      {
+        "source": "WHO global emergency overview",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Direct WHO global overview checked; no distinct 22–23 November Gaza health-system or medical-evacuation event identified."
+      }
+    ],
+    "official_first_searches": [
+      "site:ochaopt.org Gaza latest humanitarian situation report 22 November 2026",
+      "site:who.int Gaza November 22 2026 health emergency hospital medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "site:english.wafa.ps/Pages/Details/ \"23/November/2026\" Gaza killed injured ambulances civilians",
+      "site:aa.com.tr/en/middle-east/ Gaza November 23 2026 new deaths injuries latest",
+      "site:aljazeera.com/news/2026/11/22/ Gaza civilians latest Sunday evening November 22",
+      "Gaza November 23 2026 overnight killing injured Jabalia Rafah Reuters AFP Palestinians",
+      "site:unrwa.org Gaza November 22 2026 shelter rain displaced aid updates",
+      "site:unicef.org Gaza 22 November 2026 child casualties water aid statement",
+      "site:wfp.org Gaza November 22 2026 distribution bread food crossings latest",
+      "site:icrc.org Gaza 22 23 November 2026 hostages detainees medevac aid",
+      "Gaza Rafah Kerem Shalom crossing 23 November 2026 aid trucks fuel access restrictions update",
+      "Gaza hospital ambulance WHO Red Crescent 22 23 November 2026 patients evacuation fuel shortages",
+      "Gaza ceasefire talks hostages negotiations November 22 23 2026 civilian impact latest",
+      "site:reliefweb.int/en/report/occupied-palestinian-territory Gaza 22 November 2026 humanitarian situation shelter health water"
+    ],
+    "additional_direct_checks": [
+      {
+        "source": "WAFA English latest-news feed",
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Newest Gaza-specific index item remains 22 November 19:27 Gaza time Jabalia fatality, previously logged; later posts concern West Bank or politics. 23 November calendar header does not establish new Gaza reporting."
+      },
+      {
+        "source": "WFP Palestine emergency page",
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Contains significant current food-aid cuts, 1.4 million food-insecure people and crossing limitations, but the page supplies no new dated post-cutoff operational change; excluded as standing conditions."
+      },
+      {
+        "source": "Anadolu November 22 Gaza roundup",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "result": "Direct page retrieval unavailable; content and already-logged incidents described in prior verified ledger; not added without new proof."
+      }
+    ],
+    "exclusions": [
+      "The Deir al-Balah and Jabalia fatalities, Bir al-Naaja and Al-Sikka injuries, and other November 21–22 casualty reports overlap earlier ledger findings; no unsupported additional casualty count.",
+      "Rafah 23-patient/23-companion evacuation, hospital supply shortages, meningitis warning, children's diabetes care disruption and hospital capacity issues were previously recorded.",
+      "Maghazi housing demolitions, central Gaza sewage-system figures, displacement/shelter/flood risk estimates and WFP food-aid cuts lacked distinct newly verified post-cutoff developments.",
+      "Ceasefire and hostage-related searches returned historical or non-operational coverage; unverified claims, old publications, unrelated West Bank incidents and opinion excluded."
+    ],
+    "access_failures": [
+      {
+        "url": "https://www.emro.who.int/opt/",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-kill-3-gazans-injure-4-in-latest-ceasefire-violation/4133706",
+        "error": "Direct retrieval inaccessible; verified previous ledger covers overlapping items",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "WHO regional website remains unavailable. OCHA OPT, global WHO overview, WAFA index, WFP and other source search coverage provided viable independent checks.",
+      "Search indexing can lag 23 November events; no report is accepted as new merely because it resurfaces in search.",
+      "Prior hourly heartbeat was consulted to prevent repeated or additive counting of previously observed events."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true
+  }
+}

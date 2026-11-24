@@ -1,0 +1,145 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T064451-0800-20261124T144455Z",
+  "scheduled_for": "2026-11-24T06:44:51-08:00",
+  "started_at": "2026-11-24T06:44:55-08:00",
+  "completed_at": "2026-11-24T14:46:19.394Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T13:46:07.110Z",
+    "end": "2026-11-24T14:46:19.394Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T054451-0800-20261124T134456Z.json",
+    "basis": "Authenticated predecessor completion through current source review cutoff; discovery and event timing distinguished."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report November 18, published November 20; no new dated Gaza report in listing."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza release."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 WAFA latest civilian casualties displacement",
+      "غزة 24 نوفمبر 2026 شهداء إصابات مساعدات مستشفيات وفا",
+      "Gaza November 24 2026 aid food water fuel crossing UN humanitarian",
+      "Gaza November 24 2026 hospital ambulance evacuation meningitis PRCS MSF",
+      "Gaza November 24 2026 Reuters AP ceasefire negotiations hostages detention",
+      "Gaza November 24 2026 UNRWA UNICEF ICRC infrastructure flooding shelter",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "Gaza after:2026-11-23 site:reuters.com OR site:apnews.com",
+      "Gaza after:2026-11-23 site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza after:2026-11-23 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza after:2026-11-23 site:aljazeera.com"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic index updated through at least 16:06 local; new listed item about bone marrow transplantation in Ramallah outside scope; Gaza items previously logged."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; earlier Gaza items repeated."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; prior coverage, including article 4135202 reviewed for lead poisoning and earlier casualty reports."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report 239 remains featured."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "November 24 casualty and meningitis article newly visible; full article confirms already logged material."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Latest dated document November 23 winter rains report previously assessed."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated Gaza update identified."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated operational update identified."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "November 24 releases concern DRC, not Gaza."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Newly visible secondary coverage repeats earlier casualty reports, outbreak figures and epidemic alert; no material new fact."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/-israeli-drone-strikes-kill-5-palestinians-in-gaza/4135202",
+        "reason": "Earlier article previously examined; lead poisoning report already identified in authenticated November 23 21:44 heartbeat. No verified new change."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-senior-hamas-security-official-gaza-hamas-sources-say-2026-11-24/",
+        "reason": "Earlier assessed military report, no newly verified civilian impact."
+      },
+      {
+        "url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/24/chuvas-inundam-barracas-em-gaza-e-cruz-vermelha-fala-em-desastre-humano.ghtm",
+        "reason": "Previously reviewed contextual shelter lead; no new dated operational change."
+      },
+      "Earlier cumulative crossing figures, detention statement, fishermen report and medical evacuation excluded as duplicates."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Ten authenticated preceding heartbeats reviewed; bounded rather than exhaustive ledger deduplication.",
+      "Search results sparse and sometimes stale; direct sources supplemented coverage.",
+      "No new qualifying development verified; absence not established.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

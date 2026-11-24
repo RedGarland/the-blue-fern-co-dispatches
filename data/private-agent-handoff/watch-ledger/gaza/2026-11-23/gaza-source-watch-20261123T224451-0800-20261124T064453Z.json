@@ -1,0 +1,186 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T224451-0800-20261124T064453Z",
+  "scheduled_for": "2026-11-23T22:44:51-08:00",
+  "started_at": "2026-11-23T22:44:53-08:00",
+  "completed_at": "2026-11-23T22:45:39-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T21:45:49.414-08:00",
+    "end": "2026-11-23T22:45:39-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T214451-0800-20261124T054453Z.json",
+    "basis": "Authenticated prior heartbeat completion to current review cutoff"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-wafa-netzarim-junction-injuries",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D8%BA%D8%A7%D8%B1%D8%A9-%D9%84%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%82%D8%B1%D8%A8-%D9%85%D9%81%D8%AA%D8%B1%D9%82-%D9%86%D8%AA%D8%B3%D8%A7%D8%B1%D9%8A%D9%85",
+      "title": "مصابون في غارة للاحتلال قرب مفترق نتساريم جنوب شرقي مدينة غزة",
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": "2026-11-24T08:17:00+02:00",
+      "publication_time_pacific": "2026-11-23T22:17:00-08:00",
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Near Netzarim junction, southeast of Gaza City",
+      "affected_population_system": "Palestinians reportedly injured; number, severity and independent confirmation of civilian status unavailable.",
+      "exact_supporting_passage": "وأفادت مصادر محلية بأن الغارة أسفرت عن وقوع إصابات في صفوف المواطنين، دون أن تتضح على الفور طبيعة الإصابات أو عددها.",
+      "source_type": "Palestinian news agency citing local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Arabic WAFA homepage and direct full article following official-first review and 12 targeted searches.",
+        "observed_between": [
+          "2026-11-23T21:45:49.414-08:00",
+          "2026-11-23T22:45:39-08:00"
+        ],
+        "novelty": "Distinct location and reported incident from previously logged Al-Karama, Beit Lahia and Khan Younis incidents; no match in six authenticated prior heartbeat reviews.",
+        "translation": "Local sources said the strike caused injuries among residents, with the nature and number of injuries not immediately clear.",
+        "corroboration": "No independent source verified in bounded review.",
+        "caveat": "Do not assign a numerical casualty count or treat civilian status as independently confirmed."
+      }
+    },
+    {
+      "finding_id": "gaza-20261124-wafa-al-karama-count-followup",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177248",
+      "title": "Gaza: Three killed and five injured in Israeli drone strike west of Khan Yunis",
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": "2026-11-24T08:15:00+02:00",
+      "publication_time_pacific": "2026-11-23T22:15:00-08:00",
+      "event_date": "2026-11-23",
+      "event_timestamp": null,
+      "location": "Al-Karama, northwest Gaza City (identified in accompanying Arabic WAFA report)",
+      "affected_population_system": "Previously recorded Al-Karama casualties; newer English and Arabic reports both state two people killed, several injured, versus earlier English report of one killed.",
+      "exact_supporting_passage": "Last night, two other Palestinians were killed and several others were injured in an airstrike carried out by Israeli occupation forces on Gaza City.",
+      "source_type": "Palestinian news agency follow-up",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Direct English WAFA article 177248, cross-checked with Arabic Netzarim article, which identifies Al-Karama explicitly.",
+        "observed_between": [
+          "2026-11-23T21:45:49.414-08:00",
+          "2026-11-23T22:45:39-08:00"
+        ],
+        "related_finding_id": "gaza-20261123-al-karama-evening-casualties-wafa",
+        "novelty": "New in-window English report aligns with earlier Arabic count of two; not a new incident, not a formal correction, not independent confirmation.",
+        "corroboration": "Same publisher's Arabic and English reports now agree; no independent corroboration.",
+        "caveat": "Do not add two deaths to prior count; flag for reconciliation. The English article's main Khan Younis casualty event is already logged and not admitted again.",
+        "related_source_url": "https://www.wafa.ps/news/2026/11/24/%D9%85%D8%B5%D8%A7%D8%A8%D9%88%D9%86-%D9%81%D9%8A-%D8%BA%D8%A7%D8%B1%D8%A9-%D9%84%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%82%D8%B1%D8%A8-%D9%85%D9%81%D8%AA%D8%B1%D9%82-%D9%86%D8%AA%D8%B3%D8%A7%D8%B1%D9%8A%D9%85"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza item found on emergency page or targeted WHO query."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza latest November 24 2026 WAFA killed wounded ceasefire Gaza November 24",
+      "Gaza November 24 2026 Reuters AP latest Gaza ceasefire aid strikes",
+      "Gaza November 24 2026 Anadolu latest Gaza casualties hospital",
+      "Gaza November 24 2026 Al Jazeera Gaza latest live humanitarian",
+      "Gaza November 23 24 2026 UNRWA UNICEF aid food water shelters displacement",
+      "Gaza November 23 24 2026 medical evacuation hospital fuel ambulance MSF PRCS ICRC",
+      "Gaza November 24 2026 crossing aid trucks food WFP Gaza",
+      "Gaza November 24 2026 hostages detainees ceasefire negotiations Gaza",
+      "Gaza November 24 2026 infrastructure damage displacement flooding Gaza",
+      "غزة 24 نوفمبر 2026 قصف شهداء إصابات مستشفى مساعدات",
+      "Gaza November 24 2026 Middle East Eye BBC Guardian Gaza latest civilian",
+      "Gaza November 24 2026 UN news humanitarian Gaza November 23 briefing"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Netzarim report identified at 08:17 Gaza local."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Article 177248 includes new English retrospective casualty count."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Senators letter and UN deputy chief remarks; no operational access change verified."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Earlier November 23 reports."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177248",
+        "reason": "Main Al-Mawasi Khan Younis incident duplicates previously logged police-post casualties; only new Al-Karama count alignment admitted."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/americas/us-senators-urge-rubio-to-press-israel-on-winter-aid-for-gaza/4135216",
+        "reason": "Advocacy letter dated Monday, precise publication time not established; no operational aid or crossing change verified."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/world/un-deputy-chief-says-there-s-no-excuse-for-inaction-as-gaza-suffering-continues/4135209",
+        "reason": "General remarks; no newly established operational change."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "reason": "Outside observation window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Authenticated directory listing returned 22 prior daily heartbeat names. Six prior heartbeat contents successfully retrieved and reviewed, including immediate predecessor and relevant positive records. Attempted bulk read exceeded tool-call limit; not a full-day deduplication.",
+      "Search index returned largely stale results; direct source reads supplied current findings.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

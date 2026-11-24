@@ -1,0 +1,170 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T104451-0800-20261124T184455Z",
+  "scheduled_for": "2026-11-24T10:44:51-08:00",
+  "started_at": "2026-11-24T10:44:55-08:00",
+  "completed_at": "2026-11-24T10:46:14.297-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T09:45:48-08:00",
+    "end": "2026-11-24T10:46:14.297-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T094451-0800-20261124T174453Z.json",
+    "basis": "Authenticated predecessor completion through current review; supplementary discovery includes newly recovered reporting just before predecessor cutoff, explicitly distinguished from new events."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-wafa-hamad-winter-shelter-response-capacity",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177295",
+      "title": "Minister Hamad calls for international pressure to open Gaza crossings, expedite entry of relief aid",
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": "2026-11-24T19:43:00+02:00",
+      "publication_time_pacific": "2026-11-24T09:43:00-08:00",
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Gaza Strip; minister's remarks in Cairo, Egypt",
+      "affected_population_system": "Displaced families and winter shelter response. Palestinian Minister of Social Development and State for Relief Affairs Samah Hamad reports work completed at 50 of 160 targeted displacement sites and four shelter centers established with combined capacity for 325 families. She reports approximately 12,000 requests for relief and more than 950,000 people at flood risk across 989 displacement sites. Exact operational dates and assessment methodology unknown; not necessarily changes occurring today.",
+      "exact_supporting_passage": "work had been completed at 50 of the 160 targeted displacement sites and that four shelter centers had been established",
+      "source_type": "News agency reporting named government minister's remarks",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T09:45:48-08:00",
+          "2026-11-24T10:46:14.297-08:00"
+        ],
+        "discovery": "WAFA English latest-news index and full article 177295, compared against ten authenticated November 24 prior heartbeats and OCHA November 20 report.",
+        "novelty": "Previously unlogged specific shelter capacity and project completion metrics; not just an appeal. Publication timestamp is 2 minutes 48 seconds before predecessor completion, so this is a recall recovery, not a confirmed in-window publication.",
+        "caveat": "No original ministry dataset or independent corroboration retrieved. OCHA's 162/356 flood hotspot activities refer to a different denominator and scope; do not combine. No new crossing decision established. Historical flood totals and broad appeals not admitted as separate findings."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20; no newer report identified."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza release identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest today casualties strikes Reuters AP",
+      "site:english.wafa.ps Gaza November 24 2026 killed injured aid crossing",
+      "site:aljazeera.com Gaza November 24 2026 latest hospital aid",
+      "Gaza November 24 2026 PRCS medical evacuation ambulance hospital fuel",
+      "Gaza November 24 2026 UNICEF UNRWA WFP food water displacement aid",
+      "Gaza November 24 2026 ceasefire negotiations hostages detention crossings Reuters Anadolu",
+      "غزة 24 نوفمبر 2026 اليوم شهداء مساعدات مستشفيات وفا",
+      "site:aa.com.tr Gaza November 24 2026 latest aid health",
+      "Gaza November 24 2026 humanitarian site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 24 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza November 24 2026 infrastructure shelter flooding water aid access latest",
+      "Gaza November 24 2026 latest civilian aid health BBC Guardian Middle East Eye"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Existing Gaza headlines."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Newly recovered shelter operational metrics in 177295; other Gaza reporting duplicate."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Prior WHO surveillance and EU humanitarian access appeal; no new qualifying change."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Earlier casualty and outbreak reporting."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Situation report 239 dated November 19, no newer dated report identified."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated Gaza release established."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated Gaza release established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated Gaza release established."
+      },
+      {
+        "url": "https://www.unicef.org/press-releases",
+        "result": "Latest November 24 releases concern DRC; no new Gaza release identified."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177290",
+        "reason": "India's $2.5m flexible UNRWA contribution is region-wide; no Gaza-specific allocation or operational change demonstrated. Published 07:46 Pacific, before current window."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Previously logged strike incidents; no verified material new civilian-impact information."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/infants-hardest-hit-as-meningitis-cases-continue-to-rise-in-gaza/4136120",
+        "reason": "Already recorded in immediate predecessor."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/europe/eu-must-speak-with-one-voice-to-press-israel-on-humanitarian-access-to-gaza-commissioner/4136177",
+        "reason": "Previously assessed appeal; no new access decision."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN Geneva briefing",
+        "error": "URL not accessible",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Ten authenticated same-day prior heartbeats reviewed.",
+      "Search indexing sparse; direct source checks supplement discovery.",
+      "Shelter report is newly discovered but predates cutoff slightly; underlying operational dates unverified.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

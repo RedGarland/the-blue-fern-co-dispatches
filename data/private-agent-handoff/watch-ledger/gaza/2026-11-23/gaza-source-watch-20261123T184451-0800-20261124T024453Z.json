@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T184451-0800-20261124T024453Z",
+  "scheduled_for": "2026-11-23T18:44:51-08:00",
+  "started_at": "2026-11-23T18:44:53-08:00",
+  "completed_at": "2026-11-23T18:45:36-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T17:45:37-08:00",
+    "end": "2026-11-23T18:45:36-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T174451-0800-20261124T014451Z.json",
+    "basis": "Prior authenticated completion through current review cutoff."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report published November 20, dated November 18; no new report."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza report."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Persistent access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 Al Mawasi Khan Younis police casualties latest WAFA Anadolu",
+      "Gaza November 23 24 2026 latest Palestinian casualties displacement WAFA",
+      "Gaza November 23 24 2026 hospital ambulance medical evacuation fuel health ministry PRCS MSF",
+      "Gaza November 23 24 2026 humanitarian aid crossings food water WFP UNICEF UNRWA",
+      "Gaza November 23 24 2026 ceasefire negotiations hostages detainees Rafah Reuters AP",
+      "Gaza November 23 24 2026 infrastructure damage displacement shelter flooding reliefweb",
+      "Gaza November 24 2026 news Al Jazeera Middle East Eye BBC Guardian",
+      "Gaza November 23 2026 United Nations humanitarian briefing aid access",
+      "غزة 24 نوفمبر 2026 قصف إصابات وفا اليوم",
+      "Gaza after:2026-11-22 site:english.wafa.ps OR site:wafa.ps",
+      "Gaza after:2026-11-22 site:aa.com.tr OR site:aljazeera.com OR site:reuters.com OR site:apnews.com",
+      "Gaza after:2026-11-22 site:reliefweb.int OR site:un.org OR site:unicef.org OR site:msf.org OR site:icrc.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza report already logged."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest listed article November 23 23:55 local, older than window."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Previously logged UNRWA worker report."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously logged UNRWA and hearing aid reports."
+      },
+      {
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403."
+      },
+      {
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "result": "Anti-bot challenge."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://operativmm.az/en/post/israeli-drone-strike-kills-three-palestinians-at-gaza-police-post/88275",
+        "reason": "Republication of Anadolu casualty report recorded in prior heartbeat; no independently sourced change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177230",
+        "reason": "Bureij injury and Nuseirat rooftop report already recorded."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177223",
+        "reason": "Previously logged health ministry aggregate."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177243",
+        "reason": "Previously logged Al-Karama and Beit Lahia incidents."
+      },
+      {
+        "url": "https://www.nextcenturyfoundation.org/gaza-information-index-20-november-2026/",
+        "reason": "Historical roundup outside observation window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "error": "Anti-bot challenge",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "All 18 preceding same-day heartbeat files retrieved and finding identifiers/titles/URLs reviewed for deduplication.",
+      "Search results sparse and largely stale or duplicates; direct source indexes supplemented retrieval. No new qualifying development verified; not proof that no event occurred.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

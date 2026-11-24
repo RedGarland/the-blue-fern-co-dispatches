@@ -1,0 +1,177 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T084451-0800-20261124T164453Z",
+  "scheduled_for": "2026-11-24T08:44:51-08:00",
+  "started_at": "2026-11-24T08:44:53-08:00",
+  "completed_at": "2026-11-24T16:46:06.329Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T15:46:34.098Z",
+    "end": "2026-11-24T16:46:06.329Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T074451-0800-20261124T154458Z.json",
+    "basis": "Authenticated predecessor completion through current review cutoff; discovery not equivalent to event/publication clock."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-aljazeera-abu-nahl-strike-bystander-injuries-followup",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strike-kills-senior-hamas-military-official-in-gaza",
+      "title": "Israeli air strike kills senior Hamas security official in Gaza",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": null,
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Gaza City, Gaza Strip; injured taken to Al-Shifa Medical Complex",
+      "affected_population_system": "Four other people injured, including a Palestinian woman, in the strike targeting Naim Abu Nahl; nearby displaced people and shelters; Al-Shifa received the injured. Civilian status of each injured person not independently established.",
+      "exact_supporting_passage": "Four others, including a Palestinian woman, were wounded and taken to al-Shifa Medical Complex.",
+      "source_type": "Established news outlet reporting local authorities and Israeli military statement",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T15:46:34.098Z",
+          "2026-11-24T16:46:06.329Z"
+        ],
+        "discovery": "Newly visible Al Jazeera Palestine index lead; full dated article retrieved. Earlier 04:44 and 05:44 ledgers treated possible bystander injuries as unresolved/contextual; 06:44 and 07:44 ledgers did not admit a distinct civilian-impact finding.",
+        "novelty": "Specific injury count, woman among injured and receiving hospital in newly retrieved report provide material follow-up to previously excluded strike lead. Not a separate incident or an addition to aggregate casualty totals.",
+        "caveat": "Exact publication and incident clock times unverified. Original casualty records not retrieved; civilian status and overlap with broader daily totals unresolved. Earlier reports identified same target; only new specific civilian-impact/medical reception information admitted."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20; no newer dated Gaza report."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza release visible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties strike displacement WAFA",
+      "غزة 24 نوفمبر 2026 شهداء إصابات مساعدات مستشفيات وفا",
+      "Gaza November 24 2026 hospital ambulance fuel medical evacuation PRCS meningitis",
+      "Gaza November 24 2026 aid crossings water food shelter displacement infrastructure",
+      "Gaza November 24 2026 Reuters AP ceasefire negotiations hostages detention",
+      "Gaza November 24 2026 UNRWA UNICEF WFP ICRC humanitarian update",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "Gaza after:2026-11-23 site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza after:2026-11-23 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza after:2026-11-23 site:reuters.com OR site:apnews.com",
+      "Gaza after:2026-11-23 site:aljazeera.com OR site:bbc.com"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic index through 18:26 local; latest stories outside Gaza scope."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; India UNRWA contribution translation and earlier Gaza stories."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Prior crossing and accountability reports; new other regional headlines not qualifying."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report 239 remains featured."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated Gaza release identified."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated Gaza release identified."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest listed news November 10."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "November 24 releases concern DRC."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Newly visible article on security official strike, full body reviewed for injuries and hospital."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Earlier casualties and epidemic alert previously logged."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israeli-strike-in-gaza-amid-repeated-ceasefire-violations/4135326",
+        "reason": "Older version of previously examined article; earlier casualty reporting."
+      },
+      "India UNRWA funding translation repeats previous regional funding lead, no Gaza-specific allocation established.",
+      "Previously logged crossing compliance, human shielding investigations, fishing detention and medical evacuation excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "BBC",
+        "error": "robots.txt",
+        "material_new_degradation": false,
+        "mitigation": "Other established outlets accessible."
+      },
+      {
+        "source": "Anadolu article 4135759",
+        "error": "Article not accessible via web tool on direct retry",
+        "material_new_degradation": false,
+        "mitigation": "Regional index accessible; Al Jazeera full report and earlier authenticated ledger available."
+      }
+    ],
+    "limitations": [
+      "Eight authenticated prior heartbeats reviewed; bounded deduplication.",
+      "Search batch returned sparse results; direct source checks supplied finding.",
+      "No new distinct attack admitted; newly recovered material follow-up with unknown publication clock.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

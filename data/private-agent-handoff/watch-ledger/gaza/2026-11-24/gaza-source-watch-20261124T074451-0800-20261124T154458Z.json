@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T074451-0800-20261124T154458Z",
+  "scheduled_for": "2026-11-24T07:44:51-08:00",
+  "started_at": "2026-11-24T07:44:58-08:00",
+  "completed_at": "2026-11-24T15:46:34.098Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T14:46:19.394Z",
+    "end": "2026-11-24T15:46:34.098Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T064451-0800-20261124T144455Z.json",
+    "basis": "Prior authenticated completion through current review cutoff. Discovery time differs from event/publication time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-anadolu-haaretz-human-shield-investigations",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/no-israeli-soldier-prosecuted-over-use-of-palestinians-as-human-shields-haaretz/4135877",
+      "title": "No Israeli soldier prosecuted over use of Palestinians as human shields: Haaretz",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip; broader investigation totals also cover West Bank",
+      "affected_population_system": "Palestinian civilians subjected to alleged human shielding in military operations; Haaretz reports ten Gaza-related investigations among at least 16 total, with no soldiers prosecuted across the reported cases. Individual incident dates, identities and outcomes unknown.",
+      "exact_supporting_passage": "The Israeli newspaper said 10 of the investigations concern incidents in the Gaza Strip, while the remaining cases involve incidents in the occupied West Bank.",
+      "source_type": "Established news agency citing Israeli newspaper reporting and information obtained by Israeli rights organization Hatzlacha",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T14:46:19.394Z",
+          "2026-11-24T15:46:34.098Z"
+        ],
+        "discovery": "Anadolu Middle East index, article 4135877, full dated article reviewed; ten prior authenticated heartbeat files examined, with three recent files additionally searched for explicit identifiers.",
+        "novelty": "Newly discovered Gaza-specific quantitative accountability information about documented civilian-impact allegations. No corresponding finding in reviewed ledgers. Dated report, not a newly occurring operation.",
+        "caveat": "Exact publication time and date of investigation openings unknown; underlying Haaretz report and military investigation records not directly retrieved. No new incident or new prosecution decision established; do not treat as ten newly occurring incidents or verified individual victim count."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, published November 20. No newer Gaza report on homepage."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza release visible."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties strike WAFA Gaza City Khan Younis",
+      "غزة 24 نوفمبر 2026 إصابات شهداء اليوم وفا",
+      "Gaza November 24 2026 hospital ambulance medical evacuation meningitis fuel WHO PRCS",
+      "Gaza November 24 2026 aid crossings displacement food water shelter UN humanitarian",
+      "Gaza November 24 2026 Reuters AP ceasefire negotiations hostages detention",
+      "Gaza November 24 2026 military operations civilian impact Al Jazeera Anadolu BBC",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "Gaza after:2026-11-23 site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza after:2026-11-23 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza November 24 2026 UNRWA aid worker Adel al Helou killed Gaza",
+      "Gaza November 24 2026 latest Gaza infrastructure water displacement crossing WFP"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic index current through 17:15 local, no new specific Gaza operation; India flexible funding report assessed."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible, latest Gaza items repeat earlier reports."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; newly reviewed investigation article 4135877."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report 239 remains featured."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated November update verified from page."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated November update verified from page."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest listed news November 10; no new dated operational release."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Updated article primarily repeats earlier casualties and security official report; no newly verified civilian-impact event; update time unavailable."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Previously logged casualty and meningitis information."
+      },
+      {
+        "url": "https://refugeesps.net/post/37915/",
+        "reason": "November 23 UNRWA worker death and staff union statement; death previously reported, no new operational protection change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177186",
+        "reason": "November 22 sewage feature, outside window."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/world/un-deputy-chief-says-there-s-no-excuse-for-inaction-as-gaza-suffering-continues/4135209",
+        "reason": "UN remarks; no new operational change."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D9%87%D9%86%D8%AF-%D8%AA%D9%82%D8%AF%D9%85-25-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%84%D9%84%D8%A3%D9%88%D9%86%D8%B1%D9%88%D8%A7-%D8%AF%D8%B9%D9%85%D8%A7",
+        "reason": "India provided $2.5m flexible UNRWA contribution; regional funding, no Gaza-specific allocation or change in operations established. Contextual lead."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Ten distinct authenticated prior heartbeats reviewed, bounded deduplication.",
+      "Some queries returned stale or sparse results; direct checks supplemented coverage.",
+      "No verified new operational incident during this specific hour; one newly discovered accountability data point with uncertain publication clock.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

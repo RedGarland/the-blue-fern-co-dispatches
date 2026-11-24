@@ -1,0 +1,152 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T124451-0800-20261124T204454Z",
+  "scheduled_for": "2026-11-24T12:44:51-08:00",
+  "started_at": "2026-11-24T12:44:54-08:00",
+  "completed_at": "2026-11-24T20:46:40.894Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T11:46:02.055-08:00",
+    "end": "2026-11-24T20:46:40.894Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T114451-0800-20261124T194455Z.json",
+    "basis": "Authenticated preceding completion to current review cutoff; older leads checked for duplicate or material follow-up."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated November 18, published November 20; no newer dated report found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Domain search and global page yielded no new dated Gaza release."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/priority-areas/emergency-response.html",
+        "status": "FAILED",
+        "result": "Inaccessible; persistent."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest civilian casualties military strikes displacement WAFA Reuters AP",
+      "Gaza November 24 2026 humanitarian aid crossings water food fuel UNRWA UNICEF WFP",
+      "Gaza November 24 2026 hospital ambulance evacuation health meningitis WHO MSF PRCS",
+      "Gaza November 24 2026 ceasefire negotiations detention hostages Reuters AP Al Jazeera",
+      "site:wafa.ps غزة 24-11-2026 شهيد إصابات مساعدات",
+      "site:english.wafa.ps Gaza November 24 2026 latest",
+      "site:aa.com.tr Gaza November 24 2026 latest aid health attack",
+      "site:aljazeera.com Gaza November 24 2026 latest Gaza",
+      "Gaza November 24 2026 humanitarian update site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza November 24 2026 site:msf.org OR site:icrc.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza November 24 2026 winter shelters floods water aid BBC Guardian Middle East Eye",
+      "Gaza November 24 2026 latest death Nuseirat woman wounds Gaza evening"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic homepage and daily roundup accessible; no distinct new incident established."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; latest Gaza headline is English translation of prior Nuseirat casualty report."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; previously recorded meningitis and EU remarks."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; earlier Gaza casualty/meningitis reports."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no new dated operational change established."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; no new dated operational change established."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated report established."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated report established."
+      }
+    ],
+    "source_recoveries": [
+      {
+        "related_finding_id": "gaza-20261124-wafa-nuseirat-woman-death-from-wounds",
+        "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-%D9%85%D9%88%D8%A7%D8%B7%D9%86%D8%A9-%D9%85%D8%AA%D8%A3%D8%AB%D8%B1%D8%A9-%D8%A8%D8%AC%D8%B1%D9%88%D8%AD%D9%87%D8%A7-%D9%81%D9%8A-%D8%A7%D9%84%D9%86%D8%B5%D9%8A%D8%B1%D8%A7%D8%AA",
+        "english_url": "https://english.wafa.ps/Pages/Details/177296",
+        "additional_report": "https://alquds.com/en/posts/277996",
+        "publisher": "WAFA",
+        "publication_date": "2026-11-24",
+        "arabic_publication_timestamp": "2026-11-24T20:36:00+02:00",
+        "english_publication_timestamp": "2026-11-24T22:14:00+02:00",
+        "result": "Full Arabic and English articles now accessible. Medical sources report woman was 30; Arabic article says original injury occurred Friday November 20 in Nuseirat. Same death as preceding ledger; no additional casualty. Al-Quds repeats medical-source report; independent corroboration not established.",
+        "exact_supporting_passage": "استشهدت مواطنة (30 عاما)، اليوم الثلاثاء، متأثرة بجروح أصيبت بها",
+        "classification": "duplicate with source recovery; not a new qualifying development"
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aa.com.tr/en/world/eu-must-speak-with-one-voice-to-press-israel-on-humanitarian-access-to-gaza-commissioner/4136177",
+        "reason": "Previously assessed EU remarks; 150,000 waiting tents already in OCHA November 20 report, no new policy or access change."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D9%87%D9%86%D8%AF-%D8%AA%D9%82%D8%AF%D9%85-25-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%84%D9%84%D8%A3%D9%88%D9%86%D8%B1%D9%88%D8%A7-%D8%AF%D8%B9%D9%85%D8%A7",
+        "reason": "Previously assessed region-wide flexible UNRWA contribution; no Gaza-specific operational allocation."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Previously logged casualties and outbreak."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D9%8A%D9%88%D8%A7%D8%B5%D9%84-%D8%B9%D8%AF%D9%88%D8%A7%D9%86%D9%87-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A7%D8%AA",
+        "reason": "21:56 local daily roundup repeats prior reports, including Netzarim injuries already referenced in 00:44 heartbeat; no distinct new casualty established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Inaccessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Twelve distinct authenticated same-day prior heartbeats reviewed; production not inspected.",
+      "Search indexing sparse and frequently returned older irrelevant material; useful direct source coverage remained.",
+      "Previous WAFA English and Anadolu access failures not reproduced this run."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

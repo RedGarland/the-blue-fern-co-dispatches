@@ -1,0 +1,140 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T134451-0800-20261124T214453Z",
+  "scheduled_for": "2026-11-24T13:44:51-08:00",
+  "started_at": "2026-11-24T13:44:53-08:00",
+  "completed_at": "2026-11-24T21:45:58.869Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T20:46:40.894Z",
+    "end": "2026-11-24T21:45:58.869Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T124451-0800-20261124T204454Z.json",
+    "basis": "Authenticated predecessor completion to current source review cutoff; UTC timestamps correspond to Pacific observation date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Domain search first: latest situation report dated November 18 and published November 20, not in window."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Domain search first and direct global crisis page checked; no newly dated Gaza release established."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest killed injured displacement WAFA",
+      "Gaza November 24 2026 humanitarian aid crossing fuel water food UN UNICEF WFP UNRWA",
+      "Gaza November 24 2026 hospital ambulance evacuation health WHO MSF ICRC",
+      "Gaza November 24 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 24 2026 latest Al Jazeera live Gaza",
+      "Gaza November 24 2026 Anadolu Gaza latest",
+      "site:english.wafa.ps Gaza November 24 2026 killed injured latest",
+      "site:aa.com.tr Gaza 24 November 2026 health aid crossing Gaza",
+      "Gaza 24 November 2026 Palestinian medical evacuation hospital fuel water shelter latest news",
+      "Gaza 24 November 2026 UNRWA UNICEF reliefweb humanitarian update",
+      "غزة 24 نوفمبر 2026 اليوم إصابات شهداء مساعدات مستشفيات",
+      "Gaza November 24 2026 latest ceasefire Gaza casualties aid Middle East Eye Guardian BBC"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic Gaza index and latest headlines accessible; previous Nuseirat fatality, evacuation, meningitis and daily incidents recur."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza casualty and shelter reports unchanged; latest other headlines West Bank."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; previously recorded WHO meningitis update and EU appeal; no distinct new Gaza lead established."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; earlier casualty and security official reports recur."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Latest linked report #239 published November 19; outside window."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; no newly dated operational change established."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated report established in review."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated report established in review."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177296",
+        "reason": "Nuseirat death already logged in 11:44 run; recovered English source documented in 12:44 run."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177263",
+        "reason": "26 patients and 27 companions evacuation logged at 00:44."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Previously logged casualty and outbreak reports; no new distinct data."
+      },
+      {
+        "url": "https://aa.com.tr/en/middle-east/-israeli-drone-strikes-kill-5-palestinians-in-gaza/4135202",
+        "reason": "Reports Monday events, prior lead poisoning reporting and previously reviewed casualty coverage; previous-day ledger references same article and poisoning; not established as new."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/world/eu-must-speak-with-one-voice-to-press-israel-on-humanitarian-access-to-gaza-commissioner/4136177",
+        "reason": "Previously assessed advocacy; no operational change."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "13 authenticated same-day heartbeat files and 16 preceding-day heartbeat files reviewed for duplication; production not inspected.",
+      "Search indexing sparse and frequently returned older material. No new qualifying finding verified; this is not evidence that no events occurred."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

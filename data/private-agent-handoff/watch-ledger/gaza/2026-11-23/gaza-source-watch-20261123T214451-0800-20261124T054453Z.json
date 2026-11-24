@@ -1,0 +1,126 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T214451-0800-20261124T054453Z",
+  "scheduled_for": "2026-11-23T21:44:51-08:00",
+  "started_at": "2026-11-23T21:44:53-08:00",
+  "completed_at": "2026-11-23T21:45:49.414-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T20:45:38-08:00",
+    "end": "2026-11-23T21:45:49.414-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T204451-0800-20261124T044453Z.json",
+    "basis": "Prior authenticated heartbeat completion through current observation cutoff."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest humanitarian situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza item identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest killed injured WAFA Gaza Tuesday",
+      "Gaza November 24 2026 aid crossings water food displacement humanitarian",
+      "Gaza November 24 2026 hospital ambulance medical evacuation fuel health",
+      "Gaza November 24 2026 ceasefire negotiations detainees hostages Reuters AP",
+      "site:english.wafa.ps Gaza November 24 2026",
+      "site:aa.com.tr Gaza November 24 2026",
+      "site:aljazeera.com Gaza November 24 2026",
+      "site:unrwa.org Gaza November 23 2026 situation report",
+      "site:unicef.org Gaza November 23 2026 water aid",
+      "site:icrc.org Gaza November 23 2026 health detainees",
+      "site:msf.org Gaza November 23 2026 hospital",
+      "site:wfp.org Gaza November 23 2026 food access"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza casualty report November 23 23:03 local; previously logged."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Earlier November 23 UNRWA, environmental contamination and lead poisoning reports."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "November 23 UNRWA, hearing aids and Oxfam reporting; no new qualifying report."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; report #239 published November 19."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Indexed emergency page accessible; reductions described without verified new in-window timestamp."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-3-palestinians-at-gaza-police-post/4135202",
+        "reason": "Same numeric ID as logged police-post report; index returns conflicting title summarizing Monday events, direct page only exposes title/navigation. Prior heartbeat explicitly documented this discrepancy; no verified new event or material in-window change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177243",
+        "reason": "Al-Karama and Beit Lahia reports already logged."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177233",
+        "reason": "Earlier November 23 vehicle strike, previously documented."
+      },
+      {
+        "url": "https://www.wfp.org/stories/hunger-crisis-looms-winter-hits-gaza",
+        "reason": "Published November 17, outside window."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "reason": "Published November 19, outside window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Directory listing returned 21 prior heartbeat filenames; a repeat directory read returned incomplete JSON. Six authenticated prior heartbeats were then successfully fetched, including immediate predecessor and relevant positive findings; not a full-ledger deduplication.",
+      "Search returned many older results; lack of verified new findings is not proof of absence.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

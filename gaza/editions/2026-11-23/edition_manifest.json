@@ -4,9 +4,6 @@
   "edition_date": "2026-11-23",
   "generated_at": "2026-11-24T03:27:30.684390+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-23/",
-  "local_output_path": "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23",
-  "local_dispatch_output_path": "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\dispatches\\gaza\\editions\\2026-11-23",
-  "local_backup_path": "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\tmp-backups-pages\\gaza\\2026-11-23",
   "template_version": "gaza-source-record-v1",
   "source_count": 2,
   "story_count": 2,
@@ -23,13 +20,13 @@
   "allow_post_edition_date_sources": false,
   "post_edition_date_sources_included": false,
   "post_edition_date_source_count": 0,
-  "source_manifest_path": "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23\\sources_manifest.json",
-  "curation_manifest_path": "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23\\curation_manifest.json",
+  "source_manifest_path": "sources_manifest.json",
+  "curation_manifest_path": "curation_manifest.json",
   "free_public_artifacts": [
-    "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23\\index.html",
-    "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23\\edition_manifest.json",
-    "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23\\sources_manifest.json",
-    "D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\output\\site\\gaza\\editions\\2026-11-23\\curation_manifest.json"
+    "index.html",
+    "edition_manifest.json",
+    "sources_manifest.json",
+    "curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
@@ -39,7 +36,7 @@
   "warnings": [
     "This is a limited-source update generated from 2 saved source records from 1 publisher. It should be read as a partial update, not a full daily briefing.",
     "All rendered public stories in this edition rely on sources from WAFA.",
-    "manual supplement recommended: add source-backed records at D:\\Dispatches\\GazaDailyRelease\\private-fix-2026-11-23-archive\\data\\dispatches\\gaza\\sources\\2026-11-23\\manual_sources.template.json",
+    "manual supplement recommended: add source-backed records at [private workspace]/data/dispatches/gaza/sources/2026-11-23/manual_sources.template.json",
     "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ],
   "errors": [],

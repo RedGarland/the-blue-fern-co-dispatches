@@ -1,0 +1,214 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T044451-0800-20261124T124456Z",
+  "scheduled_for": "2026-11-24T04:44:51-08:00",
+  "started_at": "2026-11-24T04:44:56-08:00",
+  "completed_at": "2026-11-24T04:45:40-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T03:45:44-08:00",
+    "end": "2026-11-24T04:45:40-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T034451-0800-20261124T114457Z.json",
+    "basis": "Authenticated predecessor completion to current source-review cutoff; new discovery is distinguished from verified in-window event or publication time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-anadolu-deir-al-balah-fishermen-detention",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/6-palestinians-killed-in-israeli-strikes-in-gaza-amid-repeated-ceasefire-violations/4135326",
+      "title": "6 Palestinians killed in Israeli strikes in Gaza amid repeated ceasefire violations",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Off Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "Palestinian fishermen and fishing livelihoods: a named union coordinator reported Israeli naval fire on boats, detention, interrogation and beatings, followed by forced return toward shore by swimming; one boat reportedly seriously damaged. Number of fishermen and injury status unknown.",
+      "exact_supporting_passage": "Israeli forces detained fishermen, subjected them to interrogation and severe beatings",
+      "source_type": "News agency quoting named Gaza Fishermen Committees Union coordinator Zakaria Bakr",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T03:45:44-08:00",
+          "2026-11-24T04:45:40-08:00"
+        ],
+        "discovery": "Anadolu Middle East index now displays a subheadline about fishermen; full updated article ID 4135326 retrieved. Prior 03:44 run recorded same article ID but could not retrieve updated body.",
+        "novelty": "Distinct detention and livelihood-impact incident not present in four authenticated prior heartbeats. Newly recovered content rather than verified new event within the hour.",
+        "caveat": "Article dated and updated November 24, but exact update time and incident date/time not specified separately. No independent corroboration retrieved. Previously logged casualty events in same article excluded."
+      }
+    },
+    {
+      "finding_id": "gaza-20261124-anadolu-meningitis-epidemic-alert",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/health-ministry-declares-epidemic-alert-in-gaza-amid-sharp-rise-in-meningitis-infections/4135586",
+      "title": "Health Ministry declares ‘epidemic alert’ in Gaza amid sharp rise in meningitis infections",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": null,
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Gaza health system and population, particularly children: Anadolu reports the Health Ministry declared an epidemic alert; named health official Nidal Ghoneim described surveillance figures at a news conference. The 272 October cases and 15 year-to-date deaths repeat earlier WAFA reporting.",
+      "exact_supporting_passage": "Gaza’s Health Ministry declared an “epidemic alert” across the enclave on Tuesday",
+      "source_type": "News agency reporting health ministry declaration and named health official news conference",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T03:45:44-08:00",
+          "2026-11-24T04:45:40-08:00"
+        ],
+        "related_finding_id": "gaza-20261124-wafa-meningitis-surveillance-update",
+        "discovery": "Newly visible separate Anadolu article ID 4135586 on regional index; full text compared with WAFA English 177264 and four authenticated prior heartbeats.",
+        "novelty": "Reported formal epidemic alert and named attribution, not previously logged as a declaration; previously reported statistics are not new cases.",
+        "caveat": "Exact declaration/publication clock time unknown; newly discovered during window, not established to have occurred within it. Original ministry notice and independent WHO confirmation not retrieved."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "status": "ACCESSIBLE",
+        "result": "Latest indexed report dated November 18, published November 20; outside window."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza release returned."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest civilian casualties displacement WAFA after:2026-11-23",
+      "غزة 24 نوفمبر 2026 شهداء إصابات مساعدات مستشفيات وفا",
+      "Gaza November 24 2026 Reuters AP ceasefire negotiations hostages detention",
+      "Gaza November 24 2026 hospital ambulance fuel medical evacuation PRCS MSF",
+      "Gaza November 24 2026 UNRWA UNICEF humanitarian aid water food displacement crossings",
+      "Gaza November 24 2026 WFP ICRC infrastructure damage flooding shelter",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "site:aljazeera.com Gaza after:2026-11-23",
+      "Gaza after:2026-11-23 site:reuters.com OR site:apnews.com",
+      "Gaza after:2026-11-23 site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza after:2026-11-23 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Previously logged Gaza articles in headline list."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest visible entries through 14:14 local are West Bank stories; earlier Gaza entries duplicated."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report #239 remains featured."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Newly visible fishing incident and epidemic alert; full articles retrieved."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new verified in-window Gaza operational change identified."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new verified dated item identified."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new verified dated operational update identified."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible; no new verified Gaza release identified in returned results."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Most recent Gaza entries November 23."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177264",
+        "reason": "Previously logged meningitis statistics; compared for alert novelty."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177263",
+        "reason": "Previously logged evacuation."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177259",
+        "reason": "Previously logged casualty reporting."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-killed-in-israeli-strikes-in-gaza-amid-repeated-ceasefire-violations/4135326",
+        "reason": "Existing casualty incidents and tent-fire lead excluded; fishing incident only admitted."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/gaza-internal-security-chief-assassinated-in-israeli-strike-interior-ministry/4135759",
+        "reason": "Security official death separately reported; possible civilian injuries near Haidar Square retained as contextual lead, incident overlap and timing unresolved; not admitted as separate civilian-impact finding."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Updated security chief identification and existing casualty events; update clock unknown; no distinct verified civilian impact added."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261124-red-cross-gaza-urgently-needs-more-durable-shelter-solutions/",
+        "reason": "Previously assessed Monday ICRC statement; no new operational change."
+      },
+      {
+        "url": "https://www.reuters.com/world/us/us-envoy-not-certain-military-aid-israel-will-end-this-year-trump-promised-2026-11-24/",
+        "reason": "Previously assessed, no direct Gaza operational change."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Four authenticated prior heartbeats reviewed; not exhaustive ledger deduplication.",
+      "Twelve additional searches submitted; search results sparse and often stale; direct source review supplied findings.",
+      "Both findings are newly recovered dated reports; precise within-window publication and event times are unverified.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

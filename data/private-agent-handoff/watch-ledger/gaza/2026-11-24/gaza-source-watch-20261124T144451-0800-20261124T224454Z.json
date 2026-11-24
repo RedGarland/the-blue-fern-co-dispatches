@@ -1,0 +1,142 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T144451-0800-20261124T224454Z",
+  "scheduled_for": "2026-11-24T14:44:51-08:00",
+  "started_at": "2026-11-24T14:44:54-08:00",
+  "completed_at": "2026-11-24T22:46:06.491Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T21:45:58.869Z",
+    "end": "2026-11-24T22:46:06.491Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T134451-0800-20261124T214453Z.json",
+    "basis": "Authenticated predecessor completion to current review cutoff; discovery window, not a claim of exact event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-wafa-maghazi-bureij-displacement-demolitions",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B9%D9%85%D9%84%D9%8A%D8%A9-%D9%8A%D9%86%D8%B3%D9%81-%D8%B4%D8%B1%D9%82%D9%8A-%D9%85%D8%AE%D9%8A%D9%85-%D8%A7%D9%84%D9%85%D8%BA%D8%A7%D8%B2%D9%8A-%D9%88%D9%8A%D8%B7%D9%84%D9%82",
+      "title": "الاحتلال عملية ينسف شرقي مخيم المغازي ويطلق النار شرق المخيم وخانيونس",
+      "publisher": "WAFA Palestinian News and Information Agency",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_time": "23:30",
+      "publication_timezone": "Asia/Gaza (inferred from local agency clock)",
+      "event_date": "2026-11-24",
+      "event_time": null,
+      "location": "Eastern Al-Maghazi and Al-Bureij refugee camps, central Gaza; eastern Khan Younis, southern Gaza",
+      "affected_population": "Families displaced from homes in eastern Gaza; residents affected by building destruction and movement restrictions",
+      "affected_system": "Civilian shelter and movement",
+      "summary": "WAFA reports new demolitions in eastern Al-Maghazi and Al-Bureij and continued military activity in eastern areas, with building destruction, restricted movement and displacement of families. The number of families and structures is not specified; the displacement statement describes ongoing operations and is not established as exclusively caused by the newly reported demolitions.",
+      "exact_supporting_passage": "ما أدى إلى نزوح عائلات من منازلها، وفاقم معاناة المواطنين جراء تدمير المنازل وتقييد حركتهم.",
+      "supporting_passage_translation": "This led to families being displaced from their homes and exacerbated residents’ suffering due to the destruction of homes and restrictions on their movement.",
+      "source_type": "Established reporting / Palestinian official news agency, field correspondent",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "method": "Direct WAFA Arabic homepage Gaza section, then full article review; not surfaced in prior heartbeat's source assessment or findings.",
+        "first_observed_run": "gaza-source-watch-20261124T144451-0800-20261124T224454Z",
+        "publication_window_caveat": "Displayed publication at 23:30 Palestine local time is approximately 13:30 PST, shortly before previous heartbeat completion. Newly discovered on this run; not claimed to have been published or occurred within the current hourly interval.",
+        "independent_corroboration": null,
+        "duplicate_check": "14 same-day authenticated heartbeat findings reviewed; no matching Al-Maghazi/Al-Bureij demolition-displacement finding. Existing daily casualty total excluded."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "First domain search; latest listing is November 18 report, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "First domain search plus direct page; no current dated new Gaza release established."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest civilians killed injured ceasefire Gaza November 24 evening",
+      "site:wafa.ps Gaza November 24 2026 casualties crossings medical evacuation",
+      "site:aa.com.tr Gaza November 24 2026 aid hospital strikes negotiations",
+      "site:aljazeera.com Gaza November 24 2026 latest live Gaza",
+      "site:reuters.com Gaza November 24 2026 ceasefire aid military",
+      "site:apnews.com Gaza November 24 2026 humanitarian ceasefire",
+      "site:un.org Gaza November 24 2026 humanitarian briefing water shelter",
+      "site:emro.who.int Gaza November 2026 meningitis hospital evacuation",
+      "site:wfp.org Gaza November 24 2026 food aid",
+      "Gaza November 24 2026 UNICEF UNRWA MSF ICRC water shelter fuel health access",
+      "Gaza November 24 2026 Rafah crossing medical evacuation detention prisoners latest",
+      "Gaza November 24 2026 latest ceasefire talks humanitarian aid infrastructure evening Palestine"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; surfaced new Arabic demolition and displacement article."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; prior shelter and casualty reports repeat."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; prior outbreak and political statements repeat."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; prior reports repeat."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source": "Al Jazeera, Reuters, Anadolu",
+        "reason": "Prior casualty and meningitis incidents, including Abu Nahl, repeated."
+      },
+      {
+        "source": "WAFA India UNRWA $2.5m",
+        "reason": "Earlier dated general regional refugee funding; no Gaza-specific allocation or service change established."
+      },
+      {
+        "source": "WAFA cabinet statement",
+        "reason": "Repeats prior Oxfam environmental report and general mandate position."
+      },
+      {
+        "source": "UN deputy chief remarks",
+        "reason": "Monday remarks republished; no new operational change established."
+      }
+    ],
+    "limitations": [
+      "14 same-day authenticated prior heartbeat files reviewed. No production inventory inspected. Sparse indexing for current primary humanitarian sources. No independent corroboration of WAFA displacement count; no count reported. Other categories had no distinct qualifying new lead in this bounded review."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

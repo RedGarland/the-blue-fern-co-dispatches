@@ -1,0 +1,226 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T004451-0800-20261124T084453Z",
+  "scheduled_for": "2026-11-24T00:44:51-08:00",
+  "started_at": "2026-11-24T00:44:53-08:00",
+  "completed_at": "2026-11-24T00:45:52.805-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-23T23:46:05-08:00",
+    "end": "2026-11-24T00:45:52.805-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T234451-0800-20261124T074500Z.json",
+    "basis": "Authenticated prior completion through current source review cutoff"
+  },
+  "findings": [
+    {
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "event_timestamp": null,
+      "confidence": "medium",
+      "finding_id": "gaza-20261124-wafa-wadi-gaza-netzarim-fatality-followup",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/7-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%81%D9%8A-%D8%BA%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B9%D9%84%D9%89-%D9%85%D9%86%D8%A7%D8%B7%D9%82-%D9%85%D8%AA%D9%81%D8%B1%D9%82%D8%A9",
+      "title": "7 شهداء في غارات الاحتلال على مناطق متفرقة من قطاع غزة منذ فجر اليوم",
+      "publication_timestamp": "2026-11-24T10:16:00+02:00",
+      "publication_time_pacific": "2026-11-24T00:16:00-08:00",
+      "event_date": "2026-11-24",
+      "location": "Wadi Gaza, central Gaza Strip; possible overlap with Netzarim corridor report",
+      "affected_population_system": "Health sources report three people killed, including a child; Reuters separately reports fatalities near Netzarim. Exact incident identity unresolved.",
+      "exact_supporting_passage": "وأفادت مصادر صحية، باستشهاد ثلاثة مواطنين بينهم طفل، في قصف لطائرات الاحتلال استهدف منطقة وادي غزة وسط القطاع.",
+      "source_type": "News agency citing health sources",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-23T23:46:05-08:00",
+          "2026-11-24T00:45:52.805-08:00"
+        ],
+        "discovery": "Arabic WAFA latest-news index and full dated article, after OCHA OPT and WHO checks and 12 targeted searches.",
+        "related_finding_id": "gaza-20261124-wafa-netzarim-junction-injuries",
+        "corroboration": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "novelty": "New fatality and child-victim information compared with prior injuries-only report. Reuters article has earlier initial publication time and an undated update; it supports a possible overlap, not a separately countable incident.",
+        "caveat": "Do not add this count to earlier Netzarim reporting; military told Reuters it targeted militants; identities not independently verified."
+      }
+    },
+    {
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "event_timestamp": null,
+      "confidence": "medium",
+      "finding_id": "gaza-20261124-wafa-jabalia-death-from-wounds",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/7-%D8%B4%D9%87%D8%AF%D8%A7%D8%A1-%D9%81%D9%8A-%D8%BA%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B9%D9%84%D9%89-%D9%85%D9%86%D8%A7%D8%B7%D9%82-%D9%85%D8%AA%D9%81%D8%B1%D9%82%D8%A9",
+      "title": "7 شهداء في غارات الاحتلال على مناطق متفرقة من قطاع غزة منذ فجر اليوم",
+      "publication_timestamp": "2026-11-24T10:16:00+02:00",
+      "publication_time_pacific": "2026-11-24T00:16:00-08:00",
+      "event_date": "2026-11-24",
+      "location": "Jabalia refugee camp (site of earlier injury); place of death unknown",
+      "affected_population_system": "A Palestinian reportedly died from injuries sustained in an earlier attack; identity and prior injury date unknown.",
+      "exact_supporting_passage": "استشهد مواطن رابع متأثرا بجروحه جراء استهدافه بمخيم جباليا.",
+      "source_type": "News agency reporting",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-23T23:46:05-08:00",
+          "2026-11-24T00:45:52.805-08:00"
+        ],
+        "discovery": "Arabic WAFA latest-news index and full dated article, after OCHA OPT and WHO checks and 12 targeted searches.",
+        "novelty": "Newly reported death from prior wounds; absent from four reviewed recent heartbeats. Earlier injury incident not identified.",
+        "caveat": "Not a new attack or independently confirmed casualty; reconcile with production before aggregation."
+      }
+    },
+    {
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "event_timestamp": null,
+      "confidence": "medium",
+      "finding_id": "gaza-20261124-wafa-prcs-rafah-medical-evacuation",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D9%87%D9%84%D8%A7%D9%84-%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1-%D9%8A%D8%B4%D8%A7%D8%B1%D9%83-%D9%81%D9%8A-%D8%A5%D8%AC%D9%84%D8%A7%D8%A1-26-%D9%85%D8%B1%D9%8A%D8%B6%D8%A7-%D9%8827",
+      "title": "الهلال الأحمر يشارك في إجلاء 26 مريضا و27 مرافقا للعلاج خارج قطاع غزة",
+      "publication_timestamp": "2026-11-24T10:38:00+02:00",
+      "publication_time_pacific": "2026-11-24T00:38:00-08:00",
+      "event_date": "2026-11-24",
+      "location": "Rafah crossing; PRCS Al-Mawasi field hospital",
+      "affected_population_system": "26 patients and 27 companions evacuated for treatment outside Gaza with PRCS ambulance support and WHO coordination; PRCS prepared patients at its field hospital.",
+      "exact_supporting_passage": "في إجلاء 26 مريضا و27 مرافقا للعلاج خارج قطاع غزة، عبر معبر رفح، بالتنسيق مع منظمة الصحة العالمية.",
+      "source_type": "News agency citing Palestine Red Crescent Society statement",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-23T23:46:05-08:00",
+          "2026-11-24T00:45:52.805-08:00"
+        ],
+        "discovery": "Arabic WAFA latest-news index and full dated article, after OCHA OPT and WHO checks and 12 targeted searches.",
+        "novelty": "Dated, distinct medical evacuation operation; not present in four reviewed prior heartbeats.",
+        "caveat": "No independent WHO or PRCS original statement retrieved; does not establish wider reopening or permanent capacity change."
+      }
+    },
+    {
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "event_timestamp": null,
+      "confidence": "medium",
+      "finding_id": "gaza-20261124-wafa-meningitis-surveillance-update",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/24/%D9%85%D8%B5%D8%A7%D8%AF%D8%B1-%D8%B5%D8%AD%D9%8A%D8%A9-272-%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%A8%D8%A7%D9%84%D8%AA%D9%87%D8%A7%D8%A8-%D8%A7%D9%84%D8%B3%D8%AD%D8%A7%D9%8A%D8%A7-%D9%81%D9%8A-%D8%BA%D8%B2%D8%A9",
+      "title": "مصادر صحية: 272 إصابة بالتهاب السحايا في غزة خلال أكتوبر وتحذيرات من تفاقم التفشي الوبائي",
+      "publication_timestamp": "2026-11-24T10:44:00+02:00",
+      "publication_time_pacific": "2026-11-24T00:44:00-08:00",
+      "event_date": null,
+      "location": "Gaza Strip, multiple governorates",
+      "affected_population_system": "Health sources report 272 meningitis cases in October 2026 versus a stated normal 30–50 monthly; 108 bacterial cases in October and 100 more since November began; 15 deaths since start of year. Laboratory genotyping unavailable. Sources cite overcrowding, damaged infrastructure, contaminated water and supply restrictions.",
+      "exact_supporting_passage": "مشيرة إلى تسجيل 272 إصابة خلال شهر تشرين الأول/ أكتوبر الماضي، بزيادة تتجاوز ثمانية أضعاف المعدل الشهري الطبيعي.",
+      "source_type": "News agency citing unnamed health sources",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-23T23:46:05-08:00",
+          "2026-11-24T00:45:52.805-08:00"
+        ],
+        "discovery": "Arabic WAFA latest-news index and full dated article, after OCHA OPT and WHO checks and 12 targeted searches.",
+        "novelty": "New publication within window with quantitative disease surveillance data for earlier reporting periods; not present in four reviewed prior heartbeats.",
+        "caveat": "Not cases newly occurring this hour. Source's eightfold characterization depends on baseline; use reported counts, not multiplier. No independent WHO/UNICEF confirmation retrieved."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report published November 20; outside window."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza item in emergency page or first targeted search."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties WAFA Gaza City Khan Younis",
+      "غزة 24 نوفمبر 2026 شهداء إصابات وفا مستشفى",
+      "Gaza November 24 2026 Reuters AP ceasefire hostages detainees negotiations",
+      "Gaza November 24 2026 hospital ambulance fuel medical evacuation PRCS MSF",
+      "Gaza November 24 2026 humanitarian aid crossings food water displacement UN UNICEF UNRWA",
+      "Gaza November 24 2026 infrastructure damage flooding shelters",
+      "site:english.wafa.ps Gaza November 24 2026 after:2026-11-23",
+      "site:aa.com.tr Gaza November 24 2026 after:2026-11-23",
+      "site:aljazeera.com Gaza November 24 2026 after:2026-11-23",
+      "Gaza November 24 2026 site:reuters.com OR site:apnews.com",
+      "Gaza November 24 2026 site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 24 2026 site:icrc.org OR site:msf.org OR site:unicef.org OR site:palestinercs.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "New dated reports at 10:16, 10:38, 10:44 Gaza time; full articles reviewed."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible, earlier reporting."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Earlier November 23 reporting."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "result": "Updated report with Netzarim deaths; initial publication outside window; update time unknown."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Khan Younis police-post and Al-Karama incidents excluded as duplicate casualty events; Reuters' updated police affiliation is context only, not a separate civilian-impact finding.",
+      "Older OCHA reports and generic humanitarian background excluded.",
+      "West Bank-only detention reports excluded."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA English homepage",
+        "error": "Timeout fetching; Arabic homepage and indexed English article available",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Four authenticated prior heartbeats reviewed, including immediate predecessor and relevant casualty records; not full ledger deduplication.",
+      "Targeted search index largely stale; direct Arabic WAFA supplied dated findings.",
+      "No direct original PRCS or health authority release retrieved; production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

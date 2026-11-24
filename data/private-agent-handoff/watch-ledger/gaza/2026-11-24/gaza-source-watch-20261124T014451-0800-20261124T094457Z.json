@@ -1,0 +1,147 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T014451-0800-20261124T094457Z",
+  "scheduled_for": "2026-11-24T01:44:51-08:00",
+  "started_at": "2026-11-24T01:44:57-08:00",
+  "completed_at": "2026-11-24T01:46:03.597-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T00:45:52.805-08:00",
+    "end": "2026-11-24T01:46:03.597-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T004451-0800-20261124T084453Z.json",
+    "basis": "Authenticated prior completion through current review cutoff"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated November 18, published November 20; outside window."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza release identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties WAFA Gaza City Khan Younis",
+      "غزة 24 نوفمبر 2026 شهداء إصابات مستشفى مساعدات وفا",
+      "Gaza November 24 2026 Reuters AP ceasefire hostages detainees negotiations",
+      "Gaza November 24 2026 hospital ambulance fuel medical evacuation PRCS MSF meningitis",
+      "Gaza November 24 2026 humanitarian aid crossings food water displacement UN UNICEF UNRWA",
+      "Gaza November 24 2026 infrastructure damage flooding shelters",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "site:aljazeera.com Gaza after:2026-11-23",
+      "Gaza November 24 2026 site:reuters.com OR site:apnews.com",
+      "Gaza November 24 2026 site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 24 2026 site:icrc.org OR site:msf.org OR site:unicef.org OR site:palestinercs.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest Arabic news index through 11:38 Gaza local time; no new Gaza development after 10:44 meningitis report. Later winter voucher story explicitly West Bank only."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible again; English translations of prior Arabic findings, timestamped 11:24 Gaza local."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; current and older Gaza reports reviewed."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible, report #239 remains featured."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new in-window dated release identified."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest relevant items November 23."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; latest listed news November 10."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177264",
+        "reason": "English translation of prior meningitis report; underlying Arabic report confirms WHO/UNICEF emergency plan appeal was already in original text. Not independently verified."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177263",
+        "reason": "English translation of already recorded medical evacuation."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177259",
+        "reason": "English translation of previously logged casualty developments."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Same incidents and corroboration already recorded; no verified material revision."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israeli-strike-in-gaza-amid-repeated-ceasefire-violations/4135326",
+        "reason": "Police-post casualties and Jabalia death already logged. Additional contextual detail on Jabalia prior injury location/date and reported fire toward displacement tents is not independently corroborated or time-bounded; article has date only, no clock time. Retain as contextual follow-up lead, not a new event."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177186",
+        "reason": "Sewage pits feature published November 22; outside window."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-fire-kills-palestinian-injures-others-in-gaza-as-child-dies-of-acute-lead-poisoning/4134185",
+        "reason": "November 23 report, no verified in-window update."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-prisoners-lose-dozens-of-kilograms-in-israeli-jail-amid-food-shortages-medical-neglect-report/4134520",
+        "reason": "November 23 report; no verified new Gaza-specific detention change within window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Four authenticated preceding heartbeat contents reviewed, including immediate predecessor and relevant casualty records; not exhaustive ledger deduplication.",
+      "Targeted search results often stale or sparse; direct source checks supplement discovery.",
+      "No qualifying new development verified; not proof of absence.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

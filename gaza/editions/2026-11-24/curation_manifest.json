@@ -1,0 +1,670 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-24-004",
+    "title": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah - WAFA Agency",
+    "summary": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah WAFA Agency GAZA, November 22, 2026 (WAFA) - A Palestinian man was killed by Israeli fire east of Deir al-Balah in the central Gaza Strip on Sunday evening. Medical sources at Al-Aqsa Martyrs Hospital reported the arrival of at least one body, killed by Israeli drone fire targeting a group of Palestinians east of Deir al-Balah. Meanwhile, a child was wounded in the back by Israeli army fire in the al-Sikka area of \u200b\u200bKhan Younis in the southern Gaza Strip. K.T.",
+    "category": "health_infrastructure",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-wafa-gaza-health-infrastructure-query-badd1db0cd9d"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-wafa-gaza-health-infrastructure-query-badd1db0cd9d"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9mNDVQODNMSHFtWkhaMC1HR3Nuak9RZ0UzcER0bDlSTVpqMTFTYmxncXBXVmhFYUJ6NUZDaGplNktZYXY1MkJ5SVVMSWt6eXp4VUxlbkV6QQ?oc=5"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-wafa-gaza-health-infrastructure-query-badd1db0cd9d",
+        "title": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah - WAFA Agency",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9mNDVQODNMSHFtWkhaMC1HR3Nuak9RZ0UzcER0bDlSTVpqMTFTYmxncXBXVmhFYUJ6NUZDaGplNktZYXY1MkJ5SVVMSWt6eXp4VUxlbkV6QQ?oc=5",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah WAFA Agency GAZA, November 22, 2026 (WAFA) - A Palestinian man was killed by Israeli fire east of Deir al-Balah in the central Gaza Strip on Sunday evening. Medical sources at Al-Aqsa Martyrs Hospital reported the arrival of at least one body, killed by Israeli drone fire targeting a group of Palestinians east of Deir al-Balah. Meanwhile, a child was wounded in the back by Israeli army fire in the al-Sikka area of \u200b\u200bKhan Younis in the southern Gaza Strip. K.T",
+        "published_at": "2026-11-22T15:40:35+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "health_infrastructure",
+        "attribution": "WAFA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "health_infrastructure",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "WAFA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-001",
+    "title": "Israeli air strike kills Hamas internal security chief in Gaza",
+    "summary": "Naeem Abu Nahel, who had been in the post for two months, is among seven Palestinians reportedly killed in Israeli strikes on Tuesday.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-bbc-middle-east-cbc3d57ecd65"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-bbc-middle-east-cbc3d57ecd65"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c6rrg7ggq190o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-bbc-middle-east-cbc3d57ecd65",
+        "title": "Israeli air strike kills Hamas internal security chief in Gaza",
+        "url": "https://www.bbc.co.uk/news/articles/c6rrg7ggq190o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Naeem Abu Nahel, who had been in the post for two months, is among seven Palestinians reportedly killed in Israeli strikes on Tuesday.",
+        "published_at": "2026-11-24T15:35:53+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-008",
+    "title": "Israeli air strike kills senior Hamas security official in Gaza",
+    "summary": "Naim Abu Nahl, 50, was killed in a crowded area while four others, including a Palestinian woman, were wounded.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-aljazeera-middle-east-2d7e7965f296"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-aljazeera-middle-east-2d7e7965f296"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/24/israeli-air-strike-kills-senior-hamas-military-official-in-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-aljazeera-middle-east-2d7e7965f296",
+        "title": "Israeli air strike kills senior Hamas security official in Gaza",
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strike-kills-senior-hamas-military-official-in-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Naim Abu Nahl, 50, was killed in a crowded area while four others, including a Palestinian woman, were wounded.",
+        "published_at": "2026-11-24T13:55:11+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-005",
+    "title": "Gaza issues meningitis epidemic alert after steep rise in cases",
+    "summary": "Health ministry records 272 new infections in October, more than eight times the normal monthly rate Gaza's health ministry has issued an epidemic alert after a sharp rise in meningitis infections, with more than 270 new cases reported in October. Dr Nidal Ghoneim, a senior official at the ministry, said the spread of the disease posed a threat to the lives of hundreds of thousands of people, including children.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-guardian-world-d98d5d5b8e06"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-guardian-world-d98d5d5b8e06"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/nov/24/gaza-meningitis-epidemic-alert"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-guardian-world-d98d5d5b8e06",
+        "title": "Gaza issues meningitis epidemic alert after steep rise in cases",
+        "url": "https://www.theguardian.com/world/2026/nov/24/gaza-meningitis-epidemic-alert",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Health ministry records 272 new infections in October, more than eight times the normal monthly rate Gaza's health ministry has issued an epidemic alert after a sharp rise in meningitis infections, with more than 270 new cases reported in October. Dr Nidal Ghoneim, a senior official at the ministry, said the spread of the disease posed a threat to the lives of hundreds of thousands of people, including children.",
+        "published_at": "2026-11-24T14:51:18+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-003",
+    "title": "Israel-Gaza war - BBC",
+    "summary": "Israel-Gaza war BBC.",
+    "category": "medical_evacuation_health_system",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-bbc-gaza-health-query-94dbde5794ee"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-bbc-gaza-health-query-94dbde5794ee"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9obXNaT3JaQ2JlcVF4VDk2VFpNUFpxcG9YMUhGOC1VMkJhN3pJaTVvZVRlSnZCTDNUekt0YndVelJHVUJaeF9rWjZqdlJ5NU1iRnlDb2NFTQ?oc=5"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-bbc-gaza-health-query-94dbde5794ee",
+        "title": "Israel-Gaza war - BBC",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9obXNaT3JaQ2JlcVF4VDk2VFpNUFpxcG9YMUhGOC1VMkJhN3pJaTVvZVRlSnZCTDNUekt0YndVelJHVUJaeF9rWjZqdlJ5NU1iRnlDb2NFTQ?oc=5",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Israel-Gaza war BBC",
+        "published_at": "2026-11-24T01:01:15+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "medical_evacuation_health_system",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "medical_evacuation_health_system",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-07-10-003",
+    "prior_edition_date": "2026-07-10",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "normalized_title",
+      "no_new_summary_detail"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-007",
+    "title": "The photos from Gaza resonating with the people of Sarajevo",
+    "summary": "From a photography exhibition to a weekly vigil reading out the names of killed children, solidarity grows in Sarajevo.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-aljazeera-middle-east-21207d7795e6"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-aljazeera-middle-east-21207d7795e6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/11/24/the-photographs-from-gaza-that-sarajevo-took-home?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-aljazeera-middle-east-21207d7795e6",
+        "title": "The photos from Gaza resonating with the people of Sarajevo",
+        "url": "https://www.aljazeera.com/features/2026/11/24/the-photographs-from-gaza-that-sarajevo-took-home?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "From a photography exhibition to a weekly vigil reading out the names of killed children, solidarity grows in Sarajevo.",
+        "published_at": "2026-11-24T14:50:02+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-006",
+    "title": "Twenty Gaza students due to leave for Ireland after winning visa battle",
+    "summary": "Group's evacuation follows campaign to overturn decision to deny visas to more than 60 students from territory Twenty students from Gaza are to travel to Ireland to take up scholarships after winning a battle for visas that undercut the Irish government's reputation as a champion of Palestinians . The group is due to leave the territory on Monday under strict Israeli controls and travel via Jordan to Dublin to take up places at Irish universities. Another group is expected to follow next month.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 37,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-guardian-world-882312cdc412"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-guardian-world-882312cdc412"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/nov/23/students-from-gaza-win-visa-battle-to-study-in-ireland"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-guardian-world-882312cdc412",
+        "title": "Twenty Gaza students due to leave for Ireland after winning visa battle",
+        "url": "https://www.theguardian.com/world/2026/nov/23/students-from-gaza-win-visa-battle-to-study-in-ireland",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Group's evacuation follows campaign to overturn decision to deny visas to more than 60 students from territory Twenty students from Gaza are to travel to Ireland to take up scholarships after winning a battle for visas that undercut the Irish government's reputation as a champion of Palestinians . The group is due to leave the territory on Monday under strict Israeli controls and travel via Jordan to Dublin to take up places at Irish universities. Another group is expected to follow next month.",
+        "published_at": "2026-11-23T13:03:14+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 37,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-24-002",
+    "title": "Israeli attacks have turned Gaza into 'toxic wasteland', Oxfam says",
+    "summary": "The report says there are signs of possible contamination across almost all of Gaza as a result of Israel's actions.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 42,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-24-bbc-middle-east-f8bafa580cdb"
+    ],
+    "source_ids": [
+      "gaza-2026-11-24-bbc-middle-east-f8bafa580cdb"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c8r4gzzxvxl3o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-24-bbc-middle-east-f8bafa580cdb",
+        "title": "Israeli attacks have turned Gaza into 'toxic wasteland', Oxfam says",
+        "url": "https://www.bbc.co.uk/news/articles/c8r4gzzxvxl3o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The report says there are signs of possible contamination across almost all of Gaza as a result of Israel's actions.",
+        "published_at": "2026-11-23T17:07:25+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-24T20:04:04.342463+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 42,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

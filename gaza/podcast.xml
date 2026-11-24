@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 24 Nov 2026 03:28:10 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 24 Nov 2026 20:04:59 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for November 24, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-24-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-11-24-transcript.html</guid>
+    <pubDate>Tue, 24 Nov 2026 00:00:00 +0000</pubDate>
+    <description>Palestinian killed by Israeli fire east of Gaza's Deir al-Balah - WAFA Agency. Palestinian killed by Israeli fire east of Gaza's Deir al-Balah WAFA Agency GAZA, November 22, 2026 (WAFA) - A Palestinian man was killed by Israeli fire east of Deir al-Balah in the central Gaza Strip on Sunday evening. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-11-24.mp3" length="2039424" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for November 23, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-23-transcript.html</link>
@@ -27,13 +35,12 @@
     <description>Four Palestinians killed, including UNRWA employee, in Israeli attacks across Gaza. WAFA reported that four Palestinians, including UNRWA employee Adel Sami al-Helou, were killed in Israeli attacks and gunfire across Gaza since dawn; it said three Palestinians were killed when Israeli aircraft targeted a civilian vehicle near Ansar Roundabout west of Gaza City, with several others injured. Transcript and source links are available from The Blue Fern Co.</description>
     <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-11-23.mp3" length="1001856" type="audio/mpeg" />
   </item>
-  <item><title>Correction — October 14, 2026</title><link>https://dispatches.thebluefernco.com/gaza/corrections/gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4/</link><guid isPermaLink="false">gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4</guid><description>No qualified stories remain in the corrected saved-input selection. The saved evidence does not establish that no news occurred. Correction audio render is pending separate approval.</description><pubDate>Wed, 14 Oct 2026 16:18:12 -0700</pubDate><enclosure url="https://dispatches.thebluefernco.com/gaza/audio/corrections/gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4.mp3" length="01183498" type="audio/mpeg" /></item>
-<item>
-    <title>Superseded original Gaza recording — October 14, 2026</title>
+  <item>
+    <title>Gaza Briefing for October 14, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-14-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-10-14-transcript.html</guid>
     <pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
-    <description>No qualified stories remain in the corrected saved-input selection. The saved evidence does not establish that no news occurred. Correction record: https://dispatches.thebluefernco.com/gaza/corrections/gaza-edition-correction-v1-fd0e2e8a1d6af65d6fc4/</description>
+    <description>Colombia inaugurates embassy to Israel in Jerusalem. Palestinian officials slam move by Colombian government that marked major shift after ex-president had cut. Transcript and source links are available from The Blue Fern Co.</description>
     <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-10-14.mp3" length="792192" type="audio/mpeg" />
   </item>
   <item>

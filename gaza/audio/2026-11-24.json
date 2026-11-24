@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-24",
+  "generated_at": "2026-11-24T20:04:59.164036Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-11-24.mp3",
+  "audio_url": "/gaza/audio/2026-11-24.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 2001,
+  "tts_input_word_count": 327,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 2039424,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-11-24T20:04:59.164002Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-11-24-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-24/",
+  "script_text": "This is the Gaza Dispatch audio briefing for November 24, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian killed by Israeli fire east of Gaza's Deir al-Balah - WAFA Agency. Palestinian killed by Israeli fire east of Gaza's Deir al-Balah WAFA Agency GAZA, November 22, 2026 (WAFA) - A Palestinian man was killed by Israeli fire east of Deir al-Balah in the central Gaza Strip on Sunday evening. This was reported by WAFA.\n\n2. Israeli air strike kills Hamas internal security chief in Gaza. Naeem Abu Nahel, who had been in the post for two months, is among seven Palestinians reportedly killed in Israeli strikes on Tuesday. This was reported by BBC News.\n\n3. Israeli air strike kills senior Hamas security official in Gaza. Naim Abu Nahl, 50, was killed in a crowded area while four others, including a Palestinian woman, were wounded. This was reported by Al Jazeera.\n\n4. Gaza issues meningitis epidemic alert after steep rise in cases. Health ministry records 272 new infections in October, more than eight times the normal monthly rate Gaza's health ministry has issued an epidemic alert after a sharp rise in meningitis infections, with more than 270 new cases reported in October. This was reported by The Guardian.\n\n5. The photos from Gaza resonating with the people of Sarajevo. From a photography exhibition to a weekly vigil reading out the names of killed children, solidarity grows in Sarajevo. This was reported by Al Jazeera.\n\n6. Twenty Gaza students due to leave for Ireland after winning visa battle. Group's evacuation follows campaign to overturn decision to deny visas to more than 60 students from territory Twenty students from Gaza are to travel to Ireland to take up scholarships after winning a battle for visas that undercut the Irish government's reputation as a champion of Palestinians . This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the November 24, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-11-24-wafa-gaza-health-infrastructure-query-badd1db0cd9d",
+      "publisher": "WAFA",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9mNDVQODNMSHFtWkhaMC1HR3Nuak9RZ0UzcER0bDlSTVpqMTFTYmxncXBXVmhFYUJ6NUZDaGplNktZYXY1MkJ5SVVMSWt6eXp4VUxlbkV6QQ?oc=5",
+      "title": "Palestinian killed by Israeli fire east of Gaza's Deir al-Balah - WAFA Agency"
+    },
+    {
+      "source_record_id": "gaza-2026-11-24-bbc-middle-east-cbc3d57ecd65",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c6rrg7ggq190o?at_medium=RSS&at_campaign=rss",
+      "title": "Israeli air strike kills Hamas internal security chief in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-11-24-aljazeera-middle-east-2d7e7965f296",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strike-kills-senior-hamas-military-official-in-gaza?traffic_source=rss",
+      "title": "Israeli air strike kills senior Hamas security official in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-11-24-guardian-world-d98d5d5b8e06",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/nov/24/gaza-meningitis-epidemic-alert",
+      "title": "Gaza issues meningitis epidemic alert after steep rise in cases"
+    },
+    {
+      "source_record_id": "gaza-2026-11-24-aljazeera-middle-east-21207d7795e6",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/11/24/the-photographs-from-gaza-that-sarajevo-took-home?traffic_source=rss",
+      "title": "The photos from Gaza resonating with the people of Sarajevo"
+    },
+    {
+      "source_record_id": "gaza-2026-11-24-guardian-world-882312cdc412",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/nov/23/students-from-gaza-win-visa-battle-to-study-in-ireland",
+      "title": "Twenty Gaza students due to leave for Ireland after winning visa battle"
+    }
+  ]
+}

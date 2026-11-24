@@ -1,0 +1,173 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T034451-0800-20261124T114457Z",
+  "scheduled_for": "2026-11-24T03:44:51-08:00",
+  "started_at": "2026-11-24T03:44:57-08:00",
+  "completed_at": "2026-11-24T03:45:44-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T02:45:43-08:00",
+    "end": "2026-11-24T03:45:44-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T024451-0800-20261124T104454Z.json",
+    "basis": "Authenticated predecessor completion to current source-review cutoff"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza release on emergency page."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest WAFA casualties displacement crossing",
+      "Gaza November 24 2026 Reuters AP ceasefire hostages military civilian",
+      "Gaza November 24 2026 hospital ambulance fuel meningitis medical evacuation PRCS",
+      "Gaza November 24 2026 UNRWA UNICEF aid water food displacement",
+      "Gaza November 24 2026 WFP food access aid crossings",
+      "Gaza November 24 2026 ICRC detention infrastructure humanitarian",
+      "غزة 24 نوفمبر 2026 وفا شهداء إصابات مساعدات مستشفيات",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "site:aljazeera.com Gaza after:2026-11-23",
+      "Gaza November 24 2026 site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza November 24 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest visible Gaza reports already logged; no distinct new Gaza report identified."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest listed items through 12:18 Gaza local; no new Gaza-specific operational report."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Existing casualty report updated headline; senators' winter aid letter assessed."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report #239 remains featured."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza items dated November 23."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Latest document November 23 winter rains article previously assessed."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest listed news November 10."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "No new dated November release identified in page."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Latest visible release unrelated to Gaza."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177259",
+        "reason": "Previously logged casualty incidents and aggregate."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177263",
+        "reason": "Previously logged evacuation."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177264",
+        "reason": "Previously logged meningitis surveillance; secondary coverage repeats same counts."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177271",
+        "reason": "Previously assessed detention advocacy appeal."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Previously logged casualties and corroboration."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israeli-strike-in-gaza-amid-repeated-ceasefire-violations/4135326",
+        "reason": "Same article ID as earlier review, headline now six; body unavailable, no verified separate incident or change beyond previously logged events."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/americas/us-senators-urge-rubio-to-press-israel-on-winter-aid-for-gaza/4135216",
+        "reason": "November 24 dated report of November 23 senators' letter urging winter aid access. Includes claims about existing crossing restrictions, dual-use approval and flooded tents, but no new operational change or verified in-window publication time; contextual lead."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261124-red-cross-gaza-urgently-needs-more-durable-shelter-solutions/?amp=",
+        "reason": "Indexed November 24 coverage of Monday ICRC statement; no verified new operational change; full retrieval failed."
+      },
+      {
+        "url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/24/chuvas-inundam-barracas-em-gaza-e-cruz-vermelha-fala-em-desastre-humano.ghtm",
+        "reason": "Indexed report quoting IFRC spokesman on flooded shelters; publication clock time and new event dates unverified; full retrieval failed. Contextual lead."
+      },
+      {
+        "url": "https://europeansting.com/2026/11/24/gaza-war-has-undone-77-years-of-human-development-un-warns/",
+        "reason": "Republication of UN deputy chief's Monday remarks; no new operational change."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Secondary shelter reports and existing Anadolu casualty article",
+        "error": "Two full-text retrievals disabled; Anadolu casualty body not returned.",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Four authenticated preceding heartbeats reviewed; not exhaustive ledger deduplication.",
+      "Twelve targeted searches submitted; second six returned no separately visible search records in combined response; direct source checks supplemented discovery.",
+      "No qualifying new development verified; absence not established.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

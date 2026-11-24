@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T094451-0800-20261124T174453Z",
+  "scheduled_for": "2026-11-24T09:44:51-08:00",
+  "started_at": "2026-11-24T09:44:53-08:00",
+  "completed_at": "2026-11-24T09:45:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T08:46:06.329-08:00",
+    "end": "2026-11-24T09:45:48-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T084451-0800-20261124T164453Z.json",
+    "basis": "Authenticated predecessor completion through current source review cutoff. Newly discovered reporting is distinguished from incident or publication clock."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-anadolu-who-meningitis-infants-surveillance",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/infants-hardest-hit-as-meningitis-cases-continue-to-rise-in-gaza/4136120",
+      "title": "Infants hardest hit as meningitis cases continue to rise in Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": null,
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Gaza Strip, especially Gaza City and Khan Yunis; WHO briefing in Geneva",
+      "affected_population_system": "WHO spokesperson Christian Lindmeier reported more than 533 meningitis cases and four deaths since mid-October; infants under one account for 71% of cases reported since October, newborns 13%, and 73% of patients are displaced. Limited laboratory capacity impedes viral/bacterial differentiation. Counts cover different reporting periods from earlier ministry figures and must not be added.",
+      "exact_supporting_passage": "Children under the age of one account for 71% of cases reported since October, with newborns alone accounting for 13% of all cases, he said.",
+      "source_type": "Established news agency reporting named WHO spokesperson at Geneva briefing",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T08:46:06.329-08:00",
+          "2026-11-24T09:45:48-08:00"
+        ],
+        "related_finding_id": "gaza-20261124-wafa-meningitis-surveillance-update",
+        "discovery": "New Anadolu Middle East index headline 4136120; full dated report retrieved. Ten authenticated preceding heartbeat files checked; no matching WHO figures or article ID.",
+        "novelty": "WHO-attributed surveillance update, age and displacement distribution, and testing capacity limitation are material additions to previously recorded ministry outbreak counts and epidemic alert.",
+        "caveat": "Exact publication/briefing clock and underlying WHO transcript not retrieved. Reporting-period totals are not hourly new infections, and four deaths since mid-October are not additional to the ministry's year-to-date count."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, published November 20; no newer report identified."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly dated Gaza release surfaced in first search. WHO spokesperson report subsequently recovered via Anadolu."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway on direct check."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties strike Reuters AP today",
+      "site:english.wafa.ps Gaza November 24 2026 killed injured crossing",
+      "site:aljazeera.com Gaza November 24 2026 live updates hospital aid",
+      "Gaza November 24 2026 Palestinian Red Crescent medical evacuation ambulance hospital fuel",
+      "Gaza November 24 2026 UNICEF UNRWA WFP food water displacement aid",
+      "Gaza November 24 2026 ceasefire negotiations hostages detention crossings Reuters Anadolu",
+      "غزة 24 نوفمبر 2026 اليوم شهداء مساعدات مستشفيات وفا",
+      "Gaza November 24 2026 site:aa.com.tr latest Gaza aid hospital",
+      "Gaza November 24 2026 humanitarian site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 24 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza November 24 2026 latest infrastructure shelter flooding water aid access",
+      "Gaza November 24 2026 latest updates injured civilian aid health BBC Guardian Middle East Eye"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Earlier Gaza headlines, no newly qualifying item surfaced."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; previously recorded detention appeal and other West Bank headlines."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "New WHO outbreak report and EU humanitarian access remarks retrieved in full."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Earlier casualty and outbreak headlines already reviewed."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no new dated Gaza release established in retrieved content."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest news November 10."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated Gaza release established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated Gaza release established."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aa.com.tr/en/europe/eu-must-speak-with-one-voice-to-press-israel-on-humanitarian-access-to-gaza-commissioner/4136177",
+        "reason": "EU commissioner reiterates restrictions and winter needs; 150,000 waiting tents already documented in OCHA November 20 publication citing November 13 HCT statement. No verified new policy or access change; flooding figures lack comparable updated assessment dates."
+      },
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/24/gaza-meningitis-epidemic-alert",
+        "reason": "Earlier publication at 06:51 Pacific, modified 07:16; repeats ministry alert and historical OCHA/WHO figures, not an additional finding."
+      },
+      {
+        "url": "https://aa.com.tr/en/middle-east/-israeli-drone-strikes-kill-5-palestinians-in-gaza/4135202",
+        "reason": "Lead poisoning report already recorded November 23 per authenticated 06:44 heartbeat; prior casualty reporting."
+      },
+      "Reuters and Al Jazeera earlier strike reports overlap previously logged incidents. No additional separately countable casualty event established."
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Ten authenticated prior heartbeats reviewed for bounded deduplication.",
+      "Search indexing sparse for official sources; direct source checks partly mitigate.",
+      "WHO briefing reported by named spokesperson via news agency, primary transcript not retrieved.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

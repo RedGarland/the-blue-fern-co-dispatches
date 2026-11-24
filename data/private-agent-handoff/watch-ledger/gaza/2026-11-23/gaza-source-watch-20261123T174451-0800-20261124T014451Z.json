@@ -1,0 +1,162 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T174451-0800-20261124T014451Z",
+  "scheduled_for": "2026-11-23T17:44:51-08:00",
+  "started_at": "2026-11-23T17:44:53-08:00",
+  "completed_at": "2026-11-23T17:45:37-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T16:45:38-08:00",
+    "end": "2026-11-23T17:45:37-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T164454-0800-20261124T004451Z.json",
+    "basis": "Prior authenticated completion to current source-review cutoff."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-aa-4135202-khan-younis-police-post-casualties",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-3-palestinians-at-gaza-police-post/4135202",
+      "title": "Israeli drone strike kills 3 Palestinians at Gaza police post",
+      "publisher": "Anadolu Agency",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": null,
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Al-Mawasi area of Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Three Palestinians reported killed and five wounded; a police post reportedly targeted. Victim identities, civilian or combatant status and effect on police services are not established.",
+      "exact_supporting_passage": "An Israeli drone strike killed three Palestinians and wounded five others in southern Gaza early Tuesday, a medical source at Nasser Hospital told Anadolu.",
+      "source_type": "Established news agency, citing a Nasser Hospital medical source and local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "discovery": "Direct Anadolu Middle East index and canonical article after official-first checks and 12 targeted searches",
+        "observed_between": [
+          "2026-11-23T16:45:38-08:00",
+          "2026-11-23T17:45:37-08:00"
+        ],
+        "novelty": "Previously unlogged reported casualties at a police post in southern Gaza, distinct from November 23 vehicle strike and other ledger incidents.",
+        "date_note": "Source and event dates are November 24 in the region, while the watch observation date is November 23 Pacific. Exact publication and event clock times unavailable; first observed during this check, not proven to have first occurred within the hour.",
+        "corroboration": "No second independent source verified in this bounded check.",
+        "caveat": "Civilian status not established; this is a reported casualty development, not a verified civilian casualty tally. Do not add to aggregate counts."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza report identified on global emergency page."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "HTTP_502",
+        "result": "Persistent access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 November 23 evening casualties WAFA Gaza strike Beit Lahia",
+      "Gaza November 23 24 2026 latest hospital ambulance fuel evacuation health WHO PRCS MSF",
+      "Gaza November 23 24 2026 UN humanitarian aid water food crossing displacement",
+      "Gaza November 23 24 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 23 24 2026 UNICEF UNRWA WFP aid humanitarian",
+      "Gaza November 23 24 2026 latest news Al Jazeera Anadolu Middle East Eye",
+      "غزة 24 نوفمبر 2026 23 نوفمبر مساء قصف إصابات وفا",
+      "Gaza November 23 24 2026 ICRC medical evacuation crossings humanitarian",
+      "Gaza after:2026-11-22 site:english.wafa.ps OR site:wafa.ps",
+      "Gaza after:2026-11-22 site:aljazeera.com OR site:aa.com.tr",
+      "Gaza after:2026-11-22 site:reuters.com OR site:apnews.com",
+      "Gaza after:2026-11-22 site:reliefweb.int OR site:un.org OR site:unicef.org OR site:msf.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza casualty reports already logged."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic latest news up to 23:55 Gaza local November 23; prior casualty reports and daily roundup."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "UNRWA worker, hearing aid and Oxfam reports already logged."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "New police-post casualty report found and canonical article read."
+      },
+      {
+        "url": "https://www.wfp.org/news",
+        "result": "HTTP 403."
+      },
+      {
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "result": "Anti-bot challenge."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports",
+        "result": "Index accessible."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Country page accessible."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "reason": "Previously recorded UNRWA worker and western Gaza City vehicle casualties."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177243",
+        "reason": "Previously logged Al-Karama and Beit Lahia incidents; no verified correction."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/23/منظمة-طبية-دولية-تداعيات-شتاء-غزة-كارثة-من",
+        "reason": "Earlier November 23 IFRC winter warning describes existing flooding, shortages and infant hypothermia deaths without verified new date or quantitative change."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "error": "Anti-bot challenge",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Search engine results mostly stale or duplicate; direct indexes supplemented retrieval.",
+      "All 17 preceding same-day heartbeat files retrieved and reviewed for deduplication; production not inspected.",
+      "Police-post victim status and exact times remain unknown."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261123T234451-0800-20261124T074500Z",
+  "scheduled_for": "2026-11-23T23:44:51-08:00",
+  "started_at": "2026-11-23T23:45:00-08:00",
+  "completed_at": "2026-11-23T23:46:05-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-23",
+    "start": "2026-11-23T22:45:39-08:00",
+    "end": "2026-11-23T23:46:05-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-23/gaza-source-watch-20261123T224451-0800-20261124T064453Z.json",
+    "basis": "Authenticated prior completion to current source-review cutoff"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza report on emergency page."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "TIMEOUT",
+        "result": "Persistent regional access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties WAFA Netzarim Gaza City",
+      "Gaza November 24 2026 latest Reuters AP ceasefire hostages detainees negotiations",
+      "Gaza November 24 2026 hospital ambulance fuel medical evacuation PRCS MSF health ministry",
+      "Gaza November 24 2026 humanitarian aid crossings food water displacement UN UNICEF UNRWA",
+      "Gaza November 24 2026 infrastructure damage flooding shelters Gaza",
+      "غزة 24 نوفمبر 2026 شهداء إصابات مستشفى مساعدات وفا",
+      "Gaza November 24 2026 latest site:english.wafa.ps OR site:wafa.ps",
+      "Gaza November 24 2026 latest site:aa.com.tr OR site:aljazeera.com",
+      "Gaza November 24 2026 latest site:reuters.com OR site:apnews.com",
+      "Gaza November 23 24 2026 humanitarian aid site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 23 24 2026 health evacuation site:who.int OR site:msf.org OR site:icrc.org OR site:palestinercs.org",
+      "Gaza November 24 2026 latest crossings aid food water military civilians detainees"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic index through November 24 09:19 local; latest Gaza-specific casualty article remains 08:17 Netzarim report already recorded."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest Gaza casualty report remains 08:15 local Khan Yunis, previously recorded."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Previously reported UNRWA worker incident; no distinct new report identified."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "November 23 UNRWA casualty and hearing-aid reporting already noted."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; indexed situation report #239 published November 19."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "Accessible."
+      },
+      {
+        "url": "https://www.icrc.org/en/article/gaza-working-alongside-communities-prepare-winter-rains",
+        "result": "Full November 23 article reviewed; historical flood impacts and recent assistance without specific delivery or publication time."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.icrc.org/en/article/gaza-working-alongside-communities-prepare-winter-rains",
+        "reason": "Relevant primary-source recall candidate, dated November 23 without publication clock time; recent delivery of eight sewage vacuum trucks and sandbag support for about 20,000 displaced people reported, but exact delivery dates and novelty within current window not verified. Retain here as contextual lead, not positive hourly finding. Production not checked."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177248",
+        "reason": "Khan Younis incident and Al-Karama count follow-up already recorded."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Previously recorded incident; publication before current window."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-3-palestinians-at-gaza-police-post/4135202",
+        "reason": "Previously documented conflicting headline/body under same numeric ID; describes earlier Monday events and no verified in-window change."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "reason": "Published November 20; outside window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout fetching regional news page",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Four authenticated preceding heartbeat contents reviewed, including immediate predecessor and earlier police-post record; not full-day ledger review.",
+      "Search results largely older or duplicate; direct checks supplement index retrieval.",
+      "No qualifying new development verified; not proof of absence.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

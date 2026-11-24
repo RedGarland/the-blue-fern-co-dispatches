@@ -1,0 +1,159 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T024451-0800-20261124T104454Z",
+  "scheduled_for": "2026-11-24T02:44:51-08:00",
+  "started_at": "2026-11-24T02:44:54-08:00",
+  "completed_at": "2026-11-24T02:45:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T01:46:03.597-08:00",
+    "end": "2026-11-24T02:45:43-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T014451-0800-20261124T094457Z.json",
+    "basis": "Authenticated preceding completion through current source-review cutoff"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed situation report dated November 18, published November 20; outside window."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza release on emergency page."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties WAFA Khan Younis Gaza City",
+      "غزة 24 نوفمبر 2026 شهداء إصابات مستشفى مساعدات وفا",
+      "Gaza November 24 2026 Reuters AP ceasefire hostages detention negotiations",
+      "Gaza November 24 2026 hospital ambulance fuel medical evacuation PRCS MSF",
+      "Gaza November 24 2026 aid crossings food water displacement UN UNICEF UNRWA",
+      "Gaza November 24 2026 infrastructure damage flooding shelters",
+      "site:english.wafa.ps Gaza after:2026-11-23",
+      "site:aa.com.tr Gaza after:2026-11-23",
+      "site:aljazeera.com Gaza after:2026-11-23",
+      "Gaza November 24 2026 site:reuters.com OR site:apnews.com",
+      "Gaza November 24 2026 site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 24 2026 site:icrc.org OR site:msf.org OR site:unicef.org OR site:palestinercs.org"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest Arabic index through 11:50 Gaza local; latest substantive Gaza items already logged."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "English index through 12:18 Gaza local; new detention advocacy appeal assessed separately."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; earlier Gaza coverage, including recycled article ID 4135202."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; situation report #239 remains featured."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated November release identified."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Latest Gaza items November 23."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest listed news November 10."
+      },
+      {
+        "url": "https://www.unicef.org/media/press-releases",
+        "result": "No new Gaza release in reviewed latest listing."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Latest documents feature November 23 winter assistance article previously assessed."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177271",
+        "reason": "Newly published 12:18 Gaza local / 02:18 Pacific report on General Union of Palestinian Women appeal to UN Special Rapporteur. Includes Gaza women in detention and cites existing documented mistreatment and denial of outside contact. No newly documented detention incident, count, release, access change or dated new evidence established. Preserve as contextual lead, not operational finding."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177259",
+        "reason": "Previously logged casualty reports and unchanged aggregate figures."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177263",
+        "reason": "Medical evacuation previously logged."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177264",
+        "reason": "Meningitis surveillance previously logged."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/3-palestinians-killed-in-israeli-strike-in-gaza-amid-repeated-ceasefire-violations/4135326",
+        "reason": "Previously reviewed police-post and Jabalia reports; no verified new material change."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/-israeli-drone-strikes-kill-5-palestinians-in-gaza/4135202",
+        "reason": "Previously reviewed numeric article ID, body describes Monday events; no verified in-window update."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Previously recorded casualties and corroboration; no verified material change."
+      },
+      {
+        "url": "https://www.reuters.com/world/us/us-envoy-not-certain-military-aid-israel-will-end-this-year-trump-promised-2026-11-24/",
+        "reason": "In-window reporting on uncertain US military funding; no new Gaza-specific operational, ceasefire or humanitarian access change established."
+      },
+      {
+        "url": "https://www.icrc.org/en/article/gaza-working-alongside-communities-prepare-winter-rains",
+        "reason": "Previously retained contextual lead; no verified new delivery or publication timing."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "limitations": [
+      "Four authenticated preceding heartbeat contents reviewed; not exhaustive ledger deduplication.",
+      "Targeted search results sparse; supplemented with direct source checks.",
+      "No qualifying new development verified; not proof of absence.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

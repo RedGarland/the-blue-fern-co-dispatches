@@ -1265,7 +1265,7 @@ h3 {
 }
 
 /* Keep the Gaza archive's records in view; do not reuse landing-page hero spacing. */
-.archive--gaza { padding: 1rem 0 2rem; }
+.archive--gaza { padding: .9rem 0 2rem; }
 .archive--gaza .archive-intro { max-width: 900px; padding: 0 0 .5rem; }
 .archive--gaza .archive-intro h1 {
   margin: .15rem 0 .5rem;
@@ -1284,5 +1284,6 @@ h3 {
 .archive--gaza .archive-latest .archive-latest-date { margin: 0; }
 .archive--gaza .archive-controls { margin: .75rem 0 .5rem; padding: .5rem 0; }
 .archive--gaza .archive-result { margin-bottom: .5rem; }
-.archive--gaza .archive-context { margin-bottom: .75rem; }
-.archive--gaza .archive-month h2 { margin-top: 1rem; }
+.archive--gaza .archive-context { margin-bottom: 0; }
+.archive--gaza .archive-month { margin-top: 0; }
+.archive--gaza .archive-month h2 { margin-top: 0; }

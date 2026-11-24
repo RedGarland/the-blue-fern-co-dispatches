@@ -1,0 +1,174 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T114451-0800-20261124T194455Z",
+  "scheduled_for": "2026-11-24T11:44:51-08:00",
+  "started_at": "2026-11-24T11:44:55-08:00",
+  "completed_at": "2026-11-24T11:46:02.055-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T10:46:14.297-08:00",
+    "end": "2026-11-24T11:46:02.055-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T104451-0800-20261124T184455Z.json",
+    "basis": "Predecessor completion to current review; newly recovered pre-cutoff reporting explicitly marked."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-wafa-nuseirat-woman-death-from-wounds",
+      "canonical_source_url": null,
+      "title": "استشهاد مواطنة متأثرة بجروحها في النصيرات يرفع عدد شهداء اليوم بقطاع غزة إلى 10",
+      "publisher": "WAFA",
+      "source_date": "2026-11-24",
+      "publication_date": "2026-11-24",
+      "publication_timestamp": "2026-11-24T20:36:00+02:00",
+      "publication_time_pacific": "2026-11-24T10:36:00-08:00",
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Nuseirat, central Gaza Strip",
+      "affected_population_system": "WAFA reports a Palestinian woman died of her wounds in Nuseirat; identity, original injury incident and clinical details unavailable. The headline revises its reported daily death toll to ten; do not add to prior aggregate.",
+      "exact_supporting_passage": "استشهاد مواطنة متأثرة بجروحها في النصيرات يرفع عدد شهداء اليوم بقطاع غزة إلى 10",
+      "source_type": "Official Palestinian news agency, dated headline on Arabic homepage",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T10:46:14.297-08:00",
+          "2026-11-24T11:46:02.055-08:00"
+        ],
+        "source_index_url": "https://www.wafa.ps/",
+        "discovery": "Exact headline displayed in Gaza casualty section and timestamp 20:36 in violations and latest-news sections of Arabic WAFA homepage; no hyperlink exposed by retrieval. Direct article URL attempts failed; canonical article URL unknown, not guessed.",
+        "novelty": "Distinct Nuseirat woman death-from-wounds report not present in eleven authenticated same-day heartbeats. Headline timestamp precedes predecessor completion by about ten minutes; recall recovery, not an established in-window occurrence.",
+        "caveat": "Headline only; full article unavailable. Original incident timing, individual identity, independent verification and overlap with other totals unresolved. Do not treat as new attack."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18 and published November 20; no newer dated report identified."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Initial WHO domain search yielded no newer dated Gaza release; global situation page accessible."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/priority-areas/emergency-response.html",
+        "status": "FAILED",
+        "result": "URL inaccessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties civilian displacement WAFA Reuters AP",
+      "Gaza November 24 2026 aid crossings fuel water food UNRWA UNICEF WFP",
+      "Gaza November 24 2026 hospital ambulance evacuation meningitis WHO MSF PRCS",
+      "Gaza November 24 2026 ceasefire negotiations hostage detention Reuters AP Al Jazeera",
+      "site:wafa.ps غزة 24-11-2026 إصابات شهيد مساعدات",
+      "site:aa.com.tr Gaza November 24 2026 aid health attack",
+      "site:english.wafa.ps Gaza November 24 2026 aid killed hospital after 19:00",
+      "site:aa.com.tr/en/middle-east Gaza \"24.11.2026\"",
+      "site:aljazeera.com/news/2026/11/24 Gaza aid hospital",
+      "Gaza November 24 2026 humanitarian update site:un.org OR site:reliefweb.int OR site:unrwa.org",
+      "Gaza November 24 2026 site:msf.org OR site:icrc.org OR site:palestinercs.org OR site:unicef.org",
+      "Gaza November 24 2026 shelter floods water aid access latest BBC Guardian Middle East Eye"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Newly recovered dated casualty headline; other earlier reports duplicate."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Repeated timeout."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Repeated timeout; targeted searches yielded sparse relevant results."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Earlier casualty/outbreak reporting."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no new Gaza release established."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated release established."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated release established."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible; undated operational overview. Food cuts reported in October, no newly dated change established."
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/24/gaza-meningitis-epidemic-alert",
+        "reason": "Published 06:51 Pacific, updated 07:16; previously logged epidemic alert, older OCHA/WHO surveillance and water figures, historical displacement."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Earlier casualty and epidemic reports already covered."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Inaccessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA English",
+        "error": "Repeated timeout",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Anadolu Middle East",
+        "error": "Repeated timeout",
+        "material_new_degradation": true
+      },
+      {
+        "source": "WAFA Arabic individual casualty article",
+        "error": "No article link exposed and direct retrieval unsuccessful",
+        "material_new_degradation": true
+      }
+    ],
+    "limitations": [
+      "Eleven authenticated same-day prior heartbeats reviewed.",
+      "Search indexing sparse; useful coverage remained via Arabic WAFA, OCHA, WHO global, Al Jazeera, Guardian and other direct pages.",
+      "One finding supported by dated publisher headline only; canonical article URL unknown.",
+      "Production not inspected."
+    ],
+    "material_failure_or_new_degradation": true,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

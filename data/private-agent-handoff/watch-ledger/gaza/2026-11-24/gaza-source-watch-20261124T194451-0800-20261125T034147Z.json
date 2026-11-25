@@ -1,0 +1,158 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T194451-0800-20261125T034147Z",
+  "scheduled_for": "2026-11-24T19:44:51-08:00",
+  "started_at": "2026-11-24T19:41:47-08:00",
+  "completed_at": "2026-11-25T03:43:20Z",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-25T02:48:02.144Z",
+    "end": "2026-11-25T03:43:20Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T184451-0800-20261125T024714Z.json",
+    "basis": "Authenticated predecessor completion to current review cutoff; discovery interval, not event or publication timing. Actual invocation preceded nominal hourly slot."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261124-civil-defense-approaching-storm-shelter-risk",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+      "title": "Storm threatens lives of 1.76 million Palestinians sheltering in tents: Gaza media office",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": "2026-11-24",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Displaced families sheltering in tents or structurally compromised buildings, especially children, elderly and sick people. Civil Defense spokesman Mahmoud Basal warned on Tuesday of anticipated heavy rain, strong winds and exposure risks amid inadequate heating. This is a prospective warning, not confirmed new flooding or casualties.",
+      "exact_supporting_passage": "Gaza Civil Defense spokesman Mahmoud Basal warned that heavy rain could inundate the tents sheltering thousands of families",
+      "source_type": "Established news agency reporting named civil defense spokesperson",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T02:48:02.144Z",
+          "2026-11-25T03:43:20Z"
+        ],
+        "discovery": "Date-constrained targeted search; full Anadolu article 4136549 retrieved. No matching storm-specific warning in 19 authenticated November 24 prior heartbeat findings.",
+        "novelty": "Newly recovered specific approaching-storm warning attributed to Civil Defense, distinct from previously logged winter shelter response figures.",
+        "caveat": "Publisher displays November 25, consistent with date rollover abroad; exact publication clock and timezone not independently established. Civil Defense warning dated Tuesday by article; underlying forecast and original statement not retrieved. Article headline's 1.76 million estimate rests on a government media office warning via X and is not admitted as a verified exposure count. Historical November 6 flood figure and speculative deaths excluded.",
+        "related_finding_id": "gaza-20261124-wafa-hamad-winter-shelter-response-capacity"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Initial domain search; latest Gaza report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Initial domain search returned global emergency overview; no new dated Gaza operational release established."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties displacement overnight November 24",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 hospital ambulance fuel medical evacuation PRCS",
+      "Gaza November 24 25 2026 food water shelter aid UNICEF UNRWA WFP",
+      "Gaza November 24 25 2026 ceasefire negotiations hostages detention Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 humanitarian briefing site:un.org OR site:reliefweb.int",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 24 25 2026 infrastructure demolition flooding water aid",
+      "Gaza November 24 25 2026 Rafah crossing military operations civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Prior demolition, Nuseirat casualty, medical evacuation and meningitis items repeat."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Previously logged casualty and shelter response; latest headlines concern West Bank."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; new approaching-storm report recovered via targeted search and full article."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Earlier strike and outbreak coverage repeated."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Situation report 239 remains featured."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest Gaza release November 10."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no newer dated operational lead established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no newer dated operational lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177295",
+        "reason": "Previously recorded shelter response."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "reason": "Older November 21 casualty reporting."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/palestine-weekly-a-night-of-arson-sees-israel-jewish-terrorism-reckoning",
+        "reason": "Weekly recap focused on West Bank and Israeli coalition, no distinct new Gaza operational change established."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+        "reason": "Exclude unsupported social-media-derived exposure estimate, speculative future deaths and recycled November 6 flood count; retain only attributed Civil Defense near-term shelter warning."
+      }
+    ],
+    "limitations": [
+      "19 distinct same-day authenticated predecessor heartbeat files read; production inventory not inspected.",
+      "Sparse indexing and persistent source access gaps. No other distinct qualifying development established."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T124451-0800",
+  "scheduled_for": "2026-11-25T12:44:51-08:00",
+  "started_at": "2026-11-25T12:43:25-08:00",
+  "completed_at": "2026-11-25T12:44:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T11:48:29-08:00",
+    "end": "2026-11-25T12:44:00-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T114451-0800.json",
+    "basis": "Authenticated prior research cutoff to verified local clock before persistence; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza humanitarian situation report dated November 18, posted November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview accessible; no new dated Gaza operational update displayed."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest killed injured WAFA Gaza ministry",
+      "Gaza November 25 2026 humanitarian aid crossings displacement water food UN OCHA WFP UNICEF",
+      "Gaza November 25 2026 hospital ambulance fuel medical evacuation meningitis WHO PRCS",
+      "Gaza November 25 2026 ceasefire negotiations hostages prisoners Reuters AP AFP",
+      "Gaza November 25 2026 Gaza latest Al Jazeera Middle East Eye Anadolu",
+      "غزة 25 نوفمبر 2026 شهداء إصابات مستشفيات معابر وفا",
+      "site:english.wafa.ps Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "site:un.org Gaza November 25 2026 humanitarian briefing",
+      "Gaza November 25 2026 MSF ICRC PRCS medical evacuation ambulance",
+      "Gaza November 25 2026 UNRWA UNICEF WFP reliefweb water aid",
+      "Gaza November 25 2026 latest developments Reuters Associated Press"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; same Gaza incident headlines, latest visible items concern West Bank."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible again; Gaza category contains previously reported incidents and older evacuation reports."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports",
+        "result": "Featured situation report remains #239."
+      },
+      {
+        "url": "https://www.jpost.com/israel-news/article-916039",
+        "result": "November 25 article recaps UK government announcement on Monday November 23 about second cohort of evacuated Gaza children; no newly dated evacuation or count; hospital figures from May."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "url": "https://www.un.org/sg/en/content/noon-briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Al-Shati family incident, Al-Karama casualty discrepancy, Khan Younis injuries, Halawa tent incident, detention, shelter and meningitis reports.",
+      "UK evacuation article is recycled reporting of Monday announcement; older WHO statistics not current capacity updates.",
+      "General EU and US senator aid appeals predate window and lack new implemented changes; West Bank-only reports; stale search results."
+    ],
+    "limitations": [
+      "Ten authenticated same-day heartbeat files read and compared; no primary production inventory checked.",
+      "Twelve targeted searches submitted in two batches; returned results sparse and not individually attributable to all queries. No claim of exhaustive coverage.",
+      "Completion timestamp denotes verified research cutoff before persistence; execution began shortly before nominal scheduled time."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

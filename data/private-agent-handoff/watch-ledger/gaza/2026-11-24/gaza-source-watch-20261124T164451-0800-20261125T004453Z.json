@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T164451-0800-20261125T004453Z",
+  "scheduled_for": "2026-11-24T16:44:51-08:00",
+  "started_at": "2026-11-24T16:44:53-08:00",
+  "completed_at": "2026-11-25T00:45:37.144Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T23:46:03.167Z",
+    "end": "2026-11-25T00:45:37.144Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T154451-0800-20261124T234455Z.json",
+    "basis": "Authenticated predecessor completion to current review cutoff; discovery window, not event time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage and domain search; latest humanitarian situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Emergency page and domain search; no new dated Gaza release verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 24 2026 latest casualties displacement demolitions WAFA Reuters AP",
+      "Gaza November 24 2026 Al Jazeera live latest humanitarian hospital aid",
+      "Gaza November 24 2026 WHO EMRO meningitis medical evacuation hospital ambulance fuel",
+      "Gaza November 24 2026 UNICEF UNRWA WFP food water shelter crossings",
+      "Gaza November 24 2026 UN briefing humanitarian access Gaza",
+      "Gaza November 24 2026 ceasefire negotiations hostages detainees crossings latest Reuters AP Anadolu",
+      "site:wafa.ps غزة 25/11/2026 غزة قصف شهداء مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026 November 24 latest",
+      "site:aa.com.tr Gaza November 24 25 2026 latest Gaza aid",
+      "site:aljazeera.com Gaza November 25 2026 November 24 Gaza latest",
+      "Gaza November 24 2026 Red Cross IFRC Tommaso Della Longa flood relief November 24",
+      "Gaza November 25 2026 Gaza latest hospital crossing humanitarian news"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; Gaza section latest demolition article at 23:30 local already logged; no newer qualifying report visible."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; prior Nuseirat casualty and shelter response, latest other headlines outside Gaza."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Accessible; previously reviewed EU aid appeal and WHO meningitis story."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177259",
+        "reason": "Earlier November 24 casualty report; already reviewed."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Previously logged casualties and outbreak, no new detail."
+      },
+      {
+        "url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/24/chuvas-inundam-barracas-em-gaza-e-cruz-vermelha-fala-em-desastre-humano.ghtm",
+        "reason": "Previously reviewed in 06:44 heartbeat; article attributes November 23 remarks to WAFA; no distinct operational change."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-airstrike-kills-least-three-palestinians-southern-gaza-medics-say-2026-11-24/",
+        "reason": "Same previously reviewed strike and earlier casualty reports."
+      },
+      {
+        "url": "https://english.ahram.org.eg/NewsContent/58/1262/583244/War-on-Gaza/War-on-Gaza/Israeli-strikes-kill-at-least--Palestinians-in-Gaz.aspx",
+        "reason": "AP republished earlier incidents including November 23 UNRWA employee death; no new separate incident verified."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "reason": "Prior demolition, evacuation, meningitis and casualty items repeat; older videos and lead poisoning reporting not new."
+      },
+      {
+        "url": "https://www.un.org/unispal/document/winter-hits-gaza-hard-as-food-and-shelter-aid-runs-short-iom-and-wfp-warn/",
+        "reason": "November 17 statement predates interval."
+      }
+    ],
+    "limitations": [
+      "Ten distinct authenticated same-day predecessor heartbeat files reviewed, including prior exclusions for IFRC and lead poisoning. Production inventory not inspected.",
+      "Search indexing sparse; no new qualifying development verified, not proof no events occurred."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

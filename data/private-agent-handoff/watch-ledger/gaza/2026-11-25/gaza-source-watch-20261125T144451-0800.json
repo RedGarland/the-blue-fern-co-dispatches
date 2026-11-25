@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T144451-0800",
+  "scheduled_for": "2026-11-25T14:44:51-08:00",
+  "started_at": "2026-11-25T14:49:32-08:00",
+  "completed_at": "2026-11-25T14:50:08-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T13:46:12-08:00",
+    "end": "2026-11-25T14:50:08-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T134451-0800.json",
+    "basis": "Authenticated preceding research cutoff to current verified local clock; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20; no new report."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza operational update on emergency overview."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest civilian casualties displacement WAFA Gaza",
+      "Gaza November 25 2026 humanitarian aid crossings displacement water food UN UNICEF UNRWA",
+      "Gaza November 25 2026 hospital ambulance fuel medical evacuation meningitis PRCS",
+      "Gaza November 25 2026 ceasefire negotiations hostages prisoners Reuters AP AFP",
+      "Gaza November 25 2026 latest Al Jazeera Middle East Eye Anadolu",
+      "غزة 25 نوفمبر 2026 شهداء إصابات مستشفيات معابر وفا",
+      "Gaza November 25 2026 latest Reuters AP Gaza ceasefire civilian casualties after Tuffah",
+      "Gaza November 25 2026 storm tents 1.76 million media office Anadolu displacement",
+      "Gaza November 25 2026 MSF ICRC PRCS hospitals medical evacuation",
+      "Gaza November 25 2026 UNRWA UNICEF WFP reliefweb water shelter crossings",
+      "Gaza November 25 2026 UN humanitarian briefing European commissioner aid access",
+      "غزة 25 نوفمبر 2026 آخر الأخبار إصابات قصف مساعدات"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "No later Gaza incident than previously logged Tuffah report."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic index and Halawa/Khan Younis article checked; prior incidents repeated."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Latest highlighted report published November 19; not new."
+      },
+      {
+        "url": "https://audiovisual.ec.europa.eu/en/media/video/I-298554",
+        "result": "November 25 Brussels midday briefing confirms existing shelter import and access restrictions; no newly implemented change, predates window."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+        "result": "November 25 report of November 24 storm warnings, not a new observed impact or operational change in window; population estimate attributed to Gaza media office and not independently verified."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "JavaScript robot verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Tuffah, Al-Shati, Al-Karama, Halawa and Khan Younis incidents previously logged; no duplicate counts.",
+      "EU existing access constraints and earlier storm warnings; no new observed impact or implemented change.",
+      "Stale humanitarian reports and West Bank-only reporting."
+    ],
+    "limitations": [
+      "Ten authenticated same-day heartbeat records reviewed; production inventory not checked.",
+      "Search indexes returned sparse and older material. No claim of exhaustive coverage.",
+      "Completed_at is the verified research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T154451-0800",
+  "scheduled_for": "2026-11-25T15:44:51-08:00",
+  "started_at": "2026-11-25T15:48:01-08:00",
+  "completed_at": "2026-11-25T15:48:41-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T14:50:08-08:00",
+    "end": "2026-11-25T15:48:41-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T144451-0800.json",
+    "basis": "Authenticated preceding research cutoff to verified local clock before persistence; discovery window, not event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-aj-municipalities-flood-risk-capacity-assessment",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/25/winter-rains-threaten-1000-gaza-shelter-sites-councils-warn",
+      "title": "Winter rains threaten 1,000 Gaza shelter sites, councils warn",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": "2026-11-25",
+      "event_timestamp": null,
+      "location": "Gaza Strip; al-Mughraqa and al-Zahra, central Gaza",
+      "affected_population_system": "The Union of Gaza Strip Municipalities, following a Wednesday meeting, estimated about 1,000 displacement sites at risk of flooding, approximately 200,000 tents requiring replacement, and over 2,000 damaged buildings at risk of collapse. Damaged drainage and sewers and insufficient pumps constrain municipal response. The union requested pumps, backup generators, fuel and emergency repair materials. These are attributed risk and capacity estimates, not newly observed flood damage.",
+      "exact_supporting_passage": "about 200,000 tents need replacing, and more than 2,000 damaged buildings are at risk of collapse",
+      "source_type": "Established news outlet reporting a named municipal union assessment",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T14:50:08-08:00",
+          "2026-11-25T15:48:41-08:00"
+        ],
+        "method": "Bounded date-targeted search and full Al Jazeera article; compared against all 14 authenticated same-day ledger files and prior OCHA situation report.",
+        "related_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "novelty": "Distinct newly discovered municipal assessment dated November 25 with quantified site/building exposure and response-capacity constraints, not the November 24 general storm warning or the previously logged household testimony. Same-day ledger contains no matching assessment.",
+        "caveat": "Exact publication hour and independent verification of municipal figures unavailable. Cannot establish article first appeared during the hour; newly discovered in this window. Do not count projected exposure as actual damage, or sum risk figures. Earlier storm damage and EU access appeal are not separately admitted."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report November 18, published November 20; no new update."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza update; latest listed speech November 17."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties strike Tuffah WAFA November 26",
+      "Gaza November 25 2026 aid access crossings food water fuel shelter displacement UN UNICEF UNRWA",
+      "Gaza November 25 2026 hospital ambulance medical evacuation meningitis MSF PRCS ICRC",
+      "Gaza November 25 2026 ceasefire negotiations hostages prisoners Reuters AP AFP",
+      "غزة 25 26 نوفمبر 2026 شهداء إصابات مستشفيات معابر وفا",
+      "Gaza November 25 2026 latest Al Jazeera Anadolu Middle East Eye",
+      "Gaza after:2026-11-25 before:2026-11-27 latest Gaza casualties aid ceasefire",
+      "Gaza November 25 2026 site:un.org OR site:unrwa.org OR site:reliefweb.int humanitarian",
+      "Gaza November 25 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:wfp.org",
+      "Gaza November 25 2026 site:reuters.com OR site:apnews.com OR site:aljazeera.com latest",
+      "غزة 26 نوفمبر 2026 وفا قصف إصابات",
+      "Gaza November 25 2026 flooding shelter infrastructure crossings aid new"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "No later Gaza incident than previously logged Tuffah."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; latest daily roundup and prior casualty reports, no new distinct incident."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/25/winter-rains-threaten-1000-gaza-shelter-sites-councils-warn",
+        "result": "Newly discovered municipal assessment admitted as follow-up."
+      },
+      {
+        "url": "https://www.aljazeera.com/features/2026/11/22/children-in-besieged-gaza-struggle-to-find-life-saving-insulin-for-diabetes",
+        "result": "November 22; excluded as outside window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "JavaScript robot verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Earlier Al-Shati, Al-Karama, Halawa, Khan Younis and Tuffah casualty reports; no duplicate counts.",
+      "November 24 storm warning and earlier flood losses, existing EU access restrictions and older humanitarian reports.",
+      "West Bank-only reports and stale insulin feature."
+    ],
+    "limitations": [
+      "14 authenticated same-day heartbeat files reviewed; production inventory not checked.",
+      "Search indexes returned substantial stale material; no claim of exhaustive coverage.",
+      "Exact Al Jazeera publication hour unavailable; discovery not publication window.",
+      "Completed_at is verified research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

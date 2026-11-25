@@ -1,0 +1,150 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T044451-0800-20261125T123955Z",
+  "scheduled_for": "2026-11-25T04:44:51-08:00",
+  "started_at": "2026-11-25T04:39:55-08:00",
+  "completed_at": "2026-11-25T04:40:32-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T03:47:16-08:00",
+    "end": "2026-11-25T04:40:32-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T034451-0800-20261125T114639Z.json",
+    "basis": "Authenticated prior completion to current research cutoff. Includes a narrowly overlapping publication newly discovered this run."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-wafa-halawa-displacement-tent-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177313",
+      "title": "One Palestinian killed in Israeli drone strike on displacement tent in northern Gaza",
+      "publisher": "WAFA Palestinian News and Information Agency",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": "2026-11-25T13:46:00+02:00",
+      "event_date": "2026-11-25",
+      "event_timestamp": null,
+      "location": "Halawa displacement camp, Jabalia al-Balad, northern Gaza Strip",
+      "affected_population_system": "One Palestinian reportedly killed in a strike on a displacement tent. Identity and civilian status not independently established; the reported location is a civilian shelter site.",
+      "exact_supporting_passage": "A Palestinian was killed on Wednesday when an Israeli drone struck a tent in the Halawa displacement camp in Jabalia al-Balad",
+      "source_type": "Established Palestinian news agency",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T03:47:16-08:00",
+          "2026-11-25T04:40:32-08:00"
+        ],
+        "method": "Targeted English WAFA search and direct article read, confirmed on English WAFA front page.",
+        "novelty": "Distinct location and incident from previously recorded Al-Shati, Al-Karama and Khan Younis reports; absent from five authenticated preceding heartbeat files. Source publication time converts to 03:46 PST, about one minute before prior research cutoff; newly discovered in this run, admitted as a supplementary recall rather than a strictly later publication.",
+        "corroborating_source_url": null,
+        "caveat": "Single source; no independently verified identity or event time. Publication offset inferred from local Palestine time. Article repeats Khan Younis injuries and reports an aggregate fatality figure that may overlap earlier incidents; neither is treated as new or summed."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest humanitarian situation report dated November 18, published November 20; no newer report surfaced."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "400 timeout."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview reachable; targeted WHO search did not identify a fresh operational release."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties shelling military civilian impact WAFA",
+      "Gaza November 25 2026 aid crossings water food displacement flooding UNRWA UNICEF WFP",
+      "Gaza November 25 2026 hospital ambulance medical evacuation fuel PRCS MSF",
+      "Gaza November 25 2026 ceasefire negotiation hostages detention Reuters AP",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026",
+      "site:aa.com.tr Gaza November 25 2026 Jabalia displacement camp latest",
+      "site:aljazeera.com Gaza November 25 2026 latest attacks",
+      "Gaza November 25 2026 humanitarian site:un.org OR site:reliefweb.int",
+      "Gaza November 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 25 2026 flooding tents infrastructure demolition water",
+      "Gaza November 25 2026 Rafah crossing aid civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Earlier shelter testimony and other headlines; no additional new lead."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Newly discovered Halawa camp casualty report confirmed."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously logged detention and Al-Shati reports."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no newly verified operational lead."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177305",
+        "reason": "Al-Karama and Khan Younis already logged."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177301",
+        "reason": "Al-Shati and Khan Younis already logged."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177299",
+        "reason": "Previously reviewed senators' letter; no implemented aid change."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/25/sentences-served-but-gaza-prisoners-remain-behind-israeli-bars",
+        "reason": "Recovered in prior heartbeat."
+      }
+    ],
+    "limitations": [
+      "Five authenticated preceding heartbeat files reviewed; production inventory not checked.",
+      "Many search results were older; direct article verification recovered one qualifying missed report.",
+      "Publication narrowly predates previous cutoff; no claim it occurred after previous check.",
+      "Completion timestamp denotes research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

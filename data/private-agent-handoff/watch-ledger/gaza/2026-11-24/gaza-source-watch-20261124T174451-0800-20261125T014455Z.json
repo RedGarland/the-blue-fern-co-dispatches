@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T174451-0800-20261125T014455Z",
+  "scheduled_for": "2026-11-24T17:44:51-08:00",
+  "started_at": "2026-11-24T17:44:55-08:00",
+  "completed_at": "2026-11-25T01:45:51.395Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-25T00:45:37.144Z",
+    "end": "2026-11-25T01:45:51.395Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T164451-0800-20261125T004453Z.json",
+    "basis": "Authenticated predecessor completion through current review cutoff; discovery interval, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage and domain search: latest humanitarian situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Emergency page and domain search; latest listed DG briefing November 17; no new dated Gaza release verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties displacement strikes Gaza November 24 evening",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026 November 24 latest",
+      "Gaza November 24 25 2026 hospital ambulance fuel medical evacuation PRCS WHO",
+      "Gaza November 24 25 2026 humanitarian food water shelter aid crossings UNICEF UNRWA WFP",
+      "Gaza November 24 25 2026 ceasefire negotiations hostages detention Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 November 24 latest",
+      "site:aljazeera.com Gaza November 25 2026 November 24 latest",
+      "Gaza November 24 25 2026 site:un.org OR site:reliefweb.int humanitarian briefing",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 24 25 2026 infrastructure demolition flood water aid latest",
+      "Gaza November 24 25 2026 Rafah crossing military operation civilian impact latest"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Gaza section remains on November 24 demolition, casualty, medical evacuation and meningitis coverage; no distinct newer lead."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Prior Nuseirat casualty and shelter response; later headlines outside Gaza."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Previously logged crossing compliance, human shielding investigations, meningitis and EU appeal; newest headlines elsewhere."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "November 24 strike and meningitis coverage repeats; other healthcare articles dated November 23 or earlier."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Situation report 239 still featured."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated operational lead established."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated operational lead established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated operational lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/-gaza-authorities-record-6-405-israeli-violations-of-ceasefire-in-410-days/4135885",
+        "reason": "Already logged at 05:44, same cumulative crossing and aid compliance assessment."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "reason": "Latest demolition article already logged at 14:44; casualty, evacuation and outbreak reports repeat. Older photo/video items do not establish distinct new events."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "reason": "November 21 report outside interval; no newly verified development."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "reason": "Prior Abu Nahl strike, outbreak, UNRWA staff death and November 23 hearing aid report; older insulin feature outside interval."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "reason": "Published November 20; previously available situation report, not a new release."
+      }
+    ],
+    "limitations": [
+      "17 distinct authenticated same-day prior heartbeats reviewed, including immediate predecessor and early crossing compliance and medical evacuation findings. Production inventory not inspected.",
+      "Targeted searches returned sparse and stale results despite current-date queries; direct source checks supplemented coverage. No new qualifying development verified; not proof none occurred."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

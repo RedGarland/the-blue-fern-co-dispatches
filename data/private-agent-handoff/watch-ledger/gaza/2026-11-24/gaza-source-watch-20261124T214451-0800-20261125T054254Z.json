@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T214451-0800-20261125T054254Z",
+  "scheduled_for": "2026-11-24T21:44:51-08:00",
+  "started_at": "2026-11-24T21:42:54-08:00",
+  "completed_at": "2026-11-25T05:43:49Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-25T04:46:26Z",
+    "end": "2026-11-25T05:43:49Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T204451-0800-20261125T044530Z.json",
+    "basis": "Authenticated predecessor completion to current review cutoff; discovery interval, not event or publication time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated November 18, published November 20; no new release."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview and news listings accessible; no new dated Gaza operational release identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza latest November 25 2026 Wednesday casualties displacement attacks November 24",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026",
+      "Gaza November 25 2026 hospitals ambulance medical evacuations meningitis fuel PRCS",
+      "Gaza November 25 2026 water food shelter rain aid UNICEF UNRWA WFP",
+      "Gaza November 25 2026 ceasefire crossings detention hostages negotiations Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 humanitarian site:un.org OR site:reliefweb.int",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 25 2026 flooding tents infrastructure demolition water",
+      "Gaza November 25 2026 Rafah crossing aid military civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://wafa.ps/",
+        "result": "Arabic index recovered via alternate hostname; no new Gaza operational report after prior demolition report."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Accessible; casualty, shelter, meningitis and evacuation headlines previously covered."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report 239 still featured."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; no new dated lead established."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated lead established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "DisabledError on highlights index; prior restriction persists",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA Arabic initial hostname",
+        "error": "Timeout; alternate hostname recovered full index",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.dawn.com/news/2046857/israeli-strikes-in-gaza-kill-security-official-six-others",
+        "reason": "AFP republication dated November 25 describes November 24 casualties already covered, no clearly distinct new development."
+      },
+      {
+        "url": "https://saudigazette.com.sa/article/666509/world/storm-threatens-lives-of-176-million-palestinians-living-in-tents-gaza-authorities-warn",
+        "reason": "Same storm warning as previous Anadolu finding; no verified new flooding."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Previously recorded casualty and meningitis developments."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "reason": "Older November 21 report."
+      },
+      {
+        "url": "https://www.wafa.ps/video/2026/11/24/%D9%86%D8%A7%D8%B2%D8%AD%D9%88%D9%86-%D9%8A%D8%B5%D8%B7%D9%81%D9%88%D9%86-%D9%84%D9%84%D8%AD%D8%B5%D9%88%D9%84-%D8%B9%D9%84%D9%89-%D9%85%D9%8A%D8%A7%D9%87-%D9%81%D9%8A-%D8%AF%D9%8A%D8%B1-%D8%A7%D9%84%D8%A8%D9%84%D8%AD-13073",
+        "reason": "November 24 earlier video caption documents queues at a water distribution point but establishes no change in water access or capacity."
+      }
+    ],
+    "limitations": [
+      "Authenticated directory listing shows 21 prior same-day files. Four selected prior heartbeat contents successfully reviewed (including immediately preceding run and three earlier positive findings); attempted full-day batch exceeded connector call cap and is not counted as successful. Predecessor records comprehensive duplicate review. Production inventory not inspected.",
+      "Persistent official-source restrictions and sparse fresh indexing; no new qualifying development verified."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

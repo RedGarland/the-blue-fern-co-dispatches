@@ -1,0 +1,155 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T034451-0800-20261125T114639Z",
+  "scheduled_for": "2026-11-25T03:44:51-08:00",
+  "started_at": "2026-11-25T03:46:39-08:00",
+  "completed_at": "2026-11-25T03:47:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T01:46:03-08:00",
+    "end": "2026-11-25T03:47:16-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T014451-0800-20261125T094517Z.json",
+    "basis": "Latest authenticated durable completion through current research cutoff, deliberately covering the missing 02:44 hourly run. Prior run reported a provisional detention article but did not verify persistence. Discovery window, not event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-aj-post-sentence-detention-48",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/25/sentences-served-but-gaza-prisoners-remain-behind-israeli-bars",
+      "title": "Sentences served, but Gaza prisoners remain behind Israeli bars",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip; Israeli detention facilities",
+      "affected_population_system": "Gaza prisoners and their families. The article attributes a count of 48 prisoners held after the end of their criminal sentences to the Palestinian Commission of Detainees and Ex-Detainees Affairs, and documents two named families' experiences. Continued detention is reported, not a new arrest or release during the watch interval.",
+      "exact_supporting_passage": "Fadi is among 48 prisoners from Gaza who remain in Israeli custody after completing their sentences, according to the Palestinian Commission of Detainees and Ex-Detainees Affairs.",
+      "source_type": "Established news outlet; firsthand family interviews and named official commission attribution",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T01:46:03-08:00",
+          "2026-11-25T03:47:16-08:00"
+        ],
+        "method": "Date-targeted search returned AMP excerpt; direct canonical and AMP opens failed initially; related article link from accessible Al Jazeera report successfully recovered full canonical story. Six preceding authenticated heartbeat files reviewed.",
+        "novelty": "Carry-forward recovery of prior hourly run's provisional unpersisted lead; newly verified full report and specific commission-attributed count. No match among six readback heartbeats. Not a second independent report of a new detention event.",
+        "corroborating_source_url": null,
+        "caveat": "Exact publication hour and date of commission's count unknown; commission statement and individual custody records not independently retrieved. Prior run already alerted user about this article; no repeat notification recommended."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest humanitarian situation report dated November 18, published November 20; no newer report surfaced."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview reachable; initial targeted WHO search did not identify a new operational update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 today WAFA casualties shelling Gaza ministry health",
+      "Gaza November 25 2026 aid crossings water food displacement flood UNRWA UNICEF WFP",
+      "Gaza November 25 2026 hospital ambulance evacuation fuel MSF PRCS ICRC",
+      "Gaza November 25 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 25 2026 Al Jazeera latest live Gaza attacks",
+      "Gaza November 25 2026 Anadolu Gaza humanitarian strikes",
+      "site:wafa.ps غزة 25-11-2026 اليوم قصف إصابة مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026 today Gaza",
+      "site:un.org Gaza November 25 2026 humanitarian briefing",
+      "site:unrwa.org Gaza November 25 2026 situation report",
+      "site:aljazeera.com/news/2026/11/25 Gaza prisoners detention",
+      "Gaza November 25 2026 latest rain hospital Gaza health Arabic غزة الأربعاء 25 نوفمبر 2026"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Reviewed current headlines and EU commissioner statement."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Reviewed current headlines; already logged casualty incidents and new EU assessment without concrete change."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Detention lead recovered; other Gaza reports were older or duplicates."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Al Jazeera detention article direct/AMP",
+        "error": "Direct access failed; canonical story recovered via related link.",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177301",
+        "reason": "Already logged Al-Shati and Khan Younis casualties."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/25/israeli-strike-kills-hamas-official-his-wife-and-children",
+        "reason": "Same Al-Shati incident; official's identity additional context, not a new civilian impact."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177310",
+        "reason": "Newly reported EU commissioner assessment of existing aid barriers; no new concrete access change or metric."
+      },
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/24/gaza-meningitis-epidemic-alert",
+        "reason": "November 24 reporting of previously reported epidemic alert, no newer distinct development established."
+      },
+      {
+        "url": "https://mcigroup.my/world-news/gaza-authorities-record-6405-israeli-ceasefire-violations-in-410-days/",
+        "reason": "Timestamp corresponds to November 24 16:56 PST, outside effective window; cumulative figure, no new operational change."
+      }
+    ],
+    "limitations": [
+      "Six authenticated prior heartbeats reviewed, not production inventory.",
+      "Previous 02:44 run absent from authenticated directory listing; current heartbeat covers the gap and preserves previously provisional lead without fabricating a missing heartbeat.",
+      "No independently verified new development after the prior hourly check. Persistent access limitations remain.",
+      "Completion timestamp denotes research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T054451-0800-20261125T134450Z",
+  "scheduled_for": "2026-11-25T05:44:51-08:00",
+  "started_at": "2026-11-25T05:44:50-08:00",
+  "completed_at": "2026-11-25T05:46:05-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T04:40:32-08:00",
+    "end": "2026-11-25T05:46:05-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T044451-0800-20261125T123955Z.json",
+    "basis": "Previous authenticated research cutoff to current research cutoff before persistence."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-wafa-meningitis-nasser-capacity-patient-discharge",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/25/%D8%A7%D9%84%D8%AA%D9%87%D8%A7%D8%A8-%D8%A7%D9%84%D8%B3%D8%AD%D8%A7%D9%8A%D8%A7-%D9%8A%D9%87%D8%AF%D8%AF-%D8%A3%D8%B7%D9%81%D8%A7%D9%84-%D8%BA%D8%B2%D8%A9-15-%D9%88%D9%81%D8%A7%D8%A9-%D9%88272",
+      "title": "التهاب السحايا يهدد أطفال غزة.. 15 وفاة و272 إصابة خلال تشرين الأول",
+      "publisher": "WAFA Palestinian News and Information Agency",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": "2026-11-25T15:16:00+02:00",
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Nasser Medical Complex, Khan Younis; Al-Rantisi Children's Hospital, Gaza City; Gaza Strip",
+      "affected_population_system": "New firsthand reporting documents a displaced mother saying she was instructed to leave Nasser Medical Complex with her child with meningitis on the third day because more severe cases needed care and infection risk was high. Medical Relief director Dr Mohammed Abu Afash reports severe shortages of laboratory testing supplies across medical points. The report also states Nasser received over 500 cases (period not specified) and Al-Rantisi recorded about 145 cases, 15 bacterial, during September 25–October 25. These are facility-level reported figures, not new incidence this hour; overlap with overall surveillance counts is unknown.",
+      "exact_supporting_passage": "وفي اليوم الثالث أبلغتني إدارة المستشفى بضرورة مغادرتي، نظرا لوجود حالات أكثر خطورة من حالة طفلي",
+      "source_type": "Established news agency; named firsthand patient-family interviews and named medical relief official",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T04:40:32-08:00",
+          "2026-11-25T05:46:05-08:00"
+        ],
+        "method": "Direct Arabic WAFA home page health/report section and full dated article, compared with the November 24 WAFA surveillance report and Al Jazeera report; 13 prior authenticated heartbeat files read (five recent, eight earlier).",
+        "related_finding_id": "gaza-20261124-wafa-meningitis-surveillance-update",
+        "corroborating_source_url": null,
+        "novelty": "Publication at 15:16 local (05:16 PST) is within the observation window. Specific bedside account of hospital capacity-driven discharge and facility counts add to the earlier surveillance figures and alert, which are not counted again.",
+        "caveat": "Mother's testimony and facility counts not independently corroborated; no specific discharge date, clinical disposition assessment or period for Nasser total verified. Publication offset inferred. Do not sum facility figures or treat earlier 272 cases, 15 deaths, 100 November bacterial cases or genotyping limitations as new."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated November 18, published November 20; no newer report surfaced."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Initial targeted search and direct overview; no new operational release identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/palestine/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "Direct open inaccessible; prior persistent limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties Jabalia Gaza health ministry WAFA",
+      "Gaza November 25 2026 aid access water food shelter crossings humanitarian UN",
+      "Gaza November 25 2026 hospital ambulance fuel medical evacuation WHO PRCS MSF",
+      "Gaza November 25 2026 ceasefire negotiations hostages detention Reuters AP",
+      "site:wafa.ps Gaza November 25 2026 killed wounded Gaza",
+      "site:un.org Gaza November 25 2026 humanitarian briefing",
+      "site:english.wafa.ps/Pages/Details Gaza \"25/November/2026\"",
+      "site:wafa.ps غزة \"25/11/2026\" قصف إصابة مساعدات",
+      "site:aa.com.tr Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 25 2026 site:unrwa.org OR site:unicef.org OR site:wfp.org OR site:icrc.org",
+      "Gaza November 25 2026 crossings infrastructure flooding displacement aid latest"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "New meningitis feature and older/duplicate items."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Previously logged attacks, no distinct later Gaza casualty headline."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously logged detention and Al-Shati."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no new operational release verified."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Inaccessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177313",
+        "reason": "Prior Halawa finding; Arabic video identifies victim but no distinct new incident."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177305",
+        "reason": "Prior Al-Karama and Khan Younis findings."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177301",
+        "reason": "Prior Al-Shati finding."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177310",
+        "reason": "Official statement of existing access constraints, no implemented change; predates window."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Earlier casualty and surveillance reporting, used as baseline."
+      }
+    ],
+    "limitations": [
+      "13 authenticated heartbeat files successfully reviewed; attempted broader historical batch exceeded per-call limit, narrowed to relevant prior records. Production inventory not checked.",
+      "Search results frequently older; direct WAFA index recovered fresh facility-level evidence.",
+      "Completion timestamp denotes research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

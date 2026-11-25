@@ -1,0 +1,116 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T114451-0800",
+  "scheduled_for": "2026-11-25T11:44:51-08:00",
+  "started_at": "2026-11-25T11:47:45-08:00",
+  "completed_at": "2026-11-25T11:48:29-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T10:42:44-08:00",
+    "end": "2026-11-25T11:48:29-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T104451-0800.json",
+    "basis": "Authenticated previous research cutoff to verified local clock immediately before persistence; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage latest humanitarian report dated November 18, posted November 20; targeted official search found no newer dated Gaza operational report."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global overview accessible; official targeted search returned older material, no current dated operational update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties strikes Reuters AP WAFA",
+      "Gaza November 25 2026 displacement shelter aid food water crossings UNRWA UNICEF WFP",
+      "Gaza November 25 2026 hospital ambulance fuel medical evacuation capacity",
+      "Gaza November 25 2026 ceasefire negotiations hostages prisoners",
+      "site:english.wafa.ps Gaza November 25 2026 latest",
+      "site:wafa.ps غزة 25/11/2026 قصف إصابة مساعدات مستشفى",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "site:un.org Gaza November 25 2026 humanitarian briefing",
+      "Gaza November 25 2026 MSF ICRC PRCS medical evacuation ambulance",
+      "Gaza November 25 2026 Anadolu Middle East Eye humanitarian",
+      "Gaza November 25 2026 UNRWA UNICEF WFP reliefweb water aid",
+      "Gaza November 25 2026 latest developments Reuters Associated Press"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest listed headline 20:13 Palestine time, West Bank; Gaza incident headlines unchanged."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; current Gaza casualty and prisoner articles already logged."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports",
+        "result": "Featured report remains #239."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177310",
+        "result": "EU commissioner statement published 12:51 Palestine time; general aid access warning without new measured operational change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177303",
+        "result": "Earlier Amnesty report on reproductive health, already noted in earlier authenticated heartbeat coverage."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Arabic WAFA",
+        "url": "https://www.wafa.ps/",
+        "error": "400 timeout on repeated attempts including bare domain; intermittent restriction has recurred after prior recovery. English index accessible and Arabic targeted query attempted.",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Al-Karama casualty count discrepancy, Halawa displacement camp casualty, Al-Shati family incident, Khan Younis injuries, detention, shelter and meningitis reports.",
+      "Older Amnesty reproductive-health report noted in 00:44 heartbeat; EU commissioner warning predates window and gives no new concrete operational measure.",
+      "West Bank-only stories and stale humanitarian reports."
+    ],
+    "limitations": [
+      "Ten authenticated same-day prior heartbeat files reviewed. No primary production inventory check.",
+      "Twelve targeted searches submitted in one batch; returned results were very sparse and not individually attributable to each query. No claim of exhaustive coverage.",
+      "Arabic WAFA intermittently unavailable; English WAFA and other accessible sources provide partial coverage.",
+      "Completion timestamp is the verified research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

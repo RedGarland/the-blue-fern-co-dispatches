@@ -1,0 +1,159 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T014451-0800-20261125T094517Z",
+  "scheduled_for": "2026-11-25T01:44:51-08:00",
+  "started_at": "2026-11-25T01:45:17-08:00",
+  "completed_at": "2026-11-25T01:46:03-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T00:42:48-08:00",
+    "end": "2026-11-25T01:46:03-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T004451-0800-20261125T084209Z.json",
+    "basis": "Authenticated predecessor completion to current research cutoff; discovery window, not event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-wafa-almawasi-unmet-shelter-aid-household-testimony",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/25/%D9%86%D8%A7%D8%B2%D8%AD%D9%88-%D9%85%D9%88%D8%A7%D8%B5%D9%8A-%D8%AE%D8%A7%D9%86-%D9%8A%D9%88%D9%86%D8%B3-%D9%81%D9%8A-%D9%85%D9%88%D8%A7%D8%AC%D9%87%D8%A9-%D9%85%D9%86%D8%AE%D9%81%D8%B6-%D8%AC%D9%88%D9%8A",
+      "title": "نازحو مواصي خان يونس في مواجهة منخفض جوي جديد بلا مقومات إيواء",
+      "publisher": "WAFA Palestinian News and Information Agency",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": "2026-11-25T11:14:00+02:00",
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Al-Mawasi, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Displaced households and shelter aid delivery. New on-the-ground reporting by Tariq al-Astal documents four named displaced residents describing unresolved damage from earlier rain and unmet shelter needs. One reports receiving no shelter aid despite being listed as affected; another reports loss of stored food and uneven aid distribution; another says he borrowed money to replace a destroyed tent. This is localized evidence of outstanding aid gaps, not a confirmed new storm, new displacement count, or Gaza-wide aid assessment.",
+      "exact_supporting_passage": "لم يتلقَّ حتى الآن أي مساعدة أو تدخل من الجهات المعنية لتوفير مستلزمات الإيواء",
+      "source_type": "Established news agency, firsthand interviews with named displaced residents",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T00:42:48-08:00",
+          "2026-11-25T01:46:03-08:00"
+        ],
+        "method": "Direct Arabic WAFA front page and full report; publication timestamp 11:14 Gaza local, corresponding to 01:14 PST, within window.",
+        "related_finding_id": "gaza-20261124-civil-defense-approaching-storm-shelter-risk",
+        "corroborating_source_url": null,
+        "novelty": "New site-specific testimony of persistent unmet shelter and food needs adds concrete household-level evidence beyond prior general storm warning; six authenticated preceding heartbeat files reviewed.",
+        "caveat": "Individual testimony not independently corroborated. No newly verified flood damage, casualty count, or overall change in aid volumes. Exact interview date and local publication offset not independently verified (offset inferred)."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest listing dated November 18, published November 20; no newer situation report found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global overview reachable; date-targeted WHO search yielded no fresh Gaza operational release."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties displacement military operations",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026",
+      "Gaza November 25 2026 hospital ambulance medical evacuation fuel meningitis PRCS",
+      "Gaza November 25 2026 water food aid shelter UNRWA UNICEF WFP",
+      "Gaza November 25 2026 ceasefire crossings detention hostages Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026",
+      "site:aljazeera.com Gaza November 25 2026",
+      "Gaza November 25 2026 humanitarian site:un.org OR site:reliefweb.int",
+      "Gaza November 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 25 2026 flooding tents infrastructure demolition water",
+      "Gaza November 25 2026 Rafah crossing aid military civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "New Al-Mawasi firsthand report recovered and read."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Previously logged casualty and Amnesty reports."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "No distinct new qualifying development established."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no fresh qualifying lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Anadolu Middle East landing page",
+        "error": "400 timeout; previously encountered; targeted search attempted",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177301",
+        "reason": "Previously recorded Al-Shati and Khan Younis casualty reports."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177299",
+        "reason": "Previously reviewed senators' letter, no implemented access change."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "reason": "Older November 21 reporting."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+        "reason": "Prior storm warning already logged; newly admitted evidence is distinct firsthand shelter aid testimony."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84-%D8%B9%D9%85%D9%84%D9%8A%D8%A9-%D9%8A%D9%86%D8%B3%D9%81-%D8%B4%D8%B1%D9%82%D9%8A-%D9%85%D8%AE%D9%8A%D9%85-%D8%A7%D9%84%D9%85%D8%BA%D8%A7%D8%B2%D9%8A-%D9%88%D9%8A%D8%B7%D9%84%D9%82",
+        "reason": "November 24 publication outside window; not a new lead."
+      }
+    ],
+    "limitations": [
+      "Six authenticated preceding heartbeat files reviewed; no production inventory verification.",
+      "Search indexing returned older items; direct WAFA navigation recovered new firsthand report.",
+      "Persistent source access limitations remain; completion timestamp is research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

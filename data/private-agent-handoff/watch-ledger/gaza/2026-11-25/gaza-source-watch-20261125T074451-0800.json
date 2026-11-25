@@ -1,0 +1,151 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T074451-0800",
+  "scheduled_for": "2026-11-25T07:44:51-08:00",
+  "started_at": "2026-11-25T07:45:39-08:00",
+  "completed_at": "2026-11-25T07:46:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T06:46:53-08:00",
+    "end": "2026-11-25T07:46:43-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T064451-0800-20261125T144608Z.json",
+    "basis": "Authenticated preceding research cutoff to current research cutoff; discovery rather than event window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-aj-alkarama-two-fatalities-reported-update",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/25/israeli-strike-kills-hamas-official-his-wife-and-children",
+      "title": "Israeli strike in Gaza kills senior Hamas official, his wife and children",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": "2026-11-25",
+      "event_timestamp": null,
+      "location": "Al-Karama neighbourhood, northern Gaza City",
+      "affected_population_system": "Al Jazeera reports two Palestinians killed in Al-Karama, whereas earlier WAFA and Reuters reports give one fatality. A possible upward revision, not an independently confirmed additional death or a separate incident. Civilian status not independently established.",
+      "exact_supporting_passage": "two Palestinians were killed in a drone attack on the al-Karama neighbourhood in Gaza City",
+      "source_type": "Established news outlet",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T06:46:53-08:00",
+          "2026-11-25T07:46:43-08:00"
+        ],
+        "method": "Date-targeted Al Jazeera search and current Palestine index; full article compared against earlier WAFA report and Reuters full article; seven authenticated prior heartbeats reviewed.",
+        "related_finding_id": "gaza-20261125-wafa-alkarama-casualties",
+        "corroborating_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-hamas-official-his-wife-children-2026-11-25/",
+        "novelty": "Newly discovered conflicting count of two versus the previously logged one; Reuters confirms the underlying incident but not the higher count. The Al Jazeera article is dated November 25, with no verified publication hour.",
+        "caveat": "Do not add counts, assert an extra verified death, or characterize this as a separate event. Exact timing and identities unresolved."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated Nov 18, published Nov 20; no newer dated report found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated operational report verified."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway, persistent limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest WAFA killed injured Gaza today after:2026-11-24",
+      "Gaza November 25 2026 Reuters AP crossings ceasefire hostages aid",
+      "Gaza November 25 2026 Al Jazeera latest hospital attacks aid",
+      "Gaza November 25 2026 UNICEF UNRWA WFP food water shelter aid",
+      "Gaza November 25 2026 MSF ICRC PRCS hospital ambulance evacuation fuel",
+      "Gaza November 25 2026 Anadolu Middle East Eye civilian casualties military",
+      "site:english.wafa.ps/Pages/Details Gaza \"25/November/2026\"",
+      "site:wafa.ps غزة \"25/11/2026\" قصف إصابة مساعدات",
+      "Gaza after:2026-11-24 before:2026-11-26 humanitarian Gaza hospital crossing water November 25 2026",
+      "Gaza after:2026-11-24 before:2026-11-26 ceasefire civilian aid Gaza latest November 25",
+      "site:un.org Gaza November 25 2026 humanitarian briefing",
+      "site:aa.com.tr/en Gaza November 25 2026 Gaza Palestinians"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Previously logged casualty, shelter, and meningitis stories; no distinct newer Gaza operational incident verified."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Previously logged casualty, Amnesty and EU stories; other items outside Gaza or not implemented changes."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Newly discovered expanded Al-Shati story includes conflicting Al-Karama count; detention and video already logged."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-hamas-official-his-wife-children-2026-11-25/",
+        "result": "Dated 09:05 UTC November 25, outside current discovery window by publication time. Corroborates Al-Shati and Al-Karama incidents; Israeli military confirms target was Mohammad Abuelouf, a senior Hamas security official; wife and two children also killed. This clarifies victim composition of previously logged four deaths, not a separate casualty event. Reuters gives one Al-Karama fatality."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Previously known report accessible, outside window."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible background page; no new dated update verified."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNRWA report index",
+        "error": "403",
+        "material_new_degradation": false,
+        "mitigation": "Specific report accessible; targeted search also performed."
+      }
+    ],
+    "exclusions": [
+      "Al-Shati four deaths, Halawa tent fatality, Khan Younis injuries, detention after sentences, maternal health report, Al-Mawasi shelter testimony and meningitis findings already logged; do not duplicate.",
+      "November 24 storm reporting and earlier IOM/WFP warning outside window; no newly verified flood event.",
+      "Older 2025 situation reports excluded; West Bank-only items excluded; EU and rights statements without new operational changes excluded."
+    ],
+    "limitations": [
+      "Seven authenticated prior heartbeat records reviewed, including latest predecessor; production inventory not checked.",
+      "Publication hour of new Al Jazeera article unknown; newly discovered report only, not proof of new event within hour.",
+      "Completion time is research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

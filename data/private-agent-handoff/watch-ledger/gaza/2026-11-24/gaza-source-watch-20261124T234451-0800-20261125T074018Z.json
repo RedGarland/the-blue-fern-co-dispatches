@@ -1,0 +1,166 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T234451-0800-20261125T074018Z",
+  "scheduled_for": "2026-11-24T23:44:51-08:00",
+  "started_at": "2026-11-24T23:40:18-08:00",
+  "completed_at": "2026-11-24T23:41:22-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-24T22:45:40-08:00",
+    "end": "2026-11-24T23:41:22-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T224451-0800-20261125T064444Z.json",
+    "basis": "Authenticated predecessor completion through current research cutoff; discovery window, not incident timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-amnesty-reproductive-maternal-health-research",
+      "canonical_source_url": "https://www.amnesty.org/en/documents/mde15/1636/2026/en/",
+      "title": "No conditions for life: Women, girls and the gendered dimensions of Israel’s genocide against Palestinians in Gaza",
+      "publisher": "Amnesty International",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "source_type": "Primary human rights research report and accompanying press release",
+      "classification": "new",
+      "location": "Gaza Strip",
+      "affected_population_system": "Women and girls; maternal and neonatal healthcare, reproductive healthcare and fertility services. New research documents overwhelmed maternity facilities, shortages affecting pregnancy and delivery care, and shutdown of all IVF services. Report draws on 228 interviews, medical records, verified imagery and other evidence. The study covers 7 October 2023 to 1 October 2026; this is a new publication of research, not a newly occurring clinical incident or a verified change in service capacity during this hour.",
+      "exact_supporting_passage": "Israel’s attacks and blockade have also shut down all IVF services in Gaza",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-24T22:45:40-08:00",
+          "2026-11-24T23:41:22-08:00"
+        ],
+        "method": "WAFA Arabic news index identified 25 November 09:07 local report; followed to Amnesty country research index, primary report landing page and accompanying detailed release.",
+        "supporting_passage_url": "https://www.amnesty.org/en/latest/news/2026/11/women-and-girls-bear-the-crushing-toll-of-israels-ongoing-genocide-in-gaza/",
+        "corroborating_source_url": "https://www.wafa.ps/news/2026/11/25/%D9%85%D9%86%D8%B8%D9%85%D8%A9-%D8%A7%D9%84%D8%B9%D9%81%D9%88-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9-%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84-%D8%AA%D8%AA%D8%AE%D8%B0-%D8%A5%D8%AC%D8%B1%D8%A7%D8%A1%D8%A7%D8%AA-%D8%AA%D8%AD%D8%AF",
+        "novelty": "Primary research release absent from five authenticated prior heartbeat files; WAFA reporting at 09:07 Palestine time (23:07 PST November 24) falls within discovery window. Primary release exact publication hour not stated.",
+        "caveat": "Confidence high for report publication and accurately attributed findings, not independent confirmation of every underlying claim. Report's legal conclusions are Amnesty's; it says it could not definitively conclude intent to prevent births. Primary report landing page and detailed release read; PDF not analyzed. Research period ends October 1; no claim of new hourly service closure. Production inventory not checked."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, published November 20; no fresh report identified."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Overview reachable; targeted WHO search yielded no fresh dated Gaza operational release."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest casualties displacement humanitarian aid",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026",
+      "Gaza November 25 2026 hospitals ambulance medical evacuation meningitis fuel PRCS",
+      "Gaza November 25 2026 water food shelter rain aid UNICEF UNRWA WFP",
+      "Gaza November 25 2026 ceasefire crossings detention hostages negotiations Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 humanitarian site:un.org OR site:reliefweb.int",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 25 2026 flooding tents infrastructure demolition water",
+      "Gaza November 25 2026 Rafah crossing aid military civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Fresh Amnesty coverage; Arabic Shati and Khan Younis reports already logged."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "English translation of earlier casualty report; not a new incident."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Shati duplicate; no fresh qualifying development identified."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Storm warning previously logged."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no new qualifying lead established."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Accessible; targeted searches returned no fresh operational lead."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible; no new dated operational lead established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated operational lead established."
+      },
+      {
+        "url": "https://www.amnesty.org/en/latest/news/2026/11/women-and-girls-bear-the-crushing-toll-of-israels-ongoing-genocide-in-gaza/",
+        "result": "New research verified from primary source."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177301",
+        "reason": "Shati and Khan Younis casualty incidents already logged in immediate predecessor; translation adds names but not distinct civilian-impact event."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177299",
+        "reason": "Previously reviewed senators' letter; no implemented access change."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+        "reason": "Previously logged storm warning."
+      }
+    ],
+    "limitations": [
+      "Five authenticated prior heartbeat files reviewed including immediate predecessor; no production inventory verification.",
+      "Search indexing frequently returned older items; direct source navigation recovered new research.",
+      "Official access failures unchanged."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

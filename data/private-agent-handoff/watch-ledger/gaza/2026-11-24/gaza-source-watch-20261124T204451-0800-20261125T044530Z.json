@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T204451-0800-20261125T044530Z",
+  "scheduled_for": "2026-11-24T20:44:51-08:00",
+  "started_at": "2026-11-24T20:45:30-08:00",
+  "completed_at": "2026-11-25T04:46:26Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-25T03:43:20Z",
+    "end": "2026-11-25T04:46:26Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T194451-0800-20261125T034147Z.json",
+    "basis": "Authenticated predecessor completion to current review cutoff; discovery interval, not event/publication time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated November 18, published November 20; no new Gaza release."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Emergency overview retrieved; no new dated operational release."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest overnight casualties displacement November 24",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 hospital ambulance fuel medical evacuation PRCS",
+      "Gaza November 24 25 2026 food water shelter aid UNICEF UNRWA WFP",
+      "Gaza November 24 25 2026 ceasefire negotiations hostages detention Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 humanitarian briefing site:un.org OR site:reliefweb.int",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 24 25 2026 infrastructure demolition flooding water aid",
+      "Gaza November 24 25 2026 Rafah crossing military operations civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic landing page accessible; Gaza news repeats previously logged casualties, medical evacuation, meningitis and demolitions."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Landing page timed out; individual English reports retrieved via search."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Landing page timed out; full prior storm warning article retrieved via search."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Situation report 239 still featured."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest Gaza release November 10."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Accessible, no new dated lead established."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible, no new dated lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA English landing page",
+        "error": "400 timeout; individual articles and Arabic index accessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Anadolu Middle East landing page",
+        "error": "400 timeout; full storm article accessible through search",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+        "reason": "Prior heartbeat records same Civil Defense storm warning."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177295",
+        "reason": "Previously logged shelter response."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177259",
+        "reason": "Previously reviewed casualty reporting."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Previously logged casualty and meningitis developments."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "reason": "Older November 21 reporting."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/24/%D8%A7%D9%84%D9%87%D9%86%D8%AF-%D8%AA%D9%82%D8%AF%D9%85-25-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%84%D9%84%D8%A3%D9%88%D9%86%D8%B1%D9%88%D8%A7-%D8%AF%D8%B9%D9%85%D8%A7",
+        "reason": "India's $2.5 million flexible regional UNRWA contribution is not specifically allocated to Gaza; no documented Gaza operational change; earlier November 24 publication."
+      }
+    ],
+    "limitations": [
+      "20 distinct same-day authenticated prior heartbeat files read successfully in batches; production inventory not inspected.",
+      "Sparse indexing and persistent source restrictions; no new qualifying finding established. Landing page timeouts mitigated by accessible articles and Arabic index."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

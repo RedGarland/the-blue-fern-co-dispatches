@@ -1,0 +1,77 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-25",
+  "generated_at": "2026-11-25T15:42:26.803087+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-25/",
+  "local_output_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25",
+  "local_dispatch_output_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\dispatches\\gaza\\editions\\2026-11-25",
+  "local_backup_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\tmp-backups-pages\\gaza\\2026-11-25",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 8,
+  "story_count": 4,
+  "source_adequacy_status": "daily_briefing",
+  "source_adequacy_label": "Daily briefing",
+  "publisher_count": 4,
+  "publishers": [
+    "Al Jazeera",
+    "BBC News",
+    "The Guardian",
+    "The Jerusalem Post"
+  ],
+  "source_adequacy_warnings": [],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25\\sources_manifest.json",
+  "curation_manifest_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25\\curation_manifest.json",
+  "free_public_artifacts": [
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25\\index.html",
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25\\edition_manifest.json",
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25\\sources_manifest.json",
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-25-001\\output\\site\\gaza\\editions\\2026-11-25\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 3 repeated/stale candidate sources via cross-edition dedupe"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-11-25T06:00:00-08:00",
+  "actual_run_local_time": "2026-11-25T07:42:26-08:00",
+  "source_window_start_utc": "2026-11-23T17:07:25Z",
+  "source_window_end_utc": "2026-11-25T14:06:13Z",
+  "first_source_retrieved_at": "2026-11-25T15:40:56.434911Z",
+  "last_source_retrieved_at": "2026-11-25T15:40:56.434911Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-25T15:40:56.434911Z",
+      "retrieved_at_local": "2026-11-25T07:40:56-08:00",
+      "retrieved_local_date": "2026-11-25",
+      "batch_classification": "after_scheduled_initial_batch",
+      "source_record_ids": [
+        "gaza-2026-11-25-bbc-middle-east-71e0c2f8e507",
+        "gaza-2026-11-25-bbc-middle-east-37edeaa5bb4a",
+        "gaza-2026-11-25-bbc-middle-east-cbc3d57ecd65",
+        "gaza-2026-11-25-bbc-middle-east-f8bafa580cdb",
+        "gaza-2026-11-25-guardian-world-3c3d14d006a3",
+        "gaza-2026-11-25-guardian-world-d98d5d5b8e06",
+        "gaza-2026-11-25-aljazeera-middle-east-a1468b7d053c",
+        "gaza-2026-11-25-jpost-gaza-accountability-query-6d441e282820"
+      ],
+      "source_count": 8
+    }
+  ]
+}

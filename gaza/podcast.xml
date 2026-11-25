@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 24 Nov 2026 20:04:59 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 25 Nov 2026 15:53:34 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for November 25, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-25-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-11-25-transcript.html</guid>
+    <pubDate>Wed, 25 Nov 2026 00:00:00 +0000</pubDate>
+    <description>Israeli strike kills senior Hamas security official and family in Gaza City. Mohammed Abu al-Ouf, head of Hamas's internal security service in northern Gaza, was killed with his wife and two teenage daughters, doctors say. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-11-25.mp3" length="1544832" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for November 24, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-24-transcript.html</link>

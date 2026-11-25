@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-25",
+  "generated_at": "2026-11-25T15:53:33.827791Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-11-25.mp3",
+  "audio_url": "/gaza/audio/2026-11-25.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1508,
+  "tts_input_word_count": 247,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1544832,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-11-25T15:53:33.827761Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-11-25-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-25/",
+  "script_text": "This is the Gaza Dispatch audio briefing for November 25, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli strike kills senior Hamas security official and family in Gaza City. Mohammed Abu al-Ouf, head of Hamas's internal security service in northern Gaza, was killed with his wife and two teenage daughters, doctors say. This was reported by BBC News.\n\n2. Israeli strike in Gaza kills senior Hamas official, his wife and children. Gaza's internal security director and his family are among seven Palestinians killed in one day by Israeli forces. This was reported by Al Jazeera.\n\n3. Pro-Palestine activist sought by US in extradition case: 'I still have a right to my beliefs'. James 'Fergie' Chambers, at center of legal fight, says he 'should not be unjustly accused' because of leftwing views James \"Fergie\" Chambers, the wealthy leftwing activist and donor controversially sought in extradition by the US, has told the Guardian that he is \"not asking anyone to endorse my ideas or not think I'm a jerk - but I still have a right to my beliefs and should not be unjustly accused because of them\". This was reported by The Guardian.\n\n4. Protesters call on Israel to free Palestinian student held without charge. Mahdi Tunsi, 26, was taken from his university dormitory earlier this month and has since been held without charge. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the November 25, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-11-25-bbc-middle-east-71e0c2f8e507",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cmd718zydz9qo?at_medium=RSS&at_campaign=rss",
+      "title": "Israeli strike kills senior Hamas security official and family in Gaza City"
+    },
+    {
+      "source_record_id": "gaza-2026-11-25-aljazeera-middle-east-a1468b7d053c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/11/25/israeli-strike-kills-hamas-official-his-wife-and-children?traffic_source=rss",
+      "title": "Israeli strike in Gaza kills senior Hamas official, his wife and children"
+    },
+    {
+      "source_record_id": "gaza-2026-11-25-guardian-world-3c3d14d006a3",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/nov/25/fergie-chambers-us-extradition-interview",
+      "title": "Pro-Palestine activist sought by US in extradition case: 'I still have a right to my beliefs'"
+    },
+    {
+      "source_record_id": "gaza-2026-11-25-bbc-middle-east-37edeaa5bb4a",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cw62p8z9edjlo?at_medium=RSS&at_campaign=rss",
+      "title": "Protesters call on Israel to free Palestinian student held without charge"
+    }
+  ]
+}

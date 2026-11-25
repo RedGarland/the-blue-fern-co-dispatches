@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T184451-0800-20261125T024714Z",
+  "scheduled_for": "2026-11-24T18:44:51-08:00",
+  "started_at": "2026-11-24T18:47:14-08:00",
+  "completed_at": "2026-11-25T02:48:02.144Z",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-25T01:45:51.395Z",
+    "end": "2026-11-25T02:48:02.144Z",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T174451-0800-20261125T014455Z.json",
+    "basis": "Authenticated predecessor completion to current observation cutoff; discovery interval, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Domain search and updates index show latest Gaza humanitarian situation report dated Nov 18, published Nov 20; no newer release."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Domain search and emergency overview checked; no new dated Gaza operational release verified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 latest Palestinian casualties overnight November 24",
+      "site:wafa.ps غزة 25 نوفمبر 2026 قصف شهداء مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 hospital ambulance fuel medical evacuation PRCS",
+      "Gaza November 24 25 2026 humanitarian food water shelter aid UNICEF UNRWA WFP",
+      "Gaza November 24 25 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 November 24 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 site:un.org OR site:reliefweb.int humanitarian briefing",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 24 25 2026 infrastructure demolition flood water aid latest",
+      "Gaza November 24 25 2026 Rafah crossing military operation civilian impact latest"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Previously recorded Maghazi/Bureij demolitions, Nuseirat casualty and shelter response; no distinct newer lead."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest headlines outside Gaza; prior casualty, shelter and medical evacuation reporting."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Previously reviewed meningitis, crossing compliance, human shielding investigations and EU appeal; leading newer headlines unrelated."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Prior Nov 24 strike and meningitis coverage, Nov 23 UNRWA worker and hearing aid coverage; no newer qualifying Gaza development."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Situation report 239 still featured."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest Gaza release Nov 10 winter appeal."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "Latest Gaza-specific statement Nov 12 Nasser hospital; Nov 19 reports concern West Bank."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible; no new dated Gaza operational lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/pse/palestine-news/",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "url": "https://www.un.org/sg/en/content/noon-briefing-highlight",
+        "error": "JavaScript verification",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177295",
+        "reason": "Shelter response already logged at 10:44; no fresh update."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177290",
+        "reason": "Nov 24 17:46 Palestine local time, earlier than interval; routine flexible UNRWA annual contribution, no Gaza-specific operational allocation or aid access change established."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/world/eu-must-speak-with-one-voice-to-press-israel-on-humanitarian-access-to-gaza-commissioner/4136177",
+        "reason": "Previously observed EU appeal; no new access decision or distinct in-window event, historical storm figures not treated as a new flood."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/21/at-least-four-palestinians-killed-in-israeli-attacks-on-gaza",
+        "reason": "Nov 21 historical reporting outside interval."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-18-november-2026",
+        "reason": "Nov 20 publication, already available."
+      }
+    ],
+    "limitations": [
+      "18 distinct authenticated same-day prior heartbeat files reviewed, including immediate predecessor; production inventory not inspected.",
+      "Search indexing sparse and returned older results despite date constraints. No new qualifying development verified; not proof none occurred."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

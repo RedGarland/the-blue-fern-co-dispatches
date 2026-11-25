@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T064451-0800-20261125T144608Z",
+  "scheduled_for": "2026-11-25T06:44:51-08:00",
+  "started_at": "2026-11-25T06:46:08-08:00",
+  "completed_at": "2026-11-25T06:46:53-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T05:46:05-08:00",
+    "end": "2026-11-25T06:46:53-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T054451-0800-20261125T134450Z.json",
+    "basis": "Authenticated prior research cutoff through current research cutoff; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report dated 18 November, published 20 November; no newer report surfaced."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Initial search followed by direct overview; no new dated operational release verified."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway; persistent regional access limitation."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 WAFA casualties hospital displacement today",
+      "Gaza November 25 2026 Reuters AP ceasefire aid crossing hostages",
+      "Gaza November 25 2026 Al Jazeera latest Gaza casualties aid",
+      "Gaza November 25 2026 UN UNICEF UNRWA WFP aid water food shelter",
+      "Gaza November 25 2026 MSF ICRC PRCS hospital evacuation fuel",
+      "Gaza November 25 2026 Anadolu Middle East Eye civilian strike",
+      "site:english.wafa.ps/Pages/Details Gaza \"25/November/2026\"",
+      "site:wafa.ps غزة \"25/11/2026\" قصف إصابة مساعدات",
+      "Gaza after:2026-11-24 before:2026-11-26 humanitarian Gaza November 25 2026 hospital crossing water",
+      "Gaza after:2026-11-24 before:2026-11-26 ceasefire civilian aid Gaza latest November 25",
+      "site:un.org Gaza November 25 2026 humanitarian briefing",
+      "site:aa.com.tr/en Gaza November 25 2026 Gaza Palestinians"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic latest index: prior Gaza casualty and meningitis reports, no distinct newer event verified."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "Latest new items relate to West Bank incidents or reiterate existing Gaza warnings."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously logged detention and Al-Shati casualty reports."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Report 239 published November 19, outside window."
+      },
+      {
+        "url": "https://www.wfp.org/emergencies/palestine-emergency",
+        "result": "Accessible background data without verified new publication date."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177313",
+        "reason": "Prior Halawa finding; Arabic follow-up repeats previously recorded Khan Younis injuries."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177301",
+        "reason": "Previously logged Al-Shati casualty incident; Anadolu report duplicates it."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177310",
+        "reason": "Prior EU statement, no implemented operational change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177316",
+        "reason": "Rights chief warning and repeated EU statement; no new specific Gaza operational development."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177315",
+        "reason": "West Bank, outside Gaza scope."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/25/sentences-served-but-gaza-prisoners-remain-behind-israeli-bars",
+        "reason": "Previously logged detention finding."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/gaza-humanitarian-response-situation-report-no-31",
+        "reason": "2025 report, not current."
+      }
+    ],
+    "limitations": [
+      "Five authenticated November 25 prior heartbeat files reviewed; conversation also contains November 24 baseline. Production inventory not checked.",
+      "Search indexes frequently returned older material; direct current source indexes mitigated this.",
+      "Completion timestamp represents research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261124T224451-0800-20261125T064444Z",
+  "scheduled_for": "2026-11-24T22:44:51-08:00",
+  "started_at": "2026-11-24T22:44:44-08:00",
+  "completed_at": "2026-11-24T22:45:40-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-24",
+    "start": "2026-11-25T05:43:49Z",
+    "end": "2026-11-24T22:45:40-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-24/gaza-source-watch-20261124T214451-0800-20261125T054254Z.json",
+    "basis": "Authenticated predecessor completion to current review cutoff; discovery window, not exact incident timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-wafa-shati-residential-casualties",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/25/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-4-%D9%85%D9%88%D8%A7%D8%B7%D9%86%D9%8A%D9%86-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84%D8%AA%D8%A7%D9%86-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%A2%D8%AE%D8%B1%D9%8A%D9%86",
+      "title": "استشهاد 4 مواطنين بينهم طفلتان وإصابة آخرين بقصف الاحتلال غرب غزة",
+      "publisher": "WAFA Palestinian News and Information Agency",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": "2026-11-25T08:28:00+02:00",
+      "event_date": "2026-11-25",
+      "event_timestamp": null,
+      "source_type": "Established news agency reporting attributed hospital medical sources",
+      "classification": "new",
+      "location": "Al-Shati refugee camp, west Gaza City",
+      "affected_population_system": "Residents of a residential apartment; WAFA reports four killed including two girls aged 13 and 15, and additional injuries with no verified count. Al-Shifa hospital medical sources report receiving the deceased and injured.",
+      "exact_supporting_passage": "استُشهد أربعة مواطنين، بينهم طفلتان، وأصيب آخرون",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T05:43:49Z",
+          "2026-11-24T22:45:40-08:00"
+        ],
+        "method": "Direct Arabic WAFA index then full article; Al Jazeera Palestine index and full newsfeed article corroborate four deaths and additional injuries.",
+        "corroborating_source_url": "https://www.aljazeera.com/video/newsfeed/2026/11/25/israeli-strike-kills-four-people-in-gaza",
+        "novelty": "Distinct November 25 local-date incident absent from four authenticated prior heartbeat files reviewed; predecessor recorded earlier November 24 casualties. No production inventory check.",
+        "caveat": "WAFA publication timestamp offset inferred from Palestine local clock; 08:28 local corresponds to 22:28 PST November 24. Al Jazeera corroborates count and location; ages attributed to WAFA."
+      }
+    },
+    {
+      "finding_id": "gaza-20261125-wafa-khan-younis-girl-wounded",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/25/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-4-%D9%85%D9%88%D8%A7%D8%B7%D9%86%D9%8A%D9%86-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D8%B7%D9%81%D9%84%D8%AA%D8%A7%D9%86-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%A2%D8%AE%D8%B1%D9%8A%D9%86",
+      "title": "استشهاد 4 مواطنين بينهم طفلتان وإصابة آخرين بقصف الاحتلال غرب غزة",
+      "publisher": "WAFA Palestinian News and Information Agency",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": "2026-11-25T08:28:00+02:00",
+      "event_date": "2026-11-25",
+      "event_timestamp": null,
+      "source_type": "Established news agency reporting attributed hospital medical sources",
+      "classification": "new",
+      "location": "Khan Younis, southern Gaza",
+      "affected_population_system": "A girl reportedly wounded by Israeli gunfire, according to Nasser Medical Complex medical sources; injury severity and age not reported.",
+      "exact_supporting_passage": "بإصابة فتاة برصاص قوات الاحتلال",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T05:43:49Z",
+          "2026-11-24T22:45:40-08:00"
+        ],
+        "method": "Separate incident in same full WAFA article; attributed to Nasser Medical Complex medical sources.",
+        "corroborating_source_url": null,
+        "novelty": "Separate from the Al-Shati residential strike and the earlier Nuseirat casualty. No match in four authenticated predecessor files reviewed.",
+        "caveat": "Exact injury date/time not independently specified beyond November 25 report context; no independent corroboration retrieved. Publication offset inferred from Palestine local clock."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18 and published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza operational release in overview/news list."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza latest November 25 2026 casualties overnight displacement November 24",
+      "site:wafa.ps غزة 25 نوفمبر 2026 شهداء قصف مساعدات",
+      "site:english.wafa.ps Gaza November 25 2026",
+      "Gaza November 25 2026 hospitals ambulance medical evacuations meningitis fuel PRCS",
+      "Gaza November 25 2026 water food shelter rain aid UNICEF UNRWA WFP",
+      "Gaza November 25 2026 ceasefire crossings detention hostages negotiations Reuters AP",
+      "site:aa.com.tr Gaza November 25 2026 latest",
+      "site:aljazeera.com Gaza November 25 2026 latest",
+      "Gaza November 24 25 2026 humanitarian site:un.org OR site:reliefweb.int",
+      "Gaza November 24 25 2026 site:icrc.org OR site:msf.org OR site:palestinercs.org",
+      "Gaza November 25 2026 flooding tents infrastructure demolition water",
+      "Gaza November 25 2026 Rafah crossing aid military civilian impact"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://wafa.ps/",
+        "result": "New Al-Shati casualty report identified and opened."
+      },
+      {
+        "url": "https://english.wafa.ps/",
+        "result": "New senators letter coverage; no actual change in access."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Al-Shati report corroborated."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east",
+        "result": "Prior storm warning repeats."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Report 239 remains featured."
+      },
+      {
+        "url": "https://www.palestinercs.org/en",
+        "result": "Latest listed Gaza release November 10."
+      },
+      {
+        "url": "https://www.msf.org/palestine",
+        "result": "No new dated Gaza release identified."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Accessible, no new dated operational lead established."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177299",
+        "reason": "Senators' November 23 letter reported November 25 requests aid access changes; no actual change in access verified; earlier flood claims not independently established as new."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/storm-threatens-lives-of-176-million-palestinians-sheltering-in-tents-gaza-media-office/4136549",
+        "reason": "Previously logged storm warning."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/24/israeli-air-strikes-in-gaza-kill-7-as-doctors-warn-of-meningitis-outbreak",
+        "reason": "Earlier casualties and outbreak already covered."
+      }
+    ],
+    "limitations": [
+      "Four authenticated prior files reviewed, including immediate predecessor and earlier positive reports; production inventory not inspected.",
+      "Search indexing returned many older items; direct source checks recovered fresh reports. Persistent official access restrictions."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

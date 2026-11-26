@@ -1,0 +1,106 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T184451-0800",
+  "scheduled_for": "2026-11-25T18:44:51-08:00",
+  "started_at": "2026-11-25T18:49:43-08:00",
+  "completed_at": "2026-11-25T18:50:15-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T17:46:22-08:00",
+    "end": "2026-11-25T18:50:15-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T174451-0800.json",
+    "basis": "Authenticated prior research cutoff to verified local clock before persistence; discovery window, not event time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/humanitarian-situation-update",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed situation report dated November 18, published November 20; no new report found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Official emergency overview and news list checked; no new dated Gaza item."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "FAILED",
+        "result": "Timeout fetching (400)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 November 25 overnight casualties strikes WAFA Gaza City Khan Younis",
+      "Gaza November 26 2026 aid access crossings food water fuel UN OCHA UNICEF UNRWA",
+      "Gaza November 26 2026 hospital ambulance medical evacuation PRCS MSF health ministry",
+      "Gaza November 26 2026 ceasefire negotiations hostages detention Reuters AP AFP",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 latest Al Jazeera Anadolu Middle East Eye",
+      "Gaza November 25 26 2026 flood shelter infrastructure municipalities humanitarian latest",
+      "Gaza November 25 26 2026 humanitarian site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:wfp.org",
+      "Gaza November 25 26 2026 site:reuters.com OR site:apnews.com latest",
+      "غزة 26 نوفمبر 2026 نزوح مساعدات مياه وقود مستشفيات",
+      "Gaza after:2026-11-25 before:2026-11-27 latest news casualties crossings humanitarian"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest item remains previously logged November 25 Tuffah report; no subsequent entry."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest dated entry November 25 daily roundup; no new Gaza report."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously logged November 25 municipal flood-risk assessment, detention and casualty reporting; no newer entry."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-hamas-official-his-wife-children-2026-11-25/",
+        "result": "Search surfaced previously recorded November 25 reporting; November 24 reports also recycled."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout fetching (400)",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Al-Karama, Al-Shati, Halawa, Khan Younis and Tuffah reports, meningitis, detention and municipal flood-risk assessment; earlier reports, broad statements and West Bank-only items."
+    ],
+    "limitations": [
+      "Ten authenticated previous same-day heartbeats reviewed (08:44 through 17:44), including immediate predecessor; earlier items cross-checked via predecessor coverage notes. Not an exhaustive ledger inventory.",
+      "Date-targeted searches yielded sparse, predominantly older or recycled results; no claim of exhaustive source coverage. Production inventory not checked.",
+      "Completed_at records verified research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

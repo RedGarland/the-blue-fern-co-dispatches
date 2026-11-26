@@ -1,0 +1,149 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T044451-0800",
+  "scheduled_for": "2026-11-26T04:44:51-08:00",
+  "started_at": "2026-11-26T04:40:34-08:00",
+  "completed_at": "2026-11-26T04:41:33-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T03:41:49-08:00",
+    "end": "2026-11-26T04:41:33-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T034451-0800.json",
+    "basis": "Authenticated preceding research cutoff to observed current research cutoff; discovery window, not event time. Execution began before nominal scheduled time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-wafa-shelter-collapse-fatality-status-clarification",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177331",
+      "title": "Death toll in Gaza surges to 74,772 as Israeli aggression continues",
+      "publisher": "WAFA (English)",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip; precise displacement site not specified",
+      "affected_population_system": "English WAFA explicitly reports that the four previously recorded sand embankment collapse victims (three children and a woman) were killed; it also describes the cumulative 56 building/sand-collapse cases as fatalities. Arabic source had described victims/cases without expressly resolving fatality status. This is a clarification, not four additional deaths or a new collapse; no independent corroboration.",
+      "exact_supporting_passage": "four Palestinians, including three children and a woman, were killed after a sand embankment collapsed onto tents sheltering displaced people.",
+      "source_type": "Official Palestinian news agency citing medical sources; English rendering of same medical report",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T03:41:49-08:00",
+          "2026-11-26T04:41:33-08:00"
+        ],
+        "method": "Direct English WAFA latest-news listing and full article after access recovered; checked Arabic source and 21 authenticated prior hourly heartbeats.",
+        "related_finding_id": "gaza-20261126-wafa-sand-embankment-collapse-displaced-family",
+        "source_displayed_publication_time": "26/November/2026 01:36 PM; timezone unlabeled, if Palestine local time approximately 03:36 PST, before prior cutoff.",
+        "novelty": "Newly recovered explicit fatality classification resolves uncertainty documented in 02:44 heartbeat; not a newly published event established within window. Same agency/medical report, not independent corroboration. Event date and overlap with earlier collapse incidents remain unknown; do not add counts."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/publications/situation-reports",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report dated November 18, published November 20; no newer report indexed."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific emergency update."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "Timeout (400)."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest casualties WAFA hospital strike today",
+      "غزة 26 نوفمبر 2026 شهداء جرحى مستشفى وفا",
+      "Gaza November 26 2026 aid water food displacement crossing humanitarian UNRWA WFP UNICEF",
+      "Gaza November 26 2026 hospital ambulance fuel medical evacuation meningitis MSF ICRC",
+      "Gaza November 26 2026 ceasefire negotiations detention hostages Reuters AP",
+      "Gaza November 26 2026 latest Al Jazeera Anadolu civilian casualties",
+      "Gaza November 26 2026 displacement flooding tents sewage infrastructure",
+      "Gaza November 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org",
+      "Gaza November 26 2026 site:reliefweb.int OR site:news.un.org humanitarian",
+      "غزة 26 نوفمبر 2026 مستشفيات مساعدات نزوح وقود مياه",
+      "Gaza November 26 2026 Israeli military operations civilian impact crossings",
+      "Gaza November 26 2026 latest Palestinian Red Crescent aid hospital"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA Arabic",
+        "result": "Accessible; latest Gaza medical and casualty reports already recorded."
+      },
+      {
+        "source": "WAFA English",
+        "result": "Recovered; English medical report explicitly resolves earlier fatality ambiguity. No other fresh incident."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "result": "Accessible; existing casualty, detention, meningitis and shelter stories already reviewed."
+      },
+      {
+        "source": "WFP Palestine emergency",
+        "result": "Accessible; undated food assistance cuts and logistical constraints already noted, no verified fresh change."
+      },
+      {
+        "source": "UNRWA",
+        "result": "403 Forbidden"
+      },
+      {
+        "source": "UN noon briefing",
+        "result": "JavaScript verification challenge"
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNRWA",
+        "error": "403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefing",
+        "error": "JavaScript challenge",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 21,
+    "exclusions": [
+      "Duplicate November 26 hospital intake and casualty figures; previously recorded strikes, meningitis, detention and municipal flood risk; stale search results and West Bank-only reporting. No new verified crossing, aid, food/water, hospital capacity or negotiation change."
+    ],
+    "limitations": [
+      "Sparse fresh indexed results from 12 searches; direct checks supplemented them.",
+      "No exhaustive production comparison; 21 authenticated preceding heartbeats reviewed.",
+      "English WAFA publication hour timezone unverified; same agency and underlying medical report, not independent corroboration.",
+      "Completed_at denotes observed research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

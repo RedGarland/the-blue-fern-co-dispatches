@@ -1,0 +1,146 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T234451-0800",
+  "scheduled_for": "2026-11-25T23:44:51-08:00",
+  "started_at": "2026-11-25T23:49:41-08:00",
+  "completed_at": "2026-11-25T23:50:15-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T22:49:57-08:00",
+    "end": "2026-11-25T23:50:15-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T224451-0800.json",
+    "basis": "Authenticated predecessor research cutoff to verified current research cutoff, discovery window not event time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-aj-rantisi-meningitis-admissions-trend",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/26/gaza-meningitis-cases-surge-as-collapsing-infrastructure-fuels-health-fears",
+      "title": "Gaza meningitis cases surge as collapsing infrastructure fuels health fears",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Rantisi Children's Hospital, Gaza City",
+      "affected_population_system": "Pediatric meningitis admissions declined from over ten daily to three or four, according to pediatrician Sharif Matar; the outbreak continues. He reports that needed meningitis treatments have remained obtainable through Ministry of Health warehouses.",
+      "exact_supporting_passage": "At one stage, we were receiving more than 10 cases a day. Now we are talking about three to four cases daily.",
+      "source_type": "Established news outlet, direct attributed interview with hospital pediatrician",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T22:49:57-08:00",
+          "2026-11-25T23:50:15-08:00"
+        ],
+        "method": "Direct Al Jazeera Palestine index and full article; compared against 16 authenticated same-day prior heartbeats (07:44–22:44).",
+        "related_finding_id": "gaza-20261125-mondoweiss-nasser-pediatric-transfer-capacity",
+        "novelty": "Facility-specific direction of admissions and treatment availability at Rantisi, distinct from prior Nasser capacity/transfer reporting and previously reported territory-wide outbreak totals.",
+        "caveat": "Exact publication hour and interview date unknown; newly discovered during this window, not proof of first publication within it. Single clinician report, not independently verified; do not extrapolate to Gaza-wide trends or conclude epidemic ended."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest relevant situation report dated Nov 18, published Nov 20; no newer report found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No fresh Gaza-specific update in emergency overview or date-targeted results."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest casualties civilians WAFA Gaza City Khan Younis",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 hospital ambulance medical evacuation meningitis fuel",
+      "Gaza November 26 2026 aid crossings humanitarian access food water",
+      "Gaza November 26 2026 displacement flooding tents sewage infrastructure",
+      "Gaza November 26 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 25 26 2026 humanitarian UNICEF UNRWA WFP food water",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org",
+      "Gaza November 25 26 2026 humanitarian site:reliefweb.int OR site:news.un.org",
+      "Gaza November 26 2026 Al Jazeera Anadolu latest Gaza civilians",
+      "غزة 26 نوفمبر 2026 مستشفيات مساعدات نزوح وقود مياه",
+      "Gaza November 26 2026 Israeli military operations civilian impact latest"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest Gaza item already recorded Tuffah incident; Nov 26 listings West Bank."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Timeout on multiple attempts including alternate hostname."
+      },
+      {
+        "url": "https://www.unrwa.org/newsroom",
+        "result": "Accessible; no fresh qualifying item established."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Accessible; new Nov 26 Rantisi report followed to full article."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Arabic WAFA",
+        "error": "400 Timeout fetching on repeated attempts",
+        "material_new_degradation": true,
+        "note": "Previously intermittent, accessible in immediate predecessor; local-language casualty coverage impaired this run."
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt blocked",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Prior WAFA Tuffah, Deir al-Balah and Al-Nasr casualty findings; previous municipal winter-risk assessment and Nasser pediatric capacity report; existing territory-wide meningitis figures; stale reports and West Bank-only items.",
+      "No newly verified changes in crossings, detention, food/water access or negotiations."
+    ],
+    "limitations": [
+      "16 authenticated same-day prior heartbeats read; not exhaustive comparison against production.",
+      "12 additional searches submitted; sparse and stale returns, including first batch without visible search hits; not proof of comprehensive coverage.",
+      "Completed_at denotes research cutoff just before persistence."
+    ],
+    "material_failure_or_new_degradation": true,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

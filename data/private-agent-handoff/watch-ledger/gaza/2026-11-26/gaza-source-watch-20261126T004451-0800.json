@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T004451-0800",
+  "scheduled_for": "2026-11-26T00:44:51-08:00",
+  "started_at": "2026-11-26T00:48:30-08:00",
+  "completed_at": "2026-11-26T00:49:09-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-25T23:50:15-08:00",
+    "end": "2026-11-26T00:49:09-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T234451-0800.json",
+    "basis": "Authenticated predecessor research cutoff to verified current research cutoff; discovery window, not event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-wafa-al-shati-casualties",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177327",
+      "title": "UPDATE: Eight Palestinians killed in Israeli strikes and gunfire across Gaza since Wednesday evening",
+      "publisher": "WAFA",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency, attributed local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "event_date": "2026-11-26",
+      "location": "Al-Shati refugee camp, western Gaza City",
+      "affected_population_system": "WAFA reports three Palestinians killed and others injured in a strike; injury total and individual status unverified.",
+      "exact_supporting_passage": "three Palestinians were killed and others wounded",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T23:50:15-08:00",
+          "2026-11-26T00:49:09-08:00"
+        ],
+        "method": "Direct WAFA English latest-news index and full article; compared with 17 authenticated November 25 hourly heartbeats (07–23).",
+        "source_displayed_publication_time": "26/November/2026 09:51 AM, timezone unlabeled; if Palestine local time, falls shortly after predecessor cutoff.",
+        "caveat": "Single agency; identities and civilian status not independently established. Article dateline says November 25 but page publication date is November 26. Headline aggregate not fully reconciled with itemized account; do not use or add aggregate to incident counts.",
+        "novelty": "Different location from previously recorded Tuffah, Al-Nasr and Deir al-Balah incidents."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-wafa-al-bureij-fatality",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177327",
+      "title": "UPDATE: Eight Palestinians killed in Israeli strikes and gunfire across Gaza since Wednesday evening",
+      "publisher": "WAFA",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency, attributed local sources",
+      "classification": "new",
+      "confidence": "medium",
+      "event_date": null,
+      "location": "Al-Bureij refugee camp area, central Gaza",
+      "affected_population_system": "WAFA reports one Palestinian killed and ongoing impacts on residents' homes and displacement shelters; identity and civilian status not independently verified.",
+      "exact_supporting_passage": "Another Palestinian was killed by Israeli gunfire east of al-Bureij refugee camp",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T23:50:15-08:00",
+          "2026-11-26T00:49:09-08:00"
+        ],
+        "method": "Direct WAFA English latest-news index and full article; compared with 17 authenticated November 25 hourly heartbeats (07–23).",
+        "source_displayed_publication_time": "26/November/2026 09:51 AM, timezone unlabeled; if Palestine local time, falls shortly after predecessor cutoff.",
+        "caveat": "Single agency; identities and civilian status not independently established. Article dateline says November 25 but page publication date is November 26. Headline aggregate not fully reconciled with itemized account; do not use or add aggregate to incident counts.",
+        "novelty": "Separate reported fatality not present in reviewed prior heartbeats; exact event date uncertain between November 25 and 26."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report November 18, published November 20; no newer item found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update on emergency page."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest casualties civilians WAFA Gaza City Khan Younis",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 hospital ambulance medical evacuation meningitis fuel",
+      "Gaza November 26 2026 aid crossings humanitarian access food water",
+      "Gaza November 26 2026 displacement flooding tents sewage infrastructure",
+      "Gaza November 26 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 25 26 2026 UNICEF UNRWA WFP food water humanitarian",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org",
+      "Gaza November 25 26 2026 site:reliefweb.int OR site:news.un.org humanitarian",
+      "Gaza November 26 2026 Anadolu Al Jazeera latest casualties al Shati Bureij",
+      "غزة 26 نوفمبر 2026 مستشفيات مساعدات نزوح وقود مياه",
+      "Gaza November 26 2026 Israeli military operations civilian impact latest"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA Arabic",
+        "result": "Homepage recovered; linked casualty update redirected to not-found page."
+      },
+      {
+        "source": "WAFA English",
+        "result": "Latest news and casualty update accessible; two distinct new reported incidents."
+      },
+      {
+        "source": "Al Jazeera",
+        "result": "Previously logged meningitis and municipal winter-risk articles."
+      },
+      {
+        "source": "UNRWA",
+        "result": "Latest situation report #239 published November 19."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP",
+        "error": "403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA Arabic linked article",
+        "error": "Not found",
+        "material_new_degradation": false,
+        "note": "Arabic homepage recovered from previous outage; English article accessible."
+      }
+    ],
+    "exclusions": [
+      "Previously logged Tuffah, Deir al-Balah and Al-Nasr casualty incidents; Rantisi and Nasser meningitis capacity reports, municipal flood-risk assessment, stale search results, West Bank-only items. No new verified crossing, detention, negotiations or medical access change."
+    ],
+    "limitations": [
+      "17 authenticated prior heartbeats reviewed; seven earlier expected hourly paths returned 404, consistent with prior ledger coverage beginning 07:44; not exhaustive comparison against production.",
+      "Second batch of six targeted searches yielded no useful fresh hits and one robots block; no claim of comprehensive coverage.",
+      "completed_at is verified research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

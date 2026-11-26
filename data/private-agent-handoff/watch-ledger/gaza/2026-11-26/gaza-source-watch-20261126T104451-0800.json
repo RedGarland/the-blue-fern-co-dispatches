@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T104451-0800",
+  "scheduled_for": "2026-11-26T10:44:51-08:00",
+  "started_at": "2026-11-26T10:46:36-08:00",
+  "completed_at": "2026-11-26T10:47:41.270-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T09:47:53-08:00",
+    "end": "2026-11-26T10:47:41.270-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T094451-0800.json",
+    "basis": "Previous authenticated heartbeat cutoff to current research cutoff; discovery window, not event date."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "November 26 report remains latest; previously logged."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza-specific update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest today casualties WAFA hospital after evening",
+      "غزة 26 نوفمبر 2026 مساء اليوم شهداء إصابات وفا",
+      "Gaza November 26 2026 aid water food shelter crossings UNRWA WFP UNICEF",
+      "Gaza November 26 2026 hospital medical evacuation ambulance fuel PRCS MSF ICRC",
+      "Gaza November 26 2026 ceasefire negotiations detention hostages Reuters AP latest",
+      "Gaza November 26 2026 latest Anadolu Al Jazeera civilian impact",
+      "Gaza \"November 26, 2026\" humanitarian aid displacement shelter UN news",
+      "Gaza \"November 26, 2026\" hospital medical supplies evacuation health",
+      "غزة \"26 نوفمبر 2026\" معابر مساعدات مياه وقود مستشفيات",
+      "Gaza latest November 26 2026 BBC Guardian AP casualties ceasefire",
+      "Gaza November 26 2026 site:unrwa.org OR site:wfp.org OR site:unicef.org OR site:icrc.org OR site:msf.org",
+      "Gaza \"November 26, 2026\" detainees crossing negotiations civilian aid"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English and Arabic",
+        "result": "Both accessible; previously logged Gaza stories; diplomatic appeals without concrete access change."
+      },
+      {
+        "source": "Reuters and AP syndication",
+        "result": "Previously logged incident and ceasefire reporting; aggregate differences not treated as new incidents."
+      },
+      {
+        "source": "UNRWA",
+        "result": "News page accessible; latest featured report #239 dated November 19."
+      },
+      {
+        "source": "WFP",
+        "result": "Emergency page recovered from prior 403; linked winter food assistance cut report dated November 17; excluded as older."
+      },
+      {
+        "source": "UN News",
+        "result": "Robots restriction persists."
+      },
+      {
+        "source": "Al Khaleej",
+        "result": "November 26 UAE Red Crescent delegation oversight visit concerning existing AED 50 million aid directive; no newly verified delivery or funding change."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt fetch denied",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 18,
+    "prior_heartbeat_range": "November 25 16:44–23:44 and November 26 00:44–09:44",
+    "exclusions": [
+      "Previously logged OCHA and WAFA reporting; Reuters ceasefire statement and casualty reports; older WFP cuts; UNRWA November 19 report; automated secondary summary of flood warning without direct source verification; UAE aid oversight without new confirmed delivery; diplomatic appeals without operational change; opinion and recycled items."
+    ],
+    "limitations": [
+      "Deduplication against 18 authenticated watch heartbeats, not exhaustive production comparison.",
+      "Persistent WHO EMRO and UN News access gaps.",
+      "Search cutoff precedes heartbeat persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

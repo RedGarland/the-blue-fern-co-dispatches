@@ -1,0 +1,187 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T114451-0800",
+  "scheduled_for": "2026-11-26T11:44:51-08:00",
+  "started_at": "2026-11-26T11:48:02-08:00",
+  "completed_at": "2026-11-26T11:48:53-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T10:47:41.270-08:00",
+    "end": "2026-11-26T11:48:53-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T104451-0800.json",
+    "basis": "Previous authenticated heartbeat cutoff to current research cutoff; discovery window, not event or publication window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-aj-municipal-flood-risk-shelter-warning",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/25/winter-rains-threaten-1000-gaza-shelter-sites-councils-warn",
+      "title": "Winter rains threaten 1,000 Gaza shelter sites, councils warn",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": "2026-11-25",
+      "event_timestamp": null,
+      "location": "Gaza Strip; al-Mughraqa and al-Zahra, central Gaza",
+      "affected_population_system": "Displaced households and shelter infrastructure. Union of Gaza Strip Municipalities warned of flooding risk at approximately 1,000 displacement sites, need to replace 200,000 tents, and collapse risk at more than 2,000 damaged buildings. Drainage damage and pump shortages limit response. These are risk and need estimates, not newly observed damage.",
+      "exact_supporting_passage": "winter rains could flood about 1,000 camps and other sites hosting displaced Palestinians",
+      "source_type": "Established reporting attributed to municipal union",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T10:47:41.270-08:00",
+          "2026-11-26T11:48:53-08:00"
+        ],
+        "method": "Direct Al Jazeera Palestine topic page and full linked November 25 report; compared with 19 authenticated prior watch heartbeats.",
+        "novelty": "Prior 10:44 heartbeat excluded automated secondary flood-warning summary without direct source verification. Full report now recovered and attributable; older publication, not an event within the last hour.",
+        "caveat": "Municipal union estimates not independently corroborated in this run; no new flooding or displacement confirmed."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-aj-qatar-egypt-ceasefire-mediation-meeting",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/11/26/qatari-egyptian-leaders-discuss-gaza-ceasefire-and-regional-security",
+      "title": "Qatari, Egyptian leaders discuss Gaza ‘ceasefire’ and regional security",
+      "publisher": "Al Jazeera and Anadolu",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": "2026-11-26",
+      "event_timestamp": null,
+      "location": "Cairo, Egypt; Gaza Strip affected",
+      "affected_population_system": "Ceasefire mediation and humanitarian access. Qatari emir and Egyptian president held talks on ceasefire implementation and joint mediation; Egyptian president stressed aid delivery and reconstruction. No changed terms or crossing operations established.",
+      "exact_supporting_passage": "joint mediation efforts to solidify the ceasefire",
+      "source_type": "Established reporting citing Qatari Emiri Diwan and Egyptian presidential spokesman",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T10:47:41.270-08:00",
+          "2026-11-26T11:48:53-08:00"
+        ],
+        "method": "Direct Al Jazeera topic page and linked full article; compared with 19 authenticated prior watch heartbeats.",
+        "novelty": "Newly recovered concrete meeting of two mediators; distinct from previous Hamas consultation intention. Exact publication time not displayed.",
+        "caveat": "No breakthrough, agreement amendment or actual aid access change confirmed; official statements attributed by reporting, not independently retrieved."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "November 26 report still latest; previously logged."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza-specific update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/priority-areas/occupied-palestinian-territory-health-crisis-2023.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest today evening casualties WAFA Reuters",
+      "غزة 26 نوفمبر 2026 مساء اليوم شهداء إصابات وفا",
+      "Gaza November 26 2026 aid crossings water food displacement UNRWA WFP UNICEF",
+      "Gaza November 26 2026 hospital medical evacuation ambulance fuel PRCS MSF ICRC",
+      "Gaza November 26 2026 ceasefire negotiations detention hostages latest Reuters AP",
+      "Gaza November 26 2026 latest Anadolu Al Jazeera civilian impact",
+      "غزة 26 نوفمبر 2026 معابر مساعدات مياه وقود مستشفيات",
+      "Gaza November 26 2026 humanitarian aid displacement UN News",
+      "Gaza November 26 2026 latest hospital medical supplies surgery evacuation",
+      "Gaza November 26 2026 site:unrwa.org OR site:wfp.org OR site:unicef.org OR site:icrc.org OR site:msf.org",
+      "Gaza November 26 2026 detainees crossings military civilian casualties evening",
+      "غزة 26 نوفمبر 2026 الآن قصف مصابين مستشفى مساء"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA Arabic",
+        "result": "Accessible; already recorded casualty reports."
+      },
+      {
+        "source": "WAFA English",
+        "result": "Homepage timeout and known article inaccessible; Arabic remained available."
+      },
+      {
+        "source": "Reuters",
+        "result": "Full article accessible; previously recorded casualties and ceasefire statement."
+      },
+      {
+        "source": "Al Jazeera",
+        "result": "Topic page and three linked articles accessible; two qualifying developments. Previously recorded casualty article direct URL inaccessible."
+      },
+      {
+        "source": "UNRWA",
+        "result": "News page accessible, featured report #239 unchanged."
+      },
+      {
+        "source": "WFP",
+        "result": "Emergency page accessible; older November 17 Gaza story and general famine explainer."
+      },
+      {
+        "source": "UN News",
+        "result": "Robots restriction."
+      },
+      {
+        "source": "PRCS",
+        "result": "Homepage accessible; latest featured Gaza news dated November 10."
+      },
+      {
+        "source": "MSF, ICRC, UNICEF",
+        "result": "Country/emergency pages accessible; no newly dated qualifying development verified from retrieved excerpts."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt fetch denied",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA English",
+        "error": "Homepage timeout; article inaccessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Al Jazeera previously logged casualty article",
+        "error": "Specific URL inaccessible; topic page and other articles available",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 19,
+    "prior_heartbeat_range": "November 25 16:44–23:44 and November 26 00:44–10:44",
+    "exclusions": [
+      "Previously recorded OCHA, WAFA and Reuters developments; November 3 Al Jazeera article; opinion and celebrity commentary; UNRWA tribunal ruling dated November 11 reported today (individual employment remedy; no verified new service capacity or aid-access change)."
+    ],
+    "limitations": [
+      "Additional search batch surfaced only two distinct results; compensated with direct source checks, not exhaustive discovery.",
+      "Precise publication times unavailable for both findings; discovery window only.",
+      "Deduplication against 19 watch heartbeats, not exhaustive production comparison.",
+      "Search cutoff precedes heartbeat persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

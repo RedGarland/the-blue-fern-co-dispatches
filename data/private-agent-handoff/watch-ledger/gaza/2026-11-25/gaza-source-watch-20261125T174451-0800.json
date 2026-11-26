@@ -1,0 +1,123 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T174451-0800",
+  "scheduled_for": "2026-11-25T17:44:51-08:00",
+  "started_at": "2026-11-25T17:45:54-08:00",
+  "completed_at": "2026-11-25T17:46:22-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T16:45:49-08:00",
+    "end": "2026-11-25T17:46:22-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T164451-0800.json",
+    "basis": "Authenticated preceding heartbeat cutoff to verified local clock immediately before persistence; discovery window, not event time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "First targeted search and direct homepage confirm latest Gaza situation report dated November 18, published November 20."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Second targeted search and direct emergency overview; no newly dated Gaza update."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 26 2026 latest casualties strikes WAFA Gaza City Khan Younis",
+      "Gaza November 25 26 2026 humanitarian aid access crossings fuel food water displacement UN OCHA UNICEF UNRWA",
+      "Gaza November 25 26 2026 hospitals ambulance medical evacuations health ministry MSF PRCS WHO",
+      "Gaza November 25 26 2026 ceasefire negotiations hostages detention Reuters AP AFP",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا مستشفيات معابر",
+      "Gaza November 25 26 2026 latest Al Jazeera Anadolu Middle East Eye",
+      "Gaza November 25 26 2026 flooding shelter infrastructure municipalities humanitarian",
+      "Gaza November 25 26 2026 site:reliefweb.int OR site:un.org OR site:unrwa.org humanitarian",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:wfp.org",
+      "Gaza November 25 26 2026 site:reuters.com OR site:apnews.com latest",
+      "غزة 26 نوفمبر 2026 نزوح مساعدات مياه وقود مستشفيات",
+      "Gaza after:2026-11-25 before:2026-11-27 latest news casualties crossings humanitarian"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest entry remains November 25 Tuffah report, previously logged."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Arabic index accessible, earlier casualty and meningitis reports and roundup."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/25/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-%D9%85%D9%88%D8%A7%D8%B7%D9%86-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-3-%D8%A2%D8%AE%D8%B1%D9%8A%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81-%D9%84%D9%84%D8%A7%D8%AD%D8%AA%D9%84%D8%A7%D9%84",
+        "result": "Full article dated November 25 13:29 source displayed time; previously logged Halawa and Khan Younis incidents."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Municipal flood-risk assessment, casualty and detention reports already logged."
+      },
+      {
+        "url": "https://petra.gov.jo/en/news/israeli-strike-kills-one-palestinian-wounds-others-in-gaza-city",
+        "result": "Earlier Al-Karama report, consistent with previously recorded one-fatality report, not a new incident or resolution of disputed count."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-hamas-official-his-wife-children-2026-11-25/",
+        "result": "Previously recorded November 25 reporting."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Existing report page checked; no new report identified in search."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Existing winter preparation feature, previously reviewed."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Al-Karama, Al-Shati, Halawa, Khan Younis and Tuffah incidents, detention and meningitis reporting, municipal winter-risk assessment.",
+      "Older reports, West Bank-only developments and general statements without concrete Gaza operational change."
+    ],
+    "limitations": [
+      "Ten authenticated prior same-day heartbeat records (07:44 through 16:44) reviewed, including immediate predecessor; not exhaustive ledger inventory. Earlier coverage also cross-checked through predecessor notes.",
+      "Search results sparse and mostly older or recycled. No assertion of exhaustive coverage. Production inventory not checked.",
+      "Completed_at is verified research cutoff before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

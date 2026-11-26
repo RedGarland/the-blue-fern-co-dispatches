@@ -1,0 +1,137 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T194451-0800",
+  "scheduled_for": "2026-11-25T19:44:51-08:00",
+  "started_at": "2026-11-25T19:44:03-08:00",
+  "completed_at": "2026-11-25T19:45:03-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T18:50:15-08:00",
+    "end": "2026-11-25T19:45:03-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T184451-0800.json",
+    "basis": "Authenticated predecessor cutoff to verified local clock before persistence; discovery window, not event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261125-mondoweiss-nasser-pediatric-transfer-capacity",
+      "canonical_source_url": "https://mondoweiss.net/2026/11/meningitis-cases-surge-in-gaza-as-deteriorating-living-conditions-put-children-at-risk/",
+      "title": "Meningitis cases surge in Gaza as deteriorating living conditions put children at risk",
+      "publisher": "Mondoweiss",
+      "source_date": "2026-11-25",
+      "publication_date": "2026-11-25",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Nasser Medical Complex, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Pediatric emergency and inpatient capacity. Named pediatric specialist Dr Darwish Abu al-Khair reported 500–600 children attending the emergency department daily and said overcrowding prevents additional pediatric admissions, requiring transfers to other hospitals. The daily attendance figure is not a meningitis-specific case count. Neither the number of transfers nor their dates or destinations were verified.",
+      "exact_supporting_passage": "we no longer have the capacity to admit or accommodate additional children. As a result, we are transferring children to other hospitals",
+      "source_type": "News report by specialist outlet's Gaza correspondent; direct attributed interview with treating pediatric specialist",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T18:50:15-08:00",
+          "2026-11-25T19:45:03-08:00"
+        ],
+        "method": "Targeted health search followed by full canonical article read, comparison with all 18 listed authenticated same-day prior heartbeats and detailed prior WAFA capacity finding.",
+        "related_finding_id": "gaza-20261125-wafa-meningitis-nasser-capacity-patient-discharge",
+        "novelty": "Newly discovered explicit clinician-reported interhospital transfers because pediatric admissions are saturated, with quantified daily emergency attendance, distinct from prior WAFA individual capacity-related discharge and unspecified-period facility totals. Not a new outbreak or new incident this hour.",
+        "caveat": "Exact publication hour and interview date unknown; cannot establish that first publication fell within the hour. Specific figures and transfers not independently verified; prior WAFA reporting supports general capacity pressure only. Article contains an unrelated apparent chronology error; no reliance on its military or ceasefire narrative. Do not count attendance as meningitis cases, sum with prior facility counts, or infer an official closure."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest Gaza situation report dated November 18, published November 20; no new report on index or targeted search."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Emergency overview and date-targeted WHO search; no new relevant dated Gaza update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 2026 November 26 2026 killed injured Gaza WAFA latest",
+      "Gaza November 25 2026 Gaza aid access crossing fuel UN humanitarian briefing",
+      "Gaza November 25 2026 hospital ambulance medical evacuation meningitis healthcare",
+      "Gaza November 25 2026 displacement flooding tents water sewage municipalities",
+      "Gaza November 25 2026 food aid hunger WFP UNRWA UNICEF",
+      "Gaza November 25 2026 ceasefire negotiations hostages detention Reuters AP",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 latest Al Jazeera Anadolu Middle East Eye",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:wfp.org",
+      "Gaza November 25 26 2026 humanitarian site:reliefweb.int OR site:un.org OR site:unrwa.org",
+      "Gaza after:2026-11-25 before:2026-11-27 latest casualties humanitarian aid",
+      "غزة 26 نوفمبر 2026 نزوح مساعدات مياه وقود مستشفيات"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest dated entry remains previously logged November 25 Tuffah incident."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously logged municipal risk and casualty/detention reports; November 26 Netanyahu court item unrelated."
+      },
+      {
+        "url": "https://mondoweiss.net/2026/11/meningitis-cases-surge-in-gaza-as-deteriorating-living-conditions-put-children-at-risk/",
+        "result": "Full news article read; specific named clinician testimony on pediatric transfers and daily emergency attendance admitted as follow-up."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Arabic WAFA",
+        "error": "400 Timeout fetching",
+        "material_new_degradation": false,
+        "mitigation": "English latest-news index accessible; Arabic targeted searches attempted; intermittent failure also recorded earlier."
+      }
+    ],
+    "exclusions": [
+      "Previously logged casualty incidents, detention, municipal winter-risk assessment, and earlier meningitis surveillance data and individual capacity-driven discharge. No re-counting.",
+      "Older humanitarian reports, unrelated news, broad advocacy, unsupported claims and recycled items."
+    ],
+    "limitations": [
+      "All 18 prior files listed for November 25 were read successfully; no assumption of hourly files at missing names. Prior-day ledger not exhaustively reviewed; same-day findings include references to earlier coverage.",
+      "Date-targeted search was sparse and predominantly older; no claim of exhaustive coverage. Production inventory not checked.",
+      "Completed_at represents verified research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

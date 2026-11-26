@@ -1,0 +1,160 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T224451-0800",
+  "scheduled_for": "2026-11-25T22:44:51-08:00",
+  "started_at": "2026-11-25T22:49:26-08:00",
+  "completed_at": "2026-11-25T22:49:57-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T21:48:36-08:00",
+    "end": "2026-11-25T22:49:57-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T214451-0800.json",
+    "basis": "Authenticated predecessor research cutoff to current verified local research cutoff; discovery window, not event timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-wafa-deir-al-balah-displaced-couple-fatalities",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/26/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-%D9%85%D9%88%D8%A7%D8%B7%D9%86-%D9%88%D8%B2%D9%88%D8%AC%D8%AA%D9%87-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%A2%D8%AE%D8%B1%D9%8A%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81",
+      "title": "استشهاد مواطن وزوجته وإصابة آخرين في قصف للاحتلال وسط وشمال قطاع غزة",
+      "publisher": "WAFA (Arabic)",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": "2026-11-26",
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency, attributed local and hospital sources",
+      "classification": "new",
+      "confidence": "medium",
+      "location": "Deir al-Balah, central Gaza Strip",
+      "affected_population_system": "WAFA cites local sources reporting a man and his wife killed in an Israeli strike on a residential apartment; family displaced from Rafah.",
+      "exact_supporting_passage": "استشهاد رجل وزوجته في قصف إسرائيلي استهدف شقة سكنية",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T21:48:36-08:00",
+          "2026-11-25T22:49:57-08:00"
+        ],
+        "method": "Direct Arabic WAFA homepage and full article, compared with 15 authenticated same-day prior heartbeat files and prior summary of exclusions.",
+        "source_displayed_publication_time": "26/11/2026 08:25 AM; timezone not explicitly labeled. If Palestine local time (UTC+02:00), corresponds to Nov 25 22:25 PST, within discovery window.",
+        "caveat": "Single agency report; independent corroboration and victim identities unavailable. Two geographically distinct incidents in one article; do not double count if syndicated or summarized together.",
+        "novelty": "Distinct newly reported civilian casualty incident in Deir al-Balah; not the prior Tuffah or other November 25 local-date incidents."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-wafa-al-nasr-injuries-al-shifa",
+      "canonical_source_url": "https://www.wafa.ps/news/2026/11/26/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-%D9%85%D9%88%D8%A7%D8%B7%D9%86-%D9%88%D8%B2%D9%88%D8%AC%D8%AA%D9%87-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%A2%D8%AE%D8%B1%D9%8A%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81",
+      "title": "استشهاد مواطن وزوجته وإصابة آخرين في قصف للاحتلال وسط وشمال قطاع غزة",
+      "publisher": "WAFA (Arabic)",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": "2026-11-26",
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency, attributed local and hospital sources",
+      "classification": "new",
+      "confidence": "medium",
+      "location": "Al-Nasr neighbourhood, northwestern Gaza City",
+      "affected_population_system": "WAFA cites Al-Shifa Hospital reporting arrival of several injured people following an Israeli strike in Al-Nasr, including one serious injury. Total number not specified.",
+      "exact_supporting_passage": "بوصول عدد من المصابين، بينهم إصابة خطيرة",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-25T21:48:36-08:00",
+          "2026-11-25T22:49:57-08:00"
+        ],
+        "method": "Direct Arabic WAFA homepage and full article, compared with 15 authenticated same-day prior heartbeat files and prior summary of exclusions.",
+        "source_displayed_publication_time": "26/11/2026 08:25 AM; timezone not explicitly labeled. If Palestine local time (UTC+02:00), corresponds to Nov 25 22:25 PST, within discovery window.",
+        "caveat": "Single agency report; independent corroboration and victim identities unavailable. Two geographically distinct incidents in one article; do not double count if syndicated or summarized together.",
+        "novelty": "Separate newly reported location and injury incident; no matching prior ledger finding."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Date-targeted search and homepage: latest relevant situation report dated Nov 18, published Nov 20; no newer report found."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Date-targeted search and emergency overview; no fresh Gaza-specific update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest civilians killed wounded WAFA Gaza City Khan Younis",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 aid crossings fuel humanitarian access",
+      "Gaza November 26 2026 hospital ambulance medical evacuation meningitis",
+      "Gaza November 26 2026 displacement flooding tents sewage water",
+      "Gaza November 25 26 2026 food aid hunger UNRWA WFP UNICEF",
+      "Gaza November 26 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "Gaza November 26 2026 Al Jazeera Anadolu latest Gaza",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org",
+      "Gaza November 25 26 2026 humanitarian site:reliefweb.int OR site:un.org",
+      "غزة 26 نوفمبر 2026 مستشفيات مساعدات نزوح وقود مياه",
+      "Gaza November 26 2026 civilian impact Israeli military operations latest"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; new Nov 26 entries West Bank only; latest Gaza report prior Tuffah incident."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; new Nov 26 08:25 Arabic article with two distinct Gaza incidents."
+      },
+      {
+        "url": "https://www.wafa.ps/news/2026/11/26/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-%D9%85%D9%88%D8%A7%D8%B7%D9%86-%D9%88%D8%B2%D9%88%D8%AC%D8%AA%D9%87-%D9%88%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%A2%D8%AE%D8%B1%D9%8A%D9%86-%D9%81%D9%8A-%D9%82%D8%B5%D9%81",
+        "result": "Full article accessible; attributed local and hospital sources."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "url": "https://www.un.org/sg/en/content/noon-briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Prior Tuffah and other Nov 25 casualty reports, previous meningitis and pediatric capacity reporting, older food-aid vehicle incident and West Bank-only items.",
+      "No new operational change in aid, water, crossings, detention or negotiations established in this bounded search."
+    ],
+    "limitations": [
+      "15 same-day heartbeat files (07:44 through 21:44) read successfully; attempted paths 00:44–06:44 returned 404, not evidence that earlier checks did not occur. Prior summaries used for additional exclusions.",
+      "Search results sparse and often stale; no exhaustive or production inventory claim.",
+      "Completed_at is verified research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

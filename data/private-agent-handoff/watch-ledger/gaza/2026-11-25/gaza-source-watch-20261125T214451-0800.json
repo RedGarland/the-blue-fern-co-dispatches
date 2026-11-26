@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T214451-0800",
+  "scheduled_for": "2026-11-25T21:44:51-08:00",
+  "started_at": "2026-11-25T21:47:59-08:00",
+  "completed_at": "2026-11-25T21:48:36-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T20:43:19-08:00",
+    "end": "2026-11-25T21:48:36-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T204451-0800.json",
+    "basis": "Authenticated predecessor research cutoff to current verified local cutoff; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 18, published November 20; no new relevant report located."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Date-targeted search and emergency overview yielded no new dated Gaza report."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest killed wounded civilians WAFA Khan Younis Gaza city",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 aid crossings fuel humanitarian access",
+      "Gaza November 26 2026 hospital ambulance medical evacuation meningitis",
+      "Gaza November 26 2026 displacement flooding tents sewage water",
+      "Gaza November 25 26 2026 food aid hunger UNRWA WFP UNICEF",
+      "Gaza November 26 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "Gaza November 26 2026 Al Jazeera Anadolu latest Gaza",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org",
+      "Gaza November 25 26 2026 humanitarian site:reliefweb.int OR site:un.org",
+      "غزة 26 نوفمبر 2026 مستشفيات مساعدات نزوح وقود مياه",
+      "Gaza November 26 2026 latest civilian impact Israeli military operations"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Accessible; latest item Nov 25 23:13 Palestine local time, previously logged Tuffah incident."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible; daily roundup published Nov 25 23:17 repeats previously recorded incidents."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177320",
+        "result": "UNCTAD economic recovery resolution, previously reviewed; no concrete Gaza operational change."
+      },
+      {
+        "url": "https://www.newarab.com/features/gaza-meningitis-outbreak-puts-infants-risk-amid-winter-flood",
+        "result": "Nov 24 report on meningitis and hospital isolation capacity, outside discovery window and consistent with previously logged health developments; not a fresh event."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "url": "https://www.un.org/sg/en/content/noon-briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Al-Shati, Al-Karama, Halawa, Khan Younis and Tuffah casualty incidents; WAFA daily roundup is not a separate incident.",
+      "Prior detention, meningitis, pediatric capacity/transfer and municipal winter-risk assessments.",
+      "Older food-aid vehicle incident, stale humanitarian reports, West Bank-only news, and UNCTAD resolution without concrete Gaza operational change."
+    ],
+    "limitations": [
+      "Twelve authenticated prior same-day heartbeats reviewed directly (09:44–20:44); directory listing returned empty content, but individual reads succeeded. Earlier same-day runs covered by predecessor summaries, not independently reread this run.",
+      "Date-targeted results sparse and often stale; no claim of exhaustive coverage or production inventory check.",
+      "Completed_at is research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T204451-0800",
+  "scheduled_for": "2026-11-25T20:44:51-08:00",
+  "started_at": "2026-11-25T20:42:24-08:00",
+  "completed_at": "2026-11-25T20:43:19-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T19:45:03-08:00",
+    "end": "2026-11-25T20:43:19-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T194451-0800.json",
+    "basis": "Authenticated predecessor cutoff to verified local research cutoff; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Date-targeted search and updates index: latest situation report dated Nov 18, published Nov 20; no newer relevant update."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Date-targeted search and emergency overview: no new dated Gaza development located."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 latest casualties WAFA Gaza City Khan Younis",
+      "Gaza November 25 26 2026 aid access crossing fuel UN humanitarian briefing",
+      "Gaza November 25 26 2026 hospital ambulance medical evacuation meningitis healthcare",
+      "Gaza November 25 26 2026 displacement flooding tents water sewage municipalities",
+      "Gaza November 25 26 2026 food aid hunger WFP UNRWA UNICEF",
+      "Gaza November 25 26 2026 ceasefire negotiations hostages detention Reuters AP",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا",
+      "Gaza November 26 2026 latest Al Jazeera Anadolu Middle East Eye",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:wfp.org",
+      "Gaza November 25 26 2026 site:reliefweb.int OR site:un.org OR site:unrwa.org humanitarian",
+      "Gaza November 25 26 2026 Amnesty reproductive health report Gaza",
+      "غزة 26 نوفمبر 2026 نزوح مساعدات مياه وقود مستشفيات"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest item Nov 25 23:13 Palestine local time, previously logged Tuffah strike."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Accessible this run; visible Gaza headlines correspond to previously logged Jabalia/Khan Younis incident and meningitis report."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/europe/eu-says-gaza-situation-really-dire-aid-access-limited-by-israel/4137537",
+        "result": "Nov 25 midday Brussels briefing; reiterates established crossing and shelter supply constraints. Prior WAFA account explicitly reviewed and excluded in 03:44 and 11:44 heartbeats; no new measured operational change."
+      },
+      {
+        "url": "https://www.amnesty.org/en/latest/news/2026/11/women-and-girls-bear-the-crushing-toll-of-israels-ongoing-genocide-in-gaza/",
+        "result": "Nov 25 primary report release on reproductive health and gendered harms, previously logged per authenticated 00:44 predecessor references and 11:44 notes; later secondary coverage is recycled."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "url": "https://www.wfp.org/news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "url": "https://www.un.org/sg/en/content/noon-briefings",
+        "error": "DisabledError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Tuffah, Jabalia, Khan Younis and Al-Shati incidents; earlier detention, meningitis and pediatric transfers, municipal winter-risk assessment and older UK medical evacuation reporting.",
+      "Nov 26 Oz Arab Media shelter warning repeats earlier municipal risk assessment.",
+      "EU aid-access statement previously assessed; Amnesty reproductive-health report already logged according to prior authenticated ledger notes.",
+      "Older reports, irrelevant geography and unsupported or opinion-only material."
+    ],
+    "limitations": [
+      "All 19 listed same-day prior heartbeats authenticated and read; previous day not exhaustively reviewed. No production inventory check.",
+      "Date-targeted results sparse and often stale; no claim of exhaustive coverage.",
+      "Completed_at is verified research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

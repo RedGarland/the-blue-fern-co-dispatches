@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261125T164451-0800",
+  "scheduled_for": "2026-11-25T16:44:51-08:00",
+  "started_at": "2026-11-25T16:44:47-08:00",
+  "completed_at": "2026-11-25T16:45:49-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-25",
+    "start": "2026-11-25T15:48:41-08:00",
+    "end": "2026-11-25T16:45:49-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-25/gaza-source-watch-20261125T154451-0800.json",
+    "basis": "Authenticated previous research cutoff to verified local clock before persistence; discovery window, not event timing."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report November 18, published November 20; no new dated update."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza update on emergency overview."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway; situation-report listing also 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 25 26 2026 latest casualties strikes WAFA Gaza City Khan Younis",
+      "Gaza November 25 26 2026 humanitarian aid access crossings fuel food water displacement UN OCHA UNICEF UNRWA",
+      "Gaza November 25 26 2026 hospitals ambulance medical evacuations health ministry MSF PRCS WHO",
+      "Gaza November 25 26 2026 ceasefire negotiations hostages detention Reuters AP AFP",
+      "غزة 26 نوفمبر 2026 شهداء إصابات قصف وفا مستشفيات معابر",
+      "Gaza November 25 26 2026 latest Al Jazeera Anadolu Middle East Eye",
+      "Gaza November 25 26 2026 flooding shelter municipal infrastructure damage humanitarian",
+      "Gaza November 25 26 2026 site:reliefweb.int OR site:un.org OR site:unrwa.org humanitarian",
+      "Gaza November 25 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:wfp.org",
+      "Gaza November 25 26 2026 site:reuters.com OR site:apnews.com Gaza latest",
+      "غزة 26 نوفمبر 2026 نزوح مساعدات مياه وقود مستشفيات",
+      "Gaza after:2026-11-25 before:2026-11-27 latest news crossings casualties humanitarian"
+    ],
+    "direct_checks": [
+      {
+        "url": "https://english.wafa.ps/Pages/LastNews",
+        "result": "Latest Gaza incident remains previously logged Tuffah; no new dated entry."
+      },
+      {
+        "url": "https://www.wafa.ps/",
+        "result": "Latest Arabic roundup and previously logged casualty and meningitis items; no new distinct development."
+      },
+      {
+        "url": "https://www.aljazeera.com/where/palestine/",
+        "result": "Previously recorded casualty and detention stories."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/25/sentences-served-but-gaza-prisoners-remain-behind-israeli-bars",
+        "result": "Full article checked; earlier heartbeat explicitly identifies it as previously logged."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177320",
+        "result": "Broad UNCTAD economic recovery resolution, previously excluded; no implemented Gaza-specific change."
+      },
+      {
+        "url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "result": "Latest featured report published November 19, outside window."
+      },
+      {
+        "url": "https://www.icrc.org/en/where-we-work/israel-and-occupied-territories",
+        "result": "Latest Gaza article dated November 23, outside window."
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "403 Forbidden",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN noon briefings",
+        "error": "DisabledError; previously inaccessible",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      "Previously logged Tuffah, Al-Shati, Al-Karama, Halawa and Khan Younis casualty reports; same-agency roundup not separate incident.",
+      "Previously logged detention and meningitis reporting, and prior municipal winter risk assessment.",
+      "UNCTAD resolution without concrete Gaza operational change; older OCHA, UNRWA, ICRC reports and West Bank-only material."
+    ],
+    "limitations": [
+      "Ten authenticated same-day heartbeat files reviewed, including immediate predecessor and 06:44 alternate filename; six guessed early filenames absent, so not a complete ledger inventory. Prior heartbeat notes confirm earlier detention and meningitis coverage.",
+      "Targeted search returned mostly stale material; direct source checks retained useful coverage. No claim of exhaustive coverage.",
+      "Production inventory not checked. Completed_at is verified research cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

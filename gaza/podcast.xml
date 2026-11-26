@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 25 Nov 2026 15:53:34 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 26 Nov 2026 16:59:06 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for November 26, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-26-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-11-26-transcript.html</guid>
+    <pubDate>Thu, 26 Nov 2026 00:00:00 +0000</pubDate>
+    <description>Palestinian journalist killed by Israel in Gaza wins Rory Peck prize. Mariam Dagga shares award with two of her colleagues from AP for 'powerful coverage' of human cost of war Mariam Dagga, the Palestinian war correspondent who was killed at the age of 33 in Gaza in an Israeli strike, has posthumously won the prestigious Rory Peck prize for freelance video journalists, the organisers announced on Wednesday. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-11-26.mp3" length="1846656" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for November 25, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-25-transcript.html</link>

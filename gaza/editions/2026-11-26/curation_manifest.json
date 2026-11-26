@@ -1,0 +1,502 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-26-003",
+    "title": "Palestinian journalist killed by Israel in Gaza wins Rory Peck prize",
+    "summary": "Mariam Dagga shares award with two of her colleagues from AP for 'powerful coverage' of human cost of war Mariam Dagga, the Palestinian war correspondent who was killed at the age of 33 in Gaza in an Israeli strike, has posthumously won the prestigious Rory Peck prize for freelance video journalists, the organisers announced on Wednesday. She shares the award with two of her colleagues from the Associated Press (AP), Abdel Kareem Hana and Jehad Alshrafi, \"for their powerful coverage of the human cost of the war\" in the Palestinian territory, the Rory Peck Trust said.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 77,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-26-guardian-world-b7fe036b6932"
+    ],
+    "source_ids": [
+      "gaza-2026-11-26-guardian-world-b7fe036b6932"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/media/2026/nov/25/palestinian-journalist-killed-by-israel-in-gaza-wins-rory-peck-prize"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-26-guardian-world-b7fe036b6932",
+        "title": "Palestinian journalist killed by Israel in Gaza wins Rory Peck prize",
+        "url": "https://www.theguardian.com/media/2026/nov/25/palestinian-journalist-killed-by-israel-in-gaza-wins-rory-peck-prize",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Mariam Dagga shares award with two of her colleagues from AP for 'powerful coverage' of human cost of war Mariam Dagga, the Palestinian war correspondent who was killed at the age of 33 in Gaza in an Israeli strike, has posthumously won the prestigious Rory Peck prize for freelance video journalists, the organisers announced on Wednesday. She shares the award with two of her colleagues from the Associated Press (AP), Abdel Kareem Hana and Jehad Alshrafi, \"for their powerful coverage of the human cost of the war\" in the Palestinian territory, the Rory Peck Trust said.",
+        "published_at": "2026-11-25T23:06:06+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-26T16:58:40.167381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 77,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-26-002",
+    "title": "UN sacked Palestinian staff on back of unproven Israeli allegations, tribunal rules",
+    "summary": "Judgment casts doubt on evidence linking aid workers to Hamas and says humanitarian efforts in Gaza were damaged. A UN tribunal has cast doubt on the evidence used to justify the sacking of Palestinian UN aid workers in 2024, saying it was based \"almost entirely\" on unproven assertions from the Israeli government and had damaged humanitarian operations in Gaza. The judgment, seen by the Guardian, raises fresh questions about the decision by the UN Relief and Works Agency (Unrwa), the main humanitarian organisation working in Gaza, to sack members of staff. It was taken on the basis of Israeli allegations of involvement in the Hamas-led attacks of 7 October 2023.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-26-guardian-world-675784b1f5a8"
+    ],
+    "source_ids": [
+      "gaza-2026-11-26-guardian-world-675784b1f5a8"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/nov/25/un-sacked-palestinian-staff-on-back-of-unproven-israel-allegations"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-26-guardian-world-675784b1f5a8",
+        "title": "UN sacked Palestinian staff on back of unproven Israeli allegations, tribunal rules",
+        "url": "https://www.theguardian.com/world/2026/nov/25/un-sacked-palestinian-staff-on-back-of-unproven-israel-allegations",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Judgment casts doubt on evidence linking aid workers to Hamas and says humanitarian efforts in Gaza were damaged A UN tribunal has cast doubt on the evidence used to justify the sacking of Palestinian UN aid workers in 2024, saying it was based \"almost entirely\" on unproven assertions from the Israeli government and had damaged humanitarian operations in Gaza. The judgment, seen by the Guardian, raises fresh questions about the decision by the UN Relief and Works Agency (Unrwa), the main humanitarian organisation working in Gaza, to sack members of staff. It was taken on the basis of Israeli allegations of involvement in the Hamas-led attacks of 7 October 2023.",
+        "published_at": "2026-11-26T00:05:50+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-26T16:58:40.167381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "unrwa"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-26-007",
+    "title": "Hamas political official and wife among eight Palestinians killed in Israeli strikes on Gaza",
+    "summary": "The killings are the latest from a series of near daily attacks by Israel against what it says are Hamas targets.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-26-bbc-middle-east-e18f7696bf87"
+    ],
+    "source_ids": [
+      "gaza-2026-11-26-bbc-middle-east-e18f7696bf87"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cqvg2n4mzl1jo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-26-bbc-middle-east-e18f7696bf87",
+        "title": "Hamas political official and wife among eight Palestinians killed in Israeli strikes on Gaza",
+        "url": "https://www.bbc.co.uk/news/articles/cqvg2n4mzl1jo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The killings are the latest from a series of near daily attacks by Israel against what it says are Hamas targets.",
+        "published_at": "2026-11-26T10:14:08+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-26T16:58:40.167381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-26-006",
+    "title": "Film shows testimonies of international doctors amid Gaza genocide",
+    "summary": "A documentary shows footage from international doctors who bore witness to the collapse of the Gaza's medical system.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-26-aljazeera-middle-east-4f4631287e15"
+    ],
+    "source_ids": [
+      "gaza-2026-11-26-aljazeera-middle-east-4f4631287e15"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/11/26/film-shows-testimonies-of-international-doctors-amid-gaza-genocide?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-26-aljazeera-middle-east-4f4631287e15",
+        "title": "Film shows testimonies of international doctors amid Gaza genocide",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/26/film-shows-testimonies-of-international-doctors-amid-gaza-genocide?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A documentary shows footage from international doctors who bore witness to the collapse of the Gaza's medical system.",
+        "published_at": "2026-11-26T13:02:24+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-26T16:58:40.167381+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-26-009",
+    "title": "Qatari, Egyptian leaders discuss Gaza 'ceasefire' and regional security",
+    "summary": "Sheikh Tamim bin Hamad Al Thani is in Cairo for an official visit aimed at further strengthening bilateral relations.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-26-aljazeera-middle-east-525d00786a0c"
+    ],
+    "source_ids": [
+      "gaza-2026-11-26-aljazeera-middle-east-525d00786a0c"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/26/qatari-egyptian-leaders-discuss-gaza-ceasefire-and-regional-security?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-26-aljazeera-middle-east-525d00786a0c",
+        "title": "Qatari, Egyptian leaders discuss Gaza 'ceasefire' and regional security",
+        "url": "https://www.aljazeera.com/news/2026/11/26/qatari-egyptian-leaders-discuss-gaza-ceasefire-and-regional-security?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Sheikh Tamim bin Hamad Al Thani is in Cairo for an official visit aimed at further strengthening bilateral relations.",
+        "published_at": "2026-11-26T15:45:59+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-26T16:58:40.167381+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-26-005",
+    "title": "UN ruling disputes Israeli allegations used to dismiss UNRWA Gaza staff",
+    "summary": "Tribunal raises questions about the credibility of UNRWA's decision to dismiss its staff without substantiated evidence.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-26-aljazeera-middle-east-f0653e3636a7"
+    ],
+    "source_ids": [
+      "gaza-2026-11-26-aljazeera-middle-east-f0653e3636a7"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/26/un-ruling-disputes-israeli-allegations-used-to-dismiss-unrwa-gaza-staff?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-26-aljazeera-middle-east-f0653e3636a7",
+        "title": "UN ruling disputes Israeli allegations used to dismiss UNRWA Gaza staff",
+        "url": "https://www.aljazeera.com/news/2026/11/26/un-ruling-disputes-israeli-allegations-used-to-dismiss-unrwa-gaza-staff?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Tribunal raises questions about the credibility of UNRWA's decision to dismiss its staff without substantiated evidence.",
+        "published_at": "2026-11-26T15:00:47+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-26T16:58:40.167381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "unrwa"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

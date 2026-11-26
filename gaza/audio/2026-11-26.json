@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-26",
+  "generated_at": "2026-11-26T16:57:03.582014Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-11-26.mp3",
+  "audio_url": "/gaza/audio/2026-11-26.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1854,
+  "tts_input_word_count": 290,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1846656,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-11-26T16:57:03.581979Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-11-26-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-26/",
+  "script_text": "This is the Gaza Dispatch audio briefing for November 26, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian journalist killed by Israel in Gaza wins Rory Peck prize. Mariam Dagga shares award with two of her colleagues from AP for 'powerful coverage' of human cost of war Mariam Dagga, the Palestinian war correspondent who was killed at the age of 33 in Gaza in an Israeli strike, has posthumously won the prestigious Rory Peck prize for freelance video journalists, the organisers announced on Wednesday. This was reported by The Guardian.\n\n2. UN sacked Palestinian staff on back of unproven Israeli allegations, tribunal rules. Judgment casts doubt on evidence linking aid workers to Hamas and says humanitarian efforts in Gaza were damaged. This was reported by The Guardian.\n\n3. Hamas political official and wife among eight Palestinians killed in Israeli strikes on Gaza. The killings are the latest from a series of near daily attacks by Israel against what it says are Hamas targets. This was reported by BBC News.\n\n4. Film shows testimonies of international doctors amid Gaza genocide. A documentary shows footage from international doctors who bore witness to the collapse of the Gaza's medical system. This was reported by Al Jazeera.\n\n5. Qatari, Egyptian leaders discuss Gaza 'ceasefire' and regional security. Sheikh Tamim bin Hamad Al Thani is in Cairo for an official visit aimed at further strengthening bilateral relations. This was reported by Al Jazeera.\n\n6. UN ruling disputes Israeli allegations used to dismiss UNRWA Gaza staff. Tribunal raises questions about the credibility of UNRWA's decision to dismiss its staff without substantiated evidence. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the November 26, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-11-26-guardian-world-b7fe036b6932",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/media/2026/nov/25/palestinian-journalist-killed-by-israel-in-gaza-wins-rory-peck-prize",
+      "title": "Palestinian journalist killed by Israel in Gaza wins Rory Peck prize"
+    },
+    {
+      "source_record_id": "gaza-2026-11-26-guardian-world-675784b1f5a8",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/nov/25/un-sacked-palestinian-staff-on-back-of-unproven-israel-allegations",
+      "title": "UN sacked Palestinian staff on back of unproven Israeli allegations, tribunal rules"
+    },
+    {
+      "source_record_id": "gaza-2026-11-26-bbc-middle-east-e18f7696bf87",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cqvg2n4mzl1jo?at_medium=RSS&at_campaign=rss",
+      "title": "Hamas political official and wife among eight Palestinians killed in Israeli strikes on Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-11-26-aljazeera-middle-east-4f4631287e15",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/11/26/film-shows-testimonies-of-international-doctors-amid-gaza-genocide?traffic_source=rss",
+      "title": "Film shows testimonies of international doctors amid Gaza genocide"
+    },
+    {
+      "source_record_id": "gaza-2026-11-26-aljazeera-middle-east-525d00786a0c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/11/26/qatari-egyptian-leaders-discuss-gaza-ceasefire-and-regional-security?traffic_source=rss",
+      "title": "Qatari, Egyptian leaders discuss Gaza 'ceasefire' and regional security"
+    },
+    {
+      "source_record_id": "gaza-2026-11-26-aljazeera-middle-east-f0653e3636a7",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/11/26/un-ruling-disputes-israeli-allegations-used-to-dismiss-unrwa-gaza-staff?traffic_source=rss",
+      "title": "UN ruling disputes Israeli allegations used to dismiss UNRWA Gaza staff"
+    }
+  ]
+}

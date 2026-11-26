@@ -1,0 +1,81 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-26",
+  "generated_at": "2026-11-26T16:58:40.167381+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-26/",
+  "local_output_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26",
+  "local_dispatch_output_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\dispatches\\gaza\\editions\\2026-11-26",
+  "local_backup_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\tmp-backups-pages\\gaza\\2026-11-26",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 12,
+  "story_count": 6,
+  "source_adequacy_status": "daily_briefing",
+  "source_adequacy_label": "Daily briefing",
+  "publisher_count": 4,
+  "publishers": [
+    "Al Jazeera",
+    "BBC News",
+    "OCHA",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26\\sources_manifest.json",
+  "curation_manifest_path": "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26\\curation_manifest.json",
+  "free_public_artifacts": [
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26\\index.html",
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26\\edition_manifest.json",
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26\\sources_manifest.json",
+    "E:\\Dispatches\\GazaDailyRelease\\private-source-2026-11-26-001\\output\\site\\gaza\\editions\\2026-11-26\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 4 repeated/stale candidate sources via cross-edition dedupe"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-11-26T06:00:00-08:00",
+  "actual_run_local_time": "2026-11-26T08:58:40-08:00",
+  "source_window_start_utc": "2026-11-24T15:35:53Z",
+  "source_window_end_utc": "2026-11-26T15:53:32Z",
+  "first_source_retrieved_at": "2026-11-26T16:54:49.600767Z",
+  "last_source_retrieved_at": "2026-11-26T16:54:49.600767Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-11-26T16:54:49.600767Z",
+      "retrieved_at_local": "2026-11-26T08:54:49-08:00",
+      "retrieved_local_date": "2026-11-26",
+      "batch_classification": "after_scheduled_initial_batch",
+      "source_record_ids": [
+        "gaza-2026-11-26-ocha-opt-updates-0821542f84d3",
+        "gaza-2026-11-26-guardian-world-675784b1f5a8",
+        "gaza-2026-11-26-guardian-world-b7fe036b6932",
+        "gaza-2026-11-26-bbc-middle-east-cbc3d57ecd65",
+        "gaza-2026-11-26-aljazeera-middle-east-f0653e3636a7",
+        "gaza-2026-11-26-aljazeera-middle-east-4f4631287e15",
+        "gaza-2026-11-26-bbc-middle-east-e18f7696bf87",
+        "gaza-2026-11-26-bbc-gaza-health-query-1498826385fe",
+        "gaza-2026-11-26-aljazeera-middle-east-525d00786a0c",
+        "gaza-2026-11-26-bbc-middle-east-71e0c2f8e507",
+        "gaza-2026-11-26-aljazeera-middle-east-27601556da1b",
+        "gaza-2026-11-26-guardian-world-3c3d14d006a3"
+      ],
+      "source_count": 12
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T054451-0800",
+  "scheduled_for": "2026-11-26T05:44:51-08:00",
+  "started_at": "2026-11-26T05:40:40-08:00",
+  "completed_at": "2026-11-26T05:41:52-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T04:41:33-08:00",
+    "end": "2026-11-26T05:41:52-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T044451-0800.json",
+    "basis": "Authenticated preceding cutoff through observed current research cutoff; discovery window, not event time. Execution began before nominal scheduled time."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-ocha-aid-offload-weekly-decline",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip / Kerem Shalom crossing",
+      "affected_population_system": "Humanitarian logistics: 405 UN and partner truckloads offloaded on Israeli side during Nov 16–23, compared with 433 previous week (6% decrease). Offloading is not equivalent to onward entry or distribution.",
+      "exact_supporting_passage": "405 were offloaded",
+      "source_type": "Official UN humanitarian situation report, attributed sector/cluster data",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T04:41:33-08:00",
+          "2026-11-26T05:41:52-08:00"
+        ],
+        "method": "OCHA OPT first search; full official situation report inspected; compared with 22 authenticated preceding hourly heartbeats including immediate predecessor that listed November 18 as latest.",
+        "novelty": "Logistics Cluster data, reporting period November 16–23; newly published weekly comparison.",
+        "caveat": "Newly discovered official reporting, not proof the underlying change occurred during the observation hour. Publication hour unknown; figures attributed to OCHA and its reporting partners, not independently audited."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-ocha-water-trucking-fleet-loss",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Water access: private desalination operators' water trucking fleet fell from 500 to 150 vehicles (70% reduction); desalination capacity also constrained by treatment chemical shortages and generator shutdowns.",
+      "exact_supporting_passage": "declined from 500 to 150 trucks",
+      "source_type": "Official UN humanitarian situation report, attributed sector/cluster data",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T04:41:33-08:00",
+          "2026-11-26T05:41:52-08:00"
+        ],
+        "method": "OCHA OPT first search; full official situation report inspected; compared with 22 authenticated preceding hourly heartbeats including immediate predecessor that listed November 18 as latest.",
+        "novelty": "WASH Cluster, report section Essential services and operational constraints. Date of fleet comparison not specified.",
+        "caveat": "Newly discovered official reporting, not proof the underlying change occurred during the observation hour. Publication hour unknown; figures attributed to OCHA and its reporting partners, not independently audited."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-ocha-hospital-generator-maintenance-risk",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Healthcare operating capacity: 20 of 47 generators serving Ministry of Health hospitals and clinics are overdue for maintenance; continuity of life-saving services threatened. This does not establish that those generators have failed.",
+      "exact_supporting_passage": "20 of 47 generators",
+      "source_type": "Official UN humanitarian situation report, attributed sector/cluster data",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T04:41:33-08:00",
+          "2026-11-26T05:41:52-08:00"
+        ],
+        "method": "OCHA OPT first search; full official situation report inspected; compared with 22 authenticated preceding hourly heartbeats including immediate predecessor that listed November 18 as latest.",
+        "novelty": "Health Cluster citing Ministry of Health data; report section Essential services and operational constraints. Exact measurement date unknown.",
+        "caveat": "Newly discovered official reporting, not proof the underlying change occurred during the observation hour. Publication hour unknown; figures attributed to OCHA and its reporting partners, not independently audited."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-ocha-water-wells-rehabilitated",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza City",
+      "affected_population_system": "Water access improvement: partners completed rehabilitation of two domestic wells serving approximately 50,000 people, reducing reliance on trucked water.",
+      "exact_supporting_passage": "two domestic water wells",
+      "source_type": "Official UN humanitarian situation report, attributed sector/cluster data",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T04:41:33-08:00",
+          "2026-11-26T05:41:52-08:00"
+        ],
+        "method": "OCHA OPT first search; full official situation report inspected; compared with 22 authenticated preceding hourly heartbeats including immediate predecessor that listed November 18 as latest.",
+        "novelty": "WASH partners, reporting period November 17–23; exact completion dates unspecified.",
+        "caveat": "Newly discovered official reporting, not proof the underlying change occurred during the observation hour. Publication hour unknown; figures attributed to OCHA and its reporting partners, not independently audited."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-ocha-bread-production-coverage",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": "2026-11-22",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Food access: as of Nov 22 partners supported daily production of approximately 295 metric tonnes of bread, meeting 35% of estimated daily requirements. This is humanitarian-partner production coverage, not total food availability.",
+      "exact_supporting_passage": "35 per cent",
+      "source_type": "Official UN humanitarian situation report, attributed sector/cluster data",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T04:41:33-08:00",
+          "2026-11-26T05:41:52-08:00"
+        ],
+        "method": "OCHA OPT first search; full official situation report inspected; compared with 22 authenticated preceding hourly heartbeats including immediate predecessor that listed November 18 as latest.",
+        "novelty": "Food Security Sector, humanitarian response at a glance; new quantified coverage in weekly report.",
+        "caveat": "Newly discovered official reporting, not proof the underlying change occurred during the observation hour. Publication hour unknown; figures attributed to OCHA and its reporting partners, not independently audited."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-ocha-meningitis-lab-confirmation-gap",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Disease surveillance: OCHA reports only about 4% of meningitis cases laboratory-confirmed; limited laboratory capacity delays differentiation between viral and bacterial cases. WHO recorded 692 suspected cases Oct 1–Nov 23 (476 suspected viral and 216 suspected bacterial). This is a surveillance and diagnostic-capacity follow-up, not a claim of new cases during the hourly window.",
+      "exact_supporting_passage": "four per cent",
+      "source_type": "Official UN humanitarian situation report, attributed sector/cluster data",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T04:41:33-08:00",
+          "2026-11-26T05:41:52-08:00"
+        ],
+        "method": "OCHA OPT first search; full official situation report inspected; compared with 22 authenticated preceding hourly heartbeats including immediate predecessor that listed November 18 as latest.",
+        "novelty": "WHO EWARS and Health Cluster, report Health and disease surveillance section; case surveillance cutoff Nov 23. Existing outbreak and individual hospital admissions already covered; the laboratory confirmation constraint is the material new detail.",
+        "caveat": "Newly discovered official reporting, not proof the underlying change occurred during the observation hour. Publication hour unknown; figures attributed to OCHA and its reporting partners, not independently audited."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "status": "ACCESSIBLE",
+        "result": "New November 26 full situation report available; predecessor listed November 18 report as latest."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new dated Gaza update located on global overview; WHO figures in new OCHA report."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "502 Bad Gateway; alternative Palestine path also inaccessible."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 WAFA latest casualties hospital",
+      "غزة 26 نوفمبر 2026 وفا شهداء مستشفيات مساعدات",
+      "Gaza November 26 2026 UNRWA WFP UNICEF aid displacement water crossings",
+      "Gaza November 26 2026 MSF ICRC hospital fuel medical evacuation ambulance",
+      "Gaza November 26 2026 Reuters AP ceasefire negotiations hostages detention",
+      "Gaza November 26 2026 Al Jazeera Anadolu latest civilian impact",
+      "Gaza 26 November 2026 humanitarian situation aid water generators OCHA",
+      "Gaza November 26 2026 displacement flooding tents infrastructure",
+      "Gaza November 26 2026 Palestine Red Crescent ambulance aid hospital",
+      "Gaza November 26 2026 site:reliefweb.int OR site:news.un.org",
+      "Gaza November 26 2026 crossings military operations civilian impact",
+      "Gaza November 26 2026 latest news Gaza food health"
+    ],
+    "direct_checks": [
+      {
+        "source": "WAFA English and Arabic",
+        "result": "Accessible; current Gaza headlines overlap prior ledger; newer visible headlines unrelated or West Bank."
+      },
+      {
+        "source": "Al Jazeera Palestine",
+        "result": "Accessible; current news largely previously recorded; opinion and unrelated stories excluded."
+      },
+      {
+        "source": "WFP",
+        "result": "Accessible emergency overview; no new dated development isolated."
+      },
+      {
+        "source": "UNRWA",
+        "result": "403 Forbidden"
+      }
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 and alternative inaccessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNRWA",
+        "error": "403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots.txt",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 22,
+    "exclusions": [
+      "Duplicate WAFA casualty and hospital aggregate reporting, known meningitis outbreak and hospital admissions, prior displacement risk reports, West Bank-only reporting, stale search results, opinion and unverified social claims. No distinct newly sourced ceasefire or detention change established."
+    ],
+    "limitations": [
+      "No exhaustive production comparison; reviewed all 22 available November 25–26 preceding hourly records (November 25 starts at 07; earlier named paths absent).",
+      "Supplementary search results were sparse; direct official sources supplied substantive coverage.",
+      "Report date verified, precise publication hour unavailable; findings are newly observed, not necessarily newly occurring within the hour.",
+      "Completed_at represents observation cutoff immediately before persistence."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

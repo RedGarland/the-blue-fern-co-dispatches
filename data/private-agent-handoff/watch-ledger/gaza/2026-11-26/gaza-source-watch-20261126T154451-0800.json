@@ -1,0 +1,171 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T154451-0800",
+  "scheduled_for": "2026-11-26T15:44:51-08:00",
+  "started_at": "2026-11-26T15:42:09-08:00",
+  "completed_at": "2026-11-26T15:42:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T14:45:39-08:00",
+    "end": "2026-11-26T15:42:56-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T144451-0800.json",
+    "basis": "Prior authenticated research cutoff to current verified clock reading. Invocation precedes nominal scheduled slot."
+  },
+  "findings": [
+    {
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "canonical_source_url": "https://www.aljazeera.net/news/2026/11/26/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-11-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A7-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D9%85%D8%AF%D9%8A%D8%B1-%D8%B9%D8%A7%D9%85-%D8%AC%D9%87%D8%A7%D8%B2",
+      "title": "إسرائيل تغتال وكيل وزارة التعليم بغزة والحية: لن نقبل معادلة القتل والحصار",
+      "publisher": "Al Jazeera Arabic",
+      "source_type": "Established reporting quoting named official",
+      "confidence": "medium",
+      "finding_id": "gaza-20261126-aj-ar-rantisi-fuel-service-stoppage",
+      "location": "Al-Rantisi Hospital, Gaza City",
+      "affected_population_system": "Gaza Ministry of Health spokesperson Khalil al-Daqran told Al Jazeera that numerous hospital services stopped because generator fuel ran out; warned other hospitals face stoppage. Specific departments and independent corroboration unavailable. Distinct from previous Rantisi meningitis admissions trend and Nasser ICU warning.",
+      "exact_supporting_passage": "كثيرا من خدمات مستشفى الرنتيسي توقفت إثر نفاد وقود المولدات",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T14:45:39-08:00",
+          "2026-11-26T15:42:56-08:00"
+        ],
+        "method": "Compared with 27 authenticated watch receipts (November 25 12:44–23:44 and November 26 00:44–14:44); not checked against production.",
+        "caveat": "Newly recovered reporting, not necessarily published or occurring during this interval.",
+        "source_last_updated": "2026-11-26T23:33:00+03:00",
+        "novelty": "Reported actual service interruption due to fuel exhaustion, not merely risk."
+      }
+    },
+    {
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": "2026-11-26",
+      "event_timestamp": null,
+      "canonical_source_url": "https://www.aljazeera.net/news/2026/11/26/%D8%A7%D8%B3%D8%AA%D8%B4%D9%87%D8%A7%D8%AF-11-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A7-%D8%A8%D9%8A%D9%86%D9%87%D9%85-%D9%85%D8%AF%D9%8A%D8%B1-%D8%B9%D8%A7%D9%85-%D8%AC%D9%87%D8%A7%D8%B2",
+      "title": "إسرائيل تغتال وكيل وزارة التعليم بغزة والحية: لن نقبل معادلة القتل والحصار",
+      "publisher": "Al Jazeera Arabic",
+      "source_type": "Established reporting quoting named official",
+      "confidence": "medium",
+      "finding_id": "gaza-20261126-aj-ar-katz-conditional-mass-displacement-threat",
+      "location": "Gaza Strip",
+      "affected_population_system": "Al Jazeera attributes to Israeli Defense Minister Israel Katz a conditional threat to forcibly dismantle Hamas and move one million Gaza residents south if Hamas does not disarm. Statement only; no implementation, new evacuation order, or actual displacement verified.",
+      "exact_supporting_passage": "وإجلاء مليون من سكان القطاع إلى جنوبه",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T14:45:39-08:00",
+          "2026-11-26T15:42:56-08:00"
+        ],
+        "method": "Compared with 27 authenticated watch receipts (November 25 12:44–23:44 and November 26 00:44–14:44); not checked against production.",
+        "caveat": "Newly recovered reporting, not necessarily published or occurring during this interval.",
+        "source_last_updated": "2026-11-26T23:33:00+03:00",
+        "novelty": "Specific conditional mass-displacement threat distinct from Hamas consultation or mediator meeting."
+      }
+    },
+    {
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "UN OCHA occupied Palestinian territory",
+      "source_type": "Official UN situation report",
+      "confidence": "high",
+      "finding_id": "gaza-20261126-ocha-food-parcel-caloric-coverage",
+      "location": "Gaza Strip",
+      "affected_population_system": "Between November 1 and 22, in-kind food assistance reached about 384,200 people (112,800 households); parcels and wheat flour covered about half of minimum caloric needs, with rotational rather than monthly assistance. This is assistance coverage, not total dietary intake or overall prevalence of food insecurity.",
+      "exact_supporting_passage": "covering approximately 50 per cent of minimum caloric needs",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T14:45:39-08:00",
+          "2026-11-26T15:42:56-08:00"
+        ],
+        "method": "Compared with 27 authenticated watch receipts (November 25 12:44–23:44 and November 26 00:44–14:44); not checked against production.",
+        "caveat": "Newly recovered reporting, not necessarily published or occurring during this interval.",
+        "reporting_period": "2026-11-01/2026-11-22",
+        "novelty": "Distinct from prior bread-production coverage."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 report read."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new Gaza-specific dated update located."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "result": "502"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 2026 late evening casualties strikes WAFA Reuters Anadolu",
+      "غزة 26 نوفمبر 2026 مساء شهداء إصابات معابر",
+      "Gaza November 26 2026 hospital medical evacuation ambulance fuel MSF PRCS",
+      "Gaza November 26 2026 aid crossing food water UNRWA WFP UNICEF",
+      "Gaza November 26 2026 ceasefire negotiations detention hostages latest",
+      "Gaza November 26 2026 infrastructure displacement shelter flooding humanitarian",
+      "site:english.wafa.ps Gaza November 26 2026 latest casualties",
+      "site:aa.com.tr Gaza November 26 2026 latest",
+      "site:news.un.org Gaza November 26 2026 humanitarian",
+      "Gaza November 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org",
+      "Gaza November 26 2026 latest site:aljazeera.com",
+      "Gaza November 26 2026 latest site:reuters.com"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNRWA",
+        "error": "403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots restriction",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 27,
+    "prior_heartbeat_range": "November 25 12:44–23:44; November 26 00:44–14:44",
+    "limitations": [
+      "No verified event onset in the exact hourly interval; two named-official statements reported earlier and one OCHA report detail newly recovered.",
+      "No independent corroboration of service stoppage or threatened displacement; no claim of execution.",
+      "Search cutoff precedes final source inspection and persistence; timestamp records last verified clock reading."
+    ],
+    "exclusions": [
+      "Repeated strike and casualty reports, unclear overlap in reported injury counts, recycled older WHO items, previously logged OCHA indicators and opinion."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

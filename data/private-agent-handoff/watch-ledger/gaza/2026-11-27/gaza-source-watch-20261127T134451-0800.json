@@ -1,0 +1,163 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T134451-0800",
+  "scheduled_for": "2026-11-27T13:44:51-08:00",
+  "started_at": "2026-11-27T13:44:42-08:00",
+  "completed_at": "2026-11-27T13:45:21.031-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T12:44:14.131-08:00",
+    "end": "2026-11-27T13:45:21.031-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T124451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not event interval."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177363",
+      "title": "Two Palestinians killed in Gaza, bringing today's death toll to eight",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency; eyewitness reporting for Gaza City incident",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261127-wafa-177363-al-shifa-vicinity-casualties",
+      "location": "Gaza City, near MSF Belgium clinic and Al-Shifa Hospital",
+      "affected_population_system": "WAFA cites eyewitnesses reporting two Palestinians killed and several injured by a strike near the clinic. Civilian status, identities, and any damage or disruption to the clinic are unverified.",
+      "exact_supporting_passage": "killing two people and wounding several others.",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T12:44:14.131-08:00",
+          "2026-11-27T13:45:21.031-08:00"
+        ],
+        "method": "Direct WAFA homepage discovery and linked article inspection after OCHA and WHO checks; compared with all 13 November 27 authenticated heartbeats and eight November 26 evening records.",
+        "novelty": "Distinct reported evening incident, not the previously recorded Al-Rimal apartment or Bir al-Naaja vehicle strike.",
+        "caveat": "Displayed publication time 10:57 PM November 27 lacks explicit timezone; exact event time unknown. Independent corroboration not established. Do not infer strike on the clinic or add aggregate totals to prior findings."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177363",
+      "title": "Two Palestinians killed in Gaza, bringing today's death toll to eight",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261127-wafa-177363-rafah-al-mawasi-fatal-shooting",
+      "location": "Al-Mawasi, southwest of Rafah, southern Gaza Strip",
+      "affected_population_system": "WAFA reports one Palestinian fatally shot earlier that evening. Identity and civilian status unknown; potential overlap with other southern Gaza casualty reporting remains unresolved.",
+      "exact_supporting_passage": "another Palestinian was fatally shot by Israeli forces",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T12:44:14.131-08:00",
+          "2026-11-27T13:45:21.031-08:00"
+        ],
+        "method": "Direct WAFA linked article and comparison with prior 13 November 27 heartbeats and WAFA 177357.",
+        "novelty": "Newly reported fatal shooting in southwest Rafah, distinct as described from child wounded in Khan Younis and Rafah strike recovery.",
+        "caveat": "Possible overlap with earlier AP Muwasi casualty report cannot be excluded; do not sum. No explicit timezone, exact event time or independent corroboration."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest listed November 26 situation report inspected; no new report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No newer Gaza update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 persists."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian update",
+      "Gaza WHO November 27 2026 health medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 evening latest casualties Rafah Gaza City WAFA Anadolu AP Reuters",
+      "Gaza November 27 2026 aid access crossing fuel water displacement humanitarian UN",
+      "Gaza November 27 2026 hospital ambulance medical evacuation PRCS health ministry",
+      "Gaza November 27 2026 UNICEF UNRWA WFP food shelter water access",
+      "Gaza November 27 2026 ceasefire negotiations detainees hostages ICRC",
+      "site:english.wafa.ps Gaza November 27 2026 evening latest",
+      "Gaza \"November 27, 2026\" medical evacuation \"27 patients\" Red Crescent",
+      "Gaza November 27 2026 humanitarian MSF PRCS ICRC UN medical aid access",
+      "غزة 27 نوفمبر 2026 مساء شهداء إصابات مستشفى معبر",
+      "Gaza November 27 2026 latest Rafah crossings detainees ceasefire",
+      "Gaza November 27 2026 water sanitation infrastructure food aid shelter flooding",
+      "Gaza November 27 2026 latest site:aa.com.tr OR site:apnews.com OR site:reuters.com OR site:aljazeera.com"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 situation report",
+      "WAFA homepage and 177363 and 177357 via homepage links",
+      "PRCS official homepage",
+      "Saba medical evacuation report"
+    ],
+    "prior_heartbeats_reviewed": 21,
+    "prior_heartbeat_range": "All 13 November 27 records 00–12; eight November 26 records 16–23. Attempted full November 26 fetch exceeded per-call tool limit; earlier prior-day history not fully reread.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA 177357 direct URL",
+        "error": "Initial open failed; recovered via homepage link",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.saba.ye/en/news3844584.htm?cid=15",
+        "reason": "Earlier publication citing a PRCS Facebook post; report of 27 patients and 53 returnees not independently confirmed through PRCS website or established reporting. Hold as unverified lead, not finding."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177357",
+        "reason": "Previously recorded incidents, no substantive new detail."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177363",
+        "reason": "Exclude daily cumulative toll as a separate finding and generic shelling/demolitions without documented civilian impact."
+      },
+      {
+        "url": "https://en.antaranews.com/amp/news/445855/indonesia-assist-teachers-students-at-emergency-school-in-gaza",
+        "reason": "Earlier publication and education support outside focal miss classes; no clear new high-value development in this interval."
+      }
+    ],
+    "limitations": [
+      "Regional WHO unavailable; OCHA and global WHO accessible.",
+      "Search hits often stale; no evidence of absence for other categories.",
+      "No production comparison; no new corroboration of casualty identities or civilian status."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

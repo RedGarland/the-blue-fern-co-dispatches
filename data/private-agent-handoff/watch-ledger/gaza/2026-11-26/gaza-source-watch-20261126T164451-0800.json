@@ -1,0 +1,143 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T164451-0800",
+  "scheduled_for": "2026-11-26T16:44:51-08:00",
+  "started_at": "2026-11-26T16:42:55-08:00",
+  "completed_at": "2026-11-26T16:43:57-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T15:42:56-08:00",
+    "end": "2026-11-26T16:43:57-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T154451-0800.json",
+    "basis": "Previous authenticated heartbeat cutoff to last verified local clock reading; invocation precedes nominal scheduled slot."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "OCHA OPT",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_timestamp": null,
+      "source_type": "Official humanitarian situation report",
+      "confidence": "high",
+      "classification": "new",
+      "finding_id": "gaza-20261126-ocha-deir-al-balah-voluntary-relocation-effort",
+      "event_date": null,
+      "location": "Deir al Balah, Gaza Strip",
+      "affected_population_system": "Following a November 22 visit to a displacement site after a sand dune collapse, humanitarian partners are working to facilitate voluntary relocation of high-risk families to an Egyptian Committee-managed site with additional shelters. No completed relocation or family count confirmed.",
+      "exact_supporting_passage": "efforts are underway to facilitate the voluntary relocation of families at high risk.",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T15:42:56-08:00",
+          "2026-11-26T16:43:57-08:00"
+        ],
+        "method": "Full OCHA report lines 108–109; compared with 33 authenticated November 25–26 watch receipts (November 25 07–23 and November 26 00–15).",
+        "novelty": "Specific relocation response not in reviewed ledger; distinct from earlier collapse casualty reports and general flood risk.",
+        "caveat": "Older report detail recovered this run; exact event and relocation start dates unknown, no verified completion or onset within observation hour. Relationship to other reported dune collapses unknown."
+      }
+    },
+    {
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "OCHA OPT",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_timestamp": null,
+      "source_type": "Official humanitarian situation report",
+      "confidence": "high",
+      "classification": "new",
+      "finding_id": "gaza-20261126-ocha-meningitis-response-clinical-protocol-training",
+      "event_date": null,
+      "location": "Al Shifa, Al Aqsa and Nasser Medical Complex, Gaza Strip",
+      "affected_population_system": "During November 17–23, OCHA reports training 111 doctors in disease surveillance and laboratory sampling and development of a unified meningitis case-management, classification and sampling protocol with the National Infectious Disease Committee. This is a specific response-capacity development, not evidence that shortages or diagnostic constraints have been resolved.",
+      "exact_supporting_passage": "a unified protocol was developed on the case management and classification of meningitis cases and on laboratory sampling.",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T15:42:56-08:00",
+          "2026-11-26T16:43:57-08:00"
+        ],
+        "method": "Full OCHA report lines 144–145; compared with 33 authenticated November 25–26 watch receipts.",
+        "novelty": "Specific completed training and protocol development distinct from prior recorded outbreak, admissions and lab confirmation gap.",
+        "reporting_period": "2026-11-17/2026-11-23",
+        "caveat": "Previously published detail newly recovered; no verified event within hour; actual improvement in diagnostic turnaround or outcomes unconfirmed."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 report read, no later report identified."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza-specific update identified in targeted search."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 overnight November 26 casualties WAFA Reuters latest",
+      "غزة 27 نوفمبر 2026 فجر شهداء مستشفيات معابر",
+      "Gaza November 26 27 2026 aid crossings water food UNRWA WFP UNICEF",
+      "Gaza November 26 27 2026 medical evacuation ambulance hospital fuel MSF PRCS WHO",
+      "Gaza November 26 27 2026 ceasefire negotiations hostages detention Reuters",
+      "Gaza November 26 27 2026 displacement flooding infrastructure shelter",
+      "site:english.wafa.ps Gaza November 27 2026 OR November 26 2026 latest",
+      "site:aa.com.tr Gaza November 26 2026 November 27 2026 latest",
+      "site:news.un.org Gaza November 26 2026 humanitarian",
+      "Gaza November 26 2026 site:msf.org OR site:icrc.org OR site:unicef.org OR site:unrwa.org",
+      "site:aljazeera.com Gaza November 26 2026 latest November 27",
+      "site:reuters.com Gaza November 26 2026 November 27 latest"
+    ],
+    "search_batch_note": "12 additional queries submitted; second batch yielded a robots restriction for UN News and no distinct search results displayed; direct source indexes and linked reports provided supplemental coverage.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots restriction",
+        "material_new_degradation": false
+      }
+    ],
+    "access_recoveries": [
+      "UNRWA newsroom and report #239 landing page accessible; latest shown report dated November 19, body not present in fetched page.",
+      "English WAFA and WFP emergency page accessible."
+    ],
+    "prior_heartbeats_reviewed": 33,
+    "prior_heartbeat_range": "November 25 07:44–23:44; November 26 00:44–15:44. Earlier seven requested filenames unavailable; no claim of exhaustive ledger history.",
+    "limitations": [
+      "No verified new event onset in exact hourly interval. Both findings are recovered details from November 26 OCHA report.",
+      "No comparison against authoritative production collector.",
+      "UNRWA report body unavailable in retrieved landing page; second search batch output limited."
+    ],
+    "exclusions": [
+      "Repeated casualty and mediation stories, aggregate headline revisions without unique incident attribution, tribunal ruling without documented operational capacity change, generic calls for aid, historical WHO results."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

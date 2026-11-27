@@ -1,0 +1,194 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T144451-0800",
+  "scheduled_for": "2026-11-27T14:44:51-08:00",
+  "started_at": "2026-11-27T14:48:02-08:00",
+  "completed_at": "2026-11-27T14:48:59.179-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T13:45:21.031-08:00",
+    "end": "2026-11-27T14:48:59.179-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T134451-0800.json",
+    "basis": "Previous authenticated completion to current research cutoff; discovery interval, not guaranteed event or publication interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-anadolu-4141072-civil-defense-flood-risk-response-capacity",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+      "title": "Gaza weather system threatens 1.3M Palestinians with humanitarian disaster",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Civil Defense spokesperson Mahmoud Basal warns that 200,000 deteriorating tents and 1,000 shelters are at risk of flooding in expected severe weather. He reports critical shortages of fuel, vehicle maintenance supplies, rapid-response vehicles and water pumps. Forecast risk and current response constraints, not verified new flood damage.",
+      "exact_supporting_passage": "200,000 deteriorating tents and 1,000 shelters are at risk of flooding.",
+      "source_type": "News agency reporting attributed to Civil Defense spokesperson",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T13:45:21.031-08:00",
+          "2026-11-27T14:48:59.179-08:00"
+        ],
+        "method": "Anadolu linked latest-news discovery and direct article inspection after official checks; deduplicated against 14 authenticated November 27 and eight November 26 evening heartbeats.",
+        "novelty": "Specific Civil Defense warning and rescue capacity constraints not present in reviewed ledger. Distinct from older general winter shelter figures.",
+        "caveat": "Anadolu displays November 28 publisher date; the report attributes warning to Friday November 27. The observation window is November 27 Pacific time; exact publication time/timezone unknown. Figures are attributed estimates and not independently audited."
+      }
+    },
+    {
+      "finding_id": "gaza-20261127-anadolu-4140981-icrc-sewage-functioning-capacity",
+      "canonical_source_url": "https://www.aa.com.tr/en/features/red-cross-sounds-alarm-about-gaza-winter-as-displaced-face-unsafe-shelter-choices/4140981",
+      "title": "Red Cross sounds alarm about Gaza winter as displaced face unsafe shelter choices",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "ICRC spokesperson Amani al-Nawouq describes sewage system as unable to function and extensive damage to water distribution infrastructure, amplifying flood and waterborne disease risks. She reports entry restrictions on durable shelter and infrastructure repair materials.",
+      "exact_supporting_passage": "Gaza’s sewage system has become completely unable to function",
+      "source_type": "News agency direct interview with ICRC spokesperson",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T13:45:21.031-08:00",
+          "2026-11-27T14:48:59.179-08:00"
+        ],
+        "method": "Anadolu linked latest-news discovery and direct article inspection after official checks; deduplicated against 14 authenticated November 27 and eight November 26 evening heartbeats.",
+        "novelty": "New explicit ICRC characterization of sewage functioning capacity, distinct from earlier OCHA damage and disease reports. General winter shelter figures not repeated.",
+        "caveat": "No precise geographic operational breakdown, outage onset or independent corroboration. Attributed assessment, not proof that every individual sewage facility has stopped."
+      }
+    },
+    {
+      "finding_id": "gaza-20261127-anadolu-4141059-human-shield-investigation-gaza",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israels-use-of-palestinians-as-human-shields-in-gaza-widespread-encouraged-by-commanders-report/4141059",
+      "title": "Israel's use of Palestinians as human shields in Gaza widespread, encouraged by commanders: Report",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Palestinian civilians reportedly subjected to forced participation in dangerous military activity; Anadolu cites new Wall Street Journal soldier interviews and an Israeli military official reporting ten suspected Gaza cases under investigation. The reported cases are allegations, not confirmed new incidents or completed investigations.",
+      "exact_supporting_passage": "authorities are investigating 10 suspected cases of human shield use in Gaza",
+      "source_type": "News agency reporting on investigative journalism and attributed military official statement",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T13:45:21.031-08:00",
+          "2026-11-27T14:48:59.179-08:00"
+        ],
+        "method": "Anadolu linked latest-news discovery and direct article inspection after official checks; deduplicated against 14 authenticated November 27 and eight November 26 evening heartbeats.",
+        "novelty": "Newly recovered Friday investigative reporting and specific Gaza investigation count, not a claim that historical incidents occurred in this hour.",
+        "caveat": "Underlying WSJ investigation was not directly inspected. Anadolu displays November 28 publication date and attributes WSJ reporting to Friday; exact publication time unknown. No claim of newly opened cases."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "November 26 situation report remains latest listed; inspected."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new Gaza-specific update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "Timeout fetching; existing regional access degradation persists."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian update",
+      "site:who.int Gaza November 27 2026 health WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest evening casualties Gaza Rafah WAFA Anadolu AP Reuters",
+      "Gaza November 27 2026 aid access crossings fuel food water UN humanitarian",
+      "Gaza November 27 2026 hospital ambulance medical evacuation PRCS health ministry",
+      "Gaza November 27 2026 UNICEF UNRWA WFP displacement shelter flooding",
+      "Gaza November 27 2026 ceasefire negotiations detention hostages ICRC",
+      "site:english.wafa.ps Gaza November 27 2026 latest evening",
+      "Gaza \"November 27, 2026\" latest Gaza casualties aid hospital evacuation Reuters AP Anadolu",
+      "Gaza \"November 27, 2026\" UN MSF PRCS ICRC medical aid water food access",
+      "غزة 27 نوفمبر 2026 مساء شهداء إصابات مستشفى معبر",
+      "Gaza November 27 2026 Rafah crossing medical evacuation 27 patients 53 returnees",
+      "Gaza November 27 2026 latest site:aa.com.tr OR site:apnews.com OR site:reuters.com OR site:aljazeera.com",
+      "Gaza November 27 2026 UN humanitarian daily press briefing crossings displacement infrastructure"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage and latest Gaza casualty report 177363",
+      "WAFA 177356",
+      "OCHA November 26 situation report",
+      "OCHA media-monitoring November 27 and linked Guardian and Anadolu articles",
+      "AP November 26 article",
+      "Anadolu latest-news links 4141072, 4140981, 4141059"
+    ],
+    "prior_heartbeats_reviewed": 22,
+    "prior_heartbeat_range": "All November 27 00–13 records, November 26 16–23 records; two initial fetch failures recovered on retry.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout fetching",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177363",
+        "reason": "Previously logged; no change in directly inspected article."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177356",
+        "reason": "West Bank hospital funding; no new Gaza referral access verified."
+      },
+      {
+        "url": "https://www.saba.ye/en/news3844584.htm?cid=15",
+        "reason": "Previously held unverified lead, no new corroboration."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israel-threatens-new-gaza-offensive-involving-displacement-of-1-million-palestinians-/4138568",
+        "reason": "November 26 threat, not new actual displacement or verified ceasefire change."
+      },
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes",
+        "reason": "Previously logged cumulative schoolchildren count."
+      },
+      {
+        "url": "https://apnews.com/article/522676f17532b878878ff7a4347d0e31",
+        "reason": "November 26 casualty report; recycled in discovery."
+      }
+    ],
+    "limitations": [
+      "Regional WHO inaccessible; OCHA and global WHO accessible.",
+      "Search results include stale items; no evidence of absence for other categories.",
+      "No production comparison; exact publication times not verified."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T024451-0800",
+  "scheduled_for": "2026-11-27T02:44:51-08:00",
+  "started_at": "2026-11-27T02:43:23-08:00",
+  "completed_at": "2026-11-27T02:43:42-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T01:44:16-08:00",
+    "end": "2026-11-27T02:43:42-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T014451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not a guaranteed publication or event interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest listed situation report November 26; no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update on landing page."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Timeout fetching (400 reported by retrieval service); continuing regional access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "official_targeted_search_count": 0,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest casualties hospital strikes WAFA Anadolu after:2026-11-26 before:2026-11-28",
+      "Gaza November 27 2026 humanitarian aid crossings food water displacement UN OCHA UNRWA UNICEF WFP",
+      "Gaza November 27 2026 hospital ambulance fuel evacuation health MSF Palestine Red Crescent",
+      "Gaza November 27 2026 ceasefire negotiations hostages detention Reuters AP",
+      "site:english.wafa.ps/Pages/Details Gaza \"27/November/2026\"",
+      "Gaza November 27 2026 civilian casualties Al Jazeera BBC Guardian Anadolu",
+      "Gaza November 27 2026 infrastructure flooding shelter aid ICRC reliefweb",
+      "Gaza November 27 2026 medical evacuation Rafah crossing access",
+      "Gaza November 27 2026 latest news after:2026-11-26 before:2026-11-28",
+      "Gaza \"November 27, 2026\" Palestinian killed humanitarian aid hospital",
+      "Gaza November 27 2026 ceasefire crossing aid Reuters AP Anadolu WAFA",
+      "Gaza November 27 2026 UN humanitarian health situation news"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout fetching",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 2,
+    "prior_heartbeat_range": "Both preceding November 27 scheduled records fetched directly; earlier dates not reread, older material excluded.",
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Jabalia and Al-Rimal already logged at 00:44."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+        "reason": "Khan Younis and Al-Rimal follow-up already logged at 01:44; Jabalia also previously logged."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Prior reporting cycle; not mined for additional older findings."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177261",
+        "reason": "November 24 medical evacuation, outside current recall window."
+      },
+      {
+        "url": "https://apnews.com/article/522676f17532b878878ff7a4347d0e31",
+        "reason": "November 26 reporting, not established as a new development in this interval."
+      },
+      {
+        "url": "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes",
+        "reason": "Previously reported schoolchildren toll."
+      }
+    ],
+    "limitations": [
+      "Bounded search results included many stale and duplicate reports; no new qualifying development verified, not proof that no events occurred.",
+      "No production comparison.",
+      "Regional WHO access remains unavailable; no new material deterioration relative to preceding run."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

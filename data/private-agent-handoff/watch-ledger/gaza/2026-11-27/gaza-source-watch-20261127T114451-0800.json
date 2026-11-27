@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T114451-0800",
+  "scheduled_for": "2026-11-27T11:44:51-08:00",
+  "started_at": "2026-11-27T11:41:50-08:00",
+  "completed_at": "2026-11-27T11:42:36.192-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T10:41:59-08:00",
+    "end": "2026-11-27T11:42:36.192-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T104451-0800.json",
+    "basis": "Previous authenticated completion through current research cutoff; discovery interval, not event interval. Runtime began before nominal slot."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest listed report November 26 inspected; no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No newer dated Gaza update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; persistent access gap."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian update",
+      "site:who.int Gaza November 27 2026 health"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest evening casualties WAFA Anadolu Reuters AP",
+      "Gaza November 27 2026 humanitarian aid crossings fuel water displacement UN",
+      "Gaza November 27 2026 hospital ambulance medical evacuation meningitis health ministry",
+      "Gaza November 27 2026 UNICEF WFP food shelter water access",
+      "Gaza November 27 2026 ceasefire negotiations hostages detainees ICRC",
+      "site:english.wafa.ps Gaza November 27 2026 evening latest",
+      "Gaza November 27 2026 latest evening casualties aid hospital Rafah November 27 WAFA Anadolu AP",
+      "Gaza November 27 2026 humanitarian UN UNICEF UNRWA MSF WFP humanitarian access water hospitals",
+      "غزة الجمعة 27 نوفمبر 2026 مساء قصف إصابات مستشفى مساعدات",
+      "Gaza November 27 2026 ceasefire negotiations detention hostages crossings Reuters",
+      "Gaza November 27 2026 healthcare ambulance fuel medical evacuation hospital capacity",
+      "site:english.wafa.ps/Pages/Details Gaza \"November 27, 2026\" latest"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 situation report",
+      "WHO global dated updates",
+      "WAFA homepage",
+      "WAFA article 177357 (updated version)"
+    ],
+    "prior_heartbeats_reviewed": 11,
+    "prior_heartbeat_range": "All 11 authenticated November 27 preceding slots; November 26 history not reread this run. Previous heartbeat records review of November 26–27.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177357",
+        "reason": "Vehicle strike and child injury previously logged; updated Rafah recovery already in immediately preceding heartbeat. Search index returned older version; direct article is updated."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Morning Jabalia and apartment incidents already logged; search snippet older than prior record."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177350",
+        "reason": "Meningitis laboratory restriction previously logged."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously reviewed report covering November 17–23; no fresh report identified."
+      },
+      {
+        "url": "https://apnews.com/article/522676f17532b878878ff7a4347d0e31",
+        "reason": "November 26 reporting, not a new verified development in the discovery interval."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israeli-strike-kills-worker-with-un-palestinian-agency-gaza-agency-says-2026-11-23/",
+        "reason": "November 23 incident, outside window."
+      }
+    ],
+    "limitations": [
+      "Regional WHO unavailable; OCHA and WHO global available.",
+      "Search engine returned many stale and low-relevance matches; absence of qualifying findings is not proof no developments occurred.",
+      "WFP, ICRC and other agencies searched via targeted queries but no new direct primary reports verified; no direct WFP page access test performed.",
+      "No primary production comparison."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

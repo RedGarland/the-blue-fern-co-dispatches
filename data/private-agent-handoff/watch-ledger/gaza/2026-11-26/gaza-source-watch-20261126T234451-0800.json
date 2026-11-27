@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T234451-0800",
+  "scheduled_for": "2026-11-26T23:44:51-08:00",
+  "started_at": "2026-11-26T23:41:10-08:00",
+  "completed_at": "2026-11-26T23:43:40-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T22:47:56-08:00",
+    "end": "2026-11-26T23:43:40-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T224451-0800.json",
+    "basis": "Previous authenticated completion through current research cutoff; recall window, not event/publication window. Execution began before scheduled slot."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-ocha-nutrition-service-capacity-and-supplementation",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "UN OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Nutrition service capacity and food access for children and pregnant/breastfeeding women. OCHA reports 286 operational nutrition sites and approximately 6,660 pregnant and breastfeeding women receiving targeted supplementary feeding. During November 1–15, preventive supplementation reached approximately 158,400 children and 83,800 pregnant and breastfeeding women. These are reported coverage and capacity figures, not evidence of adequate coverage or new site openings.",
+      "exact_supporting_passage": "Currently, 286 nutrition sites are operational across the Gaza Strip",
+      "source_type": "Official UN humanitarian situation report",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T22:47:56-08:00",
+          "2026-11-26T23:43:40-08:00"
+        ],
+        "method": "Official OCHA report lines 148–149; reviewed 46 authenticated prior heartbeat files from November 25–26.",
+        "novelty": "Distinct service capacity and supplementation figures, not the earlier child screening and treatment-admission finding.",
+        "caveat": "First-half-November supplementation data and undated current site count from November 26 report; not events verified within this hour. No production comparison."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 latest listed report; Gaza sections checked."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update surfaced in targeted search."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 27 2026 WAFA casualties hospital fuel aid",
+      "Gaza November 26 27 2026 Reuters AP ceasefire hostages crossings",
+      "Gaza November 26 2026 humanitarian UNRWA WFP UNICEF aid water",
+      "Gaza November 26 2026 MSF ICRC medical evacuation healthcare",
+      "Gaza November 26 27 2026 Anadolu Al Jazeera civilian displacement strike",
+      "site:english.wafa.ps Gaza November 27 2026",
+      "site:aa.com.tr Gaza November 27 2026 latest casualties",
+      "site:aljazeera.com Gaza November 27 2026 latest",
+      "site:un.org Gaza November 26 2026 humanitarian aid health",
+      "site:unrwa.org Gaza November 26 2026 situation",
+      "site:icrc.org Gaza November 26 2026 detainees medical",
+      "site:msf.org Gaza November 26 2026 hospital"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 46,
+    "prior_heartbeat_range": "23 November 25 and 23 November 26 authenticated records; batch limit recovered with smaller direct reads.",
+    "limitations": [
+      "No distinct event or publication timestamp verified inside hourly observation window.",
+      "Most returned reports stale, unrelated, or duplicates; search index coverage is not exhaustive.",
+      "No production ledger comparison."
+    ],
+    "exclusions": [
+      "Reuters November 26 Hamas response report already in prior ledger; older or unrelated results excluded."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

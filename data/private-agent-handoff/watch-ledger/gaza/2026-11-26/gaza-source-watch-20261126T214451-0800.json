@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T214451-0800",
+  "scheduled_for": "2026-11-26T21:44:51-08:00",
+  "started_at": "2026-11-26T21:43:22-08:00",
+  "completed_at": "2026-11-26T21:44:30-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T20:45:43-08:00",
+    "end": "2026-11-26T21:44:30-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T204451-0800.json",
+    "basis": "Previous authenticated research cutoff to current verified cutoff; recall observation window, not event/publication window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-ocha-november-humanitarian-fund-gaza-allocation",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": "2026-11-16",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Humanitarian Coordinator launched a $40 million oPt Humanitarian Fund allocation on November 16, of which $36 million is designated for Gaza, including shelter/winterization, water and sanitation, health and food security. Allocation is not evidence of disbursement or delivery. This is distinct from the previously logged UK healthcare funding and winter shelter funding gap.",
+      "exact_supporting_passage": "comprising $36 million for the Gaza Strip and $4 million for the West Bank",
+      "source_type": "Official UN humanitarian situation report",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T20:45:43-08:00",
+          "2026-11-26T21:44:30-08:00"
+        ],
+        "method": "OCHA OPT first check, humanitarian funding section; compared with all 44 authenticated November 25–26 earlier heartbeat records.",
+        "novelty": "Specific allocation absent from reviewed watch ledger; announcement occurred November 16 and report was published November 26; not an hourly event or necessarily new to production.",
+        "caveat": "No authoritative production comparison; no confirmation of disbursement."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 remains latest listed report; reviewed Gaza and funding sections."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 27 2026 latest casualties hospital fuel ambulances WAFA Anadolu",
+      "Gaza November 26 27 2026 ceasefire negotiations crossings hostages detainees Reuters AP",
+      "Gaza November 26 27 2026 humanitarian aid access water shelter displacement UNRWA UNICEF",
+      "Gaza November 26 27 2026 medical evacuation hospital health MSF ICRC PRCS",
+      "Gaza November 26 27 2026 food aid WFP nutrition FAO",
+      "Gaza November 26 27 2026 infrastructure flood shelter NRC reliefweb",
+      "Gaza November 26 27 2026 latest airstrike civilians Al Jazeera BBC Guardian",
+      "site:news.un.org Gaza November 26 2026 humanitarian",
+      "site:english.wafa.ps Gaza November 26 27 2026",
+      "site:aa.com.tr Gaza November 26 27 2026 aid ceasefire",
+      "site:unrwa.org Gaza November 26 2026 situation report",
+      "Gaza November 26 27 2026 crossing aid COGAT Qatar Egypt official statement"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots restriction",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 44,
+    "prior_heartbeat_range": "All listed November 25 (23) and earlier November 26 (21) records",
+    "limitations": [
+      "No distinct event verified to have occurred within the hourly window.",
+      "Search returned mostly duplicate or stale reporting; no production comparison or exhaustive coverage claim."
+    ],
+    "exclusions": [
+      "Reuters Hamas response statement and WAFA/Al Jazeera casualty reporting already logged; Qatar-Egypt talks previously logged; UfM reiterated existing demands without operational change; older or opinion results excluded."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

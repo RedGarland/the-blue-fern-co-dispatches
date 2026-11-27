@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T004451-0800",
+  "scheduled_for": "2026-11-27T00:44:51-08:00",
+  "started_at": "2026-11-27T00:48:40-08:00",
+  "completed_at": "2026-11-27T00:49:13-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-26T23:43:40-08:00",
+    "end": "2026-11-27T00:49:13-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T234451-0800.json",
+    "basis": "Previous authenticated completion through current research cutoff; recall window, not verified event window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-wafa-177345-jabalia-casualties",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177345",
+      "title": "One Palestinian killed, several others injured in Israeli strikes on Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "Palestinian official news agency; medical-source attribution",
+      "classification": "new",
+      "confidence": "medium",
+      "location": "Jabalia, northern Gaza Strip",
+      "affected_population_system": "WAFA reports one Palestinian man killed and another injured in a strike affecting civilians; Al-Shifa Hospital medical sources reported receiving casualties after the attacks.",
+      "exact_supporting_passage": "A Palestinian man was killed and another injured",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T23:43:40-08:00",
+          "2026-11-27T00:49:13-08:00"
+        ],
+        "method": "Targeted WAFA search and direct article inspection; compared findings in all 24 authenticated November 26 hourly heartbeats.",
+        "novelty": "Distinct November 27 source-local incident, absent from reviewed ledger; no production comparison.",
+        "caveat": "Page displays 08:41 AM November 27 without explicit time zone or update time; if Palestine local time, original posting preceded this hourly window. Search snippet had an earlier injury-only headline; direct article reports one death. Newly recovered, not confirmed to have occurred within this hour. Independent corroboration unavailable."
+      }
+    },
+    {
+      "finding_id": "gaza-20261127-wafa-177345-al-rimal-apartment-injuries",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177345",
+      "title": "One Palestinian killed, several others injured in Israeli strikes on Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "Palestinian official news agency; medical-source attribution",
+      "classification": "new",
+      "confidence": "medium",
+      "location": "Al-Rimal neighborhood, Gaza City",
+      "affected_population_system": "Several Palestinians, including women and children, reportedly injured in a separate attack on a residential apartment; exact number unknown.",
+      "exact_supporting_passage": "several Palestinians, including women and children, were injured",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T23:43:40-08:00",
+          "2026-11-27T00:49:13-08:00"
+        ],
+        "method": "Targeted WAFA search and direct article inspection; compared findings in all 24 authenticated November 26 hourly heartbeats.",
+        "novelty": "Separate incident in same WAFA article; absent from reviewed ledger; no production comparison.",
+        "caveat": "Page displays 08:41 AM November 27 without explicit time zone or update time; if Palestine local time, original posting preceded this hourly window. Search snippet had an earlier injury-only headline; direct article reports one death. Newly recovered, not confirmed to have occurred within this hour. Independent corroboration unavailable."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "Latest listed report November 26; no newer OCHA report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "FAILED",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Direct fetch timed out; targeted search did not return a new verified report."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Direct fetch timed out."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 WAFA civilian casualties hospital fuel crossings",
+      "Gaza November 27 2026 Reuters AP ceasefire negotiations hostages aid",
+      "Gaza November 27 2026 Anadolu Al Jazeera displacement civilian casualties",
+      "Gaza November 26 27 2026 UNRWA WFP UNICEF aid water shelter",
+      "Gaza November 26 27 2026 MSF ICRC hospital ambulance medical evacuation detention",
+      "site:who.int Gaza November 27 2026 health hospitals",
+      "site:english.wafa.ps Gaza \"November 27, 2026\"",
+      "site:aa.com.tr Gaza \"27.11.2026\"",
+      "Gaza latest November 27 2026 killed aid hospital",
+      "site:un.org Gaza November 26 2026 humanitarian briefing",
+      "site:unrwa.org Gaza November 2026 situation report",
+      "site:aljazeera.com/news/2026/11/27 Gaza"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO global",
+        "error": "Timeout fetching",
+        "material_new_degradation": true
+      },
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout fetching",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 24,
+    "prior_heartbeat_range": "All 24 November 26 scheduled-hour records; prior November 25 records not re-read because new findings are dated November 27.",
+    "limitations": [
+      "No exact event time verified in hourly window.",
+      "Search results largely stale, duplicated or unrelated; coverage not exhaustive.",
+      "No production ledger comparison."
+    ],
+    "exclusions": [
+      "November 26 Reuters/Hamas response republication already logged.",
+      "Oz Arab Media automated summary of older Al Jazeera storm coverage excluded.",
+      "UNRWA older reports not treated as new.",
+      "November 26 casualty republications excluded as duplicate or not established as novel."
+    ],
+    "material_failure_or_new_degradation": true,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

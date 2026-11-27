@@ -1,0 +1,159 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T074451-0800",
+  "scheduled_for": "2026-11-27T07:44:51-08:00",
+  "started_at": "2026-11-27T07:45:54-08:00",
+  "completed_at": "2026-11-27T07:46:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T06:51:43.460-08:00",
+    "end": "2026-11-27T07:46:43-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T064451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not asserted event interval."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177357",
+      "title": "Palestinian killed, several others injured in Israeli airstrike on vehicle in northern Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261127-wafa-177357-bir-al-naaja-vehicle-casualties",
+      "location": "Bir al-Naaja, northern Gaza Strip",
+      "affected_population_system": "WAFA reports a Palestinian killed and several others wounded, some seriously, in a separate Friday evening strike on a vehicle; civilian status of the deceased and injured not established.",
+      "exact_supporting_passage": "A Palestinian was killed and several others were wounded, some seriously",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T06:51:43.460-08:00",
+          "2026-11-27T07:46:43-08:00"
+        ],
+        "method": "Direct WAFA homepage and article inspection after official humanitarian checks; comparison with 31 authenticated prior heartbeat files.",
+        "novelty": "Separate evening incident from earlier Jabalia morning strike; absent from preceding ledger.",
+        "caveat": "WAFA page displays 27 November 2026 05:24 PM (publisher local time presumed, timezone not explicit); exact event time and independent corroboration not verified."
+      }
+    },
+    {
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177357",
+      "title": "Palestinian killed, several others injured in Israeli airstrike on vehicle in northern Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "Official Palestinian news agency reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "finding_id": "gaza-20261127-wafa-177357-al-mawasi-child-wounded",
+      "location": "Al-Mawasi, Khan Younis, southern Gaza Strip",
+      "affected_population_system": "A child reportedly wounded by Israeli gunfire, attributed to medical sources; witnesses report gunfire toward displacement tents.",
+      "exact_supporting_passage": "a child was wounded by Israeli gunfire in the al-Mawasi area of Khan Younis",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T06:51:43.460-08:00",
+          "2026-11-27T07:46:43-08:00"
+        ],
+        "method": "Direct WAFA article inspection; comparison against 31 authenticated prior heartbeat files.",
+        "novelty": "Separate incident involving a child; earlier Anadolu finding concerned a woman wounded south of Khan Younis.",
+        "caveat": "Exact event time and independent corroboration not verified; publisher displays 05:24 PM without explicit timezone."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "Homepage and latest report reviewed; no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Situation page and dated news sections inspected; no newer Gaza update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502, also on regional landing page."
+      }
+    ],
+    "official_targeted_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 Friday casualties strike WAFA Anadolu latest",
+      "Gaza November 27 2026 aid crossing food water shelter displacement",
+      "Gaza November 27 2026 hospital ambulance medical evacuation meningitis fuel",
+      "Gaza November 27 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "site:wafa.ps Gaza 27 November 2026 killed injured",
+      "site:aa.com.tr Gaza November 27 2026 Israeli",
+      "Gaza November 27 2026 latest after:2026-11-26 before:2026-11-28 Gaza health ministry Friday death toll",
+      "Gaza November 27 2026 UNRWA UNICEF WFP ICRC humanitarian Gaza",
+      "Gaza November 27 2026 MSF PRCS hospital supplies health",
+      "غزة 27 نوفمبر 2026 اليوم الجمعة مستشفى إصابات مساعدات",
+      "Gaza November 27 2026 Reuters AP Al Jazeera latest developments Friday",
+      "Gaza November 27 2026 crossing aid ceasefire Gaza today after:2026-11-26"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage and article 177357",
+      "Anadolu Middle East landing page",
+      "Middle East Monitor November 27 ceasefire statement",
+      "News Today November 27 casualty report"
+    ],
+    "prior_heartbeats_reviewed": 31,
+    "prior_heartbeat_range": "24 November 26 and seven November 27 files authenticated and read; no production comparison.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Previously logged Jabalia and Al-Rimal incidents."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+        "reason": "Previously logged incidents."
+      },
+      {
+        "url": "https://www.middleeastmonitor.com/20261127-hamas-says-katzs-displacement-threats-undermine-gaza-ceasefire-criticises-board-of-peaces-silence/",
+        "reason": "Statement reiterates previously reported threats and political position; no verified change to ceasefire terms or actual displacement."
+      },
+      {
+        "url": "https://newstodaynet.com/2026/11/27/gaza-death-toll-rises-as-israeli-strikes-continue/",
+        "reason": "Recycles Wednesday-Thursday incidents already screened."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously mined report; no newer official report."
+      }
+    ],
+    "limitations": [
+      "Single-source attributed reports; no independent corroboration or exact incident times established.",
+      "No other qualifying changes verified; absence of findings does not establish absence of events.",
+      "WHO EMRO restriction persists; no new material degradation."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

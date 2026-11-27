@@ -1,0 +1,111 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T224451-0800",
+  "scheduled_for": "2026-11-26T22:44:51-08:00",
+  "started_at": "2026-11-26T22:46:57-08:00",
+  "completed_at": "2026-11-26T22:47:56-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T21:44:30-08:00",
+    "end": "2026-11-26T22:47:56-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T214451-0800.json",
+    "basis": "Previous authenticated cutoff through current research completion; observation/recall window, not event or publication window."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-ocha-weekly-shelter-household-assistance-coverage",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "OCHA OPT",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_time": null,
+      "event_date": null,
+      "event_date_start": "2026-11-17",
+      "event_date_end": "2026-11-23",
+      "location": "Gaza Strip",
+      "affected_population_system": "Households requiring shelter and household items; shelter and site management response",
+      "exact_supporting_passage": "Partners reached 10,780 households across Gaza through the distribution of shelter and household items",
+      "source_type": "official humanitarian situation report",
+      "classification": "follow-up",
+      "new_follow_up_classification": "follow-up",
+      "confidence": "high",
+      "summary": "OCHA reports actual shelter/household-item distribution reaching 10,780 households during 17–23 November, including 251 tents, 127 blankets and 174 winter clothing kits. These are item counts, not separate counts of households or evidence of adequate coverage. Distinct from earlier logged entry approvals and funding/price gaps.",
+      "bounded_discovery_context": {
+        "method": "OCHA official-first report, Gaza humanitarian response activities at a glance, Shelter and Site Management",
+        "first_observed_in_run": "gaza-source-watch-20261126T224451-0800",
+        "prior_heartbeats_reviewed": 45,
+        "novelty": "Newly recovered quantified delivery coverage, not an event or publication confirmed within the last hour; production ledger not compared."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "26 November report remains latest listed; reviewed Gaza sections and response metrics."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update surfaced."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 November 26 latest civilian casualties WAFA Reuters AP ceasefire",
+      "Gaza November 26 27 2026 hospital ambulance fuel evacuation medical ministry WHO",
+      "Gaza November 26 27 2026 displacement rain aid crossings food water UNRWA UNICEF WFP",
+      "Gaza November 26 27 2026 detainees hostages ceasefire negotiations ICRC Reuters",
+      "Gaza November 26 27 2026 aid access humanitarian MSF NRC UN news",
+      "site:english.wafa.ps Gaza November 27 2026 November 26 Gaza latest",
+      "site:aa.com.tr Gaza November 27 2026 November 26 casualties health ceasefire",
+      "site:aljazeera.com Gaza November 27 2026 November 26 ceasefire aid",
+      "site:un.org Gaza November 26 2026 humanitarian aid health",
+      "site:unrwa.org Gaza November 26 2026 situation",
+      "site:msf.org Gaza November 26 2026 hospital",
+      "site:icrc.org Gaza November 26 2026 detainees crossings"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "restricted URL",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 45,
+    "prior_heartbeat_range": "23 listed November 25 and 22 earlier November 26 records; all successfully read in batches.",
+    "limitations": [
+      "No distinct event or publication timestamp verified inside hourly window.",
+      "Search results mostly older or duplicate; no exhaustive coverage or production deduplication claim."
+    ],
+    "exclusions": [
+      "Reuters Hamas response consultations and WAFA casualty reports already logged; unrelated or stale reports omitted."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

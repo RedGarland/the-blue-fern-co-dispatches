@@ -1,0 +1,138 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261126T204451-0800",
+  "scheduled_for": "2026-11-26T20:44:51-08:00",
+  "started_at": "2026-11-26T20:44:28-08:00",
+  "completed_at": "2026-11-26T20:45:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-26",
+    "start": "2026-11-26T19:47:32-08:00",
+    "end": "2026-11-26T20:45:43-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-26/gaza-source-watch-20261126T194451-0800.json",
+    "basis": "Authenticated preceding research cutoff to verified current research cutoff; discovery window, not event or publication timing."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261126-guardian-schoolchildren-november-casualty-aggregate",
+      "canonical_source_url": "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes",
+      "title": "Israeli strikes kill 16 schoolchildren so far this month, Gaza ministry says",
+      "publisher": "The Guardian",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": "2026-11-26T12:59:00-05:00",
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Gaza education ministry statement on November 25 reported 16 schoolchildren killed since the beginning of November. This is a cumulative ministry figure, not 16 additional fatalities or a newly occurring attack. Not independently audited.",
+      "exact_supporting_passage": "The number of schoolchildren killed since the beginning of November has now risen to 16.",
+      "source_type": "Established reporting quoting official education ministry statement",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T19:47:32-08:00",
+          "2026-11-26T20:45:43-08:00"
+        ],
+        "method": "Targeted November 27 civilian-impact search; read full Guardian report, compared with 43 authenticated November 25–26 ledger files.",
+        "novelty": "Specific schoolchild casualty aggregate absent from the reviewed ledger; first publication and underlying statement predate observation window.",
+        "caveat": "Updated at 15:33 EST; individual incidents may overlap earlier reporting; no production comparison."
+      }
+    },
+    {
+      "finding_id": "gaza-20261126-ocha-emergency-household-incident-response",
+      "canonical_source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+      "title": "Humanitarian Situation Report | 26 November 2026",
+      "publisher": "United Nations OCHA occupied Palestinian territory",
+      "source_date": "2026-11-26",
+      "publication_date": "2026-11-26",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip, predominantly Deir al-Balah",
+      "affected_population_system": "Joint Distribution Consortium responded to 20 incident appeals affecting 430 households, 394 in Deir al-Balah; rapid assessments classified 219 households as high need. Incidents included displacement, strikes, fires, shelter collapse and strong winds. No new incident timing or individual harm count established.",
+      "exact_supporting_passage": "219 households were classified as high-need",
+      "source_type": "Official UN humanitarian situation report citing response partners",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-26T19:47:32-08:00",
+          "2026-11-26T20:45:43-08:00"
+        ],
+        "method": "OCHA OPT first check; report humanitarian response section; compared against 43 authenticated prior ledger files.",
+        "novelty": "Previously unlogged quantified incident-response burden, reporting period November 17–23, not events in the latest hour.",
+        "caveat": "Specific incident dates unknown; no comparison with production."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 remains latest listed report."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update found in targeted WHO search."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "502 Bad Gateway"
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 26 27 2026 latest strikes civilian casualties WAFA Reuters AP",
+      "Gaza November 26 2026 aid crossings fuel hospitals ambulance evacuation",
+      "Gaza November 26 2026 ceasefire negotiations hostages detainees Reuters AP Qatar Egypt",
+      "site:wafa.ps Gaza November 26 27 2026",
+      "site:unrwa.org Gaza November 26 2026 situation report",
+      "site:wfp.org Gaza November 26 2026 food aid",
+      "site:unicef.org Gaza November 26 2026 water children",
+      "site:icrc.org Gaza November 26 2026 medical detention",
+      "site:news.un.org Gaza November 26 2026 humanitarian",
+      "Gaza November 26 27 2026 displacement flooding infrastructure NRC MSF",
+      "Gaza November 26 27 2026 Anadolu Al Jazeera latest hospital attack",
+      "Gaza November 27 2026 Palestinian civilian humanitarian overnight news Gaza"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UN News",
+        "error": "robots restriction",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 43,
+    "prior_heartbeat_range": "All listed November 25 (23) and November 26 before this run (20) files",
+    "limitations": [
+      "Search engine returned mostly previously covered or stale items; no newly occurring distinct event verified in hourly window.",
+      "No comparison with authoritative production collector.",
+      "No claim of exhaustive source coverage."
+    ],
+    "exclusions": [
+      "Earlier WAFA/AP/Reuters incident aggregates and Hamas consultation statement already logged; WFP older update; unrelated political reports."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

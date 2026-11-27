@@ -1,0 +1,153 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T034451-0800",
+  "scheduled_for": "2026-11-27T03:44:51-08:00",
+  "started_at": "2026-11-27T03:41:27-08:00",
+  "completed_at": "2026-11-27T03:43:00-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T02:43:42-08:00",
+    "end": "2026-11-27T03:43:00-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T024451-0800.json",
+    "basis": "Prior authenticated completion to current cutoff; discovery window, not guaranteed event or publication interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-anadolu-4139871-residential-destruction-displacement",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/israeli-airstrikes-destroy-5-residential-buildings-in-gaza-displace-dozens-of-families/4139871",
+      "title": "Israeli airstrikes destroy 5 residential buildings in Gaza, displace dozens of families",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-26",
+      "event_timestamp": null,
+      "location": "Al-Tuffah and Al-Shuja'iyya, Gaza City",
+      "affected_population_system": "Dozens of families reportedly displaced following destruction of five residential buildings and damage to nearby homes and displacement tents; exact household count unknown.",
+      "exact_supporting_passage": "causing widespread damage and displacing dozens of families.",
+      "source_type": "News agency correspondent and witness reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T02:43:42-08:00",
+          "2026-11-27T03:43:00-08:00"
+        ],
+        "method": "Targeted search and direct article inspection; compared against all 27 existing November 26–27 watch entries.",
+        "novelty": "Distinct residential destruction and displacement report not found in prior watch entries; late Thursday event newly recovered, not necessarily newly published in this hour.",
+        "caveat": "No exact publication or incident time or independent corroboration verified; no comparison with production."
+      }
+    },
+    {
+      "finding_id": "gaza-20261127-wafa-177350-meningitis-lab-supply-entry-restriction",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177350",
+      "title": "WHO warns of sharp rise in suspected meningitis cases among children in Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "Meningitis diagnostic and outbreak response capacity, particularly for children; WAFA attributes to WHO a statement that essential laboratory supplies and equipment remain barred from entering Gaza.",
+      "exact_supporting_passage": "essential laboratory supplies and equipment needed to respond to the outbreak remain barred from entering Gaza",
+      "source_type": "News agency reporting attributed to WHO statement",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T02:43:42-08:00",
+          "2026-11-27T03:43:00-08:00"
+        ],
+        "method": "Direct WAFA article, comparison with November 26 OCHA report and all existing November 26–27 watch entries.",
+        "novelty": "Prior ledger covers limited laboratory confirmation and protocol training; explicit reported entry restriction on outbreak laboratory supplies is a substantive follow-up, not a newly imposed restriction.",
+        "caveat": "WAFA displays 12:47 PM on November 27 without explicit timezone; direct WHO statement not recovered, regional WHO site inaccessible. Older case counts not repeated; date refers to reported warning, onset of restriction unknown."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 report remains latest listed; prior-cycle content not reissued."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update found on global landing page."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502, continuing known regional access failure."
+      }
+    ],
+    "official_targeted_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 Palestinian killed wounded today WAFA Anadolu",
+      "Gaza November 27 2026 humanitarian aid crossings food water hospital fuel medical evacuation",
+      "Gaza November 27 2026 ceasefire negotiations detainees hostages Reuters AP",
+      "Gaza November 27 2026 UNICEF UNRWA WFP ICRC MSF displacement health",
+      "site:english.wafa.ps Gaza November 27 2026",
+      "site:aa.com.tr Gaza November 27 2026",
+      "site:amnesty.org Gaza women girls November 27 2026 report Amnesty",
+      "Gaza November 27 2026 latest health ministry casualties WAFA Gaza hospitals today after:2026-11-26",
+      "Gaza November 27 2026 displacement shelter buildings Al Tuffah Shujaiya aid after:2026-11-26",
+      "Gaza WHO November 27 2026 meningitis laboratory supplies barred entry WHO UN Geneva November 27",
+      "غزة 27 نوفمبر 2026 قصف نزوح مستشفى مساعدات",
+      "Gaza November 27 2026 humanitarian crossing medical evacuation Palestine Red Crescent UN news after:2026-11-26"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 27,
+    "prior_heartbeat_range": "All 24 November 26 and all three earlier November 27 files; authenticated contents read.",
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Previously logged Jabalia and Al-Rimal casualties."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+        "reason": "Previously logged Khan Younis and Al-Rimal follow-up."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/amnesty-report-highlights-devastating-toll-of-israel-s-genocide-in-gaza-on-women-girls/4140046",
+        "reason": "Report launched November 25; retrospective evidence, not a new report or development this interval."
+      },
+      {
+        "url": "https://www.saba.ye/en/news3844584.htm?cid=15",
+        "reason": "Research lead only: reported 27 medical evacuations, 26 companions and 53 returnees on November 26, attributed to PRCS Facebook post; original statement not verified and no independently established reporting recovered within budget."
+      },
+      {
+        "url": "https://alquds.com/ar/posts/279093-gaza-premature-babies-crisis-hospitals",
+        "reason": "Retrospective feature with unclear measurement dates and attribution; no verified fresh capacity change."
+      }
+    ],
+    "limitations": [
+      "No production comparison; absence from watch ledger not proof of absence from production.",
+      "Search results included stale and syndicated items; no exhaustive coverage implied.",
+      "WHO regional access remains unavailable; primary statement for WAFA follow-up not independently retrieved."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

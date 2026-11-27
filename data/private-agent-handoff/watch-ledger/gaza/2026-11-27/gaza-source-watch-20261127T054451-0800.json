@@ -1,0 +1,112 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T054451-0800",
+  "scheduled_for": "2026-11-27T05:44:51-08:00",
+  "started_at": "2026-11-27T05:41:06-08:00",
+  "completed_at": "2026-11-27T05:41:52-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T04:48:35.610-08:00",
+    "end": "2026-11-27T05:41:52-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T044451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery window, not guaranteed publication or event interval. Runtime commenced before nominal scheduled slot."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "Homepage and report checked; November 26 remains latest listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update on situation page."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "Timeout; alternate priority-areas path also inaccessible. Continuing regional source restriction."
+      }
+    ],
+    "official_targeted_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 WAFA casualties aid hospital crossing",
+      "Gaza November 27 2026 Anadolu casualties ceasefire aid",
+      "Gaza November 27 2026 Reuters AP ceasefire negotiations crossings",
+      "Gaza November 27 2026 UN humanitarian aid food water displacement",
+      "Gaza November 27 2026 UNICEF WFP UNRWA ICRC MSF medical evacuation",
+      "Gaza November 27 2026 hospital ambulance fuel meningitis health ministry",
+      "Gaza November 27 2026 detention hostages prisoners negotiations",
+      "Gaza November 27 2026 Al Jazeera Gaza strikes displacement",
+      "Gaza \"November 27, 2026\" Gaza Palestinian health ministry casualties aid latest after:2026-11-26 before:2026-11-28",
+      "site:english.wafa.ps/Pages/Details Gaza \"27/November/2026\"",
+      "site:aa.com.tr/en Gaza \"27.11.2026\" aid hospital casualties",
+      "غزة 27 نوفمبر 2026 مستشفى إصابات مساعدات معبر"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage",
+      "Anadolu Middle East landing page"
+    ],
+    "prior_heartbeats_reviewed": 10,
+    "prior_heartbeat_range": "All five preceding November 27 and five latest November 26 files authenticated and read; both daily directories listed. Earlier November 26 material not reread; excluded as prior-cycle material.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout and inaccessible alternate path",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Previously logged Jabalia and Al-Rimal incidents."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177350",
+        "reason": "Previously logged meningitis laboratory-supply restriction; no substantive new detail verified."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-airstrikes-destroy-5-residential-buildings-in-gaza-displace-dozens-of-families/4139871",
+        "reason": "Previously logged displacement."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-kills-nine-gaza-including-hamas-appointed-deputy-education-minister-2026-11-26/",
+        "reason": "Prior-day reporting, no verified new negotiation outcome or current-window change."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177340",
+        "reason": "Prior-day diplomatic call for aid; no concrete delivery or policy change established."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Prior-cycle report already repeatedly mined; no new report."
+      },
+      {
+        "url": "https://alwatan.ae/posts/1651803",
+        "reason": "Search result describes delegation follow-up to existing relief pledge, not verified new delivery; insufficient evidence for inclusion."
+      }
+    ],
+    "limitations": [
+      "No new qualifying finding verified; not evidence no events occurred.",
+      "Search output largely recycled or stale; no production comparison.",
+      "Regional WHO access failure persists; OCHA, WHO global, WAFA and Anadolu remained accessible."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

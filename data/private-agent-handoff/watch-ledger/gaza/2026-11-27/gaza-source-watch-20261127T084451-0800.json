@@ -1,0 +1,131 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T084451-0800",
+  "scheduled_for": "2026-11-27T08:44:51-08:00",
+  "started_at": "2026-11-27T08:42:26-08:00",
+  "completed_at": "2026-11-27T08:43:32-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T07:46:43-08:00",
+    "end": "2026-11-27T08:43:32-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T074451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not asserted event interval. Execution started before nominal scheduled time."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/updates",
+        "result": "Latest report dated November 26; direct report reviewed, no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Situation page and dated updates checked; no newer Gaza-specific update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502, persistent restriction."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 WAFA killed injured latest",
+      "Gaza November 27 2026 Anadolu Reuters AP strikes ceasefire latest",
+      "Gaza November 27 2026 humanitarian aid crossings fuel displacement UN News",
+      "Gaza November 27 2026 WHO hospital meningitis evacuation PRCS ambulance",
+      "Gaza November 27 2026 UNICEF WFP food water nutrition shelter",
+      "Gaza November 27 2026 ICRC detainees hostages negotiations crossings",
+      "site:english.wafa.ps/Pages/Details Gaza \"27/November/2026\" latest",
+      "site:aa.com.tr/en/middle-east Gaza \"27.11.2026\" aid casualties",
+      "Gaza latest November 27 2026 Palestine health ministry death toll Friday after:2026-11-26",
+      "غزة الجمعة 27 نوفمبر 2026 قصف إصابات مساعدات مستشفى",
+      "Gaza November 27 2026 site:reliefweb.int OR site:unicef.org OR site:wfp.org OR site:msf.org",
+      "Gaza November 27 2026 latest ceasefire crossing humanitarian access site:reuters.com OR site:apnews.com OR site:aljazeera.com"
+    ],
+    "additional_direct_checks": [
+      "WAFA latest news page",
+      "Anadolu Middle East landing page and linked articles 4140692, 4140572, 4140151 and 4140046",
+      "FAO newsroom",
+      "WFP news page",
+      "AP hunger report carried by ABC News",
+      "Al Jazeera winter explainer and linked November 4 article"
+    ],
+    "prior_heartbeats_reviewed": 32,
+    "prior_heartbeat_range": "24 November 26 and eight November 27 authenticated files read; no comparison with production.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news page",
+        "error": "HTTP 403; FAO newsroom and AP secondary coverage accessible",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Previously logged Jabalia and Al-Rimal incidents."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177357",
+        "reason": "Previously logged Bir al-Naaja vehicle and Al-Mawasi child incidents; still WAFA latest Gaza report."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/hamas-says-israeli-claim-that-it-used-al-ahli-hospital-as-interrogation-center-is-ridiculous/4140692",
+        "reason": "Competing claims, no independently established detention case or change in hospital functioning."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/hamas-says-israel-attempted-to-assassinate-leaders-son-in-gaza/4140572",
+        "reason": "Previously screened; no verified civilian impact or new ceasefire change."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israel-tortures-palestinian-detainees-with-government-approval-israeli-rights-group/4140151",
+        "reason": "Previously screened retrospective report, no new Gaza-specific case."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/amnesty-report-highlights-devastating-toll-of-israel-s-genocide-in-gaza-on-women-girls/4140046",
+        "reason": "Recycled November 25 Amnesty report."
+      },
+      {
+        "url": "https://abcnews.com/International/wireStory/warns-hunger-deepen-middle-east-war-fuel-costs-138477712",
+        "reason": "AP reports Palestinian territories moved down a hunger concern tier and 67% crisis-level hunger or worse, but describes report period as December through May 2026. No matching new primary report on accessible FAO newsroom; WFP news page forbidden. Cannot establish new assessment period or distinguish recycled figures; excluded pending primary verification."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/26/why-are-winter-rains-forcing-palestinians-in-gaza-to-flee-again",
+        "reason": "November 26 explainer largely recaps previous flood, shelter, and disease figures; no verified new operational change."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/4/israel-restricting-treatment-for-1100-child-amputees-in-gaza-ngo",
+        "reason": "November 4, outside current window."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Prior-cycle report already repeatedly mined; no new report."
+      }
+    ],
+    "limitations": [
+      "No new qualifying developments verified within bounded recall; absence of findings does not establish absence of events.",
+      "Persistent WHO regional gap and supplemental WFP access restriction; useful coverage remained through OCHA, WHO global, FAO, WAFA and Anadolu. No new material degradation assessed."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

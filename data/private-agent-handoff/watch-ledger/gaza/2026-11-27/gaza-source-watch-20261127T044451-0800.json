@@ -1,0 +1,125 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T044451-0800",
+  "scheduled_for": "2026-11-27T04:44:51-08:00",
+  "started_at": "2026-11-27T04:47:15-08:00",
+  "completed_at": "2026-11-27T04:48:35.610-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T03:43:00-08:00",
+    "end": "2026-11-27T04:48:35.610-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T034451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery window, not guaranteed event or publication interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "November 26 report remains latest listed; no newer report."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new dated Gaza update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502; known continuing restriction."
+      }
+    ],
+    "official_targeted_search_count": 2,
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest Palestinian casualties WAFA Anadolu hospital today after:2026-11-26 before:2026-11-28",
+      "Gaza November 27 2026 aid crossings water food shelter displacement UNRWA UNICEF WFP",
+      "Gaza November 27 2026 hospital ambulance fuel medical evacuation PRCS MSF ICRC",
+      "Gaza November 27 2026 ceasefire negotiations hostages detention Reuters AP",
+      "site:english.wafa.ps/Pages/Details Gaza \"27/November/2026\"",
+      "Gaza November 27 2026 Al Jazeera Guardian BBC civilian impact",
+      "Gaza \"November 27, 2026\" latest health ministry casualties Gaza aid November 27",
+      "Gaza November 27 2026 medical evacuation 27 patients Red Crescent November 26 2026 Rafah",
+      "غزة 27 نوفمبر 2026 شهيد إصابات مساعدات مستشفى معبر",
+      "Gaza November 27 2026 humanitarian UN news ICRC UNICEF WFP Gaza water health displacement",
+      "Gaza November 27 2026 Reuters AP Anadolu ceasefire talks detainees crossings Gaza today",
+      "site:aa.com.tr/en Gaza \"27.11.2026\" Gaza"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage",
+      "Anadolu Middle East landing page",
+      "UNRWA homepage",
+      "Anadolu detainee report and meningitis infographic",
+      "WAFA meningitis article"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNRWA homepage",
+        "error": "HTTP 403",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WAFA 177350",
+        "error": "Timeout on previously logged meningitis article; WAFA homepage accessible",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 4,
+    "prior_heartbeat_range": "All four preceding November 27 files authenticated and read; November 26 directory listing verified but contents not reread; earlier material excluded.",
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177345",
+        "reason": "Already logged Jabalia and Al-Rimal casualties."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+        "reason": "Previously logged casualties and injury-count follow-up."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-airstrikes-destroy-5-residential-buildings-in-gaza-displace-dozens-of-families/4139871",
+        "reason": "Already logged displacement."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177350",
+        "reason": "Previously logged laboratory-supply restriction; no verified substantive change."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/info/infographic/55087",
+        "reason": "November 26 infographic, previously covered meningitis issue."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israel-tortures-palestinian-detainees-with-government-approval-israeli-rights-group/4140151",
+        "reason": "November 27 reporting of a retrospective review of 42 complaints over a decade; no verified Gaza-specific new case, operational change or report release date. Earlier Gaza special-court legislation not a new development."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Prior-cycle report; not treated as a fresh development."
+      }
+    ],
+    "limitations": [
+      "Search results were predominantly older, duplicated or unrelated; no qualifying new finding verified, not evidence that no events occurred.",
+      "No production comparison.",
+      "UNRWA direct access blocked; OCHA and other search coverage remained useful. WAFA article timeout affected a previously recorded finding only. No new material degradation relative to previous run."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

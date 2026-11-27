@@ -1,0 +1,173 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T094451-0800",
+  "scheduled_for": "2026-11-27T09:44:51-08:00",
+  "started_at": "2026-11-27T09:45:37-08:00",
+  "completed_at": "2026-11-27T09:46:26-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T08:43:32-08:00",
+    "end": "2026-11-27T09:46:26-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T084451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not event interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-aj-nasser-pediatric-growth-clinic-diagnostic-capacity",
+      "canonical_source_url": "https://www.aljazeera.com/features/2026/11/27/will-i-get-taller-gazas-children-suffer-stunting-amid-war-blockade",
+      "title": "‘Will I get taller?’: Gaza’s children suffer stunting amid war, blockade",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Nasser Hospital, Khan Younis, and Ministry of Health laboratories in Gaza",
+      "affected_population_system": "Children with growth disorders; Nasser Hospital endocrinologist Hani Sayed Zuhair reports clinic demand has increased from roughly 15–20 patients per session before the war to 30–40 or more, and public-sector growth hormone stimulation testing is unavailable; private testing is limited by supply shortages and costly. This is a newly documented current service constraint, not a new shutdown.",
+      "exact_supporting_passage": "Growth hormone stimulation tests are unavailable in Ministry of Health laboratories",
+      "source_type": "Established media field reporting with named specialist interview",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T08:43:32-08:00",
+          "2026-11-27T09:46:26-08:00"
+        ],
+        "method": "Direct article inspection following official-source checks; compared with 33 authenticated November 26–27 heartbeat files; production not compared.",
+        "novelty": "Specific pediatric endocrinology diagnostic capacity and clinic workload not present in prior 33 heartbeats; separate from meningitis lab restrictions and general nutrition metrics.",
+        "caveat": "Interview and onset dates unknown. Prewar comparison is not an hourly change or population-level incidence measure. Older UNICEF survey figures excluded. No independent confirmation of laboratory availability."
+      }
+    },
+    {
+      "finding_id": "gaza-20261127-ap-al-rimal-critical-injury-followup",
+      "canonical_source_url": "https://apnews.com/article/saudi-iran-yemen-israel-november-27-2026-dbb2c950f5cd991a52f3a065b6325535",
+      "title": "Yemen’s Houthis say an airstrike killed 11 people, including children, and other Mideast news",
+      "publisher": "Associated Press",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Gaza City, residential apartment; likely Al-Rimal incident",
+      "affected_population_system": "Al-Shifa Hospital officials report that one of the six people injured in the apartment strike was critically injured. Treat as severity clarification to earlier reported apartment casualties, not additional injuries.",
+      "exact_supporting_passage": "wounding six people, including one critically, according to health officials at Shifa hospital.",
+      "source_type": "Established wire service with hospital-official attribution",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T08:43:32-08:00",
+          "2026-11-27T09:46:26-08:00"
+        ],
+        "method": "Direct article inspection following official-source checks; compared with 33 authenticated November 26–27 heartbeat files; production not compared.",
+        "novelty": "Critical injury severity not previously recorded; probable match to gaza-20261127-anadolu-4140045-al-rimal-six-injured-followup.",
+        "caveat": "AP does not name Al-Rimal; match based on same date, apartment attack, hospital and injury count; do not sum counts. AP separately attributes claimed intended target to Hamas; that claim is not accepted as a finding. Exact publication and event times unknown."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest November 26 situation report reviewed; no newer listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Situation page and date search reviewed; no newer Gaza update."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502, persistent."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest killed injured Gaza WAFA Anadolu after:2026-11-26",
+      "Gaza November 27 2026 UN humanitarian aid access crossing displacement fuel after:2026-11-26",
+      "Gaza November 27 2026 hospital ambulance medical evacuation meningitis health ministry after:2026-11-26",
+      "Gaza November 27 2026 UNICEF WFP food water nutrition winter shelter after:2026-11-26",
+      "Gaza November 27 2026 ceasefire negotiations detainees hostages ICRC after:2026-11-26",
+      "Gaza November 27 2026 site:reuters.com OR site:apnews.com OR site:aljazeera.com after:2026-11-26",
+      "site:english.wafa.ps Gaza November 27 2026 evening after:2026-11-26",
+      "site:aa.com.tr Gaza November 27 2026 wounded killed aid after:2026-11-26",
+      "غزة الجمعة 27 نوفمبر 2026 قصف إصابات مساعدات مستشفى",
+      "Gaza November 27 2026 site:unrwa.org OR site:msf.org OR site:reliefweb.int OR site:icrc.org after:2026-11-26",
+      "Gaza November 27 2026 water wells infrastructure damage crossing aid trucks after:2026-11-26",
+      "Gaza November 27 2026 latest Palestine health ministry casualties Friday evening after:2026-11-26"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage",
+      "Anadolu Middle East page",
+      "WFP news page",
+      "AP regional roundup",
+      "Al Jazeera pediatric stunting feature",
+      "WAFA West Bank referral funding article"
+    ],
+    "prior_heartbeats_reviewed": 33,
+    "prior_heartbeat_range": "24 November 26 and nine November 27 authenticated files; initial 33-call batch exceeded tool-call limit, recovered in three smaller batches.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP news",
+        "error": "HTTP 403",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177357",
+        "reason": "Already logged vehicle casualty and child injury."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+        "reason": "Previously logged morning incidents; no new civilian impact verified."
+      },
+      {
+        "url": "https://apnews.com/article/saudi-iran-yemen-israel-november-27-2026-dbb2c950f5cd991a52f3a065b6325535",
+        "reason": "Separate report of car and Muwasi fatalities held for reconciliation: uncertain overlap with earlier WAFA incidents and civilian status unverified; Israeli military says it targeted militants. No additive count asserted."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177356",
+        "reason": "Funding for West Bank hospitals, with appeal to permit Gaza evacuations; no new Gaza evacuation or referral access confirmed."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/27/israeli-attacks-on-women-and-girls-meant-to-destroy-life-in-gaza-amnesty",
+        "reason": "Recycled November 25 Amnesty report."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-kills-nine-gaza-including-hamas-appointed-deputy-education-minister-2026-11-26/",
+        "reason": "Previously logged consultation announcement."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/26/why-are-winter-rains-forcing-palestinians-in-gaza-to-flee-again",
+        "reason": "Previously screened retrospective explainer."
+      }
+    ],
+    "limitations": [
+      "Newly discovered source details, not established changes occurring in the past hour.",
+      "No production comparison; independent corroboration incomplete.",
+      "Persistent WHO EMRO and WFP access gaps; useful coverage remains."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

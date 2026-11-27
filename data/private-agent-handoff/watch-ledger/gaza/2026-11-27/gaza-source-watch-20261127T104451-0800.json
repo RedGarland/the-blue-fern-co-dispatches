@@ -1,0 +1,133 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T104451-0800",
+  "scheduled_for": "2026-11-27T10:44:51-08:00",
+  "started_at": "2026-11-27T10:41:15-08:00",
+  "completed_at": "2026-11-27T10:41:59-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T09:46:26-08:00",
+    "end": "2026-11-27T10:41:59-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T094451-0800.json",
+    "basis": "Previous authenticated completion to current research cutoff; discovery interval, not verified event interval. Runtime started before nominal slot."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-wafa-177357-rafah-civil-defense-recovery",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177357",
+      "title": "UPDATE: Four Palestinians killed, several others injured in Israeli attacks across Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Western Rafah, southern Gaza Strip",
+      "affected_population_system": "WAFA reports Civil Defense crews recovered three bodies and rescued two wounded people after an Israeli strike. Identities and civilian status of the casualties are unverified.",
+      "exact_supporting_passage": "Civil Defense crews recovered the bodies of three Palestinians and rescued two wounded people",
+      "source_type": "Official Palestinian news agency reporting on Civil Defense response",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T09:46:26-08:00",
+          "2026-11-27T10:41:59-08:00"
+        ],
+        "method": "Direct inspection of WAFA homepage and updated article; compared against 34 authenticated November 26–27 heartbeats and AP regional roundup.",
+        "novelty": "New Rafah incident detail added to previously logged WAFA 177357 article. Earlier version documented Bir al-Naaja vehicle strike and Al-Mawasi child injury only.",
+        "caveat": "WAFA retains original displayed 05:24 PM time; update time and precise event time unknown. AP separately reports three fatalities in Muwasi, attributed to Nasser Hospital; possible overlap cannot be ruled out. Do not aggregate counts or treat civilian status as established. No production comparison."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest November 26 report inspected; no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No newer Gaza update listed."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "TimeoutError; persistent regional access gap."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest evening WAFA Anadolu killed injured after:2026-11-26",
+      "Gaza November 27 2026 humanitarian aid crossings fuel water displacement UN after:2026-11-26",
+      "Gaza November 27 2026 hospital ambulance medical evacuation health ministry meningitis after:2026-11-26",
+      "Gaza November 27 2026 UNICEF WFP food water shelter after:2026-11-26",
+      "Gaza November 27 2026 ceasefire negotiations hostages detainees ICRC after:2026-11-26",
+      "Gaza November 27 2026 latest Reuters AP BBC Al Jazeera after:2026-11-26",
+      "site:english.wafa.ps Gaza November 27 2026 evening killed wounded after:2026-11-26",
+      "site:aa.com.tr Gaza November 27 2026 evening injured killed aid after:2026-11-26",
+      "Gaza November 27 2026 site:un.org OR site:unrwa.org OR site:msf.org OR site:reliefweb.int after:2026-11-26",
+      "غزة الجمعة 27 نوفمبر 2026 مساء قصف إصابات مستشفى مساعدات",
+      "Gaza November 27 2026 neonatal incubators premature babies Nasser hospital",
+      "Gaza November 27 2026 infrastructure damage water wells crossing aid trucks medical evacuation after:2026-11-26"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 report",
+      "WAFA homepage and updated article 177357",
+      "AP regional roundup",
+      "Al-Quds neonatal report"
+    ],
+    "prior_heartbeats_reviewed": 34,
+    "prior_heartbeat_range": "All 24 November 26 and 10 November 27 preceding slots authenticated by GitHub fetch.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "TimeoutError",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://alquds.com/en/posts/279123-birth-tragedies-in-displacement-tents-premature-babies-face-death-in-gaza-s",
+        "reason": "Neonatal capacity lead held: numerical claims lack traceable underlying dated medical report; family event date unknown. Do not assert fresh change."
+      },
+      {
+        "url": "https://apnews.com/article/saudi-iran-yemen-israel-november-27-2026-dbb2c950f5cd991a52f3a065b6325535",
+        "reason": "Apartment severity already logged; separate car and Muwasi fatalities previously held for location/identity and possible overlap. Military claims of militant targeting not independently verified. No additive count."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+        "reason": "Morning incidents already logged."
+      },
+      {
+        "url": "https://www.reuters.com/world/middle-east/israel-kills-nine-gaza-including-hamas-appointed-deputy-education-minister-2026-11-26/",
+        "reason": "Previously logged consultation and casualty reporting."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/26/why-are-winter-rains-forcing-palestinians-in-gaza-to-flee-again",
+        "reason": "Previously screened retrospective explainer."
+      }
+    ],
+    "limitations": [
+      "Regional WHO site inaccessible; global WHO and OCHA accessible.",
+      "No direct WFP page verification in this run; WFP-focused search completed.",
+      "No independent corroboration of Rafah incident or exact update timestamp.",
+      "No comparison with primary production."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

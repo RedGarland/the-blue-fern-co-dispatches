@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T154451-0800",
+  "scheduled_for": "2026-11-27T15:44:51-08:00",
+  "started_at": "2026-11-27T15:47:04-08:00",
+  "completed_at": "2026-11-27T15:47:50.491-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T14:48:59.179-08:00",
+    "end": "2026-11-27T15:47:50.491-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T144451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not necessarily publication or event interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-anadolu-4140045-khan-younis-al-maslakh-hamad-injuries",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/7-palestinians-killed-several-injured-in-israeli-attacks-across-gaza/4140045",
+      "title": "7 Palestinians killed, several injured in Israeli attacks across Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Al-Maslakh and Hamad City, Khan Younis, Gaza Strip",
+      "affected_population_system": "Anadolu correspondent reports three Palestinians including a woman injured by Israeli gunfire in the two areas on Friday afternoon. Civilian status of all individuals and breakdown by location unknown.",
+      "exact_supporting_passage": "three Palestinians, including a woman, were injured Friday afternoon by Israeli army gunfire in the Al-Maslakh area and Hamad City",
+      "source_type": "News agency correspondent reporting",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T14:48:59.179-08:00",
+          "2026-11-27T15:47:50.491-08:00"
+        ],
+        "method": "Targeted search and direct inspection of revised Anadolu article 4140045; compared with 23 authenticated prior November 26–27 heartbeats.",
+        "novelty": "Newly recovered three-person injury report naming Al-Maslakh and Hamad City; original article was previously logged for a woman injured south of Khan Younis and six injured in Al-Rimal. Updated text separately mentions the earlier woman.",
+        "caveat": "Exact update and event times unknown; potential overlap with earlier woman or child injury reports cannot be excluded. Do not add counts. No independent corroboration or production comparison."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "PARTIAL",
+        "url": "https://www.ochaopt.org/",
+        "result": "Homepage timed out twice; direct November 26 situation report accessible and inspected; indexed search yielded no newer report."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new Gaza-specific item identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502; ongoing regional access failure."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian update",
+      "site:who.int Gaza November 27 2026 health WHO EMRO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest evening casualties November 28 WAFA Anadolu Reuters AP",
+      "Gaza November 27 2026 UN humanitarian aid crossings food water fuel",
+      "Gaza November 27 2026 hospital medical evacuation ambulance PRCS MSF",
+      "Gaza November 27 2026 displacement shelter flooding UNICEF UNRWA ICRC",
+      "Gaza November 27 2026 ceasefire negotiations detention hostages",
+      "Gaza November 27 2026 latest WAFA Gaza November 28",
+      "Gaza \"November 27, 2026\" latest aid casualties Gaza hospital evacuation November 28 2026",
+      "Gaza November 27 2026 humanitarian UN briefing Gaza UNICEF WFP ICRC MSF",
+      "غزة 27 نوفمبر 2026 مساء شهداء إصابات مستشفى معبر",
+      "Gaza November 28 2026 latest Anadolu Al Jazeera Gaza ceasefire November 27",
+      "Gaza November 27 2026 Rafah crossing medical evacuation returnees",
+      "Gaza November 27 2026 latest Gaza news civilian casualties site:apnews.com OR site:reuters.com OR site:aa.com.tr OR site:aljazeera.com"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 situation report",
+      "WAFA homepage and 177363",
+      "Anadolu Middle East index and articles 4140045, 4140151, 4140046"
+    ],
+    "prior_heartbeats_reviewed": 23,
+    "prior_heartbeat_range": "November 27 00–14 and November 26 16–23; all retrieved and parsed.",
+    "access_failures": [
+      {
+        "source": "OCHA OPT homepage",
+        "error": "Timeout fetching",
+        "material_new_degradation": false,
+        "mitigation": "Direct latest known situation report accessible; indexed search completed."
+      },
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177363",
+        "reason": "Previously logged casualty incidents; no new civilian impact established for demolition/shelling."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/7-palestinians-killed-several-injured-in-israeli-attacks-across-gaza/4140045",
+        "reason": "Other casualties in revised article largely duplicate previous entries, including Al-Shifa vicinity (additional medical-source attribution), Jabalia, Bir al-Naja, and Rafah; no separate count accepted."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/israel-tortures-palestinian-detainees-with-government-approval-israeli-rights-group/4140151",
+        "reason": "Historical complaint sample not specifically attributed to Gaza detainees; Gaza-specific legislation mentioned is from May."
+      },
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/amnesty-report-highlights-devastating-toll-of-israel-s-genocide-in-gaza-on-women-girls/4140046",
+        "reason": "November 25 report summarized; no new current operational change in article."
+      },
+      {
+        "url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "reason": "November 17 recycled report."
+      }
+    ],
+    "limitations": [
+      "OCHA homepage unavailable but direct report accessible; WHO regional source inaccessible.",
+      "Search results include stale material; no evidence of absence for other categories.",
+      "Exact publication times and production comparison unavailable."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

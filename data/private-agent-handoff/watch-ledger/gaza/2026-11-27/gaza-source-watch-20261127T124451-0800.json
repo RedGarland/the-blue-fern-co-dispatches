@@ -1,0 +1,110 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T124451-0800",
+  "scheduled_for": "2026-11-27T12:44:51-08:00",
+  "started_at": "2026-11-27T12:43:28-08:00",
+  "completed_at": "2026-11-27T12:44:14.131-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T11:42:36.192-08:00",
+    "end": "2026-11-27T12:44:14.131-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T114451-0800.json",
+    "basis": "Previous authenticated completion to current research cutoff; discovery interval, not event interval."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; primary production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest listed report November 26 inspected; no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No newer dated Gaza update identified."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway; persistent access gap."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian update",
+      "WHO Gaza November 27 2026 health emergency EMRO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest evening casualties Rafah WAFA Anadolu AP Reuters",
+      "Gaza November 27 2026 humanitarian aid crossings fuel water displacement UN",
+      "Gaza November 27 2026 hospital ambulance medical evacuation health ministry meningitis",
+      "Gaza November 27 2026 UNICEF UNRWA WFP food shelter water access",
+      "Gaza November 27 2026 ceasefire negotiations detainees hostages ICRC",
+      "site:english.wafa.ps Gaza November 27 2026 evening latest",
+      "Gaza \"November 27, 2026\" latest casualties hospital strike evening",
+      "Gaza November 27 2026 humanitarian UN MSF PRCS health aid access",
+      "غزة 27 نوفمبر 2026 مساء شهداء إصابات مستشفى معبر",
+      "Gaza November 27 2026 Rafah ceasefire crossings hostages detention latest",
+      "Gaza November 27 2026 water sanitation infrastructure food aid shelter flooding",
+      "Gaza November 27 2026 latest site:aa.com.tr OR site:apnews.com OR site:reuters.com OR site:aljazeera.com"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 situation report",
+      "WAFA homepage and updated 177357",
+      "WAFA 177356",
+      "AP regional roundup updated article"
+    ],
+    "prior_heartbeats_reviewed": 12,
+    "prior_heartbeat_range": "All 12 authenticated November 27 slots 00 through 11; November 26 history not reread; prior records document earlier review.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177357",
+        "reason": "Vehicle strike, child injury and Rafah recovery already recorded; current article unchanged in material substance."
+      },
+      {
+        "url": "https://apnews.com/article/saudi-iran-yemen-israel-november-27-2026-dbb2c950f5cd991a52f3a065b6325535",
+        "reason": "Previously inspected regional roundup, apartment injury and other casualty reports already considered; Rafah/Muwasi overlap remains unresolved."
+      },
+      {
+        "url": "https://english.wafa.ps/Pages/Details/177356",
+        "reason": "Funding for West Bank hospitals and appeal for Gaza medical evacuations; no demonstrated new Gaza evacuation access or funding allocation specifically for Gaza patients."
+      },
+      {
+        "url": "https://newstodaynet.com/2026/11/27/gaza-death-toll-rises-as-israeli-strikes-continue/",
+        "reason": "Recycled Wednesday–Thursday casualty reporting, no new verified development."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously reviewed report, no new update."
+      }
+    ],
+    "limitations": [
+      "Regional WHO unavailable; global WHO and OCHA accessible.",
+      "Many search hits stale or low relevance; absence of findings is not evidence of absence.",
+      "No new direct WFP, ICRC or other agency reports verified; no direct WFP page access test performed.",
+      "No production comparison."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

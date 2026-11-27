@@ -1,0 +1,135 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T014451-0800",
+  "scheduled_for": "2026-11-27T01:44:51-08:00",
+  "started_at": "2026-11-27T01:43:35-08:00",
+  "completed_at": "2026-11-27T01:44:16-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T00:49:13-08:00",
+    "end": "2026-11-27T01:44:16-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T004451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery window, not verified publication or event interval."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+      "title": "Palestinian man killed, several others injured in Israeli attacks on Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "News agency reporting attributed to medical sources",
+      "confidence": "medium",
+      "finding_id": "gaza-20261127-anadolu-4140045-khan-younis-woman-injured",
+      "location": "South of Khan Younis, Gaza Strip",
+      "affected_population_system": "A Palestinian woman reportedly injured by Israeli army gunfire, attributed to a Nasser Hospital medical source.",
+      "exact_supporting_passage": "a Palestinian woman was wounded by Israeli army gunfire south of Khan Younis",
+      "classification": "new",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T00:49:13-08:00",
+          "2026-11-27T01:44:16-08:00"
+        ],
+        "method": "Targeted date-bounded search, direct article inspection, comparison with all existing November 27 ledger entries (one).",
+        "novelty": "Separate southern Gaza incident absent from prior record of Jabalia and Al-Rimal; no production comparison.",
+        "caveat": "Article gives November 27 date but no publication time; no exact incident time or independent corroboration verified."
+      }
+    },
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/palestinian-man-killed-several-others-injured-in-israeli-attacks-on-gaza/4140045",
+      "title": "Palestinian man killed, several others injured in Israeli attacks on Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "source_type": "News agency reporting attributed to medical sources",
+      "confidence": "medium",
+      "finding_id": "gaza-20261127-anadolu-4140045-al-rimal-six-injured-followup",
+      "location": "Al-Rimal, Gaza City",
+      "affected_population_system": "Medical source reports six injured Palestinians, including women and children, brought to Al-Shifa Hospital; newly specified count for previously logged residential-apartment strike, not a separate incident.",
+      "exact_supporting_passage": "six injured Palestinians, including women and children, were brought to Al-Shifa Hospital",
+      "classification": "follow-up",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T00:49:13-08:00",
+          "2026-11-27T01:44:16-08:00"
+        ],
+        "method": "Direct Anadolu article compared with prior WAFA report and authenticated prior heartbeat.",
+        "novelty": "New specific hospital-received injury count, previously unspecified; prior finding gaza-20261127-wafa-177345-al-rimal-apartment-injuries.",
+        "caveat": "Publication time and exact event time unknown; medical sources may overlap. Do not sum with earlier report."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "result": "Latest listed report dated November 26, already covered; no newer report listed."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Recovered from preceding timeout; no new dated Gaza update found."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "result": "HTTP 502 Bad Gateway."
+      }
+    ],
+    "additional_targeted_search_count": 10,
+    "official_targeted_search_count": 2,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 casualties strike Jabalia Gaza today WAFA",
+      "Gaza November 27 2026 hospital fuel ambulance medical evacuation",
+      "Gaza November 27 2026 aid crossing water food displacement",
+      "Gaza November 27 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 27 2026 humanitarian UNICEF WFP UNRWA ICRC",
+      "Gaza November 27 2026 Anadolu Al Jazeera civilian impact",
+      "site:english.wafa.ps/Pages/Details Gaza \"27/November/2026\" after:2026-11-26 before:2026-11-28",
+      "Gaza November 27 2026 latest today Palestinian casualties aid hospital after:2026-11-26 before:2026-11-28",
+      "Gaza November 27 2026 ceasefire Gaza crossings detention humanitarian after:2026-11-26 before:2026-11-28",
+      "Gaza November 27 2026 Palestine Red Crescent MSF OCHA UNRWA WHO emergency after:2026-11-26 before:2026-11-28"
+    ],
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "prior_heartbeats_reviewed": 1,
+    "prior_heartbeat_range": "All existing November 27 records (one), directory listing verified. Prior-day entries not reread; November 26 material excluded from positive findings.",
+    "limitations": [
+      "No verified event or publication time within the hourly window.",
+      "Search coverage bounded and not exhaustive.",
+      "No production comparison."
+    ],
+    "exclusions": [
+      "Jabalia death already recorded; Anadolu corroboration not counted separately; differing unspecified injury estimate not treated as a precise update.",
+      "November 26 Reuters and AP attacks and Hamas response excluded as earlier material.",
+      "OCHA November 26 report not mined for additional older findings.",
+      "West Bank items, stale and unrelated results, and shelling without documented civilian impact excluded."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

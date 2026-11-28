@@ -1,0 +1,134 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T184451-0800",
+  "scheduled_for": "2026-11-27T18:44:51-08:00",
+  "started_at": "2026-11-27T18:41:21-08:00",
+  "completed_at": "2026-11-27T18:42:25.556-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T17:48:13-08:00",
+    "end": "2026-11-27T18:42:25.556-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T174451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery rather than guaranteed publication interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-msf-clinic-deconfliction-competing-status-claim-followup",
+      "canonical_source_url": "https://www.aljazeera.com/video/newsfeed/2026/11/28/israel-kills-two-msf-staff-in-targeted-strike-on-gaza-clinic",
+      "title": "Israel kills two MSF staff in targeted strike on Gaza clinic",
+      "publisher": "Al Jazeera",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Gaza Strip, MSF clinic; prior reporting placed the incident near Al-Shifa Hospital, Gaza City",
+      "affected_population_system": "Medical humanitarian personnel and facility protection. MSF says the clinic was visibly marked and its location known to the Israeli military; Al Jazeera reports Israel claimed the two deceased were Hamas fighters. Neither claim is independently established here. The deaths were already recorded and must not be counted again. Physical damage and service interruption remain unverified.",
+      "exact_supporting_passage": "MSF called it a ‘direct hit’, saying its logos were visible and Israel knew the location. Israel said the two were Hamas fighters.",
+      "source_type": "Established news outlet reporting attributed statements by affected humanitarian organization and Israel",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T17:48:13-08:00",
+          "2026-11-27T18:42:25.556-08:00"
+        ],
+        "method": "Targeted MSF clinic search, direct Al Jazeera article inspection, Roya News statement cross-check, compared against 26 authenticated ledger heartbeats.",
+        "novelty": "Previously logged MSF staff identification and deaths at 16:44. Newly captured facility marking and prior location disclosure claim and conflicting Israeli claim regarding status of the deceased. Not a new casualty incident.",
+        "corroborating_source_url": "https://en.royanews.tv/news/76583",
+        "caveat": "Roya reproduces MSF's attributed statement; original MSF statement and original Israeli statement not independently retrieved. Publication date is publisher-displayed November 28; precise timestamp and time zone unknown. New to reviewed ledger, not proven first published within window. No production comparison."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Latest listed situation report dated November 26; inspected directly; previously covered."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502 Bad Gateway; persistent."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new Gaza-specific update found."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian situation",
+      "site:who.int Gaza November 27 2026 health medical evacuation"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest MSF clinic security guards statement casualties",
+      "site:wafa.ps Gaza November 27 2026 evening casualties Rafah Khan Younis",
+      "Gaza November 27 2026 aid crossing fuel water displacement UNRWA UNICEF WFP",
+      "Gaza November 27 2026 hospital ambulance medical evacuation PRCS WHO MSF",
+      "Gaza November 27 2026 ceasefire negotiations hostages detention Reuters AP",
+      "Gaza November 27 2026 attacks civilian impact Anadolu Al Jazeera",
+      "Gaza November 28 2026 Saturday latest casualties humanitarian Gaza aid crossing",
+      "Gaza November 28 2026 hospital medical fuel displacement UN humanitarian",
+      "غزة 28 نوفمبر 2026 شهداء إصابات مستشفى معبر",
+      "Gaza MSF clinic attack November 27 2026 Israeli military response MSF direct hit",
+      "site:msf.org Gaza clinic guards November 27 2026",
+      "Gaza November 28 2026 ceasefire detention Reuters AP Al Jazeera"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 report",
+      "WHO global emergency page",
+      "MSF Palestine page",
+      "WAFA homepage",
+      "Al Jazeera clinic report",
+      "Roya clinic report",
+      "Sawa clinic report",
+      "Anadolu previously logged clinic report"
+    ],
+    "prior_heartbeats_reviewed": 26,
+    "prior_heartbeat_range": "November 26 16–23 and November 27 00–17, authenticated branch file reads.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Sawa",
+        "error": "HTTP 403 on direct open",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Anadolu",
+        "error": "Previously recorded clinic article inaccessible on direct open; retained ledger content accessible",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "reason": "Earlier OCHA reports, previously captured MSF fatalities, earlier WAFA casualties and other repeated reports excluded as new incidents."
+      }
+    ],
+    "limitations": [
+      "Several search queries produced no current distinct results; useful coverage remained via direct checks and Al Jazeera/Roya.",
+      "No independently verified publication time or direct production comparison.",
+      "No new material source-access degradation."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

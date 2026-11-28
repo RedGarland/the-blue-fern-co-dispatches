@@ -1,0 +1,141 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T064451-0800",
+  "scheduled_for": "2026-11-28T06:44:51-08:00",
+  "started_at": "2026-11-28T06:41:10-08:00",
+  "completed_at": "2026-11-28T06:42:03-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T05:46:31-08:00",
+    "end": "2026-11-28T06:42:03-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T054451-0800.json",
+    "basis": "Previous authenticated heartbeat completion to current research cutoff; bounded discovery, not exhaustive publication coverage."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261128-anadolu-4141369-northern-gaza-city-tent-injuries",
+      "canonical_source_url": "https://www.aa.com.tr/en/world/palestinian-killed-5-others-wounded-in-israel-s-ongoing-ceasefire-violations-in-gaza/4141369",
+      "title": "Palestinian killed, 5 others wounded in Israel’s ongoing ceasefire violations in Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "source_update_date": "2026-11-28",
+      "event_date": "2026-11-28",
+      "event_timestamp": null,
+      "location": "Northern Gaza City, Gaza Strip",
+      "affected_population_system": "Three Palestinians reportedly wounded, two seriously, in a separate strike affecting a tent, according to a medical source at Al-Shifa Hospital. Civilian status, displacement status, identities and subsequent outcomes not established. Article revised from two to five injured overall; avoid adding three to aggregate counts from other reporting without reconciliation.",
+      "exact_supporting_passage": "Three more Palestinians were wounded, two of them seriously, when an Israeli drone struck a tent in northern Gaza City",
+      "source_type": "Established news agency reporting attributed to a hospital medical source",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T05:46:31-08:00",
+          "2026-11-28T06:42:03-08:00"
+        ],
+        "method": "Direct inspection of Anadolu Middle East index and updated article 4141369; compared against 30 authenticated hourly heartbeats from November 27 00:44 through November 28 05:44.",
+        "novelty": "New separately described northern Gaza City tent incident in revised article; earlier versions logged the Al-Rimal fatality and Khan Younis boy injury, not the three tent injuries.",
+        "related_finding_id": "gaza-20261128-anadolu-4141369-al-rimal-hospital-corroboration-followup",
+        "caveat": "Exact update time unavailable; newly discovered within the observation interval, not proven first published within it. No independent corroboration or production collector comparison."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "FAILED",
+        "result": "Homepage fetch timeout; official situation update listing recovered and showed November 26 latest report.",
+        "fallback_url": "https://www.ochaopt.org/publications/humanitarian-situation-update"
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific item on official listing."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "Fetch timeout; persistent regional-source access failure."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest WAFA casualties health ministry Saturday",
+      "Gaza November 28 2026 Anadolu latest casualties ceasefire",
+      "Gaza November 28 2026 humanitarian aid crossings fuel medical evacuation hospital ambulance",
+      "Gaza November 28 2026 displaced food water sanitation flooding UNICEF UNRWA WFP",
+      "Gaza November 28 2026 Reuters AP ceasefire hostage detention negotiation latest",
+      "Gaza November 28 2026 Al Jazeera BBC Guardian civilian impact latest",
+      "Gaza November 28 2026 site:english.wafa.ps/Pages/Details",
+      "Gaza November 28 2026 site:aa.com.tr/en",
+      "Gaza after:2026-11-27 before:2026-11-29 site:un.org OR site:unicef.org OR site:unrwa.org OR site:wfp.org",
+      "Gaza after:2026-11-27 before:2026-11-29 site:msf.org OR site:icrc.org OR site:palestinercs.org",
+      "Gaza November 28 2026 latest strikes civilian casualties Saturday afternoon",
+      "Gaza November 28 2026 crossing detainees ceasefire humanitarian latest news"
+    ],
+    "direct_source_checks": [
+      "WAFA latest news",
+      "Anadolu Middle East index and linked stories",
+      "Al Jazeera Palestine index and MSF story",
+      "MSF Palestine",
+      "UNRWA newsroom and situation report 239",
+      "UNICEF press releases",
+      "Reuters Middle East index",
+      "AP Israel-Hamas hub"
+    ],
+    "prior_heartbeats_reviewed": 30,
+    "prior_heartbeat_range": "November 27 00:44 through November 28 05:44",
+    "access_failures": [
+      {
+        "source": "OCHA OPT homepage",
+        "error": "Timeout; official list accessible",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Previously recorded Civil Defense shelter/fuel/response-capacity warning."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/features/red-cross-sounds-alarm-about-gaza-winter-as-displaced-face-unsafe-shelter-choices/4140981",
+        "reason": "Previously recorded ICRC sewage and shelter warning."
+      },
+      {
+        "source_url": "https://www.aljazeera.com/news/2026/11/28/israeli-strike-on-doctors-without-borders-clinic-in-gaza-kills-two-staff",
+        "reason": "Previously recorded MSF staff fatalities and deconfliction statements."
+      },
+      {
+        "source_url": "https://english.wafa.ps/",
+        "reason": "Current Gaza headlines already captured; newer West Bank items out of scope."
+      }
+    ],
+    "limitations": [
+      "Twelve additional search requests issued, but batch returned unusually sparse indexed results; direct source navigation recovered useful coverage.",
+      "UNRWA report page did not expose verifiable November publication date in retrieved text.",
+      "No exhaustive coverage; exact update timestamps unknown.",
+      "No production collector comparison."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

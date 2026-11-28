@@ -1,0 +1,128 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T074451-0800",
+  "scheduled_for": "2026-11-28T07:44:51-08:00",
+  "started_at": "2026-11-28T07:47:47-08:00",
+  "completed_at": "2026-11-28T07:48:48-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T06:42:03-08:00",
+    "end": "2026-11-28T07:48:48-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T064451-0800.json",
+    "basis": "Prior authenticated heartbeat completion to current research cutoff; bounded discovery, not exhaustive publication coverage."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-unicef-186586-winterization-health-wash-access",
+      "canonical_source_url": "https://www.unicef.org/media/186586/file/State-of-Palestine-Humanitarian-Situation-Update-(Gaza-Strip-and-West-Bank-Winterization)-27-November-2026.pdf.pdf",
+      "title": "Gaza Strip and West Bank: Situation Update and Humanitarian Response",
+      "publisher": "UNICEF State of Palestine",
+      "source_date": "2026-11-27",
+      "publication_date": null,
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip",
+      "affected_population_system": "UNICEF's November 27 winterization report documents distribution of 65 incubators to 10 neonatal intensive care sites and completed rapid winterization works at Al-Helou Hospital. Israeli authorities indicated approval for most of UNICEF's November 22 priority winter list, including 11 pumps, 72 generators, 54,210 litres of engine oil, desalination plant spare parts and three water trucks; formal system approval for entry remains pending. This is a report of cumulative assistance and conditional access, not confirmation that the pending supplies have entered or that hospital capacity has increased by a specific bed count.",
+      "exact_supporting_passage": "UNICEF has distributed 65 new incubators to 10 Neonatal Intensive Care Unit (NICU) sites",
+      "source_type": "Primary official humanitarian agency operational situation report",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T06:42:03-08:00",
+          "2026-11-28T07:48:48-08:00"
+        ],
+        "method": "Targeted humanitarian search; official UNICEF PDF opened, pages 1 and 3 visually inspected; compared with 31 authenticated hourly heartbeat files from November 27 00:44 through November 28 06:44.",
+        "novelty": "Newly recovered operational report and specific neonatal equipment distribution and conditional WASH equipment access absent from reviewed findings. Broader flood and sewage warnings already recorded and are not new incidents.",
+        "caveat": "Document dated November 27; exact publication and individual delivery dates unknown. Newly discovered during interval, not necessarily first published then. No production collector comparison.",
+        "supporting_page": 3
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Homepage and updates listing accessible; latest situation report November 26."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502, recurring failure."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No newly identified Gaza-specific update."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 WAFA latest casualties health ministry Gaza Saturday",
+      "Gaza November 28 2026 Anadolu latest casualties ceasefire tent",
+      "Gaza November 28 2026 humanitarian aid crossings fuel medical evacuation hospital ambulance",
+      "Gaza November 28 2026 displaced food water sanitation flooding UNICEF UNRWA WFP",
+      "Gaza November 28 2026 Reuters AP ceasefire hostage detention negotiation latest",
+      "Gaza November 28 2026 Al Jazeera BBC Guardian civilian impact latest",
+      "Gaza site:english.wafa.ps/Pages/Details November 28 2026",
+      "Gaza site:aa.com.tr/en November 28 2026 latest",
+      "Gaza after:2026-11-27 before:2026-11-29 site:un.org OR site:unicef.org OR site:unrwa.org OR site:wfp.org",
+      "Gaza after:2026-11-27 before:2026-11-29 site:msf.org OR site:icrc.org OR site:palestinercs.org",
+      "Gaza November 28 2026 Saturday afternoon latest injuries strikes Gaza City Khan Younis",
+      "Gaza November 28 2026 crossing detainees ceasefire humanitarian latest news"
+    ],
+    "direct_source_checks": [
+      "OCHA homepage and updates",
+      "WHO global and EMRO",
+      "WAFA homepage",
+      "Anadolu Middle East index and updated article 4141369",
+      "UNICEF press releases and winterization PDF",
+      "MSF Palestine",
+      "UNRWA newsroom"
+    ],
+    "prior_heartbeats_reviewed": 31,
+    "prior_heartbeat_range": "November 27 00:44 through November 28 06:44",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://www.aa.com.tr/en/world/palestinian-killed-5-others-wounded-in-israel-s-ongoing-ceasefire-violations-in-gaza/4141369",
+        "reason": "Tent injuries and other reported incidents already recorded."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177368",
+        "reason": "Al-Rimal casualty incident previously recorded; earlier indexed version not a new report."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/8-palestinians-killed-several-injured-in-israeli-attacks-across-gaza/4140045",
+        "reason": "Child injury and Friday incidents already reviewed."
+      }
+    ],
+    "limitations": [
+      "Search results sparse; direct navigation and official PDF recovered useful coverage.",
+      "No exhaustive coverage or production collector comparison.",
+      "Report date verified; exact publication and event timestamps unavailable."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

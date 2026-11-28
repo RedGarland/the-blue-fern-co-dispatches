@@ -1,0 +1,130 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T164451-0800",
+  "scheduled_for": "2026-11-27T16:44:51-08:00",
+  "started_at": "2026-11-27T16:49:41-08:00",
+  "completed_at": "2026-11-27T16:50:21-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T15:47:50.491-08:00",
+    "end": "2026-11-27T16:50:21-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T154451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; discovery interval, not necessarily publication or event interval."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261127-anadolu-4141089-msf-clinic-guards-killed-followup",
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/doctors-without-borders-denounces-israeli-strike-on-gaza-clinic/4141089",
+      "title": "Doctors Without Borders denounces Israeli strike on Gaza clinic",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "Gaza City, MSF clinic near Al-Shifa Hospital, Gaza Strip",
+      "affected_population_system": "MSF reports two of its guards killed in an Israeli strike on one of its clinics on Friday. The organization reports 17 colleagues killed in Gaza cumulatively. Physical damage and any suspension of medical services are unverified; the two deaths likely correspond to the previously logged clinic-vicinity incident, not additional fatalities.",
+      "exact_supporting_passage": "two of its colleagues, both guards, were killed late Friday in an Israeli strike on one of its clinics",
+      "source_type": "Established news agency reporting an attributed statement by the affected humanitarian organization",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T15:47:50.491-08:00",
+          "2026-11-27T16:50:21-08:00"
+        ],
+        "method": "Anadolu Middle East index and direct article inspection after OCHA and WHO checks; compared against 24 authenticated prior heartbeat files.",
+        "novelty": "New identification of the two deceased as MSF guards and MSF attribution of strike to its clinic; previous finding gaza-20261127-wafa-177363-al-shifa-vicinity-casualties did not establish staff identity or a strike on the clinic.",
+        "caveat": "Anadolu displays November 28 publisher date, while MSF statement refers to Friday November 27. Publication time and time zone not explicit. Original MSF statement on X not directly retrieved; MSF website and Palestine page inspected but no matching release located. Attribution is to MSF via Anadolu, not an unsupported social claim. No independent corroboration of clinic damage or service disruption. Do not aggregate casualties. Production not compared."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "status": "ACCESSIBLE",
+        "url": "https://www.ochaopt.org/",
+        "result": "Homepage recovered; latest situation report dated November 26 inspected, no newer report located."
+      },
+      {
+        "source": "WHO global",
+        "status": "ACCESSIBLE",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "No new Gaza-specific development located."
+      },
+      {
+        "source": "WHO EMRO",
+        "status": "FAILED",
+        "url": "https://www.emro.who.int/opt/",
+        "result": "HTTP 502, persistent access failure."
+      }
+    ],
+    "official_search_queries": [
+      "site:who.int Gaza November 27 2026 health humanitarian update",
+      "site:ochaopt.org Gaza November 27 2026 humanitarian"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 2026 latest casualties WAFA Anadolu Friday",
+      "Gaza November 28 2026 casualties WAFA Saturday",
+      "Gaza November 27 2026 aid crossing food water displacement UN humanitarian",
+      "Gaza November 27 2026 hospital fuel ambulance medical evacuation MSF PRCS",
+      "Gaza November 27 2026 ceasefire talks hostages detainees Reuters AP",
+      "Gaza November 27 2026 infrastructure flooding ICRC UNICEF UNRWA",
+      "Gaza latest November 28 2026 aid casualties hospital crossing overnight Saturday",
+      "غزة 28 نوفمبر 2026 شهداء إصابات معبر مستشفى",
+      "Gaza November 27 2026 latest UN briefing humanitarian WFP IOM UNICEF MSF Gaza",
+      "Gaza November 28 2026 ceasefire negotiations detained released aid Rafah",
+      "Gaza November 27 2026 Gaza latest evening news site:apnews.com OR site:reuters.com OR site:aljazeera.com",
+      "Gaza November 28 2026 humanitarian weather displacement aid Gaza site:aa.com.tr OR site:english.wafa.ps"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 situation report",
+      "WHO global emergency page",
+      "WAFA homepage",
+      "Anadolu Middle East index and article 4141089",
+      "MSF global homepage and Palestine country page",
+      "Al Jazeera November 27 regional casualty report"
+    ],
+    "prior_heartbeats_reviewed": 24,
+    "prior_heartbeat_range": "November 26 16–23 and November 27 00–15; all retrieved and parsed.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Already logged in 14:44 heartbeat."
+      },
+      {
+        "url": "https://www.aljazeera.com/news/2026/11/27/israel-kills-four-in-gaza-as-hamas-chief-al-hayyas-son-survives-strike",
+        "reason": "Previously recorded strikes and injuries, family injury report likely overlaps apartment strike; competing hospital allegations without established operational change."
+      },
+      {
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously reviewed report, no newly established hourly update."
+      }
+    ],
+    "limitations": [
+      "WHO EMRO unavailable; search indexing returned stale results.",
+      "No direct MSF statement capture, exact publication times or production comparison.",
+      "No evidence of absence in other categories."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

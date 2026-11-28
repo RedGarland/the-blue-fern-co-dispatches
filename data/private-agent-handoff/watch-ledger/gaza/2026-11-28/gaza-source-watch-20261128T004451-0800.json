@@ -1,0 +1,114 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T004451-0800",
+  "scheduled_for": "2026-11-28T00:44:51-08:00",
+  "started_at": "2026-11-28T00:40:03-08:00",
+  "completed_at": "2026-11-28T00:40:58-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-27T23:42:51.507-08:00",
+    "end": "2026-11-28T00:40:58-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T234451-0800.json",
+    "basis": "Prior authenticated completion through current research cutoff; discovery interval, not exhaustive event coverage."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "November 26 report remains latest listed; direct report checked."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502, persistent."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update identified."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 28 2026 humanitarian update",
+      "site:who.int Gaza November 28 2026 health emergency"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest casualties overnight Khan Younis Rafah WAFA",
+      "Gaza November 28 2026 hospital ambulance medical evacuation fuel MSF PRCS",
+      "Gaza November 28 2026 aid crossing water food displacement shelter flooding",
+      "Gaza November 28 2026 ceasefire negotiations detention hostages Reuters AP",
+      "Gaza November 28 2026 UNICEF UNRWA WFP ICRC humanitarian",
+      "site:english.wafa.ps Gaza November 28 2026",
+      "site:aa.com.tr Gaza November 28 2026 Palestinians",
+      "site:msf.org Gaza clinic November 27 28 2026",
+      "Gaza November 28 2026 civilian infrastructure military operations latest",
+      "Gaza November 28 2026 Al Jazeera Middle East Eye latest aid casualties",
+      "Gaza November 28 2026 UN News ReliefWeb humanitarian medical",
+      "Gaza November 28 2026 Palestine Red Crescent hospital ambulance health ministry"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage and articles 177366, 177367",
+      "Anadolu Middle East index and article 4140151",
+      "OCHA November 26 report",
+      "WHO global page"
+    ],
+    "prior_heartbeats_reviewed": 10,
+    "prior_heartbeat_range": "November 27 14–23, authenticated branch reads; latest heartbeat includes prior exclusions. Larger batch exceeded tool-call limit; narrowed to relevant recent records.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177365",
+        "reason": "Child injury already logged in immediately prior run."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177366",
+        "reason": "Newly listed WAFA article repeats MSF staff deaths, clinic marking and deconfliction claims already logged in 16 and 18 hour heartbeats; accountability call alone is not new operational impact. Displayed 10:14 AM Palestine time if local, but timezone not explicit."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177367",
+        "reason": "Jerusalem school closure outside Gaza scope."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Previously logged flood risk."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/israel-tortures-palestinian-detainees-with-government-approval-israeli-rights-group/4140151",
+        "reason": "November 27 report; no new in-window Gaza-specific development established."
+      },
+      {
+        "source_url": "https://www.msf.org/gaza-israel-war",
+        "reason": "General situation page last updated September 28; no new event."
+      }
+    ],
+    "limitations": [
+      "No production collector comparison.",
+      "WHO regional access unavailable; WHO global and OCHA accessible.",
+      "Bounded searches may miss newly published or unindexed material; not exhaustive.",
+      "Deduplication used ten most recent authenticated heartbeats rather than full historical ledger."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

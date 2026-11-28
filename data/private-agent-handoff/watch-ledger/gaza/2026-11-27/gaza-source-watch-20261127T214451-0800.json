@@ -1,0 +1,107 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T214451-0800",
+  "scheduled_for": "2026-11-27T21:44:51-08:00",
+  "started_at": "2026-11-27T21:46:33-08:00",
+  "completed_at": "2026-11-27T21:47:25.822-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T20:45:04-08:00",
+    "end": "2026-11-27T21:47:25.822-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T204451-0800.json",
+    "basis": "Prior authenticated heartbeat completion through current research cutoff; date-only publications do not establish freshness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed situation report November 26, retrieved at https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026; previously covered."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update listed."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502, persistent."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest casualties WAFA Gaza November 27 night",
+      "Gaza November 28 2026 aid crossings food water UN humanitarian",
+      "Gaza November 27 28 2026 hospital ambulance medical evacuation fuel WHO MSF",
+      "Gaza November 28 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "Gaza November 28 2026 displacement flooding infrastructure civil defense",
+      "Gaza November 28 2026 site:english.wafa.ps Gaza",
+      "Gaza latest news \"November 28, 2026\" Palestinians Gaza Saturday",
+      "site:aa.com.tr Gaza \"28 November 2026\" killed aid hospital",
+      "Gaza \"November 28\" 2026 site:aljazeera.com Gaza live",
+      "Gaza MSF security guards November 27 2026 site:msf.org",
+      "Gaza November 27 2026 UNRWA WFP UNICEF ICRC aid access Gaza",
+      "Gaza November 28 2026 latest strikes ceasefire Gaza site:reuters.com OR site:apnews.com"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage and latest Gaza report",
+      "Anadolu Middle East index, Al-Ahli hospital allegation, detention report and Amnesty report"
+    ],
+    "prior_heartbeats_reviewed": 21,
+    "prior_heartbeat_range": "November 27 00–20, authenticated branch reads",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177363",
+        "reason": "Already captured at 13:44; additional demolition mentions lack newly documented civilian impact."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Already captured at 14:44."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/doctors-without-borders-denounces-israeli-strike-on-gaza-clinic/4141089",
+        "reason": "Already captured at 16:44; no new capacity change."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/hamas-says-israeli-claim-that-it-used-al-ahli-hospital-as-interrogation-center-is-ridiculous/4140692",
+        "reason": "November 27 competing allegations; no new verified detention event or hospital capacity change."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/israel-tortures-palestinian-detainees-with-government-approval-israeli-rights-group/4140151",
+        "reason": "Retrospective review of complaints spanning a decade; no new Gaza-specific detention event or in-window publication timestamp established."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/amnesty-report-highlights-devastating-toll-of-israel-s-genocide-in-gaza-on-women-girls/4140046",
+        "reason": "Underlying report issued November 25; retrospective and not an in-window development."
+      }
+    ],
+    "limitations": [
+      "Search returns largely older or duplicate coverage; no new qualifying development verified, not evidence of no events.",
+      "No direct comparison with production collector.",
+      "WHO regional access remains unavailable; OCHA and global WHO accessible."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

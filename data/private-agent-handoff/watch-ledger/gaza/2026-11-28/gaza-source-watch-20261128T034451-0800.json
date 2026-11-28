@@ -1,0 +1,139 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T034451-0800",
+  "scheduled_for": "2026-11-28T03:44:51-08:00",
+  "started_at": "2026-11-28T03:41:17-08:00",
+  "completed_at": "2026-11-28T03:42:11-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T02:44:26-08:00",
+    "end": "2026-11-28T03:42:11-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T024451-0800.json",
+    "basis": "Prior authenticated heartbeat completion through current research cutoff; bounded discovery, not exhaustive event coverage."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261128-wafa-177368-al-rimal-residential-casualties",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177368",
+      "title": "UPDATE: Young Palestinian man killed, several others injured in Israeli drone strike on Gaza City",
+      "publisher": "WAFA",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-28",
+      "event_timestamp": null,
+      "location": "Al-Rimal neighborhood, Gaza City, Gaza Strip",
+      "affected_population_system": "WAFA reports Ahmad Ashraf Sihyoun, 27, killed and several other Palestinians injured in a Saturday strike affecting a residential property. Civilian status, exact injury count and severity, and extent of damage not established.",
+      "exact_supporting_passage": "Ahmad Ashraf Sihyoun, 27, was killed and several other Palestinians were injured on Saturday",
+      "source_type": "Official Palestinian news agency reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T02:44:26-08:00",
+          "2026-11-28T03:42:11-08:00"
+        ],
+        "method": "Targeted WAFA casualty search, WAFA homepage and direct updated article inspection; compared against 15 authenticated prior heartbeats from November 27 12:44 through November 28 02:44.",
+        "novelty": "New to reviewed ledger; Saturday residential strike distinct as described from Friday Al-Rimal incident and Saturday Khan Younis child injury. Search index displayed an earlier injuries-only headline, while direct article contains fatality update; record once.",
+        "caveat": "Publisher displays November 28 12:34 PM without explicit timezone (02:34 Pacific if Palestine local time); this would precede prior cutoff by about ten minutes. Update time is unknown. Newly discovered within this window, not proven first published in it. Independent corroboration and production comparison unavailable."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "November 26 situation report remains latest listed; direct report retrieved."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update in listing."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502 Bad Gateway; persistent."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 28 2026 humanitarian update",
+      "site:who.int Gaza November 28 2026 health hospitals"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest casualties Khan Younis Gaza city WAFA",
+      "Gaza November 28 2026 hospital ambulance medical evacuation fuel MSF PRCS",
+      "Gaza November 28 2026 aid crossing water food displacement shelter flooding",
+      "Gaza November 28 2026 ceasefire negotiations detention hostages Reuters AP",
+      "Gaza November 28 2026 UNICEF UNRWA WFP ICRC humanitarian",
+      "site:english.wafa.ps Gaza November 28 2026",
+      "site:aa.com.tr Gaza November 28 2026 Palestinians Gaza City strike",
+      "site:msf.org Gaza clinic November 27 28 2026",
+      "Gaza November 28 2026 civilian infrastructure military operations latest",
+      "Gaza November 28 2026 Al Jazeera Middle East Eye latest aid casualties",
+      "Gaza November 28 2026 UN News ReliefWeb humanitarian medical",
+      "Gaza November 28 2026 Palestine Red Crescent hospital ambulance health ministry"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage",
+      "WAFA 177368 updated article",
+      "Anadolu Middle East index",
+      "OCHA November 26 situation report",
+      "WHO global news listing",
+      "Anadolu meningitis infographic link"
+    ],
+    "prior_heartbeats_reviewed": 15,
+    "prior_heartbeat_range": "November 27 12:44–23:44 and November 28 00:44–02:44, authenticated branch reads.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177365",
+        "reason": "Previously recorded Saturday Khan Younis child injury."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/8-palestinians-killed-several-injured-in-israeli-attacks-across-gaza/4140045",
+        "reason": "Age and medical-source attribution recorded in prior heartbeat; Friday recap excluded."
+      },
+      {
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously available report, not a new publication."
+      },
+      {
+        "source_url": "https://www.msf.org/gaza-israel-war",
+        "reason": "Page last updated September 28; not a fresh operational change."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/info/infographic/55087",
+        "reason": "No verifiable new dated substantive detail recovered."
+      }
+    ],
+    "limitations": [
+      "WHO EMRO unavailable; OCHA and WHO global accessible.",
+      "WAFA exact publication/update timestamp and civilian status unverified.",
+      "Search results skewed toward older material; unindexed reports may be missed.",
+      "No production collector comparison."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

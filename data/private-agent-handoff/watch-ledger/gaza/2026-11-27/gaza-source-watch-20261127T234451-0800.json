@@ -1,0 +1,144 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T234451-0800",
+  "scheduled_for": "2026-11-27T23:44:51-08:00",
+  "started_at": "2026-11-27T23:41:56-08:00",
+  "completed_at": "2026-11-27T23:42:51.507-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T22:41:55.891-08:00",
+    "end": "2026-11-27T23:42:51.507-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T224451-0800.json",
+    "basis": "Prior authenticated completion through current research cutoff; nominal scheduled slot triggered early. Discovery interval, not exhaustive event coverage."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261128-wafa-177365-khan-younis-child-wounded",
+      "canonical_source_url": "https://english.wafa.ps/Pages/Details/177365",
+      "title": "Palestinian child wounded by Israeli gunfire in Khan Younis as attacks continue across Gaza",
+      "publisher": "WAFA",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-28",
+      "event_timestamp": null,
+      "location": "Khan Younis, southern Gaza Strip",
+      "affected_population_system": "A Palestinian child reportedly wounded by Israeli forces' gunfire early Saturday. Identity, injury severity and treatment location not reported.",
+      "exact_supporting_passage": "A Palestinian child was wounded by Israeli forces' gunfire early Saturday in the city of Khan Younis, south of the Gaza Strip.",
+      "source_type": "Official Palestinian news agency reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-27T22:41:55.891-08:00",
+          "2026-11-27T23:42:51.507-08:00"
+        ],
+        "method": "WAFA homepage direct discovery and linked article inspection following OCHA and WHO checks; compared with 23 authenticated November 27 heartbeat files.",
+        "novelty": "New Saturday-morning report, distinct by reported event date from Friday November 27 Al-Mawasi child injury (WAFA 177357). Source ID 177365 absent from all reviewed heartbeat files.",
+        "caveat": "Publisher displays November 28 08:42 AM without explicit timezone. If Palestine local time (UTC+02), this corresponds to November 27 22:42 Pacific, just after prior cutoff. Exact timezone and event time not confirmed; freshness established by discovery and comparison, not precise timestamp. No independent corroboration. Do not add Friday recap casualties."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed report dated November 26; direct report checked, no new publication."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502; persistent."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update identified."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 27 2026 humanitarian update",
+      "site:who.int Gaza November 27 2026 health WHO"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 overnight casualties strike WAFA November 27",
+      "Gaza November 28 2026 humanitarian aid crossing displacement water fuel",
+      "Gaza November 28 2026 hospital ambulance medical evacuation MSF clinic",
+      "Gaza November 28 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "Gaza November 28 2026 UNICEF WFP UNRWA ICRC food water shelter",
+      "site:english.wafa.ps Gaza November 28 2026",
+      "site:aa.com.tr Gaza \"28 November 2026\" latest Palestinians",
+      "site:msf.org Gaza November 27 2026 clinic guards statement",
+      "Gaza November 28 2026 overnight infrastructure attack Palestinian civilian impact",
+      "Gaza November 28 2026 medical aid access detention latest Al Jazeera Middle East Eye",
+      "Gaza November 28 2026 humanitarian ReliefWeb UN news health food access",
+      "Gaza November 28 2026 latest Palestinian Red Crescent hospital casualties ambulance"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage and article 177365",
+      "Anadolu Middle East index, Al-Ahli allegations and November 26 meningitis infographic",
+      "OCHA November 26 report",
+      "WHO global page"
+    ],
+    "prior_heartbeats_reviewed": 23,
+    "prior_heartbeat_range": "November 27 00–22, authenticated branch reads",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177363",
+        "reason": "Friday clinic-vicinity and Rafah casualties already logged."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/doctors-without-borders-denounces-israeli-strike-on-gaza-clinic/4141089",
+        "reason": "Already logged MSF fatalities and deconfliction claims; no new operational change."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Already logged flood risk and response shortages."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/israels-use-of-palestinians-as-human-shields-in-gaza-widespread-encouraged-by-commanders-report/4141059",
+        "reason": "Already logged investigation."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/hamas-says-israeli-claim-that-it-used-al-ahli-hospital-as-interrogation-center-is-ridiculous/4140692",
+        "reason": "November 27 competing allegations; no new verified facility disruption, detention or civilian impact within window."
+      },
+      {
+        "source_url": "https://www.wfp.org/news/winter-hits-gaza-hard-food-and-shelter-aid-runs-short-iom-and-wfp-warn",
+        "reason": "November 17 release, not new."
+      },
+      {
+        "source_url": "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes",
+        "reason": "November 26 article, no new in-window update established."
+      }
+    ],
+    "limitations": [
+      "No production collector comparison.",
+      "WHO regional access unavailable; global WHO and OCHA accessible.",
+      "Search coverage bounded; publication timestamps not necessarily verified."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

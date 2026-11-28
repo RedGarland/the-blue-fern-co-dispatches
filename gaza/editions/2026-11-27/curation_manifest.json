@@ -1,0 +1,335 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-27-005",
+    "title": "Israeli strikes kill 16 schoolchildren so far this month, Gaza ministry says",
+    "summary": "Statement follows death of sisters, aged 15 and 13, in airstrike on residential apartment in Gaza City Israeli strikes have killed at least 16 schoolchildren in Gaza since the start of November, as young people across the territory face intensifying bombardment and a struggle to find food, clean water and shelter. On Wednesday, Gaza's ministry of education said: \"Palestinian students had been targeted for the third time in less than 24 hours, in an escalation reflecting the continued Israeli violations against children in the Gaza Strip. The number of schoolchildren killed since the beginning of November has now risen to 16.\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 94,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-27-guardian-world-71b4e6a7d138"
+    ],
+    "source_ids": [
+      "gaza-2026-11-27-guardian-world-71b4e6a7d138"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-27-guardian-world-71b4e6a7d138",
+        "title": "Israeli strikes kill 16 schoolchildren so far this month, Gaza ministry says",
+        "url": "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Statement follows death of sisters, aged 15 and 13, in airstrike on residential apartment in Gaza City Israeli strikes have killed at least 16 schoolchildren in Gaza since the start of November, as young people across the territory face intensifying bombardment and a struggle to find food, clean water and shelter. On Wednesday, Gaza's ministry of education said: \"Palestinian students had been targeted for the third time in less than 24 hours, in an escalation reflecting the continued Israeli violations against children in the Gaza Strip. The number of schoolchildren killed since the beginning of November has now risen to 16.\"",
+        "published_at": "2026-11-26T20:33:07+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-28T03:22:07.391840+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 94,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-27-008",
+    "title": "Hamas chief's last surviving son escapes Israeli strike in Gaza",
+    "summary": "Hamas leader Khalil al-Hayya's last surviving son Izzeldeen survived an Israeli assassination attempt on Friday.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-27-aljazeera-middle-east-4b097c0a6b13"
+    ],
+    "source_ids": [
+      "gaza-2026-11-27-aljazeera-middle-east-4b097c0a6b13"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/11/27/aje-onl-nf_-hamas-chiefs-son-escapes-israeli-strike-gaza-271126?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-27-aljazeera-middle-east-4b097c0a6b13",
+        "title": "Hamas chief's last surviving son escapes Israeli strike in Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/27/aje-onl-nf_-hamas-chiefs-son-escapes-israeli-strike-gaza-271126?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Hamas leader Khalil al-Hayya's last surviving son Izzeldeen survived an Israeli assassination attempt on Friday.",
+        "published_at": "2026-11-27T20:18:45+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-28T03:22:07.391840+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-27-010",
+    "title": "Israel kills four in Gaza as Hamas chief al-Hayya's son survives strike",
+    "summary": "Four of Khalil al-Hayya's other sons were previously killed by Israeli forces, according to the Palestinian group.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-27-aljazeera-middle-east-8482b1521350"
+    ],
+    "source_ids": [
+      "gaza-2026-11-27-aljazeera-middle-east-8482b1521350"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/11/27/israel-kills-four-in-gaza-as-hamas-chief-al-hayyas-son-survives-strike?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-27-aljazeera-middle-east-8482b1521350",
+        "title": "Israel kills four in Gaza as Hamas chief al-Hayya's son survives strike",
+        "url": "https://www.aljazeera.com/news/2026/11/27/israel-kills-four-in-gaza-as-hamas-chief-al-hayyas-son-survives-strike?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Four of Khalil al-Hayya's other sons were previously killed by Israeli forces, according to the Palestinian group.",
+        "published_at": "2026-11-27T19:53:25+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-28T03:22:07.391840+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-27-009",
+    "title": "UN Gaza rapporteur Francesca Albanese denied entry into Costa Rica",
+    "summary": "Costa Rica has barred UN special rapporteur Francesca Albanese, citing unfounded 'links to terrorist acts'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-27-aljazeera-middle-east-9b911664308c"
+    ],
+    "source_ids": [
+      "gaza-2026-11-27-aljazeera-middle-east-9b911664308c"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/11/27/un-gaza-rapporteur-francesca-albanese-denied-entry-into-costa-rica?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-27-aljazeera-middle-east-9b911664308c",
+        "title": "UN Gaza rapporteur Francesca Albanese denied entry into Costa Rica",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/11/27/un-gaza-rapporteur-francesca-albanese-denied-entry-into-costa-rica?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Costa Rica has barred UN special rapporteur Francesca Albanese, citing unfounded 'links to terrorist acts'.",
+        "published_at": "2026-11-27T20:10:30+00:00",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-28T03:22:07.391840+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

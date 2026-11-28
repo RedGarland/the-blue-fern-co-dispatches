@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-27",
+  "generated_at": "2026-11-28T03:22:50.722399Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-11-27.mp3",
+  "audio_url": "/gaza/audio/2026-11-27.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1327,
+  "tts_input_word_count": 204,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1505664,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-11-28T03:22:50.722378Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-11-27-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-27/",
+  "script_text": "This is the Gaza Dispatch audio briefing for November 27, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli strikes kill 16 schoolchildren so far this month, Gaza ministry says. Statement follows death of sisters, aged 15 and 13, in airstrike on residential apartment in Gaza City Israeli strikes have killed at least 16 schoolchildren in Gaza since the start of November, as young people across the territory face intensifying bombardment and a struggle to find food, clean water and shelter. This was reported by The Guardian.\n\n2. Hamas chief's last surviving son escapes Israeli strike in Gaza. Hamas leader Khalil al-Hayya's last surviving son Izzeldeen survived an Israeli assassination attempt on Friday. This was reported by Al Jazeera.\n\n3. Israel kills four in Gaza as Hamas chief al-Hayya's son survives strike. Four of Khalil al-Hayya's other sons were previously killed by Israeli forces, according to the Palestinian group. This was reported by Al Jazeera.\n\n4. UN Gaza rapporteur Francesca Albanese denied entry into Costa Rica. Costa Rica has barred UN special rapporteur Francesca Albanese, citing unfounded 'links to terrorist acts'. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the November 27, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-11-27-guardian-world-71b4e6a7d138",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/nov/26/gaza-ministry-schoolchildren-killed-this-month-israel-strikes",
+      "title": "Israeli strikes kill 16 schoolchildren so far this month, Gaza ministry says"
+    },
+    {
+      "source_record_id": "gaza-2026-11-27-aljazeera-middle-east-4b097c0a6b13",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/11/27/aje-onl-nf_-hamas-chiefs-son-escapes-israeli-strike-gaza-271126?traffic_source=rss",
+      "title": "Hamas chief's last surviving son escapes Israeli strike in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-11-27-aljazeera-middle-east-8482b1521350",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/11/27/israel-kills-four-in-gaza-as-hamas-chief-al-hayyas-son-survives-strike?traffic_source=rss",
+      "title": "Israel kills four in Gaza as Hamas chief al-Hayya's son survives strike"
+    },
+    {
+      "source_record_id": "gaza-2026-11-27-aljazeera-middle-east-9b911664308c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/11/27/un-gaza-rapporteur-francesca-albanese-denied-entry-into-costa-rica?traffic_source=rss",
+      "title": "UN Gaza rapporteur Francesca Albanese denied entry into Costa Rica"
+    }
+  ]
+}

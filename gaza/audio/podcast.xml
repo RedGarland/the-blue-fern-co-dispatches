@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 26 Nov 2026 16:59:06 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 28 Nov 2026 03:22:50 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for November 27, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-27-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-11-27-transcript.html</guid>
+    <pubDate>Fri, 27 Nov 2026 00:00:00 +0000</pubDate>
+    <description>Israeli strikes kill 16 schoolchildren so far this month, Gaza ministry says. Statement follows death of sisters, aged 15 and 13, in airstrike on residential apartment in Gaza City Israeli strikes have killed at least 16 schoolchildren in Gaza since the start of November, as young people across the territory face intensifying bombardment and a struggle to find food, clean water and shelter. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-11-27.mp3" length="1505664" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for November 26, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-26-transcript.html</link>

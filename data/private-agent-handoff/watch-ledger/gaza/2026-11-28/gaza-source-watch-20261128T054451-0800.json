@@ -1,0 +1,149 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T054451-0800",
+  "scheduled_for": "2026-11-28T05:44:51-08:00",
+  "started_at": "2026-11-28T05:45:39-08:00",
+  "completed_at": "2026-11-28T05:46:31-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T04:45:26-08:00",
+    "end": "2026-11-28T05:46:31-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T044451-0800.json",
+    "basis": "Prior authenticated heartbeat completion to current research cutoff; bounded discovery, not exhaustive publication coverage."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261128-reuters-msf-clinic-exterior-damage-followup",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/israeli-strike-killed-two-staff-outside-gaza-clinic-msf-says-2026-11-28/",
+      "title": "MSF charity condemns Israeli strike that killed two staff outside Gaza clinic",
+      "publisher": "Reuters",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": "2026-11-28T08:04:00Z",
+      "event_date": "2026-11-27",
+      "event_timestamp": null,
+      "location": "MSF clinic, Gaza City, Gaza Strip",
+      "affected_population_system": "Reuters footage recorded Saturday shows shrapnel damage to exterior walls at the clinic following the previously logged fatal strike on Friday. Extent of damage, interior damage and service interruption remain unverified. AP additionally quotes a relative saying the two guards were unarmed and in MSF uniforms, and a local MSF employee describing their work at the clinic. These are attributed accounts, not independent verification of civilian status; Israel alleges Hamas affiliation without presenting evidence in the cited reports. No additional fatalities.",
+      "exact_supporting_passage": "shrapnel damage on the walls outside the clinic in Gaza City",
+      "source_type": "Established wire reporting with direct visual evidence",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T04:45:26-08:00",
+          "2026-11-28T05:46:31-08:00"
+        ],
+        "method": "Bounded targeted searches and direct article inspection; 21 authenticated prior heartbeat files reviewed (November 27 08:44 through November 28 04:44).",
+        "caveat": "Newly recovered detail, not necessarily first published during the observation window. No production collector comparison.",
+        "novelty": "Prior records explicitly left physical damage unverified. Reuters footage provides new direct evidence of exterior damage. Reuters publication predates this hour; exact update time unknown. AP witness accounts are supplementary and attributed.",
+        "related_finding_id": "gaza-20261127-msf-clinic-deconfliction-competing-status-claim-followup",
+        "corroborating_source_url": "https://apnews.com/article/mideast-israel-gaza-ukraine-libya-israel-houthis-november-28-2026-088cd858cd7def5c2c2296882e6e5be4"
+      }
+    },
+    {
+      "finding_id": "gaza-20261128-ap-al-rimal-injury-count-and-target-claim-followup",
+      "canonical_source_url": "https://apnews.com/article/mideast-israel-gaza-ukraine-libya-israel-houthis-november-28-2026-088cd858cd7def5c2c2296882e6e5be4",
+      "title": "Doctors Without Borders condemns Israeli strike that killed 2 Gaza staff, and other Mideast news",
+      "publisher": "Associated Press",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-28",
+      "event_timestamp": null,
+      "location": "Gaza City, Gaza Strip; likely previously logged Al-Rimal incident, precise linkage not established by AP",
+      "affected_population_system": "AP cites Al-Shifa Hospital reporting one death and several wounded in a Saturday Gaza City strike, consistent with WAFA's multiple-injury account but differing from Anadolu's one wounded. AP also reports the Israeli military said it targeted a militant; no independent confirmation of the deceased person's status. Treat as probable follow-up, not a separate incident or additional casualties. Exact injury count remains unresolved.",
+      "exact_supporting_passage": "The Israeli military said it targeted a militant in the area.",
+      "source_type": "Established wire reporting attributed to hospital and military",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T04:45:26-08:00",
+          "2026-11-28T05:46:31-08:00"
+        ],
+        "method": "Bounded targeted searches and direct article inspection; 21 authenticated prior heartbeat files reviewed (November 27 08:44 through November 28 04:44).",
+        "caveat": "Newly recovered detail, not necessarily first published during the observation window. No production collector comparison.",
+        "novelty": "Hospital attribution for several injuries and military target claim not recorded in the prior Al-Rimal findings; AP does not name the victim or neighborhood, so linkage is provisional.",
+        "related_finding_id": "gaza-20261128-wafa-177368-al-rimal-residential-casualties",
+        "corroborating_source_url": "https://english.wafa.ps/Pages/Details/177368"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "November 26 situation report remains latest listed."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update listed."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502, persistent."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest WAFA casualties airstrike health ministry Saturday",
+      "Gaza November 28 2026 Anadolu latest casualties ceasefire Saturday",
+      "Gaza November 28 2026 humanitarian aid crossings fuel medical evacuation hospital ambulance",
+      "Gaza November 28 2026 displaced food water sanitation flooding UNICEF UNRWA WFP",
+      "Gaza November 28 2026 Reuters AP ceasefire hostage detention negotiation latest",
+      "Gaza November 28 2026 Al Jazeera BBC Guardian civilian impact latest",
+      "site:english.wafa.ps/Pages/Details Gaza November 28, 2026",
+      "site:aa.com.tr/en Gaza 28.11.2026 Palestinian",
+      "Gaza after:2026-11-27 before:2026-11-29 site:un.org OR site:unicef.org OR site:unrwa.org OR site:wfp.org",
+      "Gaza after:2026-11-27 before:2026-11-29 site:msf.org OR site:icrc.org OR site:palestinercs.org",
+      "Gaza November 28 2026 latest Israeli strikes civilian casualties November 28 Saturday",
+      "Gaza November 28 2026 crossing detainees ceasefire humanitarian latest news after:2026-11-27"
+    ],
+    "prior_heartbeats_reviewed": 21,
+    "prior_heartbeat_range": "November 27 08:44 through November 28 04:44",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177368",
+        "reason": "Direct article confirmed updated version matches previous records; older search excerpt not a new incident."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177365",
+        "reason": "Previously logged child injury."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177366",
+        "reason": "MSF death and deconfliction statements previously recorded."
+      }
+    ],
+    "limitations": [
+      "Search results included stale and irrelevant material; no exhaustive coverage.",
+      "Exact update times unknown.",
+      "No production collector comparison.",
+      "Earlier November 27 files before 08:44 not re-read in this run."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

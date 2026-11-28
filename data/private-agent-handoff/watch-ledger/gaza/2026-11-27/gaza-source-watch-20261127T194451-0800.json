@@ -1,0 +1,115 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T194451-0800",
+  "scheduled_for": "2026-11-27T19:44:51-08:00",
+  "started_at": "2026-11-27T19:46:37-08:00",
+  "completed_at": "2026-11-27T19:47:15-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T18:42:25.556-08:00",
+    "end": "2026-11-27T19:47:15-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T184451-0800.json",
+    "basis": "Prior authenticated heartbeat completion through current research cutoff; discovery interval, not exhaustive publication coverage."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest report dated November 26, directly inspected; already extensively covered."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502; persistent regional access failure."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 27 28 2026 latest WAFA casualties Rafah Khan Younis Gaza City",
+      "Gaza November 27 28 2026 MSF clinic attack statement hospital medical evacuation WHO PRCS",
+      "Gaza November 27 28 2026 UN humanitarian aid access crossing food water displacement OCHA UNICEF WFP",
+      "Gaza November 27 28 2026 Reuters AP ceasefire hostages detention negotiations civilian impact",
+      "Gaza November 27 28 2026 Anadolu Al Jazeera strikes casualties displacement latest",
+      "Gaza November 27 28 2026 ICRC UNRWA reliefweb flooding sanitation fuel ambulances",
+      "Gaza after:2026-11-27 before:2026-11-29 latest casualties aid November 28 2026 WAFA Anadolu",
+      "Gaza November 28 2026 humanitarian aid health hospital fuel displacement after:2026-11-27",
+      "Gaza MSF November 27 2026 clinic security guards site:msf.org",
+      "Gaza November 27 2026 Amnesty women girls report date publication",
+      "Gaza November 28 2026 ceasefire hostages detention Reuters AP after:2026-11-27",
+      "غزة 28 نوفمبر 2026 شهداء إصابات مساعدات مستشفى"
+    ],
+    "additional_direct_checks": [
+      "OCHA November 26 report",
+      "WAFA homepage and medical referral funding article",
+      "MSF Gaza topic page",
+      "Al Jazeera November 27 Gaza report",
+      "Folha MSF report (direct fetch failed)"
+    ],
+    "prior_heartbeats_reviewed": 27,
+    "prior_heartbeat_range": "November 26 16–23; November 27 00–18, authenticated branch reads",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "Folha de S.Paulo",
+        "error": "Direct article fetch DisabledError; search summary available",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://www.aljazeera.com/video/newsfeed/2026/11/28/israel-kills-two-msf-staff-in-targeted-strike-on-gaza-clinic",
+        "reason": "Duplicate of 18:44 heartbeat: MSF facility marking and Israeli claim regarding deceased staff."
+      },
+      {
+        "source_url": "https://www1.folha.uol.com.br/mundo/2026/11/ataque-israelense-mata-dois-vigias-ligado-ao-medicos-sem-fronteiras-em-gaza.shtml",
+        "reason": "Repetition of MSF incident; additional reported Israeli denial of medical infrastructure damage not confirmed from full article or original statement. Do not infer physical damage or service status."
+      },
+      {
+        "source_url": "https://www.aljazeera.com/news/2026/11/27/israel-kills-four-in-gaza-as-hamas-chief-al-hayyas-son-survives-strike",
+        "reason": "Earlier Friday events and hospital allegation/response; no verified new publication/update within window, casualty reports substantially overlap prior records."
+      },
+      {
+        "source_url": "https://www.amnesty.org/en/latest/news/2026/11/women-and-girls-bear-the-crushing-toll-of-israels-ongoing-genocide-in-gaza/",
+        "reason": "Original published November 25; November 27 coverage is not a new development."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177356",
+        "reason": "November 27 16:39 publisher-displayed time, funding for West Bank hospital referral obligations; no new Gaza evacuation approval or change established."
+      },
+      {
+        "source_url": "https://menatoday.info/news/israel-proposes-hostage-deal-as-fighting-continues-in-gaza",
+        "reason": "Apparent recycled older text (references 18 months after October 2023 and March 2025 imagery) despite November 28 2026 date; excluded."
+      }
+    ],
+    "limitations": [
+      "Search indexes returned substantial older or duplicate material. No new qualifying development verified in bounded window; not a claim of no events.",
+      "No direct comparison with production collector.",
+      "WHO EMRO remains inaccessible; alternate global WHO and OCHA available."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

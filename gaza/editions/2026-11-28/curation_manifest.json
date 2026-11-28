@@ -1,0 +1,173 @@
+[
+  {
+    "story_id": "gaza-story-2026-11-28-002",
+    "title": "UNICEF reports winter flood mitigation and shelter support in Gaza",
+    "summary": "UNICEF reported that flood-mitigation machinery reached 129 displacement sites housing 21,145 families. It said 10,530 tarpaulins reached an estimated 5,265 families, a separate tally that may overlap. It reported receiving 43,000 sandbags; that is not a count of installed sandbags. Additional water pumps were awaiting entry approval.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 91,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-28-unicef-winterization"
+    ],
+    "source_ids": [
+      "gaza-2026-11-28-unicef-winterization"
+    ],
+    "source_urls": [
+      "https://www.unicef.org/documents/state-palestine-humanitarian-situation-update-gaza-strip-and-west-bank-winterization-27"
+    ],
+    "publisher_names": [
+      "UNICEF"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-28-unicef-winterization",
+        "title": "UNICEF reports winter flood mitigation and shelter support in Gaza",
+        "url": "https://www.unicef.org/documents/state-palestine-humanitarian-situation-update-gaza-strip-and-west-bank-winterization-27",
+        "publisher": "UNICEF",
+        "summary_or_snippet": "UNICEF reported that flood-mitigation machinery reached 129 displacement sites housing 21,145 families. It said 10,530 tarpaulins reached an estimated 5,265 families, a separate tally that may overlap. It reported receiving 43,000 sandbags; that is not a count of installed sandbags. Additional water pumps were awaiting entry approval.",
+        "published_at": "2026-11-27",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian",
+        "attribution": "UNICEF",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-28T16:32:56.398598+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 91,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "UNICEF",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-11-28-001",
+    "title": "Gaza Civil Defense warns deteriorating shelters face flood risk",
+    "summary": "Gaza Civil Defense spokesman Mahmoud Basal told reporters that severe weather could flood some 200,000 deteriorating tents and 1,000 shelters. These are estimates of exposure, not reports of new flood damage. Basal said responders were short of fuel, spare parts, vehicles and water pumps.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-11-28-anadolu-shelter-warning"
+    ],
+    "source_ids": [
+      "gaza-2026-11-28-anadolu-shelter-warning"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072"
+    ],
+    "publisher_names": [
+      "Anadolu Ajansi"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-11-28-anadolu-shelter-warning",
+        "title": "Gaza Civil Defense warns deteriorating shelters face flood risk",
+        "url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "publisher": "Anadolu Ajansi",
+        "summary_or_snippet": "Gaza Civil Defense spokesman Mahmoud Basal told reporters that severe weather could flood some 200,000 deteriorating tents and 1,000 shelters. These are estimates of exposure, not reports of new flood damage. Basal said responders were short of fuel, spare parts, vehicles and water pumps.",
+        "published_at": "2026-11-28",
+        "modified_at": null,
+        "event_date_precision": "unknown",
+        "event_date_basis": null,
+        "event_date": "",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian",
+        "attribution": "Anadolu Ajansi",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-11-28T16:32:56.398598+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian",
+    "location": "Gaza",
+    "event_date": "",
+    "attribution": "Anadolu Ajansi",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

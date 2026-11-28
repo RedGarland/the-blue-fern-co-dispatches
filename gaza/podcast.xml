@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 28 Nov 2026 03:22:50 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 28 Nov 2026 16:33:30 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for November 28, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-28-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-11-28-transcript.html</guid>
+    <pubDate>Sat, 28 Nov 2026 00:00:00 +0000</pubDate>
+    <description>UNICEF reports winter flood mitigation and shelter support in Gaza. UNICEF reported that flood-mitigation machinery reached 129 displacement sites housing 21,145 families. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-11-28.mp3" length="815232" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for November 27, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-11-27-transcript.html</link>

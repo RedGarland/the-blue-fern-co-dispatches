@@ -1,0 +1,56 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-11-28",
+  "generated_at": "2026-11-28T16:32:46.700726Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-11-28.mp3",
+  "audio_url": "/gaza/audio/2026-11-28.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 695,
+  "tts_input_word_count": 98,
+  "tts_story_count": 2,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 815232,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-11-28T16:32:46.700707Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-11-28-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-11-28/",
+  "script_text": "This is the Gaza Dispatch audio briefing for November 28, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. UNICEF reports winter flood mitigation and shelter support in Gaza. UNICEF reported that flood-mitigation machinery reached 129 displacement sites housing 21,145 families. This was reported by UNICEF.\n\n2. Gaza Civil Defense warns deteriorating shelters face flood risk. Gaza Civil Defense spokesman Mahmoud Basal told reporters that severe weather could flood some 200,000 deteriorating tents and 1,000 shelters. This was reported by Anadolu Ajansi.\n\nFor the full source-backed dispatch, read the November 28, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 2,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-11-28-unicef-winterization",
+      "publisher": "UNICEF",
+      "url": "https://www.unicef.org/documents/state-palestine-humanitarian-situation-update-gaza-strip-and-west-bank-winterization-27",
+      "title": "UNICEF reports winter flood mitigation and shelter support in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-11-28-anadolu-shelter-warning",
+      "publisher": "Anadolu Ajansi",
+      "url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+      "title": "Gaza Civil Defense warns deteriorating shelters face flood risk"
+    }
+  ]
+}

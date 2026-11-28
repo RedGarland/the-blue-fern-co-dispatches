@@ -1,0 +1,136 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T084451-0800",
+  "scheduled_for": "2026-11-28T08:44:51-08:00",
+  "started_at": "2026-11-28T08:48:36-08:00",
+  "completed_at": "2026-11-28T08:49:43-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T07:48:48-08:00",
+    "end": "2026-11-28T08:49:43-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T074451-0800.json",
+    "basis": "Authenticated preceding heartbeat completion to research cutoff; bounded discovery, not exhaustive publication coverage."
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20261128-msf-gaza-city-clinic-planned-service-suspension",
+      "canonical_source_url": "https://www.msf.org/msf-condemns-israeli-drone-strike-killed-two-staff-working-gaza-city",
+      "title": "MSF condemns Israeli drone strike that killed two staff working in Gaza City clinic",
+      "publisher": "Médecins Sans Frontières (MSF)",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-29",
+      "event_timestamp": null,
+      "location": "MSF Gaza City clinic, Gaza Strip",
+      "affected_population_system": "MSF announces a planned suspension of medical activities on November 29 following the November 27 fatal strike. The clinic provides maternal care, family planning, nutrition, wound care and mental health consultations, averaging 1,990 patients per week in 2026. Actual implementation and duration of suspension, number of appointments disrupted, and resumption date are unverified. No new casualty count.",
+      "exact_supporting_passage": "Medical activities will be suspended tomorrow in our Gaza City clinic",
+      "source_type": "Primary official humanitarian medical provider statement",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T07:48:48-08:00",
+          "2026-11-28T08:49:43-08:00"
+        ],
+        "method": "Direct MSF country page and official statement inspection after bounded targeted searches; compared against 20 authenticated prior heartbeats from November 27 12:44 to November 28 07:44.",
+        "novelty": "Earlier records explicitly left service interruption unverified; the provider now announces a planned suspension. The announcement is dated November 28, so tomorrow refers to November 29; this is not confirmation that suspension has already begun or that all MSF operations are suspended.",
+        "related_finding_id": "gaza-20261128-reuters-msf-clinic-exterior-damage-followup",
+        "caveat": "Exact publication and planned start times unavailable. Newly discovered in observation window, not proven first published then. No production collector comparison."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/updates",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report November 26; opened."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/news/index.html",
+        "status": "FAILED",
+        "result": "Fetch timeout; emergency situation reports endpoint also timed out."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 Saturday latest wounded killed WAFA health ministry Gaza",
+      "Gaza November 28 2026 Anadolu latest Gaza tent casualties health ceasefire",
+      "Gaza November 28 2026 humanitarian aid crossings fuel hospital ambulance evacuation",
+      "Gaza November 28 2026 displacement food water sanitation flooding UNICEF UNRWA WFP",
+      "Gaza November 28 2026 Reuters AP ceasefire hostages detention negotiations latest",
+      "Gaza November 28 2026 Al Jazeera BBC Guardian latest civilian impact",
+      "site:english.wafa.ps/Pages/Details Gaza November 28 2026",
+      "site:aa.com.tr/en Gaza November 28 2026 latest",
+      "Gaza after:2026-11-27 before:2026-11-29 site:un.org OR site:unicef.org OR site:unrwa.org OR site:wfp.org",
+      "Gaza after:2026-11-27 before:2026-11-29 site:msf.org OR site:icrc.org OR site:palestinercs.org",
+      "Gaza November 28 2026 Saturday evening afternoon latest strike casualties displacement",
+      "Gaza November 28 2026 crossings detainees ceasefire humanitarian latest news"
+    ],
+    "direct_source_checks": [
+      "OCHA updates and Nov 26 report",
+      "WHO global and EMRO news and situation reports",
+      "WAFA homepage",
+      "Anadolu Middle East index and articles 4141072 and 4141059",
+      "UNRWA newsroom and report 239",
+      "MSF Palestine and Nov 28 statement",
+      "ICRC country page and Nov 23 winter article"
+    ],
+    "prior_heartbeats_reviewed": 20,
+    "prior_heartbeat_range": "November 27 12:44 through November 28 07:44",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "Timeout fetching both regional endpoints",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://www.aa.com.tr/en/world/palestinian-killed-5-others-wounded-in-israel-s-ongoing-ceasefire-violations-in-gaza/4141369",
+        "reason": "Already recorded Saturday casualty incidents."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Flood risks and response shortages already recorded."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/israels-use-of-palestinians-as-human-shields-in-gaza-widespread-encouraged-by-commanders-report/4141059",
+        "reason": "Investigation previously recorded."
+      },
+      {
+        "source_url": "https://www.icrc.org/en/article/gaza-working-alongside-communities-prepare-winter-rains",
+        "reason": "November 23 report outside recent discovery focus."
+      },
+      {
+        "source_url": "https://www.unrwa.org/news-reports/reports/unrwa-situation-report-239-humanitarian-crisis-gaza-strip-and-occupied-west",
+        "reason": "November 19 report not new."
+      }
+    ],
+    "limitations": [
+      "Sparse search returns; direct official source navigation recovered new operational detail.",
+      "WHO regional coverage incomplete; no exhaustive or production collector comparison.",
+      "One attempted larger batch of historical ledger reads exceeded per-call tool budget; subsequent smaller batch successfully verified 12 prior-day records plus eight current-day records."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

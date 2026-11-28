@@ -1,0 +1,121 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261127T224451-0800",
+  "scheduled_for": "2026-11-27T22:44:51-08:00",
+  "started_at": "2026-11-27T22:40:49-08:00",
+  "completed_at": "2026-11-27T22:41:55.891-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-27",
+    "start": "2026-11-27T21:47:25.822-08:00",
+    "end": "2026-11-27T22:41:55.891-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-27/gaza-source-watch-20261127T214451-0800.json",
+    "basis": "Prior authenticated heartbeat completion through current research cutoff; nominal scheduled slot was triggered early. Date-only publications do not establish hourly freshness."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest listed situation report November 26, directly inspected at https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026; previously covered."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502; persistent."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update listed."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 November 27 late casualties strike WAFA Khan Younis Rafah",
+      "Gaza November 28 2026 aid displacement shelter crossings water fuel UN humanitarian",
+      "Gaza November 27 28 2026 MSF clinic hospital ambulance medical evacuation WHO health",
+      "Gaza November 28 2026 ceasefire negotiations hostages detainees Reuters AP",
+      "Gaza November 27 28 2026 UNICEF WFP UNRWA ICRC aid food water",
+      "Gaza November 28 2026 Anadolu Al Jazeera latest Gaza casualties",
+      "site:english.wafa.ps Gaza \"28/November/2026\"",
+      "site:aa.com.tr Gaza \"28 November 2026\" Palestinians",
+      "site:msf.org Gaza November 27 2026 guards clinic statement",
+      "Gaza November 28 2026 overnight civilian infrastructure bombing Palestinian news",
+      "Gaza November 28 2026 humanitarian access medical aid crossing detention latest Middle East Eye",
+      "Gaza November 28 2026 UN news reliefweb humanitarian situation latest"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage and medical-referral funding article",
+      "AP and Reuters hunger hotspots reports",
+      "UOL MSF article with AFP/Reuters attribution",
+      "Anadolu investigation article full text"
+    ],
+    "prior_heartbeats_reviewed": 22,
+    "prior_heartbeat_range": "November 27 00–21, authenticated branch reads",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177363",
+        "reason": "Clinic-vicinity and Rafah casualties already captured at 13:44; no new documented civilian impact from other demolition mentions."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Already captured at 14:44."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/israels-use-of-palestinians-as-human-shields-in-gaza-widespread-encouraged-by-commanders-report/4141059",
+        "reason": "Already captured at 14:44; subtitle refers to 16 cases total, body specifies ten Gaza and six West Bank; no new Gaza count."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/doctors-without-borders-denounces-israeli-strike-on-gaza-clinic/4141089",
+        "reason": "Already captured at 16:44 and 18:44."
+      },
+      {
+        "source_url": "https://noticias.uol.com.br/internacional/ultimas-noticias/2026/11/28/ataque-israelense-mata-dois-vigias-do-medicos-sem-fronteiras-em-gaza.ghtm",
+        "reason": "Same MSF event; article dated 00:51 November 28 in São Paulo (approximately 19:51 PT November 27 if local time), predating window. Israeli denial of medical infrastructure damage is an attributed claim, not verified operational status; no in-window change established."
+      },
+      {
+        "source_url": "https://www.reuters.com/business/environment/un-warns-famine-risks-rising-hunger-hotspots-increase-2026-11-27/",
+        "reason": "FAO/WFP hunger hotspots report covered November 27 at 09:02 UTC (01:02 PT), well before observation window. Gaza downgraded to very high concern; conditions remain severe and fragile. Not a verified hourly development; may warrant production review if not already captured."
+      },
+      {
+        "source_url": "https://apnews.com/article/un-hunger-famine-food-war-sudan-yemen-819ca5f619621b6f3b7ca8ba66b65762",
+        "reason": "Same earlier FAO/WFP assessment; AP reports 67% of Gaza population faces crisis-level hunger or worse. No new in-window report change established."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177356",
+        "reason": "Funding for West Bank hospital referrals, November 27 16:39 publisher time; urges Gaza evacuation but establishes no actual evacuation or Gaza service-capacity change."
+      },
+      {
+        "source_url": "https://mobil.aa.com.tr/en/world/qatar-canada-reaffirm-support-for-syria-s-recovery-palestinian-rights/4141085",
+        "reason": "November 24 strategic dialogue and general ceasefire appeal, no new negotiation or implementation change."
+      }
+    ],
+    "limitations": [
+      "Search returned predominantly older or duplicate coverage; absence of new qualifying findings is not evidence of no events.",
+      "No direct comparison with production collector.",
+      "WHO regional access remains unavailable; OCHA and global WHO accessible."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

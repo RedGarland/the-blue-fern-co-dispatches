@@ -1,0 +1,119 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T014451-0800",
+  "scheduled_for": "2026-11-28T01:44:51-08:00",
+  "started_at": "2026-11-28T01:41:16-08:00",
+  "completed_at": "2026-11-28T01:42:01-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T00:40:58-08:00",
+    "end": "2026-11-28T01:42:01-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T004451-0800.json",
+    "basis": "Previous authenticated heartbeat completion through current research cutoff; discovery interval, not exhaustive event coverage."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "November 26 situation report remains latest listed; report directly inspected."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502 Bad Gateway, persistent."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update identified in current listing."
+      }
+    ],
+    "official_search_queries": [
+      "site:ochaopt.org Gaza November 28 2026 humanitarian update",
+      "site:who.int Gaza November 28 2026 health emergency"
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest casualties WAFA Khan Younis Gaza city",
+      "Gaza November 28 2026 hospital ambulance medical evacuation fuel MSF PRCS",
+      "Gaza November 28 2026 aid crossing water food displacement shelter flooding",
+      "Gaza November 28 2026 ceasefire negotiations detention hostages Reuters AP",
+      "Gaza November 28 2026 UNICEF UNRWA WFP ICRC humanitarian",
+      "site:english.wafa.ps Gaza November 28 2026",
+      "site:aa.com.tr Gaza November 28 2026 Palestinians",
+      "site:msf.org Gaza clinic November 27 28 2026",
+      "Gaza November 28 2026 civilian infrastructure military operations latest",
+      "Gaza November 28 2026 Al Jazeera Middle East Eye latest aid casualties",
+      "Gaza November 28 2026 UN News ReliefWeb humanitarian medical",
+      "Gaza November 28 2026 Palestine Red Crescent hospital ambulance health ministry"
+    ],
+    "additional_direct_checks": [
+      "WAFA homepage",
+      "Anadolu Middle East index",
+      "OCHA November 26 situation report",
+      "WHO global emergency page",
+      "Anadolu 4140981 and infographic 55087",
+      "WAFA 177350"
+    ],
+    "prior_heartbeats_reviewed": 20,
+    "prior_heartbeat_range": "November 27 05:44–23:44 and November 28 00:44, authenticated branch reads. Initial larger batch exceeded per-call limit; split batches succeeded.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502 Bad Gateway",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177365",
+        "reason": "Saturday child injury already logged at November 27 23:44."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177366",
+        "reason": "MSF clinic deaths and deconfliction claims previously recorded; no new impact in current index."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/features/red-cross-sounds-alarm-about-gaza-winter-as-displaced-face-unsafe-shelter-choices/4140981",
+        "reason": "ICRC sewage failure and winter shelter warning explicitly logged November 27 14:44."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177350",
+        "reason": "November 27 12:47 publisher time; older meningitis warning and laboratory constraints, no in-window update established."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/info/infographic/55087",
+        "reason": "November 26 meningitis infographic, outside interval."
+      },
+      {
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously available November 26 report, no new edition."
+      },
+      {
+        "source_url": "https://www.msf.org/gaza-israel-war",
+        "reason": "General page last updated September 28."
+      }
+    ],
+    "limitations": [
+      "Search results included older material; no qualifying in-window developments identified.",
+      "WHO regional access unavailable; WHO global and OCHA accessible.",
+      "Bounded searches may miss unindexed material; no production collector comparison."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

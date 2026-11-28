@@ -1,0 +1,120 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T094451-0800",
+  "scheduled_for": "2026-11-28T09:44:51-08:00",
+  "started_at": "2026-11-28T09:49:47-08:00",
+  "completed_at": "2026-11-28T09:50:42.915-08:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T08:49:43-08:00",
+    "end": "2026-11-28T09:50:42.915-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T084451-0800.json",
+    "basis": "Prior authenticated completion to current research cutoff; bounded discovery, not exhaustive event or publication coverage."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "Latest situation report dated November 26; direct report opened; no newer report listed."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "HTTP 502 Bad Gateway; longstanding regional access gap."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "Global site search and emergency overview checked; no new operational Gaza update identified."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 latest today WAFA civilian casualties Gaza",
+      "Gaza November 28 2026 Anadolu latest wounded Gaza ceasefire",
+      "Gaza November 28 2026 aid crossings fuel medical evacuation hospital ambulance",
+      "Gaza November 28 2026 displacement shelters food water sanitation flooding",
+      "Gaza November 28 2026 Reuters AP ceasefire negotiations detainees hostages",
+      "Gaza November 28 2026 Al Jazeera BBC Guardian latest Gaza",
+      "Gaza after:2026-11-27 before:2026-11-29 site:un.org OR site:unicef.org OR site:unrwa.org OR site:wfp.org",
+      "Gaza after:2026-11-27 before:2026-11-29 site:msf.org OR site:icrc.org OR site:palestinercs.org",
+      "site:english.wafa.ps/Pages/Details Gaza November 28 2026",
+      "site:aa.com.tr/en Gaza November 28 2026 latest Gaza evening",
+      "Gaza November 28 2026 Saturday evening strikes Gaza humanitarian latest",
+      "Gaza November 28 2026 crossings detainees Rafah humanitarian ceasefire latest"
+    ],
+    "direct_source_checks": [
+      "OCHA homepage and November 26 situation report",
+      "WHO global emergency overview and EMRO report endpoint",
+      "WAFA homepage (latest Gaza headlines already recorded)",
+      "Anadolu Middle East index and MSF article 4141089",
+      "MSF November 28 statement",
+      "Guardian November 28 MSF report",
+      "PRCS homepage (latest displayed Gaza alert November 10)",
+      "UNRWA newsroom",
+      "ICRC country page"
+    ],
+    "prior_heartbeats_reviewed": 9,
+    "prior_heartbeat_range": "November 28 00:44 through 08:44, inclusive; older context also available in these records.",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNISPAL",
+        "error": "HTTP 403 on optional direct homepage",
+        "material_new_degradation": false
+      },
+      {
+        "source": "UNICEF reports",
+        "error": "Optional index attempts returned 404 or inaccessible; previously recorded UNICEF report not a new candidate.",
+        "material_new_degradation": false
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://www.aa.com.tr/en/world/palestinian-killed-5-others-wounded-in-israel-s-ongoing-ceasefire-violations-in-gaza/4141369",
+        "reason": "Saturday casualty incidents already recorded; no substantively new civilian impact identified."
+      },
+      {
+        "source_url": "https://www.msf.org/msf-condemns-israeli-drone-strike-killed-two-staff-working-gaza-city",
+        "reason": "Strike, physical damage and planned clinic suspension already recorded."
+      },
+      {
+        "source_url": "https://www.theguardian.com/world/2026/nov/28/medecins-sans-frontieres-staff-killed-gaza-israeli-strike",
+        "reason": "Re-reporting of known MSF incident; WHO condemnation does not establish new operational change. Published and modified before this interval."
+      },
+      {
+        "source_url": "https://www.aa.com.tr/en/middle-east/gaza-weather-system-threatens-13m-palestinians-with-humanitarian-disaster/4141072",
+        "reason": "Previously recorded flood risk and shelter warnings."
+      },
+      {
+        "source_url": "https://www.ochaopt.org/content/humanitarian-situation-report-26-november-2026",
+        "reason": "Previously checked report; no newer edition."
+      }
+    ],
+    "limitations": [
+      "Search index results sparse and repetitive; direct source checks supplement them.",
+      "WHO regional access remains incomplete; additional optional endpoints inaccessible but other humanitarian coverage remained usable.",
+      "No comparison against production collector; no claim of exhaustive coverage."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": false,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}

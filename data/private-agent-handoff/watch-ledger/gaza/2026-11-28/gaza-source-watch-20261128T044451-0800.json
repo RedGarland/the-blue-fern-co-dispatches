@@ -1,0 +1,185 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261128T044451-0800",
+  "scheduled_for": "2026-11-28T04:44:51-08:00",
+  "started_at": "2026-11-28T04:44:37-08:00",
+  "completed_at": "2026-11-28T04:45:26-08:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "observation_date": "2026-11-28",
+    "start": "2026-11-28T03:42:11-08:00",
+    "end": "2026-11-28T04:45:26-08:00",
+    "prior_heartbeat_path": "data/private-agent-handoff/watch-ledger/gaza/2026-11-28/gaza-source-watch-20261128T034451-0800.json",
+    "basis": "Prior authenticated heartbeat completion through current research cutoff; bounded discovery, not exhaustive publication coverage."
+  },
+  "findings": [
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-2-others-wounded-in-israel-s-ongoing-ceasefire-violations-in-gaza/4141369",
+      "title": "Palestinian killed, 2 others wounded in Israel’s ongoing ceasefire violations in Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-28",
+      "event_timestamp": null,
+      "source_type": "Established news agency reporting attributed to hospital medical source",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "finding_id": "gaza-20261128-anadolu-4141369-khan-younis-child-severity-followup",
+      "location": "Khan Younis, southern Gaza Strip",
+      "affected_population_system": "Nasser Hospital medical source reports that the previously recorded 13-year-old boy suffered moderate abdominal injuries. No additional casualty; subsequent clinical outcome unknown.",
+      "exact_supporting_passage": "sustained moderate abdominal injuries",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T03:42:11-08:00",
+          "2026-11-28T04:45:26-08:00"
+        ],
+        "method": "Targeted searches, direct article inspection, comparison against 28 authenticated hourly heartbeat files (November 27 00:44 to November 28 03:44).",
+        "caveat": "Exact publication/update time unknown; newly discovered in the interval, not proven first published in it. No production collector comparison.",
+        "novelty": "New severity, injury location on body, and named hospital source; prior WAFA and Anadolu 4140045 records did not specify severity.",
+        "related_finding_id": "gaza-20261128-anadolu-4140045-khan-younis-child-medical-source-followup",
+        "corroborating_source_url": "https://english.wafa.ps/Pages/Details/177365"
+      }
+    },
+    {
+      "canonical_source_url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-2-others-wounded-in-israel-s-ongoing-ceasefire-violations-in-gaza/4141369",
+      "title": "Palestinian killed, 2 others wounded in Israel’s ongoing ceasefire violations in Gaza",
+      "publisher": "Anadolu",
+      "source_date": "2026-11-28",
+      "publication_date": "2026-11-28",
+      "publication_timestamp": null,
+      "event_date": "2026-11-28",
+      "event_timestamp": null,
+      "source_type": "Established news agency reporting attributed to hospital medical source",
+      "classification": "follow-up",
+      "confidence": "medium",
+      "finding_id": "gaza-20261128-anadolu-4141369-al-rimal-hospital-corroboration-followup",
+      "location": "Al-Rimal, western Gaza City, Gaza Strip",
+      "affected_population_system": "Anadolu cites an Al-Shifa Hospital medical source confirming Ahmed Sihyoun's reported death and one other person wounded in the previously recorded residential strike. WAFA reported several wounded; exact total remains unresolved. No additional casualties should be counted; civilian status unverified.",
+      "exact_supporting_passage": "a medical source at Al-Shifa Hospital told Anadolu",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T03:42:11-08:00",
+          "2026-11-28T04:45:26-08:00"
+        ],
+        "method": "Targeted searches, direct article inspection, comparison against 28 authenticated hourly heartbeat files (November 27 00:44 to November 28 03:44).",
+        "caveat": "Exact publication/update time unknown; newly discovered in the interval, not proven first published in it. No production collector comparison.",
+        "novelty": "Named hospital medical source adds corroboration to WAFA 177368; differing injury counts retained without assuming a new incident or revising totals.",
+        "related_finding_id": "gaza-20261128-wafa-177368-al-rimal-residential-casualties",
+        "corroborating_source_url": "https://english.wafa.ps/Pages/Details/177368"
+      }
+    },
+    {
+      "finding_id": "gaza-20261127-fao-wfp-hunger-hotspots-dec2026-may2027",
+      "canonical_source_url": "https://www.wfp.org/news/el-nino-adds-new-hunger-hotspots-conflict-continues-drive-risk-famine-warn-fao-and-wfp",
+      "title": "El Niño Adds New Hunger Hotspots as Conflict Continues to Drive Risk of Famine, Warn FAO and WFP",
+      "publisher": "FAO and WFP",
+      "source_date": "2026-11-27",
+      "publication_date": "2026-11-27",
+      "publication_timestamp": null,
+      "event_date": null,
+      "event_timestamp": null,
+      "location": "Gaza Strip; classification applies to Palestine as a whole",
+      "affected_population_system": "Food security: newly released joint December 2026–May 2027 outlook places Palestine among hotspots of very high concern and describes Gaza food security improvements since the ceasefire as fragile. Not a new famine declaration or evidence of a sudden deterioration.",
+      "exact_supporting_passage": "Four additional hotspots are classified as being of very high concern: Afghanistan, the Democratic Republic of the Congo, Haiti and Palestine.",
+      "source_type": "Primary official joint humanitarian agency press release",
+      "classification": "new",
+      "confidence": "high",
+      "bounded_discovery_context": {
+        "observed_between": [
+          "2026-11-28T03:42:11-08:00",
+          "2026-11-28T04:45:26-08:00"
+        ],
+        "method": "Targeted searches, direct article inspection, comparison against 28 authenticated hourly heartbeat files (November 27 00:44 to November 28 03:44).",
+        "caveat": "Official press release and report landing page accessible; report PDF returned HTTP 403. No detailed report-only claim made.",
+        "novelty": "Newly recovered November 27 outlook release absent from reviewed ledger findings; earlier-day publication, exact time unknown. Include as supplementary recall of newly issued assessment, not as an event occurring this hour.",
+        "report_landing_url": "https://www.wfp.org/publications/hunger-hotspots-fao-wfp-early-warnings-acute-food-insecurity"
+      }
+    }
+  ],
+  "coverage_notes": {
+    "purpose": "Supplementary recall only; production remains authoritative.",
+    "official_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "status": "ACCESSIBLE",
+        "result": "November 26 situation report remains latest listed."
+      },
+      {
+        "source": "WHO global",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "status": "ACCESSIBLE",
+        "result": "No new Gaza-specific update listed."
+      },
+      {
+        "source": "WHO EMRO",
+        "url": "https://www.emro.who.int/opt/information-resources/emergency-situation-reports.html",
+        "status": "FAILED",
+        "result": "Persistent HTTP 502."
+      }
+    ],
+    "additional_targeted_search_count": 12,
+    "additional_targeted_search_queries": [
+      "Gaza November 28 2026 casualties strike Khan Younis Gaza City WAFA",
+      "Gaza November 28 2026 Anadolu latest casualties ceasefire",
+      "Gaza November 28 2026 aid crossings displacement food water UN UNICEF WFP",
+      "Gaza November 28 2026 hospital ambulance medical evacuation fuel MSF PRCS",
+      "Gaza November 28 2026 Reuters AP ceasefire negotiations hostages detention",
+      "Gaza November 28 2026 latest Al Jazeera BBC Guardian military civilian",
+      "site:english.wafa.ps/Pages/Details Gaza November 28 2026",
+      "site:un.org OR site:unicef.org OR site:wfp.org OR site:unrwa.org Gaza after:2026-11-27 before:2026-11-29",
+      "site:msf.org OR site:icrc.org OR site:palestinercs.org Gaza after:2026-11-27 before:2026-11-29",
+      "Gaza November 28 2026 latest crossing aid shelter infrastructure flooding",
+      "Gaza November 28 2026 latest Israel Hamas negotiations detainees CNN Reuters AP",
+      "Gaza November 28 2026 health ministry deaths wounded Saturday Gaza latest"
+    ],
+    "prior_heartbeats_reviewed": 28,
+    "prior_heartbeat_range": "November 27 00:44 through November 28 03:44",
+    "access_failures": [
+      {
+        "source": "WHO EMRO",
+        "error": "HTTP 502",
+        "material_new_degradation": false
+      },
+      {
+        "source": "WFP full report PDF",
+        "error": "HTTP 403",
+        "material_new_degradation": false,
+        "mitigation": "Official release and report landing page available; restrict claims to accessible text."
+      }
+    ],
+    "exclusions": [
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177368",
+        "reason": "Previously recorded death; only new hospital-source corroboration retained."
+      },
+      {
+        "source_url": "https://english.wafa.ps/Pages/Details/177365",
+        "reason": "Previously recorded child injury; only new medical details retained."
+      },
+      {
+        "source_url": "https://www.aljazeera.com/news/2026/11/28/israeli-strike-on-doctors-without-borders-clinic-in-gaza-kills-two-staff",
+        "reason": "Previously recorded MSF clinic attack and competing claims."
+      },
+      {
+        "source_url": "https://www.egyptindependent.com/israel-intensifies-assassinations-in-gaza-as-us-urges-netanyahu-to-proceed-with-ceasefire-plan/",
+        "reason": "Recap of earlier strikes and Tuesday diplomatic contact, no verified fresh negotiation change."
+      }
+    ],
+    "limitations": [
+      "Search results include older and recycled material; no exhaustive coverage.",
+      "Publication clock times for retained findings unknown.",
+      "No production collector comparison."
+    ],
+    "material_failure_or_new_degradation": false,
+    "notification_recommended": true,
+    "production_unchanged": true,
+    "publication_unchanged": true,
+    "schedule_unchanged": true
+  }
+}
